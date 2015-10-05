@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- create by tony 2015-06-28 source comes from tongcheng -->
+    <color name="return_money">#ffa733</color>
+    <!-- 橙色，用户返利按钮的背景颜色 -->
+    <color name="main_primary">#ff333333</color>
+    <!-- 深黑，用于标题，正文 -->
+    <color name="main_secondary">#ff666666</color>
+    <!-- 用于tab文字，二级文字 -->
+    <color name="main_hint">#ff999999</color>
+    <!-- 用于说明文字，提示文案 -->
+    <color name="main_disable">#ffcccccc</color>
+    <!-- 用于输入框默认提示 -->
+    <color name="main_green">#ff50b400</color>
+    <color name="main_orange">#ffff6633</color>
+    <!-- 用于价格，警告 -->
+    <color name="main_white">#ffffffff</color>
+    <!-- 用于反白 -->
+    <color name="main_link">#ff0088cc</color>
+    <!-- 用于链接色 -->
+    <color name="main_click">#ffeeeeee</color>
+    <!-- 用于点击色 -->
+    <color name="bg_main">#ffe9ecf1</color>
+    <!-- 用于大背景色 -->
+    <color name="frame_gray">#ffcecece</color>
+    <color name="main_line">#ffdcdcdc</color>
+    <!-- 用于分割线、按钮描边 -->
+    <color name="bg_mask">#78000000</color>
+    <!-- 蒙层色，50%纯黑 -->
+    <color name="bg_travel_order_gray">#e9ecf1</color>
+    <!-- 灰色 -->
+    <color name="calendar_cell_novalidate">#ffc8d2dc</color>
+    <color name="calendar_text_inactive">#40778088</color>
+    <color name="contents_text">#ff000000</color>
+    <color name="pull_to_refresh_ring">#ffc0c4ca</color>
+    <color name="main_null">#ffc0c5d0</color>
+    <!-- Null -->
+    <color name="bg_bg">#fff0f0f0</color>
+    <!-- 大背景色 -->
+    <color name="main_white_transparent">#66ffffff</color>
+    <!-- 40%透明纯白 -->
+    <color name="actionbar_title_pressbg">#ffF5F5F5</color>
+    <!-- 下拉刷新圆圈的颜色 -->
+    <color name="c_tcolor_dark_grey">#ff7f7f7f</color>
+    <color name="colo_grey">#00ffffff</color>
+    <color name="lightgray2">#ff999999</color>
+    <color name="c_tcolor_dark">#ff333333</color>
+    <color name="c_tcolor_light_grey">#ffcccccc</color>
+    <color name="item_content_color">#ffE6EAED</color>
+    <color name="lightblue">#ff72a9e0</color>
+    <color name="orange_submit">#ffff6600</color>
+    <!-- 橙色 -->
+    <color name="bg_famous_scenery_title">#8A000000</color>
+    <!-- 半透明黑色 -->
+    <color name="bg_expander">#fff6f8fb</color>
+    <!-- 用户cell展开后的背景色 -->
+    <color name="lable_red">#ffff4800</color>
+    <!-- 标签纯色块，红色 -->
+    <color name="lable_orange">#ffff9500</color>
+    <!-- 标签纯色块，橙色 -->
+    <color name="translucent_background">#80000000</color>
+    <color name="btn_orange">#ffff8400</color>
+    <!-- 橙色 -->
+    <color name="home_search_hint">#ffaaaaaa</color>
+    <!-- 大首页搜索框hint -->
+    
+    
+    <color name="line_blue_color">#7FBDED</color>
+    <color name="bg_title">#009BEE</color>
+</resources>

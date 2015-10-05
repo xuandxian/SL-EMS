@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <include
+        android:id="@+id/include_register"
+        layout="@layout/headview" />
+
+    <RelativeLayout
+        android:id="@+id/rl_register_1 "
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_below="@+id/include_register"
+        android:layout_marginTop="20dp"
+        android:background="@color/main_white" >
+
+        <com.overtech.view.EditTextWithDelete
+            android:id="@+id/et_login_username"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/shape_input"
+            android:ems="10"
+            android:hint="手机号/用户名"
+            android:inputType="phone"
+            android:maxLength="11" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_above="@+id/rl_register_2"
+        android:layout_centerHorizontal="true"
+        android:background="#c1c1c1" />
+
+    <RelativeLayout
+        android:id="@+id/rl_register_2"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/rl_register_1 "
+        android:background="@color/main_white" >
+
+        <com.overtech.view.EditTextWithDelete
+            android:id="@+id/et_login_password"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="20dp"
+            android:layout_toLeftOf="@+id/tb_change_password"
+            android:background="@drawable/shape_input"
+            android:ems="10"
+            android:hint="密码"
+            android:inputType="textPassword" />
+
+        <ToggleButton
+            android:id="@+id/tb_change_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/selector_toggle_button"
+            android:text=""
+            android:textOff=""
+            android:textOn="" />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/rl_register_2"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/shape_button_visiable"
+        android:text="登录"
+        android:textColor="@color/main_white"
+        android:textSize="17sp" />
+
+    <TextView
+        android:id="@+id/tv_lost_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/btn_login"
+        android:layout_below="@+id/btn_login"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="20dp"
+        android:text="忘记密码?"
+        android:textColor="@color/line_blue_color"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/tv_login_by_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tv_lost_password"
+        android:layout_alignRight="@+id/btn_login"
+        android:layout_marginRight="5dp"
+        android:text="短信验证码登录"
+        android:textColor="@color/line_blue_color"
+        android:textSize="15sp" />
+
+</RelativeLayout>
