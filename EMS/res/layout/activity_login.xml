@@ -24,7 +24,7 @@
             android:layout_marginRight="20dp"
             android:background="@drawable/shape_input"
             android:ems="10"
-            android:hint="手机号/用户名"
+            android:hint="手机号/ID号"
             android:inputType="phone"
             android:maxLength="11" />
     </RelativeLayout>
@@ -103,7 +103,7 @@
         android:layout_alignBottom="@+id/tv_lost_password"
         android:layout_alignRight="@+id/btn_login"
         android:layout_marginRight="5dp"
-        android:text="短信验证码登录"
+        android:text="注册新账户"
         android:textColor="@color/line_blue_color"
         android:textSize="15sp" />
 

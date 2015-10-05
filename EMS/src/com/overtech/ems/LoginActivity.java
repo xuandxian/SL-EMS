@@ -1,6 +1,9 @@
 package com.overtech.ems;
 
 import android.os.Bundle;
+import android.provider.ContactsContract.CommonDataKinds.Im;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 /**
  * @author Tony 
@@ -9,7 +12,7 @@ import android.widget.TextView;
  */
 public class LoginActivity extends BaseActivity {
 	private TextView mHeadContent;
-	private TextView mRegister;
+	private ImageView mHeadBack;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -20,10 +23,10 @@ public class LoginActivity extends BaseActivity {
 
 	private void findViewById() {
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
-		mRegister = (TextView) findViewById(R.id.tv_headTitleRight);
+		mHeadBack=(ImageView)findViewById(R.id.iv_headBack);
 	}
 	private void init() {
 		mHeadContent.setText("登 录");
-		mRegister.setText("注册");
+		mHeadBack.setVisibility(View.VISIBLE);
 	}
 }

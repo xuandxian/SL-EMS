@@ -6,11 +6,11 @@
 
     <ImageView
         android:id="@+id/iv_headBack"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="25dp"
+        android:layout_marginLeft="15dp"
         android:src="@drawable/icon_common_back"
         android:visibility="gone" />
 

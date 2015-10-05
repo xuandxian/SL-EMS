@@ -10,4 +10,13 @@
         android:scaleType="centerInside"
         android:src="@drawable/splash" />
 
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="14dp"
+        android:text="Copyright (c) by www.relevator.cc" />
+
 </RelativeLayout>

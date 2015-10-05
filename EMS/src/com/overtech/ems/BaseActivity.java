@@ -1,7 +1,5 @@
 package com.overtech.ems;
 
-import com.baidu.mapapi.SDKInitializer;
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
