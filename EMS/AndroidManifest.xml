@@ -42,6 +42,12 @@
         </activity>
         <activity android:name=".MainActivity" >
         </activity>
+        <activity android:name=".LostPasswordActivity" >
+        </activity>
+        <activity android:name=".ResetPasswordActivity" >
+        </activity>
+        <activity android:name=".ResetPasswordSuccessActivity" >
+        </activity>
     </application>
 
 </manifest>

@@ -18,7 +18,6 @@ public class BaseActivity extends Activity {
 
 	public static final String ACTION_NETWORK_CHANGE = "android.net.conn.CONNECTIVITY_CHANGE";
 	public static final String ACTION_NEW_VERSION = "apk.update.action";
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

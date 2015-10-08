@@ -4,31 +4,26 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-/**
- * @author Tony
- * @description 登录界面
- * @date 2015-10-05
- */
-public class LoginActivity extends BaseActivity {
+public class LostPasswordActivity extends BaseActivity {
 	private TextView mHeadContent;
 	private ImageView mHeadBack;
-	private TextView mLostPassword;
+	private Button mLostPassword;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_login);
+		setContentView(R.layout.activity_lost_password);
 		findViewById();
 		init();
 		mLostPassword.setOnClickListener(new OnClickListener() {
-
+			
 			@Override
 			public void onClick(View arg0) {
-				Intent intent = new Intent(LoginActivity.this,
-						LostPasswordActivity.class);
+				Intent intent=new Intent(LostPasswordActivity.this, ResetPasswordActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -37,11 +32,11 @@ public class LoginActivity extends BaseActivity {
 	private void findViewById() {
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
 		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
-		mLostPassword = (TextView) findViewById(R.id.tv_lost_password);
+		mLostPassword=(Button)findViewById(R.id.btn_lost_password);
 	}
 
 	private void init() {
-		mHeadContent.setText("登 录");
+		mHeadContent.setText("密码重置");
 		mHeadBack.setVisibility(View.VISIBLE);
 	}
 }
