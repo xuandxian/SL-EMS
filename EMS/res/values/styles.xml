@@ -16,7 +16,7 @@
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
-    <!--自定义样式 -->
+    <!-- 自定义样式 -->
     <style name="tv_title_white_style" parent="@android:style/Widget.TextView">
         <item name="android:textSize">@dimen/text_size_title</item>
         <item name="android:textColor">@color/main_white</item>
@@ -25,6 +25,7 @@
         <item name="android:layout_centerHorizontal">true</item>
         <item name="android:layout_centerVertical">true</item>
     </style>
+
     <style name="tv_list_white_style" parent="@android:style/Widget.TextView">
         <item name="android:textSize">@dimen/text_size_list</item>
         <item name="android:textColor">@color/main_white</item>
@@ -33,6 +34,7 @@
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_centerVertical">true</item>
     </style>
+
     <style name="tv_list_primary_style" parent="@android:style/Widget.TextView">
         <item name="android:textSize">@dimen/text_size_list</item>
         <item name="android:textColor">@color/main_primary</item>
@@ -41,6 +43,25 @@
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_centerVertical">true</item>
     </style>
+
+    <style name="tv_info_hint_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_info</item>
+        <item name="android:textColor">@color/main_hint</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <style name="tv_info_secondary_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_info</item>
+        <item name="android:textColor">@color/main_secondary</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
     <style name="tv_info_white_style" parent="@android:style/Widget.TextView">
         <item name="android:textSize">@dimen/text_size_info</item>
         <item name="android:textColor">@color/main_white</item>
@@ -49,6 +70,7 @@
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_centerVertical">true</item>
     </style>
+
     <style name="tv_hint_white_style" parent="@android:style/Widget.TextView">
         <item name="android:textSize">@dimen/text_size_hint</item>
         <item name="android:textColor">@color/main_white</item>
@@ -56,6 +78,12 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <!-- spinner -->
+    <style name="spinner_style">
+        <item name="android:background">@drawable/spinner_selector</item>
+        <item name="android:paddingLeft">5dip</item>
     </style>
 
 </resources>

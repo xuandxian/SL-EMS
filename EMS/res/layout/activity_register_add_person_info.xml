@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <include
+        android:id="@+id/include_register"
+        layout="@layout/headview" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/include_register"
+        android:overScrollMode="always" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#dddddd" >
+
+            <TextView
+                android:id="@+id/register_send_phone"
+                style="@style/tv_info_secondary_style"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="8dp"
+                android:text="验证码已发送到手机15021565127" />
+
+            <RelativeLayout
+                android:id="@+id/rl_register_add_phone"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/register_send_phone"
+                android:background="@color/main_white" >
+
+                <com.overtech.view.EditTextWithDelete
+                    android:id="@+id/et_valicate_code"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="20dp"
+                    android:layout_toLeftOf="@+id/btn_get_valicate_code"
+                    android:background="@drawable/shape_input"
+                    android:hint="手机号" />
+
+                <Button
+                    android:id="@+id/btn_get_valicate_code"
+                    style="@style/tv_hint_white_style"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/shape_button_visiable"
+                    android:text="点击更换" />
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tv_register_person_info"
+                style="@style/tv_info_secondary_style"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/rl_register_add_phone"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="8dp"
+                android:text="填写个人基本信息" />
+
+            <RelativeLayout
+                android:id="@+id/rl_register_add_info"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/tv_register_person_info"
+                android:background="@color/main_white" >
+
+                <com.overtech.view.EditTextWithDelete
+                    android:id="@+id/et_register_add_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/shape_input"
+                    android:hint="姓名" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_register_add_info_2"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/rl_register_add_info"
+                android:layout_marginTop="1px"
+                android:background="@color/main_white" >
+
+                <com.overtech.view.EditTextWithDelete
+                    android:id="@+id/et_register_add_id_card"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/shape_input"
+                    android:hint="身份证号码" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_register_add_info_3"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/rl_register_add_info_2"
+                android:layout_marginTop="1px"
+                android:background="@color/main_white" >
+
+                <com.overtech.view.EditTextWithDelete
+                    android:id="@+id/et_register_add_workno"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/shape_input"
+                    android:hint="上岗证编号" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_register_add_info_4"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/rl_register_add_info_3"
+                android:layout_marginTop="1px"
+                android:background="@color/main_white"
+                android:gravity="center_vertical" >
+
+                <Spinner
+                    android:id="@+id/product_status_spinner"
+                    style="@style/spinner_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+                </Spinner>
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/btn_login"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_below="@+id/rl_register_add_info_4"
+                android:layout_centerHorizontal="true"
+                android:layout_margin="15dp"
+                android:background="@drawable/shape_button_visiable"
+                android:text="下一步"
+                android:textColor="@color/main_white"
+                android:textSize="17sp" />
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

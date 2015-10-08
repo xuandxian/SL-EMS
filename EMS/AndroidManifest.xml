@@ -44,6 +44,7 @@
         <activity android:name=".ResetPasswordActivity" />
         <activity android:name=".ResetPasswordSuccessActivity" />
         <activity android:name=".RegisterActivity" />
+         <activity android:name=".RegisterAddPersonInfoActivity" />
     </application>
 
 </manifest>
