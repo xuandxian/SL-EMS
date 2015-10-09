@@ -15,7 +15,7 @@
         android:layout_marginTop="20dp"
         android:background="@color/main_white" >
 
-        <com.overtech.view.EditTextWithDelete
+        <com.overtech.ems.views.EditTextWithDelete
             android:id="@+id/et_login_username"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -44,7 +44,7 @@
         android:layout_below="@+id/rl_register_1 "
         android:background="@color/main_white" >
 
-        <com.overtech.view.EditTextWithDelete
+        <com.overtech.ems.views.EditTextWithDelete
             android:id="@+id/et_login_password"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"

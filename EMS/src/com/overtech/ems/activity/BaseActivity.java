@@ -1,6 +1,6 @@
-package com.overtech.ems;
+package com.overtech.ems.activity;
 
-import com.overtech.listener.BackGestureListener;
+import com.overtech.ems.listener.BackGestureListener;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;

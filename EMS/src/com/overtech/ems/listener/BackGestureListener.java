@@ -1,6 +1,6 @@
-package com.overtech.listener;
+package com.overtech.ems.listener;
 
-import com.overtech.ems.BaseActivity;
+import com.overtech.ems.activity.BaseActivity;
 
 import android.view.MotionEvent;
 import android.view.GestureDetector.OnGestureListener;

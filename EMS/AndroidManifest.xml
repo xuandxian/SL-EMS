@@ -20,12 +20,12 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
-        android:name="com.overtech.ems.app.MyApplication"
+        android:name="com.overtech.ems.activity.MyApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <activity android:name=".SplashActivity" >
+        <activity android:name="com.overtech.ems.activity.common.SplashActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -37,15 +37,15 @@
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="pRtgsRZyxmePt5lPifOnVSS4" />
 
-        <activity android:name=".BaseActivity" />
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".MainActivity" />
-        <activity android:name=".LostPasswordActivity" />
-        <activity android:name=".ResetPasswordActivity" />
-        <activity android:name=".ResetPasswordSuccessActivity" />
-        <activity android:name=".RegisterActivity" />
-        <activity android:name=".RegisterAddPersonInfoActivity" />
-        <activity android:name=".RegisterAddPersonEduAndWorkActivity" />
+        <activity android:name="com.overtech.ems.activity.BaseActivity" />
+        <activity android:name="com.overtech.ems.activity.common.LoginActivity" />
+        <activity android:name="com.overtech.ems.activity.MainActivity" />
+        <activity android:name="com.overtech.ems.activity.common.LostPasswordActivity" />
+        <activity android:name="com.overtech.ems.activity.common.ResetPasswordActivity" />
+        <activity android:name="com.overtech.ems.activity.common.ResetPasswordSuccessActivity" />
+        <activity android:name="com.overtech.ems.activity.common.RegisterActivity" />
+        <activity android:name="com.overtech.ems.activity.common.RegisterAddPersonInfoActivity" />
+        <activity android:name="com.overtech.ems.activity.common.RegisterAddPersonEduAndWorkActivity" />
     </application>
 
 </manifest>

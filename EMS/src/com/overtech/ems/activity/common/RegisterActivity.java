@@ -1,8 +1,13 @@
-package com.overtech.ems;
+package com.overtech.ems.activity.common;
 
-import com.overtech.utils.Utilities;
-import com.overtech.view.EditTextWithDelete;
-import com.overtech.view.ValicateCode;
+import com.overtech.ems.R;
+import com.overtech.ems.R.drawable;
+import com.overtech.ems.R.id;
+import com.overtech.ems.R.layout;
+import com.overtech.ems.activity.BaseActivity;
+import com.overtech.ems.utils.Utilities;
+import com.overtech.ems.views.EditTextWithDelete;
+import com.overtech.ems.views.ValicateCode;
 
 import android.R.bool;
 import android.content.Context;

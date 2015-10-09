@@ -1,5 +1,6 @@
-package com.overtech.ems;
+package com.overtech.ems.activity;
 
+import com.overtech.ems.R;
 import android.os.Bundle;
 /**
  * @author Tony 

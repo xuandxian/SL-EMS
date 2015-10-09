@@ -15,7 +15,7 @@
         android:layout_marginTop="20dp"
         android:background="@color/main_white" >
 
-        <com.overtech.view.EditTextWithDelete
+        <com.overtech.ems.views.EditTextWithDelete
             android:id="@+id/et_register_phone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
