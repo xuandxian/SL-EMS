@@ -13,6 +13,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 
 /**
  * @author Tony
@@ -27,7 +28,7 @@ public class BaseActivity extends Activity {
 	GestureDetector mGestureDetector;
 	/** 是否需要监听手势关闭功能 */
 	private boolean mNeedBackGesture = false;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -94,4 +95,13 @@ public class BaseActivity extends Activity {
 			}
 		}
 	};
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+		im.hideSoftInputFromWindow(getCurrentFocus()
+				.getApplicationWindowToken(),
+				InputMethodManager.HIDE_NOT_ALWAYS);
+		return super.onTouchEvent(event);
+	}
 }
