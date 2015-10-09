@@ -46,6 +46,9 @@
         <activity android:name="com.overtech.ems.activity.common.RegisterActivity" />
         <activity android:name="com.overtech.ems.activity.common.RegisterAddPersonInfoActivity" />
         <activity android:name="com.overtech.ems.activity.common.RegisterAddPersonEduAndWorkActivity" />
+        <activity android:name="com.overtech.ems.activity.common.RegisterAddIdCardActivity" />
+        <activity android:name="com.overtech.ems.activity.common.RegisterAddWorkCertificateActivity" />
+        <activity android:name="com.overtech.ems.activity.common.RegisterAddOtherCertificateActivity" />
     </application>
 
 </manifest>

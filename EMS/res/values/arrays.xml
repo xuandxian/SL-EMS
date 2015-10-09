@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="city">
+        <item>城市选择</item>
         <item>上海</item>
         <item>北京</item>
         <item>江苏</item>
@@ -8,6 +9,7 @@
         <item>河南</item>
     </string-array>
     <string-array name="sh_zone">
+        <item>区域选择</item>
         <item>黄浦区</item>
         <item>徐汇区</item>
         <item>长宁区</item>
@@ -25,5 +27,18 @@
         <item>青浦区</item>
         <item>奉贤区</item>
         <item>崇明县</item>
+    </string-array>
+    <string-array name="type_evelator">
+        <item>电梯品牌</item>
+        <item>上海三菱</item>
+        <item>日立</item>
+        <item>广日</item>
+    </string-array>
+    <string-array name="education">
+        <item>学历</item>
+        <item>专科</item>
+        <item>本科</item>
+        <item>硕士</item>
+        <item>博士</item>
     </string-array>
 </resources>

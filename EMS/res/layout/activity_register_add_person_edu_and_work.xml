@@ -17,7 +17,9 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:focusable="true"
+            android:focusableInTouchMode="true" >
 
             <TextView
                 android:id="@+id/register_send_phone"
@@ -38,9 +40,9 @@
                 android:background="@color/main_white" >
 
                 <Spinner
-                    android:id="@+id/sp_add_city"
+                    android:id="@+id/sp_add_education"
                     style="@style/spinner_style"
-                    android:entries="@array/city" >
+                    android:entries="@array/education" >
                 </Spinner>
             </RelativeLayout>
 
@@ -133,14 +135,14 @@
                 android:background="@color/main_white" >
 
                 <Spinner
-                    android:id="@+id/sp_add_city2"
+                    android:id="@+id/sp_add_evelator"
                     style="@style/spinner_style"
-                    android:entries="@array/city" >
+                    android:entries="@array/type_evelator" >
                 </Spinner>
             </RelativeLayout>
 
             <Button
-                android:id="@+id/btn_login"
+                android:id="@+id/btn_add_id_card"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_below="@+id/rl_register_add_info_4"
