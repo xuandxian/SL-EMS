@@ -28,10 +28,10 @@ public class ValicateCode {
       
     //default settings  
     private static final int DEFAULT_CODE_LENGTH = 4;  
-    private static final int DEFAULT_FONT_SIZE = 27;  
+    private static final int DEFAULT_FONT_SIZE = 30;  
     private static final int DEFAULT_LINE_NUMBER = 5;  
     private static final int BASE_PADDING_LEFT = 5, RANGE_PADDING_LEFT = 15, BASE_PADDING_TOP = 15, RANGE_PADDING_TOP = 20;  
-    private static final int DEFAULT_WIDTH = 100, DEFAULT_HEIGHT = 50;  
+    private static final int DEFAULT_WIDTH = 130, DEFAULT_HEIGHT = 55;  
       
     //settings decided by the layout xml  
     //canvas width and height  

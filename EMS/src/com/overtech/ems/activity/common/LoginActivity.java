@@ -30,10 +30,11 @@ public class LoginActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+		setNeedBackGesture(false);// 设置需要手势监听
 		findViewById();
 		init();
 		mLogin.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				Intent intent = new Intent(LoginActivity.this,
@@ -51,7 +52,7 @@ public class LoginActivity extends BaseActivity {
 			}
 		});
 		mRegister.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				Intent intent = new Intent(LoginActivity.this,
@@ -59,12 +60,12 @@ public class LoginActivity extends BaseActivity {
 				startActivity(intent);
 			}
 		});
-		
+
 		mHeadBack.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
-				onBackPressed();			
+				onBackPressed();
 			}
 		});
 	}
@@ -73,8 +74,8 @@ public class LoginActivity extends BaseActivity {
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
 		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
 		mLostPassword = (TextView) findViewById(R.id.tv_lost_password);
-		mRegister=(TextView)findViewById(R.id.tv_login_by_message);
-		mLogin=(Button)findViewById(R.id.btn_login);
+		mRegister = (TextView) findViewById(R.id.tv_login_by_message);
+		mLogin = (Button) findViewById(R.id.btn_login);
 	}
 
 	private void init() {

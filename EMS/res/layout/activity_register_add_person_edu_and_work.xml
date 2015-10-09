@@ -10,14 +10,14 @@
     <ScrollView
         android:id="@+id/scrollView1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/include_register"
+        android:background="@color/bg_main"
         android:overScrollMode="always" >
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#dddddd" >
+            android:layout_height="wrap_content" >
 
             <TextView
                 android:id="@+id/register_send_phone"
@@ -101,7 +101,6 @@
                     android:layout_alignRight="@+id/et_register_add_id_card"
                     android:layout_centerVertical="true"
                     android:src="@drawable/icon_cruise_calendar" />
-
             </RelativeLayout>
 
             <RelativeLayout

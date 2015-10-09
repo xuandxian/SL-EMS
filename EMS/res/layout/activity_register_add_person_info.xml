@@ -9,14 +9,14 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@+id/include_register"
+        android:background="@color/bg_main"
         android:overScrollMode="always" >
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#dddddd" >
+            android:layout_height="wrap_content" >
 
             <TextView
                 android:id="@+id/register_send_phone"
@@ -133,6 +133,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_alignParentLeft="true"
+                android:layout_marginTop="-1dp"
                 android:layout_below="@+id/rl_register_add_info_3"
                 android:background="@color/main_white" >
 
@@ -149,7 +150,6 @@
                 android:layout_height="55dp"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/rl_register_add_info_4"
-                android:layout_marginTop="-1px"
                 android:background="@color/main_white" >
 
                 <Spinner
