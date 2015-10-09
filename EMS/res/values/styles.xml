@@ -82,7 +82,9 @@
     <!-- spinner -->
     <style name="spinner_style">
         <item name="android:background">@drawable/spinner_selector</item>
-        <item name="android:paddingLeft">25dip</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:paddingLeft">15dip</item>
     </style>
 
 </resources>
