@@ -59,7 +59,6 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_alignParentRight">true</item>
-        <item name="android:layout_centerVertical">true</item>
     </style>
 
     <style name="tv_info_white_style" parent="@android:style/Widget.TextView">
@@ -83,7 +82,7 @@
     <!-- spinner -->
     <style name="spinner_style">
         <item name="android:background">@drawable/spinner_selector</item>
-        <item name="android:paddingLeft">5dip</item>
+        <item name="android:paddingLeft">25dip</item>
     </style>
 
 </resources>

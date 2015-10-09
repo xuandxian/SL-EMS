@@ -134,15 +134,34 @@
                 android:layout_height="55dp"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/rl_register_add_info_3"
-                android:layout_marginTop="1px"
-                android:background="@color/main_white"
-                android:gravity="center_vertical" >
+                android:background="@color/main_white" >
 
                 <Spinner
-                    android:id="@+id/product_status_spinner"
-                    style="@style/spinner_style"
+                    android:id="@+id/sp_add_city"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
+                    android:layout_height="match_parent"
+                    android:background="@drawable/icon_spinner"
+                    android:entries="@array/city"
+                    android:paddingLeft="15dp" >
+                </Spinner>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_register_add_info_5"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/rl_register_add_info_4"
+                android:layout_marginTop="-1px"
+                android:background="@color/main_white" >
+
+                <Spinner
+                    android:id="@+id/sp_add_zone"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/icon_spinner"
+                    android:entries="@array/sh_zone"
+                    android:paddingLeft="15dp" >
                 </Spinner>
             </RelativeLayout>
 
@@ -151,7 +170,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_alignParentBottom="true"
-                android:layout_below="@+id/rl_register_add_info_4"
+                android:layout_below="@+id/rl_register_add_info_5"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="15dp"
                 android:background="@drawable/shape_button_visiable"

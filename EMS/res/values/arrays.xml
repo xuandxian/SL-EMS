@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="city">
+        <item>上海</item>
+        <item>北京</item>
+        <item>江苏</item>
+        <item>广州</item>
+        <item>河南</item>
+    </string-array>
+    <string-array name="sh_zone">
+        <item>黄浦区</item>
+        <item>徐汇区</item>
+        <item>长宁区</item>
+        <item>静安区</item>
+        <item>闸北区</item>
+        <item>普陀区</item>
+        <item>虹口区</item>
+        <item>杨浦区</item>
+        <item>闵行区</item>
+        <item>宝山区</item>
+        <item>嘉定区</item>
+        <item>浦东新区</item>
+        <item>金山区</item>
+        <item>松江区</item>
+        <item>青浦区</item>
+        <item>奉贤区</item>
+        <item>崇明县</item>
+    </string-array>
+</resources>
