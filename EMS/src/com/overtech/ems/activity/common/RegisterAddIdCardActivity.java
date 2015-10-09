@@ -29,6 +29,5 @@ public class RegisterAddIdCardActivity extends Activity {
 	private void findViewById() {
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
 		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
-		
 	}
 }
