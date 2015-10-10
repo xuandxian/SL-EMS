@@ -15,7 +15,11 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.TypedValue;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
 
 /**
@@ -24,7 +28,7 @@ import android.widget.TextView;
  * @date 2015-10-05
  */
 public class MainActivity extends Activity {
-	
+
 	private Context mContext;
 	private TextView mHeadContent;
 	private SwipeMenuListView mSwipeListView;
@@ -57,10 +61,19 @@ public class MainActivity extends Activity {
 					@Override
 					public void onMenuItemClick(int position, SwipeMenu menu,
 							int index) {
-						Utilities.showToast("你抢了"+position+"位置的单子", mContext);
+						Utilities.showToast("你抢了" + position + "位置的单子",
+								mContext);
 
 					}
 				});
+		mSwipeListView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Utilities.showToast("你点击了" + position + "位置", mContext);
+			}
+		});
 	}
 
 	private void initListView() {
