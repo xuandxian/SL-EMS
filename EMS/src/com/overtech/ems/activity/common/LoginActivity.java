@@ -1,11 +1,8 @@
 package com.overtech.ems.activity.common;
 
 import com.overtech.ems.R;
-import com.overtech.ems.R.id;
-import com.overtech.ems.R.layout;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.MainActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;

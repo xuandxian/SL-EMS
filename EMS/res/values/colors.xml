@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <!-- create by tony 2015-06-28 source comes from tongcheng -->
     <color name="return_money">#ffa733</color>
     <!-- 橙色，用户返利按钮的背景颜色 -->
@@ -63,8 +64,14 @@
     <!-- 橙色 -->
     <color name="home_search_hint">#ffaaaaaa</color>
     <!-- 大首页搜索框hint -->
-    
-    
+
     <color name="line_blue_color">#7FBDED</color>
     <color name="bg_title">#009BEE</color>
+    <!-- nifity dialog -->
+    <color name="divider_color">#11000000</color>
+    <color name="dialog_bg">#ffe74c3c</color>
+    <color name="btn_press_color">#66000000</color>
+    <color name="btn_unpress_color">#22000000</color>
+    
+
 </resources>
