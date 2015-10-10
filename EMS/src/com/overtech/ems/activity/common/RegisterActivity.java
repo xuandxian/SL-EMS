@@ -6,8 +6,8 @@ import com.overtech.ems.R.id;
 import com.overtech.ems.R.layout;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.utils.Utilities;
-import com.overtech.ems.views.EditTextWithDelete;
-import com.overtech.ems.views.ValicateCode;
+import com.overtech.views.EditTextWithDelete;
+import com.overtech.views.ValicateCode;
 
 import android.R.bool;
 import android.content.Context;

@@ -23,7 +23,7 @@ import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView.ScaleType;
 
-import com.handmark.pulltorefresh.library.R;
+import com.overtech.ems.R;
 import com.overtech.views.pulltorefresh.PullToRefreshBase.Mode;
 import com.overtech.views.pulltorefresh.PullToRefreshBase.Orientation;
 

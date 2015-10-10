@@ -15,8 +15,7 @@
  *******************************************************************************/
 package com.overtech.views.pulltorefresh;
 
-import com.handmark.pulltorefresh.library.R;
-import com.handmark.pulltorefresh.library.R.id;
+import com.overtech.ems.R;
 
 import android.annotation.TargetApi;
 import android.content.Context;

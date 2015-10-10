@@ -15,6 +15,10 @@
  *******************************************************************************/
 package com.overtech.views.pulltorefresh;
 
+import com.overtech.ems.R;
+import com.overtech.views.pulltorefresh.internal.EmptyViewMethodAccessor;
+import com.overtech.views.pulltorefresh.internal.LoadingLayout;
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -28,11 +32,6 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-
-import com.handmark.pulltorefresh.library.R;
-import com.handmark.pulltorefresh.library.R.styleable;
-import com.handmark.pulltorefresh.library.internal.EmptyViewMethodAccessor;
-import com.handmark.pulltorefresh.library.internal.LoadingLayout;
 
 public class PullToRefreshListView extends PullToRefreshAdapterViewBase<ListView> {
 

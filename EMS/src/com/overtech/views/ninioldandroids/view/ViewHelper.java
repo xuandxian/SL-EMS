@@ -2,6 +2,9 @@ package com.overtech.views.ninioldandroids.view;
 
 import android.view.View;
 
+import static com.overtech.views.ninioldandroids.view.animation.AnimatorProxy.NEEDS_PROXY;
+import static com.overtech.views.ninioldandroids.view.animation.AnimatorProxy.wrap;
+
 public final class ViewHelper {
     private ViewHelper() {}
 

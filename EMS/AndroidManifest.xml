@@ -39,7 +39,7 @@
 
         <activity android:name="com.overtech.ems.activity.BaseActivity" />
         <activity android:name="com.overtech.ems.activity.common.LoginActivity" />
-        <activity android:name="com.overtech.ems.activity.MainActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.MainActivity" />
         <activity android:name="com.overtech.ems.activity.common.LostPasswordActivity" />
         <activity android:name="com.overtech.ems.activity.common.ResetPasswordActivity" />
         <activity android:name="com.overtech.ems.activity.common.ResetPasswordSuccessActivity" />

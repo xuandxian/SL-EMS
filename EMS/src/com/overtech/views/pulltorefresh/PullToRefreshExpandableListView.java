@@ -15,6 +15,8 @@
  *******************************************************************************/
 package com.overtech.views.pulltorefresh;
 
+import com.overtech.views.pulltorefresh.internal.EmptyViewMethodAccessor;
+
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build.VERSION;
@@ -22,8 +24,6 @@ import android.os.Build.VERSION_CODES;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ExpandableListView;
-
-import com.handmark.pulltorefresh.library.internal.EmptyViewMethodAccessor;
 
 public class PullToRefreshExpandableListView extends PullToRefreshAdapterViewBase<ExpandableListView> {
 

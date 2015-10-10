@@ -9,6 +9,13 @@ import com.overtech.views.dialogeffects.effects.SideFall;
 import com.overtech.views.dialogeffects.effects.SlideLeft;
 import com.overtech.views.dialogeffects.effects.SlideRight;
 import com.overtech.views.dialogeffects.effects.SlideTop;
+import com.overtech.views.dialogeffects.effects.SlideBottom;
+import com.overtech.views.dialogeffects.effects.Fall;
+import com.overtech.views.dialogeffects.effects.RotateBottom;
+import com.overtech.views.dialogeffects.effects.RotateLeft;
+import com.overtech.views.dialogeffects.effects.Slit;
+import com.overtech.views.dialogeffects.effects.Shake;
+
 
 /*
  * Copyright 2014 litao

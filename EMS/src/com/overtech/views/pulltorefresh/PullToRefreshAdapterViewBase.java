@@ -15,8 +15,8 @@
  *******************************************************************************/
 package com.overtech.views.pulltorefresh;
 
+import com.overtech.ems.R;
 import com.overtech.views.pulltorefresh.internal.IndicatorLayout;
-
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
@@ -33,6 +33,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
+import com.overtech.views.pulltorefresh.internal.EmptyViewMethodAccessor;
 
 
 public abstract class PullToRefreshAdapterViewBase<T extends AbsListView> extends PullToRefreshBase<T> implements
