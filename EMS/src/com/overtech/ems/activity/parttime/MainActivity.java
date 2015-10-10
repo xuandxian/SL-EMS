@@ -2,10 +2,13 @@ package com.overtech.ems.activity.parttime;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.adapter.HotWorkAdapter;
+import com.overtech.ems.utils.Utilities;
 import com.overtech.views.swipemenu.SwipeMenu;
 import com.overtech.views.swipemenu.SwipeMenuCreator;
 import com.overtech.views.swipemenu.SwipeMenuItem;
 import com.overtech.views.swipemenu.SwipeMenuListView;
+import com.overtech.views.swipemenu.SwipeMenuListView.OnMenuItemClickListener;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -21,6 +24,8 @@ import android.widget.TextView;
  * @date 2015-10-05
  */
 public class MainActivity extends Activity {
+	
+	private Context mContext;
 	private TextView mHeadContent;
 	private SwipeMenuListView mSwipeListView;
 	private SwipeMenuCreator creator;
@@ -40,12 +45,22 @@ public class MainActivity extends Activity {
 	}
 
 	private void init() {
-		Context mContext = MainActivity.this;
+		mContext = MainActivity.this;
 		mHeadContent.setText("抢单");
 		initListView();
 		mSwipeListView.setMenuCreator(creator);
 		HotWorkAdapter mAdapter = new HotWorkAdapter(mContext);
 		mSwipeListView.setAdapter(mAdapter);
+		mSwipeListView
+				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+					@Override
+					public void onMenuItemClick(int position, SwipeMenu menu,
+							int index) {
+						Utilities.showToast("你抢了"+position+"位置的单子", mContext);
+
+					}
+				});
 	}
 
 	private void initListView() {
@@ -63,9 +78,6 @@ public class MainActivity extends Activity {
 			}
 		};
 	}
-	
-	
-	
 
 	private int dp2px(int dp) {
 		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,

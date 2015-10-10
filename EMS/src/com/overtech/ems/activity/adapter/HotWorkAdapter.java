@@ -1,7 +1,6 @@
 package com.overtech.ems.activity.adapter;
 
 import java.util.List;
-
 import com.overtech.ems.R;
 import com.overtech.ems.entity.Data;
 import android.content.Context;

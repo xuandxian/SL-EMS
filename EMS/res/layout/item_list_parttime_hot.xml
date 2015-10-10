@@ -12,7 +12,7 @@
         android:layout_marginBottom="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="15dp"
-        android:src="@drawable/ic_launcher" />
+        android:src="@drawable/icon_bg_default" />
 
     <RelativeLayout
         android:id="@+id/rl_item_list_hot"
@@ -61,6 +61,14 @@
             android:layout_alignBottom="@+id/textView3"
             android:layout_alignRight="@+id/textView2"
             android:text="2015/10/10" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/icon_bg_hot" />
     </RelativeLayout>
 
 </LinearLayout>
