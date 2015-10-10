@@ -58,7 +58,7 @@ public class HotWorkAdapter extends BaseAdapter {
 			new ViewHolder(convertView);
 		}
 		ViewHolder holder = (ViewHolder) convertView.getTag();
-		holder.tv_name.setText("这是内容:" + position);
+		holder.tv_name.setText("徐家汇景园" + position);
 		return convertView;
 	}
 
