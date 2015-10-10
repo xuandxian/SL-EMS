@@ -1,25 +1,20 @@
 package com.overtech.ems.activity.parttime;
 
 import com.overtech.ems.R;
-import com.overtech.ems.activity.adapter.HotWorkAdapter;
-import com.overtech.ems.utils.Utilities;
-import com.overtech.views.swipemenu.SwipeMenu;
-import com.overtech.views.swipemenu.SwipeMenuCreator;
-import com.overtech.views.swipemenu.SwipeMenuItem;
-import com.overtech.views.swipemenu.SwipeMenuListView;
-import com.overtech.views.swipemenu.SwipeMenuListView.OnMenuItemClickListener;
-
+import com.overtech.ems.activity.parttime.fragment.GrabTaskFragment;
+import com.overtech.ems.activity.parttime.fragment.NearByFragment;
+import com.overtech.ems.activity.parttime.fragment.PersonalZoneFragment;
+import com.overtech.ems.activity.parttime.fragment.TaskListFragment;
 import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -27,12 +22,16 @@ import android.widget.TextView;
  * @description 主界面
  * @date 2015-10-05
  */
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements OnClickListener {
 
 	private Context mContext;
 	private TextView mHeadContent;
-	private SwipeMenuListView mSwipeListView;
-	private SwipeMenuCreator creator;
+	private Fragment mGrabTaskFragment, mNearByFragment, mTaskListFragment,
+			mPersonalZoneFragment;
+	private RelativeLayout mRelGrabTask;
+	private RelativeLayout mRelNearBy;
+	private RelativeLayout mRelTaskList;
+	private RelativeLayout mRelPersonalZone;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,55 +44,55 @@ public class MainActivity extends Activity {
 
 	private void findViewById() {
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
-		mSwipeListView = (SwipeMenuListView) findViewById(R.id.sl_qiandan_listview);
+		mRelGrabTask = (RelativeLayout) findViewById(R.id.rl_parttime_grab_task);
+		mRelNearBy = (RelativeLayout) findViewById(R.id.rl_parttime_nearby);
+		mRelTaskList = (RelativeLayout) findViewById(R.id.rl_parttime_task_list);
+		mRelPersonalZone = (RelativeLayout) findViewById(R.id.rl_parttime_personal_zone);
 	}
 
 	private void init() {
 		mContext = MainActivity.this;
 		mHeadContent.setText("抢单");
-		initListView();
-		mSwipeListView.setMenuCreator(creator);
-		HotWorkAdapter mAdapter = new HotWorkAdapter(mContext);
-		mSwipeListView.setAdapter(mAdapter);
-		mSwipeListView
-				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-
-					@Override
-					public void onMenuItemClick(int position, SwipeMenu menu,
-							int index) {
-						Utilities.showToast("你抢了" + position + "位置的单子",
-								mContext);
-
-					}
-				});
-		mSwipeListView.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				Utilities.showToast("你点击了" + position + "位置", mContext);
-			}
-		});
+		FragmentManager manager = getFragmentManager();
+		FragmentTransaction transaction = manager.beginTransaction();
+		mGrabTaskFragment = new GrabTaskFragment();
+		transaction.replace(R.id.fragment_content, mGrabTaskFragment);
+		transaction.commit();
+		mRelGrabTask.setOnClickListener(this);
+		mRelNearBy.setOnClickListener(this);
+		mRelTaskList.setOnClickListener(this);
+		mRelPersonalZone.setOnClickListener(this);
 	}
 
-	private void initListView() {
-		creator = new SwipeMenuCreator() {
-			@Override
-			public void create(SwipeMenu menu) {
-				SwipeMenuItem openItem = new SwipeMenuItem(MainActivity.this);
-				openItem.setBackground(new ColorDrawable(Color.rgb(0x00, 0xff,
-						0x00)));
-				openItem.setWidth(dp2px(90));
-				openItem.setTitle("抢");
-				openItem.setTitleSize(18);
-				openItem.setTitleColor(Color.WHITE);
-				menu.addMenuItem(openItem);
-			}
-		};
-	}
-
-	private int dp2px(int dp) {
-		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
-				getResources().getDisplayMetrics());
+	@Override
+	public void onClick(View v) {
+		FragmentManager manager = getFragmentManager();
+		FragmentTransaction transaction = manager.beginTransaction();
+		switch (v.getId()) {
+		case R.id.rl_parttime_grab_task:
+			mHeadContent.setText("抢单");
+			mGrabTaskFragment = new GrabTaskFragment();
+			transaction.replace(R.id.fragment_content, mGrabTaskFragment);
+			transaction.commit();
+			break;
+		case R.id.rl_parttime_nearby:
+			mHeadContent.setText("附近");
+			mNearByFragment = new NearByFragment();
+			transaction.replace(R.id.fragment_content, mNearByFragment);
+			transaction.commit();
+			break;
+		case R.id.rl_parttime_task_list:
+			mHeadContent.setText("任务单");
+			mTaskListFragment = new TaskListFragment();
+			transaction.replace(R.id.fragment_content, mTaskListFragment);
+			transaction.commit();
+			break;
+		case R.id.rl_parttime_personal_zone:
+			mHeadContent.setText("我的");
+			mPersonalZoneFragment = new PersonalZoneFragment();
+			transaction.replace(R.id.fragment_content, mPersonalZoneFragment);
+			transaction.commit();
+			break;
+		}
 	}
 }

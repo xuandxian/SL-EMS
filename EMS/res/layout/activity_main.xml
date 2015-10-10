@@ -8,161 +8,116 @@
         android:id="@+id/include_parttime_main"
         layout="@layout/headview" />
 
-    <RelativeLayout
-        android:id="@+id/relativeLayout1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/include_parttime_main" >
-
-        <RelativeLayout
-            android:id="@+id/rl_do_filter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="5dp"
-            android:focusable="true"
-            android:focusableInTouchMode="true" >
-
-            <ImageView
-                android:id="@+id/iv_parttime_do_fifter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/selector_do_fifter"
-                android:contentDescription="@null" />
-
-            <TextView
-                android:id="@+id/tv_parttime_do_fifter"
-                style="@style/tv_hint_hint_style"
-                android:layout_below="@+id/iv_parttime_do_fifter"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="-5dp"
-                android:text="筛选" />
-
-            <com.overtech.views.EditTextWithDelete
-                android:id="@+id/et_do_parttime_search"
-                android:layout_width="match_parent"
-                android:layout_height="38dp"
-                android:layout_centerVertical="true"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="8dp"
-                android:layout_toRightOf="@+id/tv_parttime_do_fifter"
-                android:background="@drawable/shape_input"
-                android:drawableLeft="@drawable/icon_search"
-                android:hint="小区名称、所属区域"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp" />
-        </RelativeLayout>
-    </RelativeLayout>
-
-    <com.overtech.views.swipemenu.SwipeMenuListView
-        android:id="@+id/sl_qiandan_listview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/tab_parttime"
-        android:layout_below="@+id/relativeLayout1" />
-
     <LinearLayout
         android:id="@+id/tab_parttime"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
+        android:baselineAligned="false"
         android:orientation="horizontal" >
 
         <RelativeLayout
-            android:id="@+id/rl_parttime_qiandan"
+            android:id="@+id/rl_parttime_grab_task"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1" >
 
             <ImageView
-                android:id="@+id/iv_qiandan"
+                android:id="@+id/iv_grab_task"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/selector_do_qiandan" />
+                android:background="@drawable/selector_do_grab_task" />
 
             <TextView
-                android:id="@+id/tv_qiandan"
+                android:id="@+id/tv_grab_taskn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/iv_qiandan"
+                android:layout_below="@+id/iv_grab_task"
                 android:layout_centerHorizontal="true"
                 android:text="抢单" />
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/rl_parttime_qiandan2"
+            android:id="@+id/rl_parttime_nearby"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1" >
 
             <ImageView
-                android:id="@+id/iv_qiandan2"
+                android:id="@+id/iv_nearby"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/selector_do_qiandan" />
+                android:background="@drawable/selector_do_nearby" />
 
             <TextView
-                android:id="@+id/tv_qiandan2"
+                android:id="@+id/tv_nearby"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/iv_qiandan2"
+                android:layout_below="@+id/iv_nearby"
                 android:layout_centerHorizontal="true"
-                android:text="抢单" />
+                android:text="附近" />
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/rl_parttime_qiandan3"
+            android:id="@+id/rl_parttime_task_list"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1" >
 
             <ImageView
-                android:id="@+id/iv_qiandan3"
+                android:id="@+id/iv_task_list"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/selector_do_qiandan" />
+                android:background="@drawable/selector_do_task_list" />
 
             <TextView
-                android:id="@+id/tv_qiandan3"
+                android:id="@+id/tv_task_list"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/iv_qiandan3"
+                android:layout_below="@+id/iv_task_list"
                 android:layout_centerHorizontal="true"
-                android:text="抢单" />
+                android:text="任务单" />
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/rl_parttime_qiandan4"
+            android:id="@+id/rl_parttime_personal_zone"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1" >
 
             <ImageView
-                android:id="@+id/iv_qianda4"
+                android:id="@+id/iv_personal_zone"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/selector_do_qiandan" />
+                android:background="@drawable/selector_do_personal_zone" />
 
             <TextView
-                android:id="@+id/tv_qiandan4"
+                android:id="@+id/tv_personal_zone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/iv_qianda4"
+                android:layout_below="@+id/iv_personal_zone"
                 android:layout_centerHorizontal="true"
-                android:text="抢单" />
+                android:text="我的" />
         </RelativeLayout>
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/fragment_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/tab_parttime"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/include_parttime_main"
+        android:background="@color/main_white" >
+    </RelativeLayout>
 
 </RelativeLayout>
