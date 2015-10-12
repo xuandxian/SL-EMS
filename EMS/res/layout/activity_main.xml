@@ -29,7 +29,7 @@
                 android:layout_height="30dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/selector_do_grab_task" />
+                android:background="@drawable/shopping_home_tab_take_out_selected" />
 
             <TextView
                 android:id="@+id/tv_grab_taskn"
@@ -52,7 +52,7 @@
                 android:layout_height="30dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/selector_do_nearby" />
+                android:background="@drawable/shopping_home_tab_found" />
 
             <TextView
                 android:id="@+id/tv_nearby"
@@ -75,7 +75,7 @@
                 android:layout_height="30dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/selector_do_task_list" />
+                android:background="@drawable/shopping_home_tab_order" />
 
             <TextView
                 android:id="@+id/tv_task_list"
@@ -98,7 +98,7 @@
                 android:layout_height="30dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="5dp"
-                android:background="@drawable/selector_do_personal_zone" />
+                android:background="@drawable/shopping_home_tab_personal" />
 
             <TextView
                 android:id="@+id/tv_personal_zone"
