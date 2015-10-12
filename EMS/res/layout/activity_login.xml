@@ -53,7 +53,7 @@
             android:layout_marginLeft="20dp"
             android:layout_toLeftOf="@+id/tb_change_password"
             android:background="@drawable/shape_input"
-            android:ems="10"
+            android:maxLength="18"
             android:hint="密码"
             android:inputType="textPassword" />
 
