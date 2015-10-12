@@ -62,7 +62,6 @@ public class GrabTaskFragment extends Fragment {
 							int index) {
 						Utilities.showToast("你抢了" + position + "位置的单子",
 								mActivity);
-
 					}
 				});
 		mSwipeListView.setOnItemClickListener(new OnItemClickListener() {
