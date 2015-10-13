@@ -91,7 +91,18 @@ public class MainActivity extends Activity implements OnClickListener {
 			mHeadContent.setText("抢单");
 			mTabGrabTaskIv
 					.setBackgroundResource(R.drawable.shopping_home_tab_take_out_selected);
-			mTabGrabTaskContent.setTextColor(Color.argb(255, 255, 0, 255));
+			mTabGrabTaskContent.setTextColor(Color.argb(255, 49, 144, 232));
+			mTabNearByIv
+					.setBackgroundResource(R.drawable.shopping_home_tab_found);
+			mTabNearByContent.setTextColor(Color.argb(255, 153, 153, 153));
+			mTabTaskListIv
+					.setBackgroundResource(R.drawable.shopping_home_tab_order);
+			mTabTaskListContent.setTextColor(Color.argb(255, 153, 153, 153));
+			mTabPersonalZoneIv
+					.setBackgroundResource(R.drawable.shopping_home_tab_personal);
+			mTabPersonalZoneContent
+					.setTextColor(Color.argb(255, 153, 153, 153));
+
 			mGrabTaskFragment = new GrabTaskFragment();
 			transaction.replace(R.id.fragment_content, mGrabTaskFragment);
 			transaction.commit();
@@ -100,7 +111,17 @@ public class MainActivity extends Activity implements OnClickListener {
 			mHeadContent.setText("附近");
 			mTabNearByIv
 					.setBackgroundResource(R.drawable.shopping_home_tab_found_selected);
-			mTabNearByContent.setTextColor(Color.argb(255, 255, 0, 255));
+			mTabNearByContent.setTextColor(Color.argb(255, 49, 144, 232));
+			mTabGrabTaskIv
+					.setBackgroundResource(R.drawable.shopping_home_tab_take_out);
+			mTabGrabTaskContent.setTextColor(Color.argb(255, 153, 153, 153));
+			mTabTaskListIv
+					.setBackgroundResource(R.drawable.shopping_home_tab_order);
+			mTabTaskListContent.setTextColor(Color.argb(255, 153, 153, 153));
+			mTabPersonalZoneIv
+					.setBackgroundResource(R.drawable.shopping_home_tab_personal);
+			mTabPersonalZoneContent
+					.setTextColor(Color.argb(255, 153, 153, 153));
 			mNearByFragment = new NearByFragment();
 			transaction.replace(R.id.fragment_content, mNearByFragment);
 			transaction.commit();
@@ -109,7 +130,17 @@ public class MainActivity extends Activity implements OnClickListener {
 			mHeadContent.setText("任务单");
 			mTabTaskListIv
 					.setBackgroundResource(R.drawable.shopping_home_tab_order_selected);
-			mTabTaskListContent.setTextColor(Color.argb(255, 255, 0, 255));
+			mTabTaskListContent.setTextColor(Color.argb(255, 49, 144, 232));
+			mTabNearByIv
+					.setBackgroundResource(R.drawable.shopping_home_tab_found);
+			mTabNearByContent.setTextColor(Color.argb(255, 153, 153, 153));
+			mTabGrabTaskIv
+					.setBackgroundResource(R.drawable.shopping_home_tab_take_out);
+			mTabGrabTaskContent.setTextColor(Color.argb(255, 153, 153, 153));
+			mTabPersonalZoneIv
+					.setBackgroundResource(R.drawable.shopping_home_tab_personal);
+			mTabPersonalZoneContent
+					.setTextColor(Color.argb(255, 153, 153, 153));
 			mTaskListFragment = new TaskListFragment();
 			transaction.replace(R.id.fragment_content, mTaskListFragment);
 			transaction.commit();
@@ -118,7 +149,16 @@ public class MainActivity extends Activity implements OnClickListener {
 			mHeadContent.setText("我的");
 			mTabPersonalZoneIv
 					.setBackgroundResource(R.drawable.shopping_home_tab_personal_selected);
-			mTabPersonalZoneContent.setTextColor(Color.argb(255, 255, 0, 255));
+			mTabPersonalZoneContent.setTextColor(Color.argb(255, 49, 144, 232));
+			mTabTaskListIv
+					.setBackgroundResource(R.drawable.shopping_home_tab_order);
+			mTabTaskListContent.setTextColor(Color.argb(255, 153, 153, 153));
+			mTabNearByIv
+					.setBackgroundResource(R.drawable.shopping_home_tab_found);
+			mTabNearByContent.setTextColor(Color.argb(255, 153, 153, 153));
+			mTabGrabTaskIv
+					.setBackgroundResource(R.drawable.shopping_home_tab_take_out);
+			mTabGrabTaskContent.setTextColor(Color.argb(255, 153, 153, 153));
 			mPersonalZoneFragment = new PersonalZoneFragment();
 			transaction.replace(R.id.fragment_content, mPersonalZoneFragment);
 			transaction.commit();
