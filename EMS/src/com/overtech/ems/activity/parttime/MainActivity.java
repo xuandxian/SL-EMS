@@ -5,7 +5,6 @@ import com.overtech.ems.activity.parttime.fragment.GrabTaskFragment;
 import com.overtech.ems.activity.parttime.fragment.NearByFragment;
 import com.overtech.ems.activity.parttime.fragment.PersonalZoneFragment;
 import com.overtech.ems.activity.parttime.fragment.TaskListFragment;
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -83,7 +82,6 @@ public class MainActivity extends Activity implements OnClickListener {
 		mRelPersonalZone.setOnClickListener(this);
 	}
 
-	@SuppressLint("NewApi")
 	@Override
 	public void onClick(View v) {
 		FragmentManager manager = getFragmentManager();
