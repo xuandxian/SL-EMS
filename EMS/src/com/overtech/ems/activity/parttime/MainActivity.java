@@ -1,5 +1,6 @@
 package com.overtech.ems.activity.parttime;
 
+import com.baidu.mapapi.SDKInitializer;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.parttime.fragment.GrabTaskFragment;
 import com.overtech.ems.activity.parttime.fragment.NearByFragment;
@@ -46,6 +47,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		SDKInitializer.initialize(getApplicationContext());
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
 		findViewById();

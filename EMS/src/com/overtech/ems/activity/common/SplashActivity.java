@@ -1,20 +1,22 @@
 package com.overtech.ems.activity.common;
 
 import com.overtech.ems.R;
-import com.overtech.ems.activity.BaseActivity;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.Window;
 /**
  * @author Tony 
  * @description 欢迎界面
  * @date 2015-10-05 
  */
-public class SplashActivity extends BaseActivity {
+public class SplashActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.splash);
 		new Handler().postDelayed(new Runnable() {
 
@@ -25,7 +27,7 @@ public class SplashActivity extends BaseActivity {
 				startActivity(intent);
 				finish();
 			}
-		}, 3000);
+		}, 2000);
 	}
 
 }
