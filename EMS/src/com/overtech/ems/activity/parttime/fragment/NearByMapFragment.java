@@ -21,7 +21,6 @@ import com.baidu.mapapi.model.LatLng;
 import com.overtech.ems.R;
 import com.overtech.ems.entity.Data;
 import com.overtech.ems.utils.Utilities;
-
 import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Bundle;
