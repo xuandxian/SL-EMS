@@ -1,6 +1,5 @@
 package com.overtech.ems.activity.parttime.fragment;
 
-import com.baidu.location.ac;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.adapter.HotWorkAdapter;
 import com.overtech.ems.utils.Utilities;
@@ -9,7 +8,6 @@ import com.overtech.views.swipemenu.SwipeMenuCreator;
 import com.overtech.views.swipemenu.SwipeMenuItem;
 import com.overtech.views.swipemenu.SwipeMenuListView;
 import com.overtech.views.swipemenu.SwipeMenuListView.OnMenuItemClickListener;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.graphics.Color;
