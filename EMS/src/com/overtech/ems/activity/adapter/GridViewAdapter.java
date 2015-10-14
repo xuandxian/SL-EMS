@@ -76,7 +76,7 @@ public class GridViewAdapter extends BaseAdapter {
 		LayerDrawable la = null;
 		if (isChice[post] == true) {
 			bitmap2 = BitmapFactory.decodeResource(context.getResources(),
-					R.drawable.icon_bg_hot);
+					R.drawable.icon_map_lable);
 		}
 		if (bitmap2 != null) {
 			Drawable[] array = new Drawable[2];
