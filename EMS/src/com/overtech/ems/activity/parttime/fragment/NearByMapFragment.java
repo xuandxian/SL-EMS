@@ -1,12 +1,14 @@
 package com.overtech.ems.activity.parttime.fragment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
+import com.baidu.mapapi.map.BaiduMap.OnMarkerClickListener;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapStatusUpdate;
@@ -18,6 +20,8 @@ import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.overtech.ems.R;
 import com.overtech.ems.entity.Data;
+import com.overtech.ems.utils.Utilities;
+
 import android.app.Fragment;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -31,6 +35,7 @@ import android.widget.Button;
 public class NearByMapFragment extends Fragment {
 
 	ArrayList<Data> dataList = new ArrayList<Data>();
+	private HashMap<String, Data> mHashMap = new HashMap<String, Data>();
 	private MapView mMapView = null;
 	private BaiduMap mBaiduMap = null;
 	private LocationClient mLocationClient;
@@ -48,6 +53,7 @@ public class NearByMapFragment extends Fragment {
 		initBaiduMapView(view);
 		getDataList();
 		addOverLay(dataList);
+		setMarkerClick();
 		return view;
 	}
 
@@ -94,10 +100,12 @@ public class NearByMapFragment extends Fragment {
 
 	private ArrayList<Data> getDataList() {
 		dataList = new ArrayList<Data>();
-		Data data1 = new Data("XXX小区1", "31.20137", "121.439246");
-		Data data2 = new Data("XXX小区2", "31.10137", "121.239546");
+		Data data1 = new Data("1", "XXX小区1", "31.20137", "121.439246");
+		Data data2 = new Data("2", "XXX小区2", "31.10137", "121.239546");
+		Data data3 = new Data("3", "XXX小区3", "31.30237", "121.339246");
 		dataList.add(data1);
 		dataList.add(data2);
+		dataList.add(data3);
 		return dataList;
 	}
 
@@ -129,9 +137,23 @@ public class NearByMapFragment extends Fragment {
 				mOverlayOptions = new MarkerOptions().position(ll).icon(bitmap)
 						.zIndex(9).draggable(false);
 				mMarker = (Marker) (mBaiduMap.addOverlay(mOverlayOptions));
+				mMarker.setZIndex(Integer.parseInt(data.id));
+				mHashMap.put(data.id, data);
 			}
 		}
 
+	}
+
+	private void setMarkerClick() {
+		mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener() {
+
+			@Override
+			public boolean onMarkerClick(final Marker marker) {
+				data = mHashMap.get(String.valueOf(marker.getZIndex()));
+				Utilities.showToast("你点击了：" + data.name, getActivity());
+				return true;
+			}
+		});
 	}
 
 	@Override
