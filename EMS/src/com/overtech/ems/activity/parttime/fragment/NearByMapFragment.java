@@ -23,6 +23,7 @@ import com.overtech.ems.entity.Data;
 import com.overtech.ems.utils.Utilities;
 
 import android.app.Fragment;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -70,6 +71,7 @@ public class NearByMapFragment extends Fragment {
 		option.setScanSpan(5000); // 设置发起定位请求的间隔时间为5000ms
 		mLocationClient.setLocOption(option); // 设置定位参数
 		mLocationClient.start();
+		mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(16.0f));// 缩放到16
 	}
 
 	private void setBaiduMapMarker(LatLng point) {
@@ -100,12 +102,16 @@ public class NearByMapFragment extends Fragment {
 
 	private ArrayList<Data> getDataList() {
 		dataList = new ArrayList<Data>();
-		Data data1 = new Data("1", "XXX小区1", "31.20137", "121.439246");
-		Data data2 = new Data("2", "XXX小区2", "31.10137", "121.239546");
-		Data data3 = new Data("3", "XXX小区3", "31.30237", "121.339246");
+		Data data1 = new Data("1", "虹枫大楼", "121.437466", "31.200715");
+		Data data2 = new Data("2", "虹交小区", "121.439693", "31.200386");
+		Data data3 = new Data("3", "明仕苑", "121.441279", "31.202749");
+		Data data4 = new Data("4", "乐山公寓", "121.439312", "31.203274");
+		Data data5 = new Data("5", "番禺大楼", "121.43429", "31.202101");
 		dataList.add(data1);
 		dataList.add(data2);
 		dataList.add(data3);
+		dataList.add(data4);
+		dataList.add(data5);
 		return dataList;
 	}
 
@@ -124,18 +130,19 @@ public class NearByMapFragment extends Fragment {
 			String lat = data.latitude;
 			String lon = data.longitude;
 			if (!(TextUtils.isEmpty(lat) || TextUtils.isEmpty(lon))) {
-				LatLng ll = new LatLng(Double.parseDouble(lat),
-						Double.parseDouble(lon));
+				LatLng ll = new LatLng(Double.parseDouble(lon),
+						Double.parseDouble(lat));
 				MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
 				mBaiduMap.animateMapStatus(u);
 				Button button = new Button(getActivity());
 				button.setBackgroundResource(R.drawable.map_popcontent);
 				button.setGravity(Gravity.CENTER);
-				button.setPadding(5, 0, 5, 20);
+				button.setPadding(5, 0, 5, 30);
+				button.setTextColor(Color.WHITE);
 				button.setText(data.name);
 				bitmap = BitmapDescriptorFactory.fromView(button);
 				mOverlayOptions = new MarkerOptions().position(ll).icon(bitmap)
-						.zIndex(9).draggable(false);
+						.zIndex(11).draggable(false);
 				mMarker = (Marker) (mBaiduMap.addOverlay(mOverlayOptions));
 				mMarker.setZIndex(Integer.parseInt(data.id));
 				mHashMap.put(data.id, data);
