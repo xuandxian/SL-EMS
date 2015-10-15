@@ -3,6 +3,7 @@ package com.overtech.ems.activity;
 import java.io.IOException;
 import java.util.Vector;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.overtech.ems.R;
+import com.overtech.ems.utils.Utilities;
 import com.overtech.views.zxing.camera.CameraManager;
 import com.overtech.views.zxing.decoding.CaptureActivityHandler;
 import com.overtech.views.zxing.decoding.InactivityTimer;
@@ -48,12 +50,14 @@ public class ScanCodeActivity extends Activity implements Callback {
 	private boolean vibrate;
 	private ImageView mDoBack;
 	private TextView mHeadContent;
+	private Context mContext;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_task_list_capture);
+		mContext=ScanCodeActivity.this;
 		CameraManager.init(getApplication());
 		viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
@@ -121,9 +125,9 @@ public class ScanCodeActivity extends Activity implements Callback {
 		playBeepSoundAndVibrate();
 		String resultString = result.getText();
 		if (resultString.equals("")) {
-			Toast.makeText(ScanCodeActivity.this, "Scan failed!",
-					Toast.LENGTH_SHORT).show();
+			Utilities.showToast("扫描失败", mContext);
 		} else {
+			Utilities.showToast("扫描成功", mContext);
 			Intent resultIntent = new Intent();
 			Bundle bundle = new Bundle();
 			bundle.putString("result", resultString);

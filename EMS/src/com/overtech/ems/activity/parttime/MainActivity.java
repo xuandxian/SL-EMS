@@ -48,7 +48,6 @@ public class MainActivity extends Activity implements OnClickListener {
 	private ImageView mTabNearByIv;
 	private ImageView mTabTaskListIv;
 	private ImageView mTabPersonalZoneIv;
-	private final static int SCANNIN_GREQUEST_CODE = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -179,10 +178,11 @@ public class MainActivity extends Activity implements OnClickListener {
 			break;
 		case R.id.tv_headTitleRight:
 			Intent intent = new Intent();
+//			intent.setClass(MainActivity.this, TaskListScanActivity.class);
 			intent.setClass(MainActivity.this, ScanCodeActivity.class);
-			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-			startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
+			startActivity(intent);
 			break;
 		}
 	}
+
 }
