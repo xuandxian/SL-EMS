@@ -2,17 +2,17 @@ package com.overtech.ems.activity.parttime;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.overtech.ems.R;
+import com.overtech.ems.activity.MipcaActivityCapture;
 import com.overtech.ems.activity.parttime.fragment.GrabTaskFragment;
 import com.overtech.ems.activity.parttime.fragment.NearByFragment;
 import com.overtech.ems.activity.parttime.fragment.PersonalZoneFragment;
 import com.overtech.ems.activity.parttime.fragment.TaskListFragment;
-import com.overtech.ems.utils.Utilities;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
@@ -32,8 +32,10 @@ public class MainActivity extends Activity implements OnClickListener {
 	private Context mContext;
 	private TextView mHeadContent;
 	private TextView mHeadRightContent;
-	private Fragment mGrabTaskFragment, mNearByFragment, mTaskListFragment,
-			mPersonalZoneFragment;
+	private Fragment mGrabTaskFragment;
+	private Fragment mTaskListFragment;
+	private Fragment mPersonalZoneFragment;
+	private Fragment mNearByFragment;
 	private RelativeLayout mRelGrabTask;
 	private RelativeLayout mRelNearBy;
 	private RelativeLayout mRelTaskList;
@@ -46,6 +48,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	private ImageView mTabNearByIv;
 	private ImageView mTabTaskListIv;
 	private ImageView mTabPersonalZoneIv;
+	private final static int SCANNIN_GREQUEST_CODE = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -175,7 +178,10 @@ public class MainActivity extends Activity implements OnClickListener {
 			transaction.commit();
 			break;
 		case R.id.tv_headTitleRight:
-			Utilities.showToast("dianji", mContext);
+			Intent intent = new Intent();
+			intent.setClass(MainActivity.this, MipcaActivityCapture.class);
+			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
 			break;
 		}
 	}
