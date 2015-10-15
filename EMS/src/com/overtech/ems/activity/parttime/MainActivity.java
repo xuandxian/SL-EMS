@@ -6,6 +6,8 @@ import com.overtech.ems.activity.parttime.fragment.GrabTaskFragment;
 import com.overtech.ems.activity.parttime.fragment.NearByFragment;
 import com.overtech.ems.activity.parttime.fragment.PersonalZoneFragment;
 import com.overtech.ems.activity.parttime.fragment.TaskListFragment;
+import com.overtech.ems.utils.Utilities;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -29,6 +31,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	private Context mContext;
 	private TextView mHeadContent;
+	private TextView mHeadRightContent;
 	private Fragment mGrabTaskFragment, mNearByFragment, mTaskListFragment,
 			mPersonalZoneFragment;
 	private RelativeLayout mRelGrabTask;
@@ -56,6 +59,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	private void findViewById() {
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
+		mHeadRightContent = (TextView) findViewById(R.id.tv_headTitleRight);
 		mRelGrabTask = (RelativeLayout) findViewById(R.id.rl_parttime_grab_task);
 		mRelNearBy = (RelativeLayout) findViewById(R.id.rl_parttime_nearby);
 		mRelTaskList = (RelativeLayout) findViewById(R.id.rl_parttime_task_list);
@@ -82,6 +86,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		mRelNearBy.setOnClickListener(this);
 		mRelTaskList.setOnClickListener(this);
 		mRelPersonalZone.setOnClickListener(this);
+		mHeadRightContent.setOnClickListener(this);
 	}
 
 	@Override
@@ -91,6 +96,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.rl_parttime_grab_task:
 			mHeadContent.setText("抢单");
+			mHeadRightContent.setText("");
 			mTabGrabTaskIv
 					.setBackgroundResource(R.drawable.shopping_home_tab_take_out_selected);
 			mTabGrabTaskContent.setTextColor(Color.argb(255, 49, 144, 232));
@@ -111,6 +117,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			break;
 		case R.id.rl_parttime_nearby:
 			mHeadContent.setText("附近");
+			mHeadRightContent.setText("");
 			mTabNearByIv
 					.setBackgroundResource(R.drawable.shopping_home_tab_found_selected);
 			mTabNearByContent.setTextColor(Color.argb(255, 49, 144, 232));
@@ -130,6 +137,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			break;
 		case R.id.rl_parttime_task_list:
 			mHeadContent.setText("任务单");
+			mHeadRightContent.setText("开始");
 			mTabTaskListIv
 					.setBackgroundResource(R.drawable.shopping_home_tab_order_selected);
 			mTabTaskListContent.setTextColor(Color.argb(255, 49, 144, 232));
@@ -149,6 +157,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			break;
 		case R.id.rl_parttime_personal_zone:
 			mHeadContent.setText("我的");
+			mHeadRightContent.setText("");
 			mTabPersonalZoneIv
 					.setBackgroundResource(R.drawable.shopping_home_tab_personal_selected);
 			mTabPersonalZoneContent.setTextColor(Color.argb(255, 49, 144, 232));
@@ -164,6 +173,9 @@ public class MainActivity extends Activity implements OnClickListener {
 			mPersonalZoneFragment = new PersonalZoneFragment();
 			transaction.replace(R.id.fragment_content, mPersonalZoneFragment);
 			transaction.commit();
+			break;
+		case R.id.tv_headTitleRight:
+			Utilities.showToast("dianji", mContext);
 			break;
 		}
 	}

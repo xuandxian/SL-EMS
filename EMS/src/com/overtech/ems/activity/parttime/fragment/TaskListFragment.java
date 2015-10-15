@@ -26,7 +26,6 @@ public class TaskListFragment extends Fragment {
 	private SwipeMenuListView mSwipeListView;
 	private SwipeMenuCreator creator;
 	private Activity mActivity;
-	private View view;
 
 	@Override
 	public void onAttach(Activity activity) {
