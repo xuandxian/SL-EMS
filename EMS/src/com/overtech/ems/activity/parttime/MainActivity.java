@@ -178,7 +178,6 @@ public class MainActivity extends Activity implements OnClickListener {
 			break;
 		case R.id.tv_headTitleRight:
 			Intent intent = new Intent();
-//			intent.setClass(MainActivity.this, TaskListScanActivity.class);
 			intent.setClass(MainActivity.this, ScanCodeActivity.class);
 			startActivity(intent);
 			break;
