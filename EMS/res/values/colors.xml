@@ -72,6 +72,10 @@
     <color name="dialog_bg">#ffe74c3c</color>
     <color name="btn_press_color">#66000000</color>
     <color name="btn_unpress_color">#22000000</color>
+    <!-- 二维码 -->
+    <color name="result_view">#b0000000</color>
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="possible_result_points">#c0ffff00</color>
     
 
 </resources>
