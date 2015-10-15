@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 public class NearByFragment extends Fragment {
-	
+
 	private Button mNearByMapBtn;
 	private Button mNearByListBtn;
 
@@ -28,20 +28,20 @@ public class NearByFragment extends Fragment {
 	}
 
 	private void init(View view) {
-		mNearByMapBtn=(Button)view.findViewById(R.id.btn_nearby_title_map);
-		mNearByListBtn=(Button)view.findViewById(R.id.btn_nearby_title_list);
+		mNearByMapBtn = (Button) view.findViewById(R.id.btn_nearby_title_map);
+		mNearByListBtn = (Button) view.findViewById(R.id.btn_nearby_title_list);
 	}
 
 	private void initEvents() {
 		mNearByMapBtn.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				initMapView();
 			}
 		});
 		mNearByListBtn.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				initNearByListView();
@@ -52,17 +52,17 @@ public class NearByFragment extends Fragment {
 	private void initMapView() {
 		FragmentManager manager = getFragmentManager();
 		FragmentTransaction transaction = manager.beginTransaction();
-		Fragment mNearByMap=new NearByMapFragment();
+		Fragment mNearByMap = new NearByMapFragment();
 		transaction.replace(R.id.rl_nearby_content, mNearByMap);
 		transaction.commit();
 	}
-	
+
 	private void initNearByListView() {
 		FragmentManager manager = getFragmentManager();
 		FragmentTransaction transaction = manager.beginTransaction();
-		Fragment mNearByList=new NearByListFragment();
+		Fragment mNearByList = new NearByListFragment();
 		transaction.replace(R.id.rl_nearby_content, mNearByList);
 		transaction.commit();
 	}
-	
+
 }
