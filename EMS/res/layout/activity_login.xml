@@ -74,17 +74,10 @@
 
     <Button
         android:id="@+id/btn_login"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentLeft="true"
         android:layout_below="@+id/rl_register_2"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
-        android:layout_marginTop="25dp"
         android:background="@drawable/shape_button_visiable"
-        android:text="登录"
-        android:textColor="@color/main_white"
-        android:textSize="17sp" />
+        style="@style/btn_title_white_style"
+        android:text="登录" />
 
     <TextView
         android:id="@+id/tv_lost_password"

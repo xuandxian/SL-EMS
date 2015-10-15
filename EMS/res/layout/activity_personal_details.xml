@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/main_white"
@@ -30,19 +30,19 @@
                 android:paddingTop="8dip" >
 
                 <TextView
-                    android:layout_width="0dip"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:gravity="left"
-                    android:text="头像"
-                    android:textSize="24dip" />
+                    android:id="@+id/textView1"
+                    style="@style/tv_title_primary_style"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="头像" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
                     android:src="@drawable/icon_personal_my" />
-            </LinearLayout>
+            </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -52,19 +52,127 @@
                 android:padding="15dip" >
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/tv_title_primary_style"
                     android:layout_alignParentLeft="true"
-                    android:text="ID"
-                    android:textSize="24dip" />
+                    android:text="ID" />
 
                 <TextView
+                    style="@style/tv_list_primary_style"
+                    android:layout_alignParentRight="true"
+                    android:text="10012" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dip"
+                android:background="@color/main_white"
+                android:padding="15dip" >
+
+                <TextView
+                    style="@style/tv_title_primary_style"
+                    android:layout_alignParentLeft="true"
+                    android:text="姓名" />
+
+                <TextView
+                    style="@style/tv_list_primary_style"
+                    android:layout_alignParentRight="true"
+                    android:text="Tony" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dip"
+                android:background="@color/main_white"
+                android:padding="15dip" >
+
+                <TextView
+                    style="@style/tv_title_primary_style"
+                    android:layout_alignParentLeft="true"
+                    android:text="手机号" />
+
+                <ImageView
+                    android:id="@+id/imageView1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:text="10012"
-                    android:textSize="24dip" />
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/icon_arrow_right" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    style="@style/tv_list_primary_style"
+                    android:layout_alignTop="@+id/imageView1"
+                    android:layout_toLeftOf="@+id/imageView1"
+                    android:text="150****5127" />
+
             </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dip"
+                android:background="@color/main_white"
+                android:padding="15dip" >
+
+                <TextView
+                    style="@style/tv_title_primary_style"
+                    android:layout_alignParentLeft="true"
+                    android:text="上岗证编号" />
+
+                <TextView
+                    style="@style/tv_list_primary_style"
+                    android:layout_alignParentRight="true"
+                    android:text="1008611" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dip"
+                android:background="@color/main_white"
+                android:padding="15dip" >
+
+                <TextView
+                    style="@style/tv_title_primary_style"
+                    android:layout_alignParentLeft="true"
+                    android:text="注册时间" />
+
+                <TextView
+                    style="@style/tv_list_primary_style"
+                    android:layout_alignParentRight="true"
+                    android:text="2015-09-01" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dip"
+                android:background="@color/main_white" >
+
+                <RatingBar
+                    android:id="@+id/ratingBar1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="15dp" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    style="@style/tv_title_primary_style"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:text="星级" />
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/btn_login"
+                style="@style/btn_title_white_style"
+                android:background="@drawable/shape_button_delete"
+                android:text="退 出" />
         </LinearLayout>
     </ScrollView>
 
