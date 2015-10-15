@@ -2,7 +2,7 @@ package com.overtech.ems.activity.parttime;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.overtech.ems.R;
-import com.overtech.ems.activity.MipcaActivityCapture;
+import com.overtech.ems.activity.ScanCodeActivity;
 import com.overtech.ems.activity.parttime.fragment.GrabTaskFragment;
 import com.overtech.ems.activity.parttime.fragment.NearByFragment;
 import com.overtech.ems.activity.parttime.fragment.PersonalZoneFragment;
@@ -179,7 +179,7 @@ public class MainActivity extends Activity implements OnClickListener {
 			break;
 		case R.id.tv_headTitleRight:
 			Intent intent = new Intent();
-			intent.setClass(MainActivity.this, MipcaActivityCapture.class);
+			intent.setClass(MainActivity.this, ScanCodeActivity.class);
 			intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
 			break;

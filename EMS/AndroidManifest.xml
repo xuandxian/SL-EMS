@@ -60,7 +60,7 @@
         <activity android:name="com.overtech.ems.activity.parttime.PersonalDeatilsActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.GrabTaskDoFilterActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.TaskListScanActivity" />
-        <activity android:name="com.overtech.ems.activity.MipcaActivityCapture" />
+        <activity android:name="com.overtech.ems.activity.ScanCodeActivity" />
     </application>
 
 </manifest>

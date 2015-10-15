@@ -1,7 +1,7 @@
 package com.overtech.ems.activity.parttime;
 
 import com.overtech.ems.R;
-import com.overtech.ems.activity.MipcaActivityCapture;
+import com.overtech.ems.activity.ScanCodeActivity;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -44,7 +44,7 @@ public class TaskListScanActivity extends Activity {
 			public void onClick(View arg0) {
 				Intent intent = new Intent();
 				intent.setClass(TaskListScanActivity.this,
-						MipcaActivityCapture.class);
+						ScanCodeActivity.class);
 				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 				startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
 			}

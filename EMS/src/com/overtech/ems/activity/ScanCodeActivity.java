@@ -17,7 +17,9 @@ import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.view.Window;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
@@ -26,11 +28,13 @@ import com.overtech.views.zxing.camera.CameraManager;
 import com.overtech.views.zxing.decoding.CaptureActivityHandler;
 import com.overtech.views.zxing.decoding.InactivityTimer;
 import com.overtech.views.zxing.view.ViewfinderView;
+
 /**
  * Initial the camera
+ * 
  * @author Ryan.Tang
  */
-public class MipcaActivityCapture extends Activity implements Callback {
+public class ScanCodeActivity extends Activity implements Callback {
 
 	private CaptureActivityHandler handler;
 	private ViewfinderView viewfinderView;
@@ -42,23 +46,24 @@ public class MipcaActivityCapture extends Activity implements Callback {
 	private boolean playBeep;
 	private static final float BEEP_VOLUME = 0.10f;
 	private boolean vibrate;
+	private ImageView mDoBack;
+	private TextView mHeadContent;
 
-	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_capture);
-		//ViewUtil.addTopView(getApplicationContext(), this, R.string.scan_card);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setContentView(R.layout.activity_task_list_capture);
 		CameraManager.init(getApplication());
 		viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
-		
-		Button mButtonBack = (Button) findViewById(R.id.button_back);
-		mButtonBack.setOnClickListener(new OnClickListener() {
-			
+		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
+		mHeadContent.setText("二维码扫描");
+		mDoBack = (ImageView) findViewById(R.id.iv_headBack);
+		mDoBack.setVisibility(View.VISIBLE);
+		mDoBack.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				MipcaActivityCapture.this.finish();
-				
+				ScanCodeActivity.this.finish();
 			}
 		});
 		hasSurface = false;
@@ -87,7 +92,7 @@ public class MipcaActivityCapture extends Activity implements Callback {
 		}
 		initBeepSound();
 		vibrate = true;
-		
+
 	}
 
 	@Override
@@ -105,9 +110,9 @@ public class MipcaActivityCapture extends Activity implements Callback {
 		inactivityTimer.shutdown();
 		super.onDestroy();
 	}
-	
+
 	/**
-	 * ����ɨ����
+	 * 
 	 * @param result
 	 * @param barcode
 	 */
@@ -116,8 +121,9 @@ public class MipcaActivityCapture extends Activity implements Callback {
 		playBeepSoundAndVibrate();
 		String resultString = result.getText();
 		if (resultString.equals("")) {
-			Toast.makeText(MipcaActivityCapture.this, "Scan failed!", Toast.LENGTH_SHORT).show();
-		}else {
+			Toast.makeText(ScanCodeActivity.this, "Scan failed!",
+					Toast.LENGTH_SHORT).show();
+		} else {
 			Intent resultIntent = new Intent();
 			Bundle bundle = new Bundle();
 			bundle.putString("result", resultString);
@@ -125,9 +131,9 @@ public class MipcaActivityCapture extends Activity implements Callback {
 			resultIntent.putExtras(bundle);
 			this.setResult(RESULT_OK, resultIntent);
 		}
-		MipcaActivityCapture.this.finish();
+		ScanCodeActivity.this.finish();
 	}
-	
+
 	private void initCamera(SurfaceHolder surfaceHolder) {
 		try {
 			CameraManager.get().openDriver(surfaceHolder);

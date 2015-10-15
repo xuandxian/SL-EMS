@@ -29,7 +29,7 @@ import com.google.zxing.ReaderException;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
 import com.overtech.ems.R;
-import com.overtech.ems.activity.MipcaActivityCapture;
+import com.overtech.ems.activity.ScanCodeActivity;
 import com.overtech.views.zxing.camera.CameraManager;
 import com.overtech.views.zxing.camera.PlanarYUVLuminanceSource;
 
@@ -37,10 +37,10 @@ final class DecodeHandler extends Handler {
 
   private static final String TAG = DecodeHandler.class.getSimpleName();
 
-  private final MipcaActivityCapture activity;
+  private final ScanCodeActivity activity;
   private final MultiFormatReader multiFormatReader;
 
-  DecodeHandler(MipcaActivityCapture activity, Hashtable<DecodeHintType, Object> hints) {
+  DecodeHandler(ScanCodeActivity activity, Hashtable<DecodeHintType, Object> hints) {
     multiFormatReader = new MultiFormatReader();
     multiFormatReader.setHints(hints);
     this.activity = activity;
