@@ -46,7 +46,7 @@ public class AppUtils {
 	public static File getCacheDir(Context context) {
 		File cacheDir;
 		if (isSDCardAvailable(context)) {
-			cacheDir = new File(android.os.Environment.getExternalStorageDirectory(), "TongCheng");
+			cacheDir = new File(android.os.Environment.getExternalStorageDirectory(), "EMS");
 		} else {
 			cacheDir = context.getCacheDir();
 		}
