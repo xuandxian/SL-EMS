@@ -3,9 +3,7 @@ package com.overtech.ems.activity.common;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
-import com.overtech.ems.picasso.Picasso;
 import com.overtech.views.EditTextWithDelete;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.method.HideReturnsTransformationMethod;
