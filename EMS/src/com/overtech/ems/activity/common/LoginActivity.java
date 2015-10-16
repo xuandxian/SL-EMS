@@ -3,9 +3,12 @@ package com.overtech.ems.activity.common;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
+import com.overtech.ems.bitmap.ImageLoadeCallback;
+import com.overtech.ems.bitmap.ImageLoader;
 import com.overtech.views.EditTextWithDelete;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
@@ -13,6 +16,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -103,6 +107,11 @@ public class LoginActivity extends BaseActivity {
 		mRegister = (TextView) findViewById(R.id.tv_login_by_message);
 		mLogin = (Button) findViewById(R.id.btn_login);
 		mChangePasswordState = (ToggleButton) findViewById(R.id.tb_change_password);
+		ImageView imageView = (ImageView) findViewById(R.id.imageView1);
+		imageLoader
+				.displayImage(
+						"http://www.jcodecraeer.com/uploads/20140731/67391406772378.png",
+						imageView, R.drawable.icon_bg_default);
 	}
 
 	private void init() {

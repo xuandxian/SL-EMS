@@ -1,5 +1,6 @@
 package com.overtech.ems.activity;
 
+import com.overtech.ems.bitmap.ImageLoader;
 import com.overtech.ems.listener.BackGestureListener;
 
 import android.app.Activity;
@@ -28,8 +29,11 @@ public class BaseActivity extends Activity {
 	GestureDetector mGestureDetector;
 	/** 是否需要监听手势关闭功能 */
 	private boolean mNeedBackGesture = false;
-	//dsdasdashkshk
-
+	/** 图片加载 */
+	public ImageLoader imageLoader;
+	
+	public Context context;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -37,6 +41,9 @@ public class BaseActivity extends Activity {
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		initGestureDetector();
 		setNeedBackGesture(true);// 设置需要手势监听
+		context = this;
+		imageLoader = ImageLoader.getInstance();
+		imageLoader.initContext(context);
 	}
 
 	private void initGestureDetector() {
