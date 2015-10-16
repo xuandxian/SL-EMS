@@ -7,6 +7,9 @@ import com.overtech.ems.activity.parttime.fragment.GrabTaskFragment;
 import com.overtech.ems.activity.parttime.fragment.NearByFragment;
 import com.overtech.ems.activity.parttime.fragment.PersonalZoneFragment;
 import com.overtech.ems.activity.parttime.fragment.TaskListFragment;
+import com.overtech.views.dialogeffects.Effectstype;
+import com.overtech.views.dialogeffects.NiftyDialogBuilder;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -15,6 +18,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -30,6 +34,8 @@ import android.widget.TextView;
 public class MainActivity extends Activity implements OnClickListener {
 
 	private Context mContext;
+	private Effectstype effect;
+	private NiftyDialogBuilder dialogBuilder;
 	private TextView mHeadContent;
 	private TextView mHeadRightContent;
 	private Fragment mGrabTaskFragment;
@@ -79,6 +85,7 @@ public class MainActivity extends Activity implements OnClickListener {
 	private void init() {
 		mContext = MainActivity.this;
 		mHeadContent.setText("抢单");
+		dialogBuilder = NiftyDialogBuilder.getInstance(this);
 		FragmentManager manager = getFragmentManager();
 		FragmentTransaction transaction = manager.beginTransaction();
 		mGrabTaskFragment = new GrabTaskFragment();
@@ -183,5 +190,34 @@ public class MainActivity extends Activity implements OnClickListener {
 			break;
 		}
 	}
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK
+				&& event.getAction() == KeyEvent.ACTION_DOWN) {
+			effect = Effectstype.Shake;
+			dialogBuilder.withTitle("温馨提示").withTitleColor("#FFFFFF")
+					.withDividerColor("#11000000").withMessage("您是否要退出?")
+					.withMessageColor("#FFFFFFFF").withDialogColor("#FF7B68EE")
+					.withIcon(getResources().getDrawable(R.drawable.icon_dialog))
+					.isCancelableOnTouchOutside(true).withDuration(700)
+					.withEffect(effect).withButton1Text("确定")
+					.withButton2Text("取消")
+					.setButton1Click(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							finish();
+							System.exit(0);
+						}
+					}).setButton2Click(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							dialogBuilder.dismiss();
+						}
+					}).show();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+
 
 }

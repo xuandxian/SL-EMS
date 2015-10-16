@@ -7,7 +7,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,6 @@ public class GridViewAdapter extends BaseAdapter {
 
 	public GridViewAdapter(int[] im, Context context) {
 		this.image = im;
-		Log.i("hck", im.length + "lenght");
 		isChice = new boolean[im.length];
 		for (int i = 0; i < im.length; i++) {
 			isChice[i] = false;
@@ -36,13 +34,13 @@ public class GridViewAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public Object getItem(int arg0) {
-		return image[arg0];
+	public Object getItem(int position) {
+		return image[position];
 	}
 
 	@Override
-	public long getItemId(int arg0) {
-		return arg0;
+	public long getItemId(int position) {
+		return position;
 	}
 
 	@Override

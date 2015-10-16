@@ -41,12 +41,12 @@ public class GrabTaskDoFilterActivity extends Activity {
 		mHeadContent.setText("筛 选");
 		mHeadContentRight.setText("确定");
 		mHeadBack.setVisibility(View.VISIBLE);
-		int[] image = { R.drawable.grid, R.drawable.grid, R.drawable.grid,
-				R.drawable.grid, R.drawable.grid, R.drawable.grid,
-				R.drawable.grid, R.drawable.grid, R.drawable.grid,
-				R.drawable.grid, R.drawable.grid, R.drawable.grid,
-				R.drawable.grid, R.drawable.grid, R.drawable.grid,
-				R.drawable.grid, R.drawable.grid, R.drawable.grid };
+		int[] image = { R.drawable.huangpu, R.drawable.xuhui, R.drawable.changning,
+				R.drawable.jingan, R.drawable.zhabei, R.drawable.putuo,
+				R.drawable.hongkou, R.drawable.yangpu, R.drawable.minghang,
+				R.drawable.baoshan, R.drawable.jiading, R.drawable.pudong,
+				R.drawable.jinshan, R.drawable.songjiang, R.drawable.qingpu,
+				R.drawable.fengxian, R.drawable.chongming};
 		adapter = new GridViewAdapter(image, getApplicationContext());
 		gridView.setAdapter(adapter);
 		gridView.setOnItemClickListener(new OnItemClickListener() {
