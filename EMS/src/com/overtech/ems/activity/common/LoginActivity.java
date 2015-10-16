@@ -3,6 +3,7 @@ package com.overtech.ems.activity.common;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
+import com.overtech.ems.picasso.Picasso;
 import com.overtech.views.EditTextWithDelete;
 
 import android.content.Intent;
@@ -76,20 +77,23 @@ public class LoginActivity extends BaseActivity {
 			}
 		});
 		mChangePasswordState
-		.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
-			@Override
-			public void onCheckedChanged(CompoundButton buttonView,
-					boolean isChecked) {
-				if (isChecked) {
-					//设置密码为可见的
-					mPassword.setTransformationMethod(HideReturnsTransformationMethod
-							.getInstance());
-				} else {
-					mPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
-				}
-			}
-		});
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView,
+							boolean isChecked) {
+						if (isChecked) {
+							// 设置密码为可见的
+							mPassword
+									.setTransformationMethod(HideReturnsTransformationMethod
+											.getInstance());
+						} else {
+							mPassword
+									.setTransformationMethod(PasswordTransformationMethod
+											.getInstance());
+						}
+					}
+				});
 	}
 
 	private void findViewById() {
