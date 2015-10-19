@@ -4,39 +4,39 @@
     android:layout_height="wrap_content" >
 
     <TextView
-        android:id="@+id/tv_grab_task_package_name"
+        android:id="@+id/tv_personal_village_name"
         style="@style/tv_list_primary_style"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp"
         android:singleLine="true"
-        android:text="31号楼1号电梯（全包）" />
+        android:text="丰业广园公寓" />
 
     <TextView
-        android:id="@+id/tv_grab_task_package_productor"
+        android:id="@+id/tv_personal_maintenance_time"
         style="@style/tv_info_secondary_style"
-        android:layout_alignBaseline="@+id/tv_grab_task_package_name"
-        android:layout_alignBottom="@+id/tv_grab_task_package_name"
+        android:layout_alignBaseline="@+id/tv_personal_village_name"
+        android:layout_alignBottom="@+id/tv_personal_village_name"
         android:layout_alignParentRight="true"
         android:layout_marginRight="15dp"
-        android:text="上海三菱" />
+        android:text="2015-10-10" />
 
     <TextView
-        android:id="@+id/tv_grab_task_package_eveltor_no"
-        style="@style/tv_info_secondary_style"
-        android:layout_alignLeft="@+id/tv_grab_task_package_name"
-        android:layout_below="@+id/tv_grab_task_package_name"
+        android:id="@+id/tv_personal_account"
+        style="@style/tv_info_red_style"
+        android:layout_alignLeft="@+id/tv_personal_village_name"
+        android:layout_below="@+id/tv_personal_village_name"
         android:layout_marginTop="10dp"
         android:paddingBottom="10dp"
-        android:text="80032981234" />
+        android:text="￥200" />
 
     <TextView
-        android:id="@+id/tv_grab_task_package_type"
+        android:id="@+id/tv_personal_maintenance_endtime"
         style="@style/tv_info_secondary_style"
-        android:layout_alignBaseline="@+id/tv_grab_task_package_eveltor_no"
-        android:layout_alignBottom="@+id/tv_grab_task_package_eveltor_no"
-        android:layout_alignRight="@+id/tv_grab_task_package_productor"
-        android:text="20层/20站" />
+        android:layout_alignBaseline="@+id/tv_personal_account"
+        android:layout_alignBottom="@+id/tv_personal_account"
+        android:layout_alignRight="@+id/tv_personal_maintenance_time"
+        android:text="2015-10-15" />
 
 </RelativeLayout>

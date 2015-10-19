@@ -1,7 +1,10 @@
 package com.overtech.ems.activity.parttime.fragment;
 
 import com.overtech.ems.R;
+import com.overtech.ems.activity.parttime.personal.PersonalAccountListActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalDeatilsActivity;
+
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +20,15 @@ public class PersonalZoneFragment extends Fragment implements OnClickListener {
 	private LinearLayout mPersonalAccountList;
 	private LinearLayout mPersonalBounds;
 	private LinearLayout mCompanyNotice;
+	private Activity mActivity;
+	
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		this.mActivity=activity;
+	}
+	
+	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -54,19 +66,19 @@ public class PersonalZoneFragment extends Fragment implements OnClickListener {
 		Intent intent = new Intent();
 		switch (v.getId()) {
 		case R.id.ll_personal_details:
-			intent.setClass(getActivity(), PersonalDeatilsActivity.class);
+			intent.setClass(mActivity, PersonalDeatilsActivity.class);
 			startActivity(intent);
 			break;
 		case R.id.ll_personal_account_list:
-			intent.setClass(getActivity(), PersonalDeatilsActivity.class);
+			intent.setClass(mActivity, PersonalAccountListActivity.class);
 			startActivity(intent);
 			break;
 		case R.id.ll_personal_bounds:
-			intent.setClass(getActivity(), PersonalDeatilsActivity.class);
+			intent.setClass(mActivity, PersonalDeatilsActivity.class);
 			startActivity(intent);
 			break;
 		case R.id.ll_personal_notice:
-			intent.setClass(getActivity(), PersonalDeatilsActivity.class);
+			intent.setClass(mActivity, PersonalDeatilsActivity.class);
 			startActivity(intent);
 			break;
 		}

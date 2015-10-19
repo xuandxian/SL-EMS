@@ -13,6 +13,7 @@
     <color name="main_disable">#ffcccccc</color>
     <!-- 用于输入框默认提示 -->
     <color name="main_green">#ff50b400</color>
+    <color name="main_red">#ffff0000</color>
     <color name="main_orange">#ffff6633</color>
     <!-- 用于价格，警告 -->
     <color name="main_white">#ffffffff</color>

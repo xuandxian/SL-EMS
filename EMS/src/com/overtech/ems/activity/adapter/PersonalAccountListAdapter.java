@@ -10,12 +10,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class PackageDetailAdapter extends BaseAdapter {
-
+public class PersonalAccountListAdapter extends BaseAdapter {
+	
 	private Context context;
 	private ArrayList<Data2> list = new ArrayList<Data2>();
-
-	public PackageDetailAdapter(Context context, ArrayList<Data2> list) {
+	
+	public PersonalAccountListAdapter(Context context, ArrayList<Data2> list) {
 		super();
 		this.context = context;
 		this.list = list;
@@ -28,7 +28,7 @@ public class PackageDetailAdapter extends BaseAdapter {
 
 	@Override
 	public Object getItem(int position) {
-		return list.get(position);
+		return position;
 	}
 
 	@Override
@@ -43,32 +43,31 @@ public class PackageDetailAdapter extends BaseAdapter {
 		if (convertView == null) {
 			holder = new ViewHolder();
 			convertView = LayoutInflater.from(context).inflate(
-					R.layout.item_grab_task_package_detail, null);
-			holder.mElevtorName = (TextView) convertView
-					.findViewById(R.id.tv_grab_task_package_name);
-			holder.mElevtorProductor = (TextView) convertView
-					.findViewById(R.id.tv_grab_task_package_productor);
-			holder.mElevtorNo = (TextView) convertView
-					.findViewById(R.id.tv_grab_task_package_eveltor_no);
-			holder.mElevtorType = (TextView) convertView
-					.findViewById(R.id.tv_grab_task_package_type);
+					R.layout.item_personal_account_list, null);
+			holder.mVillageName = (TextView) convertView
+					.findViewById(R.id.tv_personal_village_name);
+			holder.mMaintenanceTime = (TextView) convertView
+					.findViewById(R.id.tv_personal_maintenance_time);
+			holder.mPersonalAccount = (TextView) convertView
+					.findViewById(R.id.tv_personal_account);
+			holder.mMaintenanceEndTime = (TextView) convertView
+					.findViewById(R.id.tv_personal_maintenance_endtime);
 			convertView.setTag(holder);
 
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		holder.mElevtorName.setText(data.getElevtorName());
-		holder.mElevtorProductor.setText(data.getElevtorProductor());
-		holder.mElevtorNo.setText(data.getElevtorNo());
-		holder.mElevtorType.setText(data.getElevtorType());
+		holder.mVillageName.setText(data.getElevtorName());
+		holder.mMaintenanceTime.setText(data.getElevtorProductor());
+		holder.mPersonalAccount.setText(data.getElevtorNo());
+		holder.mMaintenanceEndTime.setText(data.getElevtorType());
 		return convertView;
 	}
 
 	class ViewHolder {
-		public TextView mElevtorName;
-		public TextView mElevtorProductor;
-		public TextView mElevtorNo;
-		public TextView mElevtorType;
+		public TextView mVillageName;
+		public TextView mMaintenanceTime;
+		public TextView mPersonalAccount;
+		public TextView mMaintenanceEndTime;
 	}
-
 }
