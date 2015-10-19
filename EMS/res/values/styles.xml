@@ -129,8 +129,6 @@
         <item name="android:textColor">@color/main_white</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_alignParentRight">true</item>
-        <item name="android:layout_centerVertical">true</item>
     </style>
     
     <style name="btn_title_white_style" parent="@android:style/Widget.TextView">

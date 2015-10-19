@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/main_white"
+    android:orientation="horizontal" >
+
+    <TextView
+        android:id="@+id/tv_grab_task_package_name"
+        style="@style/tv_list_primary_style"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:singleLine="true"
+        android:text="31号楼1号电梯（全包）" />
+
+    <TextView
+        android:id="@+id/tv_grab_task_package_productor"
+        style="@style/tv_info_secondary_style"
+        android:layout_alignBaseline="@+id/tv_grab_task_package_name"
+        android:layout_alignBottom="@+id/tv_grab_task_package_name"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="15dp"
+        android:text="上海三菱" />
+
+    <TextView
+        android:id="@+id/tv_grab_task_package_eveltor_no"
+        style="@style/tv_info_secondary_style"
+        android:layout_alignLeft="@+id/tv_grab_task_package_name"
+        android:layout_below="@+id/tv_grab_task_package_name"
+        android:layout_marginTop="15dp"
+        android:text="80032981234" />
+
+    <TextView
+        android:id="@+id/tv_grab_task_package_type"
+        style="@style/tv_info_secondary_style"
+        android:layout_alignBaseline="@+id/tv_grab_task_package_eveltor_no"
+        android:layout_alignBottom="@+id/tv_grab_task_package_eveltor_no"
+        android:layout_alignRight="@+id/tv_grab_task_package_con"
+        android:text="20层/20站" />
+
+</RelativeLayout>

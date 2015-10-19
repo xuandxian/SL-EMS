@@ -44,8 +44,8 @@ public class GridViewAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public View getView(int arg0, View arg1, ViewGroup arg2) {
-		View view = arg1;
+	public View getView(int arg0, View v, ViewGroup arg2) {
+		View view = v;
 		GetView getView = null;
 		if (view == null) {
 			view = LayoutInflater.from(context).inflate(
