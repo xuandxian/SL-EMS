@@ -61,6 +61,7 @@
         <activity android:name="com.overtech.ems.activity.parttime.grabtask.GrabTaskDoFilterActivity" />
         <activity android:name="com.overtech.ems.activity.ScanCodeActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.grabtask.PackageDetailActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.grabtask.ElevatorDetailActivity" />
     </application>
 
 </manifest>

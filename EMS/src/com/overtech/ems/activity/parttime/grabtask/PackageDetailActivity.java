@@ -2,7 +2,11 @@ package com.overtech.ems.activity.parttime.grabtask;
 
 import java.util.ArrayList;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
@@ -26,6 +30,17 @@ public class PackageDetailActivity extends BaseActivity {
 	private void initListView() {
 		adapter = new PackageDetailAdapter(context, list);
 		mPackageDetailListView.setAdapter(adapter);
+		mPackageDetailListView
+				.setOnItemClickListener(new OnItemClickListener() {
+
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view,
+							int position, long id) {
+						Intent intent = new Intent(PackageDetailActivity.this,
+								ElevatorDetailActivity.class);
+						startActivity(intent);
+					}
+				});
 	}
 
 	private void findViewById() {
