@@ -1,4 +1,4 @@
-package com.overtech.ems.activity.parttime.fragment;
+package com.overtech.ems.activity.parttime.nearby;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.adapter.HotWorkAdapter;

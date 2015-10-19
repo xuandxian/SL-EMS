@@ -1,7 +1,8 @@
 package com.overtech.ems.activity.parttime.fragment;
 
 import com.overtech.ems.R;
-import com.overtech.ems.activity.parttime.PersonalDeatilsActivity;
+import com.overtech.ems.activity.parttime.personal.PersonalDeatilsActivity;
+
 import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;

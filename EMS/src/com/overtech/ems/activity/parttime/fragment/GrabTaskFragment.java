@@ -2,7 +2,8 @@ package com.overtech.ems.activity.parttime.fragment;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.adapter.HotWorkAdapter;
-import com.overtech.ems.activity.parttime.GrabTaskDoFilterActivity;
+import com.overtech.ems.activity.parttime.grabtask.GrabTaskDoFilterActivity;
+import com.overtech.ems.activity.parttime.grabtask.PackageDetailActivity;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.views.swipemenu.SwipeMenu;
 import com.overtech.views.swipemenu.SwipeMenuCreator;
@@ -74,7 +75,9 @@ public class GrabTaskFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				Utilities.showToast("你点击了" + position + "位置", mActivity);
+				Intent intent =new Intent(mActivity, PackageDetailActivity.class);
+				startActivity(intent);
+				
 			}
 		});
 		mPartTimeDoFifter.setOnClickListener(new OnClickListener() {

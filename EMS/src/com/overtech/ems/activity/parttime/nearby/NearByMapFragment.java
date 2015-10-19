@@ -1,4 +1,4 @@
-package com.overtech.ems.activity.parttime.fragment;
+package com.overtech.ems.activity.parttime.nearby;
 
 import java.util.ArrayList;
 import java.util.HashMap;

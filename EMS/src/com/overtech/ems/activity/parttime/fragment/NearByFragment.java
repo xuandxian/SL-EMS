@@ -1,6 +1,9 @@
 package com.overtech.ems.activity.parttime.fragment;
 
 import com.overtech.ems.R;
+import com.overtech.ems.activity.parttime.nearby.NearByListFragment;
+import com.overtech.ems.activity.parttime.nearby.NearByMapFragment;
+
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;

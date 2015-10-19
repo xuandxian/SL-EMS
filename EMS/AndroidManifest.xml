@@ -57,9 +57,10 @@
         <activity android:name="com.overtech.ems.activity.common.RegisterAddIdCardActivity" />
         <activity android:name="com.overtech.ems.activity.common.RegisterAddWorkCertificateActivity" />
         <activity android:name="com.overtech.ems.activity.common.RegisterAddOtherCertificateActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.PersonalDeatilsActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.GrabTaskDoFilterActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalDeatilsActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.grabtask.GrabTaskDoFilterActivity" />
         <activity android:name="com.overtech.ems.activity.ScanCodeActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.grabtask.PackageDetailActivity" />
     </application>
 
 </manifest>
