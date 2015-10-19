@@ -30,7 +30,7 @@
     <application
         android:name="com.overtech.ems.activity.MyApplication"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity android:name="com.overtech.ems.activity.common.SplashActivity" >

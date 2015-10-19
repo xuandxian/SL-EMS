@@ -4,6 +4,7 @@ import com.overtech.ems.R;
 import com.overtech.ems.activity.parttime.personal.PersonalAccountListActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalBoundsActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalDeatilsActivity;
+import com.overtech.ems.utils.Utilities;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -14,10 +15,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 public class PersonalZoneFragment extends Fragment implements OnClickListener {
 	private View view;
-	private LinearLayout mPersonalDetail;
+	private RelativeLayout mPersonalDetail;
 	private LinearLayout mPersonalAccountList;
 	private LinearLayout mPersonalBounds;
 	private LinearLayout mCompanyNotice;
@@ -40,7 +42,7 @@ public class PersonalZoneFragment extends Fragment implements OnClickListener {
 	}
 
 	private void initViews() {
-		mPersonalDetail = (LinearLayout) view
+		mPersonalDetail = (RelativeLayout) view
 				.findViewById(R.id.ll_personal_details);
 		mPersonalAccountList = (LinearLayout) view
 				.findViewById(R.id.ll_personal_account_list);
@@ -75,8 +77,7 @@ public class PersonalZoneFragment extends Fragment implements OnClickListener {
 			startActivity(intent);
 			break;
 		case R.id.ll_personal_notice:
-			intent.setClass(mActivity, PersonalDeatilsActivity.class);
-			startActivity(intent);
+			Utilities.showToast("你点击了公告", mActivity);
 			break;
 		}
 	}

@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/bg_main" >
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/ll_personal_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -14,30 +14,39 @@
         android:padding="15dip" >
 
         <ImageView
+            android:id="@+id/imageView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/icon_personal_my" />
 
         <LinearLayout
+            android:id="@+id/linearLayout1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginLeft="10dip"
             android:orientation="vertical" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Relevator001"
-                android:textSize="17sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dip"
-                android:text="150****2727" />
         </LinearLayout>
-    </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/imageView1"
+            android:text="Relevator001"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="10dp"
+            android:textSize="17sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/imageView1"
+            android:layout_alignLeft="@+id/textView1"
+            android:layout_marginBottom="8dp"
+            android:text="150****2727" />
+
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/ll_personal_account_list"
