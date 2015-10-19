@@ -1,7 +1,7 @@
 package com.overtech.ems.activity;
 
-import com.overtech.ems.bitmap.ImageLoader;
 import com.overtech.ems.listener.BackGestureListener;
+import com.overtech.ems.widget.bitmap.ImageLoader;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;

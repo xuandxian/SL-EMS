@@ -5,11 +5,12 @@ import com.overtech.ems.activity.adapter.HotWorkAdapter;
 import com.overtech.ems.activity.parttime.grabtask.GrabTaskDoFilterActivity;
 import com.overtech.ems.activity.parttime.grabtask.PackageDetailActivity;
 import com.overtech.ems.utils.Utilities;
-import com.overtech.views.swipemenu.SwipeMenu;
-import com.overtech.views.swipemenu.SwipeMenuCreator;
-import com.overtech.views.swipemenu.SwipeMenuItem;
-import com.overtech.views.swipemenu.SwipeMenuListView;
-import com.overtech.views.swipemenu.SwipeMenuListView.OnMenuItemClickListener;
+import com.overtech.ems.widget.swipemenu.SwipeMenu;
+import com.overtech.ems.widget.swipemenu.SwipeMenuCreator;
+import com.overtech.ems.widget.swipemenu.SwipeMenuItem;
+import com.overtech.ems.widget.swipemenu.SwipeMenuListView;
+import com.overtech.ems.widget.swipemenu.SwipeMenuListView.OnMenuItemClickListener;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;

@@ -26,10 +26,10 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.overtech.ems.R;
 import com.overtech.ems.utils.Utilities;
-import com.overtech.views.zxing.camera.CameraManager;
-import com.overtech.views.zxing.decoding.CaptureActivityHandler;
-import com.overtech.views.zxing.decoding.InactivityTimer;
-import com.overtech.views.zxing.view.ViewfinderView;
+import com.overtech.ems.widget.zxing.camera.CameraManager;
+import com.overtech.ems.widget.zxing.decoding.CaptureActivityHandler;
+import com.overtech.ems.widget.zxing.decoding.InactivityTimer;
+import com.overtech.ems.widget.zxing.view.ViewfinderView;
 
 /**
  * Initial the camera

@@ -34,7 +34,7 @@
                 android:layout_marginTop="-5dp"
                 android:text="筛选" />
 
-            <com.overtech.views.EditTextWithDelete
+            <com.overtech.ems.widget.EditTextWithDelete
                 android:id="@+id/et_do_parttime_search"
                 android:layout_width="match_parent"
                 android:layout_height="38dp"
@@ -52,7 +52,7 @@
         </RelativeLayout>
     </RelativeLayout>
 
-    <com.overtech.views.swipemenu.SwipeMenuListView
+    <com.overtech.ems.widget.swipemenu.SwipeMenuListView
         android:id="@+id/sl_qiandan_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

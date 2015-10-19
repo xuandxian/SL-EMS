@@ -7,8 +7,8 @@ import com.overtech.ems.activity.parttime.fragment.GrabTaskFragment;
 import com.overtech.ems.activity.parttime.fragment.NearByFragment;
 import com.overtech.ems.activity.parttime.fragment.PersonalZoneFragment;
 import com.overtech.ems.activity.parttime.fragment.TaskListFragment;
-import com.overtech.views.dialogeffects.Effectstype;
-import com.overtech.views.dialogeffects.NiftyDialogBuilder;
+import com.overtech.ems.widget.dialogeffects.Effectstype;
+import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
 
 import android.app.Activity;
 import android.app.Fragment;

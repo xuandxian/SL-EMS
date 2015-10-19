@@ -34,7 +34,7 @@
             android:textSize="@dimen/text_size_list" />
     </LinearLayout>
 
-    <com.overtech.views.swipemenu.SwipeMenuListView
+    <com.overtech.ems.widget.swipemenu.SwipeMenuListView
         android:id="@+id/sl_task_list_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
