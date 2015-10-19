@@ -20,9 +20,9 @@ import android.widget.RelativeLayout;
 public class PersonalZoneFragment extends Fragment implements OnClickListener {
 	private View view;
 	private RelativeLayout mPersonalDetail;
-	private LinearLayout mPersonalAccountList;
-	private LinearLayout mPersonalBounds;
-	private LinearLayout mCompanyNotice;
+	private RelativeLayout mPersonalAccountList;
+	private RelativeLayout mPersonalBounds;
+	private RelativeLayout mCompanyNotice;
 	private Activity mActivity;
 	
 	@Override
@@ -43,13 +43,13 @@ public class PersonalZoneFragment extends Fragment implements OnClickListener {
 
 	private void initViews() {
 		mPersonalDetail = (RelativeLayout) view
-				.findViewById(R.id.ll_personal_details);
-		mPersonalAccountList = (LinearLayout) view
-				.findViewById(R.id.ll_personal_account_list);
-		mPersonalBounds = (LinearLayout) view
-				.findViewById(R.id.ll_personal_bounds);
-		mCompanyNotice = (LinearLayout) view
-				.findViewById(R.id.ll_personal_notice);
+				.findViewById(R.id.rl_personal_details);
+		mPersonalAccountList = (RelativeLayout) view
+				.findViewById(R.id.rl_personal_account_list);
+		mPersonalBounds = (RelativeLayout) view
+				.findViewById(R.id.rl_personal_bounds);
+		mCompanyNotice = (RelativeLayout) view
+				.findViewById(R.id.rl_personal_notice);
 	}
 
 	private void initEvents() {
@@ -64,19 +64,19 @@ public class PersonalZoneFragment extends Fragment implements OnClickListener {
 
 		Intent intent = new Intent();
 		switch (v.getId()) {
-		case R.id.ll_personal_details:
+		case R.id.rl_personal_details:
 			intent.setClass(mActivity, PersonalDeatilsActivity.class);
 			startActivity(intent);
 			break;
-		case R.id.ll_personal_account_list:
+		case R.id.rl_personal_account_list:
 			intent.setClass(mActivity, PersonalAccountListActivity.class);
 			startActivity(intent);
 			break;
-		case R.id.ll_personal_bounds:
+		case R.id.rl_personal_bounds:
 			intent.setClass(mActivity, PersonalBoundsActivity.class);
 			startActivity(intent);
 			break;
-		case R.id.ll_personal_notice:
+		case R.id.rl_personal_notice:
 			Utilities.showToast("你点击了公告", mActivity);
 			break;
 		}

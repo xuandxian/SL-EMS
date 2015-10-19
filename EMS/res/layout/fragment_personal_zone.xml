@@ -5,7 +5,7 @@
     android:background="@color/bg_main" >
 
     <RelativeLayout
-        android:id="@+id/ll_personal_details"
+        android:id="@+id/rl_personal_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dip"
@@ -46,13 +46,21 @@
             android:layout_marginBottom="8dp"
             android:text="150****2727" />
 
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/icon_big_arrow_right" />
+
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/ll_personal_account_list"
+    <RelativeLayout
+        android:id="@+id/rl_personal_account_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ll_personal_details"
+        android:layout_below="@id/rl_personal_details"
         android:layout_marginTop="20dip"
         android:background="@color/main_white" >
 
@@ -62,13 +70,22 @@
             android:padding="10dip"
             android:text="我的账单"
             android:textSize="17sp" />
-    </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/ll_personal_bounds"
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/icon_arrow_right" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_personal_bounds"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ll_personal_account_list"
+        android:layout_below="@id/rl_personal_account_list"
         android:layout_marginTop="1dip"
         android:background="@color/main_white" >
 
@@ -78,13 +95,20 @@
             android:padding="10dip"
             android:text="奖励记录"
             android:textSize="17sp" />
-    </LinearLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:src="@drawable/icon_arrow_right" />
+    </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/ll_personal_notice"
+    <RelativeLayout
+        android:id="@+id/rl_personal_notice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ll_personal_bounds"
+        android:layout_below="@id/rl_personal_bounds"
         android:layout_marginTop="20dip"
         android:background="@color/main_white" >
 
@@ -94,6 +118,6 @@
             android:padding="10dip"
             android:text="公告"
             android:textSize="17sp" />
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>
