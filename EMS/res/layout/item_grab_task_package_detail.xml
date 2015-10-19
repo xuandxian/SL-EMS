@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/main_white"
-    android:orientation="horizontal" >
+    android:layout_height="wrap_content" >
 
     <TextView
         android:id="@+id/tv_grab_task_package_name"
@@ -29,7 +27,8 @@
         style="@style/tv_info_secondary_style"
         android:layout_alignLeft="@+id/tv_grab_task_package_name"
         android:layout_below="@+id/tv_grab_task_package_name"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="10dp"
+        android:paddingBottom="10dp"
         android:text="80032981234" />
 
     <TextView
@@ -37,7 +36,7 @@
         style="@style/tv_info_secondary_style"
         android:layout_alignBaseline="@+id/tv_grab_task_package_eveltor_no"
         android:layout_alignBottom="@+id/tv_grab_task_package_eveltor_no"
-        android:layout_alignRight="@+id/tv_grab_task_package_con"
+        android:layout_alignRight="@+id/tv_grab_task_package_productor"
         android:text="20层/20站" />
 
 </RelativeLayout>

@@ -10,9 +10,18 @@
     <ListView
         android:id="@+id/grab_task_package_listview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/include_grab_task_package" >
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_grab_task_package"
+        android:layout_below="@+id/include_grab_task_package"
+        android:layout_centerHorizontal="true" />
 
-    </ListView>
+    <Button
+        android:id="@+id/btn_grab_task_package"
+        style="@style/btn_title_white_style"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/shape_button_visiable"
+        android:text="抢单" />
 
 </RelativeLayout>
