@@ -5,7 +5,7 @@
     android:background="@color/bg_main" >
 
     <LinearLayout
-        android:id="@+id/personal_details"
+        android:id="@+id/ll_personal_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dip"
@@ -40,10 +40,10 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/personal_checklist"
+        android:id="@+id/ll_personal_account_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/personal_details"
+        android:layout_below="@id/ll_personal_details"
         android:layout_marginTop="20dip"
         android:background="@color/main_white" >
 
@@ -56,10 +56,10 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/shangfangLinearLayout3"
+        android:id="@+id/ll_personal_bounds"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/personal_checklist"
+        android:layout_below="@id/ll_personal_account_list"
         android:layout_marginTop="1dip"
         android:background="@color/main_white" >
 
@@ -72,9 +72,10 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/ll_personal_notice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/shangfangLinearLayout3"
+        android:layout_below="@id/ll_personal_bounds"
         android:layout_marginTop="20dip"
         android:background="@color/main_white" >
 
