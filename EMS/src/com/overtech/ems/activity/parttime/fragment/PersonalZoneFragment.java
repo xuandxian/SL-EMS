@@ -2,6 +2,7 @@ package com.overtech.ems.activity.parttime.fragment;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.parttime.personal.PersonalAccountListActivity;
+import com.overtech.ems.activity.parttime.personal.PersonalBoundsActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalDeatilsActivity;
 
 import android.app.Activity;
@@ -27,9 +28,6 @@ public class PersonalZoneFragment extends Fragment implements OnClickListener {
 		super.onAttach(activity);
 		this.mActivity=activity;
 	}
-	
-	
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -50,7 +48,6 @@ public class PersonalZoneFragment extends Fragment implements OnClickListener {
 				.findViewById(R.id.ll_personal_bounds);
 		mCompanyNotice = (LinearLayout) view
 				.findViewById(R.id.ll_personal_notice);
-
 	}
 
 	private void initEvents() {
@@ -74,7 +71,7 @@ public class PersonalZoneFragment extends Fragment implements OnClickListener {
 			startActivity(intent);
 			break;
 		case R.id.ll_personal_bounds:
-			intent.setClass(mActivity, PersonalDeatilsActivity.class);
+			intent.setClass(mActivity, PersonalBoundsActivity.class);
 			startActivity(intent);
 			break;
 		case R.id.ll_personal_notice:

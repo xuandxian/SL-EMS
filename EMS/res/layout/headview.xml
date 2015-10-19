@@ -11,7 +11,8 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="15dp"
-        android:src="@drawable/icon_common_back" />
+        android:src="@drawable/icon_common_back"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/tv_headTitle"
