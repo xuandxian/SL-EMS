@@ -66,6 +66,13 @@
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_centerVertical">true</item>
     </style>
+    
+    <style name="tv_large_primary_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:textColor">@color/main_primary</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
 
     <style name="tv_title_primary_style" parent="@android:style/Widget.TextView">
         <item name="android:textSize">@dimen/text_size_title</item>

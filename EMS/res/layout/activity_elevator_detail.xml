@@ -9,7 +9,7 @@
 
     <TextView
         android:id="@+id/device_no"
-        style="@style/tv_title_primary_style"
+        style="@style/tv_large_primary_style"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/include1"
         android:layout_marginLeft="15dp"
@@ -18,7 +18,7 @@
 
     <TextView
         android:id="@+id/device_no_content"
-        style="@style/tv_title_primary_style"
+        style="@style/tv_large_primary_style"
         android:layout_alignBaseline="@+id/device_no"
         android:layout_alignBottom="@+id/device_no"
         android:layout_marginLeft="5dp"
@@ -27,16 +27,16 @@
 
     <TextView
         android:id="@+id/use_department"
-        style="@style/tv_title_primary_style"
+        style="@style/tv_large_primary_style"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/device_no"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
         android:text="使用单位:" />
 
     <TextView
         android:id="@+id/use_department_content"
-        style="@style/tv_title_primary_style"
+        style="@style/tv_large_primary_style"
         android:layout_alignBaseline="@+id/use_department"
         android:layout_alignBottom="@+id/use_department"
         android:layout_marginLeft="5dp"
@@ -45,16 +45,16 @@
 
     <TextView
         android:id="@+id/elevator_type"
-        style="@style/tv_title_primary_style"
+        style="@style/tv_large_primary_style"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/use_department"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
         android:text="电梯型号:" />
 
     <TextView
         android:id="@+id/elevator_type_content"
-        style="@style/tv_title_primary_style"
+        style="@style/tv_large_primary_style"
         android:layout_alignBaseline="@+id/elevator_type"
         android:layout_alignBottom="@+id/elevator_type"
         android:layout_marginLeft="5dp"
@@ -63,16 +63,16 @@
 
     <TextView
         android:id="@+id/elevator_speed"
-        style="@style/tv_title_primary_style"
+        style="@style/tv_large_primary_style"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/elevator_type"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
         android:text="速        度:" />
 
     <TextView
         android:id="@+id/elevator_speed_content"
-        style="@style/tv_title_primary_style"
+        style="@style/tv_large_primary_style"
         android:layout_alignBaseline="@+id/elevator_speed"
         android:layout_alignBottom="@+id/elevator_speed"
         android:layout_marginLeft="5dp"
@@ -81,16 +81,16 @@
 
     <TextView
         android:id="@+id/elevator_capacity"
-        style="@style/tv_title_primary_style"
+        style="@style/tv_large_primary_style"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/elevator_speed"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
         android:text="载        重:" />
 
     <TextView
         android:id="@+id/elevator_capacity_content"
-        style="@style/tv_title_primary_style"
+        style="@style/tv_large_primary_style"
         android:layout_alignBaseline="@+id/elevator_capacity"
         android:layout_alignBottom="@+id/elevator_capacity"
         android:layout_marginLeft="5dp"
@@ -99,16 +99,16 @@
 
     <TextView
         android:id="@+id/elevator_floor"
-        style="@style/tv_title_primary_style"
+        style="@style/tv_large_primary_style"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/elevator_capacity"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
         android:text="层        数:" />
 
     <TextView
         android:id="@+id/elevator_floor_content"
-        style="@style/tv_title_primary_style"
+        style="@style/tv_large_primary_style"
         android:layout_alignBaseline="@+id/elevator_floor"
         android:layout_alignBottom="@+id/elevator_floor"
         android:layout_marginLeft="5dp"
@@ -117,16 +117,16 @@
 
     <TextView
         android:id="@+id/elevator_stack"
-        style="@style/tv_title_primary_style"
+        style="@style/tv_large_primary_style"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/elevator_floor"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
         android:text="站        数:" />
 
     <TextView
         android:id="@+id/elevator_stack_content"
-        style="@style/tv_title_primary_style"
+        style="@style/tv_large_primary_style"
         android:layout_alignBaseline="@+id/elevator_stack"
         android:layout_alignBottom="@+id/elevator_stack"
         android:layout_marginLeft="5dp"
@@ -135,16 +135,16 @@
 
     <TextView
         android:id="@+id/elevator_doors"
-        style="@style/tv_title_primary_style"
+        style="@style/tv_large_primary_style"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/elevator_stack"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
         android:text="门        数:" />
 
     <TextView
         android:id="@+id/elevator_doors_content"
-        style="@style/tv_title_primary_style"
+        style="@style/tv_large_primary_style"
         android:layout_alignBaseline="@+id/elevator_doors"
         android:layout_alignBottom="@+id/elevator_doors"
         android:layout_marginLeft="5dp"
@@ -153,16 +153,16 @@
 
     <TextView
         android:id="@+id/elevator_maintenance"
-        style="@style/tv_title_primary_style"
+        style="@style/tv_large_primary_style"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/elevator_doors"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
         android:text="保养类型:" />
 
     <TextView
         android:id="@+id/elevator_maintenance_content"
-        style="@style/tv_title_primary_style"
+        style="@style/tv_large_primary_style"
         android:layout_alignBaseline="@+id/elevator_maintenance"
         android:layout_alignBottom="@+id/elevator_maintenance"
         android:layout_marginLeft="5dp"
@@ -171,16 +171,16 @@
 
     <TextView
         android:id="@+id/elevator_inspect"
-        style="@style/tv_title_primary_style"
+        style="@style/tv_large_primary_style"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/elevator_maintenance"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
         android:text="年检日期:" />
 
     <TextView
         android:id="@+id/elevator_inspect_content"
-        style="@style/tv_title_primary_style"
+        style="@style/tv_large_primary_style"
         android:layout_alignBaseline="@+id/elevator_inspect"
         android:layout_alignBottom="@+id/elevator_inspect"
         android:layout_marginLeft="5dp"
@@ -189,16 +189,16 @@
 
     <TextView
         android:id="@+id/elevator_last_maintenance"
-        style="@style/tv_title_primary_style"
+        style="@style/tv_large_primary_style"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/elevator_inspect"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="8dp"
         android:text="上次保养日期:" />
 
     <TextView
         android:id="@+id/elevator_last_maintenance_content"
-        style="@style/tv_title_primary_style"
+        style="@style/tv_large_primary_style"
         android:layout_alignBaseline="@+id/elevator_last_maintenance"
         android:layout_alignBottom="@+id/elevator_last_maintenance"
         android:layout_marginLeft="5dp"
