@@ -2,7 +2,8 @@ package com.overtech.ems.activity.adapter;
 
 import java.util.ArrayList;
 import com.overtech.ems.R;
-import com.overtech.ems.entity.Data2;
+import com.overtech.ems.entity.test.Data2;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;

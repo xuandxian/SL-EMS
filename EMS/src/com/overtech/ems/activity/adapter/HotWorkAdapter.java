@@ -2,7 +2,8 @@ package com.overtech.ems.activity.adapter;
 
 import java.util.List;
 import com.overtech.ems.R;
-import com.overtech.ems.entity.Data;
+import com.overtech.ems.entity.test.Data;
+
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;

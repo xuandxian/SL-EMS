@@ -1,4 +1,4 @@
-package com.overtech.ems.entity;
+package com.overtech.ems.entity.test;
 
 public class Data2 {
 	public String elevtorName;

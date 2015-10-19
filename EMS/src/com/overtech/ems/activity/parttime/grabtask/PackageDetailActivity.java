@@ -11,7 +11,7 @@ import android.widget.ListView;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.PackageDetailAdapter;
-import com.overtech.ems.entity.Data2;
+import com.overtech.ems.entity.test.Data2;
 
 public class PackageDetailActivity extends BaseActivity {
 	private ListView mPackageDetailListView;
