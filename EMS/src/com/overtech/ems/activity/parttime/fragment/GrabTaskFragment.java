@@ -72,8 +72,6 @@ public class GrabTaskFragment extends Fragment {
 					@Override
 					public void onMenuItemClick(int position, SwipeMenu menu,
 							int index) {
-						Utilities.showToast("你抢了" + position + "位置的单子",
-								mActivity);
 						showDialog();
 					}
 				});
@@ -82,9 +80,10 @@ public class GrabTaskFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				Intent intent =new Intent(mActivity, PackageDetailActivity.class);
+				Intent intent = new Intent(mActivity,
+						PackageDetailActivity.class);
 				startActivity(intent);
-				
+
 			}
 		});
 		mPartTimeDoFifter.setOnClickListener(new OnClickListener() {
@@ -114,6 +113,7 @@ public class GrabTaskFragment extends Fragment {
 			}
 		};
 	}
+
 	private void showDialog() {
 		effect = Effectstype.Slideright;
 		dialogBuilder.withTitle("温馨提示").withTitleColor("#FFFFFF")
@@ -121,8 +121,7 @@ public class GrabTaskFragment extends Fragment {
 				.withMessageColor("#FF333333").withDialogColor("#FFFFFFFF")
 				.withIcon(getResources().getDrawable(R.drawable.icon_dialog))
 				.isCancelableOnTouchOutside(true).withDuration(700)
-				.withEffect(effect).withButton1Text("否")
-				.withButton2Text("是")
+				.withEffect(effect).withButton1Text("否").withButton2Text("是")
 				.setButton1Click(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -131,11 +130,10 @@ public class GrabTaskFragment extends Fragment {
 				}).setButton2Click(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-						
+
 					}
 				}).show();
 	}
-
 
 	private int dp2px(int dp) {
 		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
