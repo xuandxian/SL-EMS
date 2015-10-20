@@ -81,6 +81,7 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/rl_change_phoneNo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dip"
@@ -169,7 +170,7 @@
             </RelativeLayout>
 
             <Button
-                android:id="@+id/btn_login"
+                android:id="@+id/btn_exit"
                 style="@style/btn_title_white_style"
                 android:background="@drawable/shape_button_delete"
                 android:text="退 出" />

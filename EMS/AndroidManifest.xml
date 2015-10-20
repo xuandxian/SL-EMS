@@ -64,6 +64,7 @@
         <activity android:name="com.overtech.ems.activity.parttime.grabtask.ElevatorDetailActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAccountListActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalBoundsActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalChangePhoneNoActivity" />
     </application>
 
 </manifest>
