@@ -23,8 +23,8 @@ public class GrabTaskDoFilterActivity extends Activity implements OnClickListene
 	private GridView gridView;
 	private GridViewAdapter adapter;
 	private GridViewAdapter adapter2;
-	private Button button1;
-	private Button button2;
+	private Button mZone;
+	private Button mTime;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,16 +37,16 @@ public class GrabTaskDoFilterActivity extends Activity implements OnClickListene
 	}
 
 	private void flushContent() {
-		button1.setOnClickListener(this);
-		button2.setOnClickListener(this);
+		mZone.setOnClickListener(this);
+		mTime.setOnClickListener(this);
 	}
 
 	private void findViewById() {
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
 		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
 		mHeadContentRight = (TextView) findViewById(R.id.tv_headTitleRight);
-		button1=(Button) findViewById(R.id.button1);
-		button2=(Button) findViewById(R.id.button2);
+		mZone=(Button) findViewById(R.id.button1);
+		mTime=(Button) findViewById(R.id.button2);
 		gridView = (GridView) findViewById(R.id.gridView1);
 	}
 
@@ -69,6 +69,7 @@ public class GrabTaskDoFilterActivity extends Activity implements OnClickListene
 				adapter.chiceState(position);
 			}
 		});
+		mZone.setBackgroundResource(R.drawable.selector);
 		
 	}
 
@@ -87,6 +88,8 @@ public class GrabTaskDoFilterActivity extends Activity implements OnClickListene
 					adapter.chiceState(position);
 				}
 			});
+			mZone.setBackgroundResource(R.drawable.selector);
+			mTime.setBackgroundDrawable(null);
 			break;
 		case R.id.button2:
 			int[] image2={R.drawable.one,R.drawable.two,R.drawable.three2five,R.drawable.five2seven,
@@ -98,13 +101,14 @@ public class GrabTaskDoFilterActivity extends Activity implements OnClickListene
 			}
 			gridView.setAdapter(adapter2);
 			gridView.setOnItemClickListener(new OnItemClickListener() {
-
 				@Override
 				public void onItemClick(AdapterView<?> arg0, View arg1,
 						int position, long arg3) {
 					adapter2.chiceState(position);
 				}
 			});
+			mTime.setBackgroundResource(R.drawable.selector);
+			mZone.setBackgroundDrawable(null);
 			break;
 		default:
 			break;
