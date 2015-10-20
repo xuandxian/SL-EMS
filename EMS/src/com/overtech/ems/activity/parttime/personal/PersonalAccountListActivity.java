@@ -1,7 +1,6 @@
 package com.overtech.ems.activity.parttime.personal;
 
 import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
