@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.overtech.ems.R;
 import com.overtech.ems.activity.adapter.PersonalAccountListAdapter;
 import com.overtech.ems.entity.test.Data2;
@@ -19,8 +21,12 @@ public class PersonalAccountListActivity extends Activity implements OnClickList
 	private ImageView mDoBack;
 	private TextView mHeadContent;
 	private ListView mPersonalAccountListView;
+	private Button mHasCount;
+	private Button mNoCount;
 	private PersonalAccountListAdapter adapter;
+	private PersonalAccountListAdapter adapter2;
 	private ArrayList<Data2> list;
+	private ArrayList<Data2> list2;
 	private Context context;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +35,7 @@ public class PersonalAccountListActivity extends Activity implements OnClickList
 		setContentView(R.layout.activity_personal_account_list);
 		findViewById();
 		getData();
+		getData2();
 		initData();
 	}
 
@@ -36,6 +43,16 @@ public class PersonalAccountListActivity extends Activity implements OnClickList
 		mDoBack=(ImageView)findViewById(R.id.iv_headBack);
 		mHeadContent=(TextView)findViewById(R.id.tv_headTitle);
 		mPersonalAccountListView=(ListView)findViewById(R.id.lv_personal_account_list);
+		mHasCount=(Button) findViewById(R.id.btn_nearby_title_map);
+		mNoCount = (Button)findViewById(R.id.btn_nearby_title_list);
+	}
+	private ArrayList<Data2> getData2(){
+		list2=new ArrayList<Data2>();
+		for(int i=0;i<10;i++){
+			Data2 data=new Data2("丰业广元"+i,"2015-10-1"+i,"￥200","2015-10-2"+i);
+			list2.add(data);
+		}
+		return list2;
 	}
 	private ArrayList<Data2> getData() {
 		//模拟数据
@@ -67,6 +84,8 @@ public class PersonalAccountListActivity extends Activity implements OnClickList
 		mHeadContent.setText("我的账单");
 		context=PersonalAccountListActivity.this;
 		mDoBack.setOnClickListener(this);
+		mHasCount.setOnClickListener(this);
+		mNoCount.setOnClickListener(this);
 		adapter=new PersonalAccountListAdapter(context, list);
 		mPersonalAccountListView.setAdapter(adapter);
 	}
@@ -76,6 +95,19 @@ public class PersonalAccountListActivity extends Activity implements OnClickList
 		switch (view.getId()) {
 		case R.id.iv_headBack:
 			finish();
+			break;
+		case R.id.btn_nearby_title_map:
+			if(adapter!=null){
+				adapter.notifyDataSetChanged();
+			}
+			mPersonalAccountListView.setAdapter(adapter);
+			break;
+		case R.id.btn_nearby_title_list:
+			if(adapter2!=null){
+				adapter2.notifyDataSetChanged();
+			}
+			adapter2=new PersonalAccountListAdapter(context, list2);
+			mPersonalAccountListView.setAdapter(adapter2);
 			break;
 		default:
 			break;
