@@ -14,7 +14,7 @@
         android:layout_below="@+id/include1"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp"
-        android:text="设备编号:" />
+        android:text="项目名称:" />
 
     <TextView
         android:id="@+id/device_no_content"
@@ -23,7 +23,7 @@
         android:layout_alignBottom="@+id/device_no"
         android:layout_marginLeft="5dp"
         android:layout_toRightOf="@+id/device_no"
-        android:text="80023231234" />
+        android:text="丰业广元公寓" />
 
     <TextView
         android:id="@+id/use_department"
@@ -32,7 +32,7 @@
         android:layout_below="@+id/device_no"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="8dp"
-        android:text="使用单位:" />
+        android:text="电梯品牌:" />
 
     <TextView
         android:id="@+id/use_department_content"
@@ -41,7 +41,7 @@
         android:layout_alignBottom="@+id/use_department"
         android:layout_marginLeft="5dp"
         android:layout_toRightOf="@+id/use_department"
-        android:text="丰业广元公寓物业" />
+        android:text="上海三菱" />
 
     <TextView
         android:id="@+id/elevator_type"
@@ -59,7 +59,7 @@
         android:layout_alignBottom="@+id/elevator_type"
         android:layout_marginLeft="5dp"
         android:layout_toRightOf="@+id/elevator_type"
-        android:text="乘客电梯" />
+        android:text="GPS-3" />
 
     <TextView
         android:id="@+id/elevator_speed"
@@ -68,7 +68,7 @@
         android:layout_below="@+id/elevator_type"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="8dp"
-        android:text="速        度:" />
+        android:text="电梯编号:" />
 
     <TextView
         android:id="@+id/elevator_speed_content"
@@ -77,7 +77,7 @@
         android:layout_alignBottom="@+id/elevator_speed"
         android:layout_marginLeft="5dp"
         android:layout_toRightOf="@+id/elevator_speed"
-        android:text="2.0m/s" />
+        android:text="80012345678" />
 
     <TextView
         android:id="@+id/elevator_capacity"
@@ -86,7 +86,7 @@
         android:layout_below="@+id/elevator_speed"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="8dp"
-        android:text="载        重:" />
+        android:text="梯        号:" />
 
     <TextView
         android:id="@+id/elevator_capacity_content"
@@ -95,7 +95,7 @@
         android:layout_alignBottom="@+id/elevator_capacity"
         android:layout_marginLeft="5dp"
         android:layout_toRightOf="@+id/elevator_capacity"
-        android:text="880Kg" />
+        android:text="L1" />
 
     <TextView
         android:id="@+id/elevator_floor"
@@ -104,7 +104,7 @@
         android:layout_below="@+id/elevator_capacity"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="8dp"
-        android:text="层        数:" />
+        android:text="物业公司:" />
 
     <TextView
         android:id="@+id/elevator_floor_content"
@@ -113,7 +113,7 @@
         android:layout_alignBottom="@+id/elevator_floor"
         android:layout_marginLeft="5dp"
         android:layout_toRightOf="@+id/elevator_floor"
-        android:text="30层" />
+        android:text="丰业广元公寓物业" />
 
     <TextView
         android:id="@+id/elevator_stack"
@@ -122,7 +122,7 @@
         android:layout_below="@+id/elevator_floor"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="8dp"
-        android:text="站        数:" />
+        android:text="物业联系人:" />
 
     <TextView
         android:id="@+id/elevator_stack_content"
@@ -131,7 +131,7 @@
         android:layout_alignBottom="@+id/elevator_stack"
         android:layout_marginLeft="5dp"
         android:layout_toRightOf="@+id/elevator_stack"
-        android:text="25站" />
+        android:text="Tony" />
 
     <TextView
         android:id="@+id/elevator_doors"
@@ -140,7 +140,7 @@
         android:layout_below="@+id/elevator_stack"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="8dp"
-        android:text="门        数:" />
+        android:text="物业联系电话:" />
 
     <TextView
         android:id="@+id/elevator_doors_content"
@@ -149,7 +149,7 @@
         android:layout_alignBottom="@+id/elevator_doors"
         android:layout_marginLeft="5dp"
         android:layout_toRightOf="@+id/elevator_doors"
-        android:text="25门" />
+        android:text="15012345678" />
 
     <TextView
         android:id="@+id/elevator_maintenance"
@@ -158,7 +158,7 @@
         android:layout_below="@+id/elevator_doors"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="8dp"
-        android:text="保养类型:" />
+        android:text="维保公司:" />
 
     <TextView
         android:id="@+id/elevator_maintenance_content"
@@ -167,7 +167,7 @@
         android:layout_alignBottom="@+id/elevator_maintenance"
         android:layout_marginLeft="5dp"
         android:layout_toRightOf="@+id/elevator_maintenance"
-        android:text="半年/次" />
+        android:text="XXX维保公司" />
 
     <TextView
         android:id="@+id/elevator_inspect"
@@ -176,7 +176,7 @@
         android:layout_below="@+id/elevator_maintenance"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="8dp"
-        android:text="年检日期:" />
+        android:text="额定载重:" />
 
     <TextView
         android:id="@+id/elevator_inspect_content"
@@ -185,7 +185,7 @@
         android:layout_alignBottom="@+id/elevator_inspect"
         android:layout_marginLeft="5dp"
         android:layout_toRightOf="@+id/elevator_inspect"
-        android:text="2015—09-01" />
+        android:text="880Kg" />
 
     <TextView
         android:id="@+id/elevator_last_maintenance"
@@ -194,7 +194,7 @@
         android:layout_below="@+id/elevator_inspect"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="8dp"
-        android:text="上次保养日期:" />
+        android:text="额定速度:" />
 
     <TextView
         android:id="@+id/elevator_last_maintenance_content"
@@ -203,6 +203,57 @@
         android:layout_alignBottom="@+id/elevator_last_maintenance"
         android:layout_marginLeft="5dp"
         android:layout_toRightOf="@+id/elevator_last_maintenance"
-        android:text="2015—06-30" />
+        android:text="2.0m/s" />
+    <TextView
+        android:id="@+id/elevator_floor_stack_bar"
+        style="@style/tv_large_primary_style"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/elevator_last_maintenance"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="8dp"
+        android:text="层站门:" />
+
+    <TextView
+        android:id="@+id/elevator_floor_stack_bar_content"
+        style="@style/tv_large_primary_style"
+        android:layout_alignBaseline="@+id/elevator_floor_stack_bar"
+        android:layout_alignBottom="@+id/elevator_floor_stack_bar"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/elevator_floor_stack_bar"
+        android:text="12/12/12" />
+    <TextView
+        android:id="@+id/elevator_height"
+        style="@style/tv_large_primary_style"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/elevator_floor_stack_bar"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="8dp"
+        android:text="提升高度:" />
+
+    <TextView
+        android:id="@+id/elevator_height_content"
+        style="@style/tv_large_primary_style"
+        android:layout_alignBaseline="@+id/elevator_height"
+        android:layout_alignBottom="@+id/elevator_height"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/elevator_height"
+        android:text="33m" />
+    <TextView
+        android:id="@+id/elevator_maintenance_type"
+        style="@style/tv_large_primary_style"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/elevator_height"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="8dp"
+        android:text="保养类型:" />
+
+    <TextView
+        android:id="@+id/elevator_maintenance_type_content"
+        style="@style/tv_large_primary_style"
+        android:layout_alignBaseline="@+id/elevator_maintenance_type"
+        android:layout_alignBottom="@+id/elevator_maintenance_type"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/elevator_maintenance_type"
+        android:text="清包" />
 
 </RelativeLayout>
