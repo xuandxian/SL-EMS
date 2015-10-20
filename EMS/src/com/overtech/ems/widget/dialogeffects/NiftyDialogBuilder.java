@@ -259,6 +259,24 @@ public class NiftyDialogBuilder extends Dialog implements DialogInterface {
         mButton2.setText(text);
         return this;
     }
+    
+    public NiftyDialogBuilder withButton1Color(String colorString) {
+    	mButton1.setTextColor(Color.parseColor(colorString));
+        return this;
+    }
+    public NiftyDialogBuilder withButton1Color(int color) {
+    	mButton1.setTextColor(color);
+        return this;
+    }
+    public NiftyDialogBuilder withButton2Color(String colorString) {
+    	mButton2.setTextColor(Color.parseColor(colorString));
+        return this;
+    }
+    public NiftyDialogBuilder withButton2Color(int color) {
+    	mButton2.setTextColor(color);
+        return this;
+    }
+    
     public NiftyDialogBuilder setButton1Click(View.OnClickListener click) {
         mButton1.setOnClickListener(click);
         return this;

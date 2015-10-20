@@ -121,7 +121,9 @@ public class GrabTaskFragment extends Fragment {
 				.withMessageColor("#FF333333").withDialogColor("#FFFFFFFF")
 				.withIcon(getResources().getDrawable(R.drawable.icon_dialog))
 				.isCancelableOnTouchOutside(true).withDuration(700)
-				.withEffect(effect).withButton1Text("否").withButton2Text("是")
+				.withEffect(effect).withButtonDrawable(R.color.main_white)
+				.withButton1Text("否").withButton1Color("#FF333333")
+				.withButton2Text("是").withButton2Color("#FF333333")
 				.setButton1Click(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {

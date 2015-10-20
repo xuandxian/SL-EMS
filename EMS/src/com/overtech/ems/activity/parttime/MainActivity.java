@@ -190,18 +190,25 @@ public class MainActivity extends Activity implements OnClickListener {
 			break;
 		}
 	}
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK
 				&& event.getAction() == KeyEvent.ACTION_DOWN) {
 			effect = Effectstype.Shake;
-			dialogBuilder.withTitle("温馨提示").withTitleColor("#FFFFFF")
-					.withDividerColor("#11000000").withMessage("您是否要退出?")
-					.withMessageColor("#FFFFFFFF").withDialogColor("#FF009BEE")
-					.withIcon(getResources().getDrawable(R.drawable.icon_dialog))
+			dialogBuilder
+					.withTitle("温馨提示")
+					.withTitleColor("#FFFFFF")
+					.withDividerColor("#11000000")
+					.withMessage("您是否要退出?")
+					.withMessageColor("#FFFFFFFF")
+					.withDialogColor("#FF009BEE")
+					.withIcon(
+							getResources().getDrawable(R.drawable.icon_dialog))
 					.isCancelableOnTouchOutside(true).withDuration(700)
-					.withEffect(effect).withButton1Text("确定")
-					.withButton2Text("取消")
+					.withEffect(effect).withButtonDrawable(R.color.bg_title)
+					.withButton1Text("确定").withButton1Color("#FFFFFFFF")
+					.withButton2Text("取消").withButton2Color("#FFFFFFFF")
 					.setButton1Click(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
@@ -218,6 +225,5 @@ public class MainActivity extends Activity implements OnClickListener {
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-
 
 }
