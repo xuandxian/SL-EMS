@@ -5,6 +5,8 @@ import com.overtech.ems.activity.adapter.HotWorkAdapter;
 import com.overtech.ems.activity.parttime.grabtask.GrabTaskDoFilterActivity;
 import com.overtech.ems.activity.parttime.grabtask.PackageDetailActivity;
 import com.overtech.ems.utils.Utilities;
+import com.overtech.ems.widget.dialogeffects.Effectstype;
+import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
 import com.overtech.ems.widget.swipemenu.SwipeMenu;
 import com.overtech.ems.widget.swipemenu.SwipeMenuCreator;
 import com.overtech.ems.widget.swipemenu.SwipeMenuItem;
@@ -32,6 +34,8 @@ public class GrabTaskFragment extends Fragment {
 	private SwipeMenuCreator creator;
 	private Activity mActivity;
 	private ImageView mPartTimeDoFifter;
+	private NiftyDialogBuilder dialogBuilder;
+	private Effectstype effect;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -57,6 +61,7 @@ public class GrabTaskFragment extends Fragment {
 	}
 
 	private void init() {
+		dialogBuilder = NiftyDialogBuilder.getInstance(mActivity);
 		initListView();
 		mSwipeListView.setMenuCreator(creator);
 		HotWorkAdapter mAdapter = new HotWorkAdapter(mActivity);
@@ -69,6 +74,7 @@ public class GrabTaskFragment extends Fragment {
 							int index) {
 						Utilities.showToast("你抢了" + position + "位置的单子",
 								mActivity);
+						showDialog();
 					}
 				});
 		mSwipeListView.setOnItemClickListener(new OnItemClickListener() {
@@ -108,6 +114,28 @@ public class GrabTaskFragment extends Fragment {
 			}
 		};
 	}
+	private void showDialog() {
+		effect = Effectstype.Slideright;
+		dialogBuilder.withTitle("温馨提示").withTitleColor("#FFFFFF")
+				.withDividerColor("#11000000").withMessage("您是否要接此单？")
+				.withMessageColor("#FF333333").withDialogColor("#FFFFFFFF")
+				.withIcon(getResources().getDrawable(R.drawable.icon_dialog))
+				.isCancelableOnTouchOutside(true).withDuration(700)
+				.withEffect(effect).withButton1Text("否")
+				.withButton2Text("是")
+				.setButton1Click(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						dialogBuilder.dismiss();
+					}
+				}).setButton2Click(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						
+					}
+				}).show();
+	}
+
 
 	private int dp2px(int dp) {
 		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
