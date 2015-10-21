@@ -18,7 +18,6 @@ package com.overtech.ems.widget.zxing.view;
 
 import java.util.Collection;
 import java.util.HashSet;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;

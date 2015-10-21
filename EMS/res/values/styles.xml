@@ -60,7 +60,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
-    
+
     <style name="tv_large_primary_style" parent="@android:style/Widget.TextView">
         <item name="android:textSize">@dimen/text_size_large</item>
         <item name="android:textColor">@color/main_primary</item>
@@ -74,6 +74,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+
     <style name="tv_title_secondary_style" parent="@android:style/Widget.TextView">
         <item name="android:textSize">@dimen/text_size_title</item>
         <item name="android:textColor">@color/main_secondary</item>
@@ -115,6 +116,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+
     <style name="tv_info_red_style" parent="@android:style/Widget.TextView">
         <item name="android:textSize">@dimen/text_size_info</item>
         <item name="android:textColor">@color/main_red</item>
@@ -135,7 +137,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
-    
+
     <style name="btn_title_white_style" parent="@android:style/Widget.TextView">
         <item name="android:textSize">@dimen/text_size_title</item>
         <item name="android:textColor">@color/main_white</item>
@@ -152,6 +154,19 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:paddingLeft">15dip</item>
+    </style>
+    <!-- progress dialog -->
+    <style name="CustomDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
+    </style>
+
+    <style name="CustomProgressDialog" parent="@style/CustomDialog">
+        <item name="android:windowBackground">@color/bg_mask</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 
 </resources>

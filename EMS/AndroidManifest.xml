@@ -23,7 +23,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
-    
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
@@ -59,12 +59,13 @@
         <activity android:name="com.overtech.ems.activity.common.RegisterAddOtherCertificateActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalDeatilsActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.grabtask.GrabTaskDoFilterActivity" />
-        <activity android:name="com.overtech.ems.activity.ScanCodeActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.tasklist.ScanCodeActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.grabtask.PackageDetailActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.grabtask.ElevatorDetailActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAccountListActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalBoundsActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalChangePhoneNoActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.tasklist.QueryTaskListActivity" />
     </application>
 
 </manifest>

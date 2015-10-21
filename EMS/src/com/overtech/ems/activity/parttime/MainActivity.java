@@ -2,11 +2,11 @@ package com.overtech.ems.activity.parttime;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.overtech.ems.R;
-import com.overtech.ems.activity.ScanCodeActivity;
 import com.overtech.ems.activity.parttime.fragment.GrabTaskFragment;
 import com.overtech.ems.activity.parttime.fragment.NearByFragment;
 import com.overtech.ems.activity.parttime.fragment.PersonalZoneFragment;
 import com.overtech.ems.activity.parttime.fragment.TaskListFragment;
+import com.overtech.ems.activity.parttime.tasklist.ScanCodeActivity;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
 

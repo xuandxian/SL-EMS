@@ -4,7 +4,6 @@ import com.overtech.ems.R;
 import com.overtech.ems.activity.adapter.HotWorkAdapter;
 import com.overtech.ems.activity.parttime.grabtask.GrabTaskDoFilterActivity;
 import com.overtech.ems.activity.parttime.grabtask.PackageDetailActivity;
-import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
 import com.overtech.ems.widget.swipemenu.SwipeMenu;
@@ -12,7 +11,6 @@ import com.overtech.ems.widget.swipemenu.SwipeMenuCreator;
 import com.overtech.ems.widget.swipemenu.SwipeMenuItem;
 import com.overtech.ems.widget.swipemenu.SwipeMenuListView;
 import com.overtech.ems.widget.swipemenu.SwipeMenuListView.OnMenuItemClickListener;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -132,7 +130,7 @@ public class GrabTaskFragment extends Fragment {
 				}).setButton2Click(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-
+						dialogBuilder.dismiss();
 					}
 				}).show();
 	}

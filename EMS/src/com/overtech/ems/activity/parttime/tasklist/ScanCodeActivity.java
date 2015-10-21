@@ -1,4 +1,4 @@
-package com.overtech.ems.activity;
+package com.overtech.ems.activity.parttime.tasklist;
 
 import java.io.IOException;
 import java.util.Vector;
@@ -21,7 +21,6 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.overtech.ems.R;
@@ -30,7 +29,6 @@ import com.overtech.ems.widget.zxing.camera.CameraManager;
 import com.overtech.ems.widget.zxing.decoding.CaptureActivityHandler;
 import com.overtech.ems.widget.zxing.decoding.InactivityTimer;
 import com.overtech.ems.widget.zxing.view.ViewfinderView;
-
 /**
  * Initial the camera
  * 
@@ -57,7 +55,7 @@ public class ScanCodeActivity extends Activity implements Callback {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_task_list_capture);
-		mContext=ScanCodeActivity.this;
+		mContext = ScanCodeActivity.this;
 		CameraManager.init(getApplication());
 		viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
@@ -127,13 +125,13 @@ public class ScanCodeActivity extends Activity implements Callback {
 		if (resultString.equals("")) {
 			Utilities.showToast("扫描失败", mContext);
 		} else {
-			Utilities.showToast("扫描成功", mContext);
-			Intent resultIntent = new Intent();
+			Intent intent = new Intent(ScanCodeActivity.this,
+					QueryTaskListActivity.class);
 			Bundle bundle = new Bundle();
 			bundle.putString("result", resultString);
 			bundle.putParcelable("bitmap", barcode);
-			resultIntent.putExtras(bundle);
-			this.setResult(RESULT_OK, resultIntent);
+			intent.putExtras(bundle);
+			startActivity(intent);
 		}
 		ScanCodeActivity.this.finish();
 	}
@@ -230,5 +228,4 @@ public class ScanCodeActivity extends Activity implements Callback {
 			mediaPlayer.seekTo(0);
 		}
 	};
-
 }
