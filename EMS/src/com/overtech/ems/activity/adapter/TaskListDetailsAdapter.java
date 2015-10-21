@@ -57,7 +57,7 @@ public class TaskListDetailsAdapter extends BaseAdapter {
 		ViewHolder holder = null;
 		ViewHolder2 holder2 = null;
 		int type = getItemViewType(position);
-//		Data3 data = list.get(position);
+		Data3 data = list.get(position);
 		if (convertView == null) {
 			switch (type) {
 			case ITEM_TITLE:
@@ -70,9 +70,13 @@ public class TaskListDetailsAdapter extends BaseAdapter {
 				holder2 = new ViewHolder2();
 				convertView = LayoutInflater.from(context).inflate(
 						R.layout.item_task_details_content, null);
-//				holder2.mContentId.setText(data.getId());
-//				holder2.mContentType.setText(data.getType());
-//				holder2.mContentContent.setText(data.getContent());
+				
+				holder2.mContentId=(TextView)convertView.findViewById(R.id.title_id);
+				holder2.mContentType=(TextView)convertView.findViewById(R.id.title_type);
+				holder2.mContentContent=(TextView)convertView.findViewById(R.id.title_content);
+				holder2.mContentId.setText(data.getId());
+				holder2.mContentType.setText(data.getType());
+				holder2.mContentContent.setText(data.getContent());
 				convertView.setTag(holder2);
 				break;
 			}
@@ -83,9 +87,9 @@ public class TaskListDetailsAdapter extends BaseAdapter {
 				break;
 			case ITEM_CONTENT:
 				holder2 = (ViewHolder2) convertView.getTag();
-//				holder2.mContentId.setText(data.getId());
-//				holder2.mContentType.setText(data.getType());
-//				holder2.mContentContent.setText(data.getContent());
+				holder2.mContentId.setText(data.getId());
+				holder2.mContentType.setText(data.getType());
+				holder2.mContentContent.setText(data.getContent());
 				break;
 			}
 		}

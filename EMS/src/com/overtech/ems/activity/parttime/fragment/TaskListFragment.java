@@ -41,12 +41,6 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 		return view;
 	}
 
-	
-	private void setDefaultView() {
-		transaction=manager.beginTransaction();
-		transaction.replace(R.id.fl_container, mTaskNone, "mTaskNone").commit();
-	}
-
 	private void initView(View view) {
 		mNone=(Button) view.findViewById(R.id.btn_task_list_title_none);
 		mDonet=(Button) view.findViewById(R.id.btn_task_list_title_donet);
@@ -56,6 +50,12 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 		mTaskNone=new TaskListNoneFragment();
 		mTaskDonet=new TaskListDonetFragment();
 	}
+	
+	private void setDefaultView() {
+		transaction=manager.beginTransaction();
+		transaction.replace(R.id.fl_container, mTaskNone).commit();
+	}
+
 
 	@Override
 	public void onClick(View v) {
@@ -79,6 +79,4 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 			transaction.hide(from).show(to).commit();
 		}
 	}
-
-
 }
