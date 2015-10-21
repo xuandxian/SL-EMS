@@ -28,6 +28,7 @@ public class QueryTaskListActivity extends Activity {
 	private ListView mTaskListData;
 	private TaskListDetailsAdapter adapter;
 	private ArrayList<Data3> list;
+	private TextView mTaskDetailsTitle;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,44 +43,12 @@ public class QueryTaskListActivity extends Activity {
 		context = QueryTaskListActivity.this;
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
 		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
+		mTaskDetailsTitle=(TextView)findViewById(R.id.tv_task_detail_title);
+		
+		
 		mHeadContent.setText("维保清单");
 		mHeadBack.setVisibility(View.VISIBLE);
 		mTaskListData = (ListView) findViewById(R.id.lv_task_details);
-		list = new ArrayList<Data3>();
-		Data3 data = new Data3("1", "维保内容", "维保内容和要求");
-		Data3 data1 = new Data3("2", "维保内容", "维保内容和要求");
-		Data3 data2 = new Data3("3", "维保内容", "维保内容和要求");
-		Data3 data3 = new Data3("4", "维保内容", "维保内容和要求");
-		Data3 data4 = new Data3("5", "维保内容", "维保内容和要求");
-		Data3 data5 = new Data3("6", "维保内容", "维保内容和要求");
-		Data3 data6 = new Data3("7", "维保内容", "维保内容和要求");
-		Data3 data7 = new Data3("8", "维保内容", "维保内容和要求");
-		Data3 data8 = new Data3("9", "维保内容", "维保内容和要求");
-		Data3 data9 = new Data3("10", "维保内容", "维保内容和要求");
-		Data3 data10 = new Data3("11", "维保内容", "维保内容和要求");
-		Data3 data11 = new Data3("12", "维保内容", "维保内容和要求");
-		Data3 data12 = new Data3("13", "维保内容", "维保内容和要求");
-		Data3 data13 = new Data3("14", "维保内容", "维保内容和要求");
-		Data3 data14 = new Data3("15", "维保内容", "维保内容和要求");
-		Data3 data15 = new Data3("16", "维保内容", "维保内容和要求");
-		list.add(data);
-		list.add(data1);
-		list.add(data2);
-		list.add(data3);
-		list.add(data4);
-		list.add(data5);
-		list.add(data6);
-		list.add(data7);
-		list.add(data8);
-		list.add(data9);
-		list.add(data10);
-		list.add(data11);
-		list.add(data12);
-		list.add(data13);
-		list.add(data14);
-		list.add(data15);
-		adapter = new TaskListDetailsAdapter(context, list);
-		mTaskListData.setAdapter(adapter);
 	}
 
 	private void getExtraAndSetData() {
@@ -111,7 +80,7 @@ public class QueryTaskListActivity extends Activity {
 		protected Integer doInBackground(Integer... params) {
 
 			try {
-				Thread.sleep(10 * 1000);
+				Thread.sleep(3 * 1000);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
@@ -126,6 +95,42 @@ public class QueryTaskListActivity extends Activity {
 		@Override
 		protected void onPostExecute(Integer result) {
 			stopProgressDialog();
+			mTaskDetailsTitle.setVisibility(View.VISIBLE);
+			list = new ArrayList<Data3>();
+			Data3 data = new Data3("0", "维保内容0", "维保内容和要求");
+			Data3 data1 = new Data3("1", "维保内容1", "维保内容和要求");
+			Data3 data2 = new Data3("2", "维保内容2", "维保内容和要求");
+			Data3 data3 = new Data3("3", "维保内容3", "维保内容和要求");
+			Data3 data4 = new Data3("4", "维保内容4", "维保内容和要求");
+			Data3 data5 = new Data3("5", "维保内容5", "维保内容和要求");
+			Data3 data6 = new Data3("6", "维保内容6", "维保内容和要求");
+			Data3 data7 = new Data3("7", "维保内容7", "维保内容和要求");
+			Data3 data8 = new Data3("8", "维保内容8", "维保内容和要求");
+			Data3 data9 = new Data3("9", "维保内容9", "维保内容和要求");
+			Data3 data10 = new Data3("10", "维保内容10", "维保内容和要求");
+			Data3 data11 = new Data3("11", "维保内容11", "维保内容和要求");
+			Data3 data12 = new Data3("12", "维保内容12", "维保内容和要求");
+			Data3 data13 = new Data3("13", "维保内容13", "维保内容和要求");
+			Data3 data14 = new Data3("14", "维保内容14", "维保内容和要求");
+			Data3 data15 = new Data3("15", "维保内容15", "维保内容和要求");
+			list.add(data);
+			list.add(data1);
+			list.add(data2);
+			list.add(data3);
+			list.add(data4);
+			list.add(data5);
+			list.add(data6);
+			list.add(data7);
+			list.add(data8);
+			list.add(data9);
+			list.add(data10);
+			list.add(data11);
+			list.add(data12);
+			list.add(data13);
+			list.add(data14);
+			list.add(data15);
+			adapter = new TaskListDetailsAdapter(context, list);
+			mTaskListData.setAdapter(adapter);
 		}
 	}
 
