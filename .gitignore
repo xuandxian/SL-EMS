@@ -72,3 +72,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 /project.properties
+EMS/project.properties
