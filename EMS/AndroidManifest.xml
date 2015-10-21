@@ -43,7 +43,7 @@
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="pRtgsRZyxmePt5lPifOnVSS4" />
+            android:value="yDrhQuihswRKko06wm11tOZ7" />
 
         <activity android:name="com.overtech.ems.activity.BaseActivity" />
         <activity android:name="com.overtech.ems.activity.common.LoginActivity" />
@@ -65,6 +65,7 @@
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAccountListActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalBoundsActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalChangePhoneNoActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.personal.ChangePhoneNoVCActivity"></activity>
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.QueryTaskListActivity" />
     </application>
 
