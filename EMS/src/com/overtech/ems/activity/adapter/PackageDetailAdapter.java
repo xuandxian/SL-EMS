@@ -2,8 +2,9 @@ package com.overtech.ems.activity.adapter;
 
 import java.util.ArrayList;
 import com.overtech.ems.R;
+import com.overtech.ems.activity.adapter.TaskListDetailsAdapter.ViewHolder;
 import com.overtech.ems.entity.test.Data2;
-
+import android.R.integer;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,7 +41,7 @@ public class PackageDetailAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder = null;
-		Data2 data=list.get(position);
+		Data2 data = list.get(position);
 		if (convertView == null) {
 			holder = new ViewHolder();
 			convertView = LayoutInflater.from(context).inflate(
@@ -71,5 +72,4 @@ public class PackageDetailAdapter extends BaseAdapter {
 		public TextView mElevtorNo;
 		public TextView mElevtorType;
 	}
-
 }
