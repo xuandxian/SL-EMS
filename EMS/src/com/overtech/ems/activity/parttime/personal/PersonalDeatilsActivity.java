@@ -58,8 +58,10 @@ public class PersonalDeatilsActivity extends Activity implements
 			this.finish();
 			break;
 		case R.id.rl_change_phoneNo:
+//			Intent intent = new Intent(PersonalDeatilsActivity.this,
+//					PersonalChangePhoneNoActivity.class);
 			Intent intent = new Intent(PersonalDeatilsActivity.this,
-					PersonalChangePhoneNoActivity.class);
+					ChangePhoneNoVCActivity.class);
 			startActivity(intent);
 			break;
 		case R.id.btn_exit:

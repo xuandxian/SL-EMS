@@ -24,7 +24,7 @@
 	            android:layout_width="wrap_content"
 	            android:layout_height="wrap_content"
 	            android:text="验证手机号"
-	            android:textColor="#757575"
+	            android:textColor="#00ff00"
 	            />
 	        <ImageView 
 	            android:layout_width="wrap_content"

@@ -66,6 +66,8 @@
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalBoundsActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalChangePhoneNoActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.ChangePhoneNoVCActivity"></activity>
+        <activity android:name="com.overtech.ems.activity.parttime.personal.ChangePhoneNoInVCActivity"></activity>
+        <activity android:name="com.overtech.ems.activity.parttime.personal.ChangePhoneNoSuccessActivity"></activity>
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.QueryTaskListActivity" />
     </application>
 
