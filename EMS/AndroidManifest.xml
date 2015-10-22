@@ -69,6 +69,8 @@
         <activity android:name="com.overtech.ems.activity.parttime.personal.ChangePhoneNoInVCActivity"></activity>
         <activity android:name="com.overtech.ems.activity.parttime.personal.ChangePhoneNoSuccessActivity"></activity>
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.QueryTaskListActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.tasklist.QuestionResponseActivity"></activity>
+        <activity android:name="com.overtech.ems.activity.parttime.tasklist.EvaluationActivity"></activity>
     </application>
 
 </manifest>

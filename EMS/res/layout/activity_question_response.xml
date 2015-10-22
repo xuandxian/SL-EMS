@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_main"
+    android:orientation="vertical" >
+    <include 
+        android:id="@+id/question_response_title"
+        layout="@layout/headview"
+        />
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="vertical"
+        >
+        <TextView 
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="\u3000\u3000如果您反馈的问题被我们采纳，您会得到相应的奖励"
+            android:textColor="#555555"
+            />
+        <EditText 
+            android:id="@+id/et_question_response"
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:gravity="top"
+            android:background="@drawable/shape_edittext_input"
+            />
+        <Button 
+            android:id="@+id/bt_confirm"
+            android:background="@drawable/shape_button_visiable"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:textColor="#ffffff"
+            android:text="提交"
+            />
+    </LinearLayout>
+
+</LinearLayout>

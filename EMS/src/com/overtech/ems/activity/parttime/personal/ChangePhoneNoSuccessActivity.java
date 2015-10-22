@@ -30,7 +30,7 @@ public class ChangePhoneNoSuccessActivity extends BaseActivity implements OnClic
 	private void showDialog() {
 		if (progressDialog == null) {
 			progressDialog = CustomProgressDialog.createDialog(this);
-			progressDialog.setMessage("正在查询中...");
+			progressDialog.setMessage("信息更新中...");
 		}
 		progressDialog.show();
 	}

@@ -5,7 +5,10 @@ import java.util.ArrayList;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.adapter.TaskListDetailsAdapter;
 import com.overtech.ems.entity.test.Data3;
+import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.CustomProgressDialog;
+import com.overtech.ems.widget.pulltorefresh.internal.Utils;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +16,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -23,6 +27,7 @@ public class QueryTaskListActivity extends Activity {
 	private CustomProgressDialog progressDialog = null;
 	private Context context;
 	private TextView mHeadContent;
+	private TextView mHeadResult;
 	private ImageView mHeadBack;
 	private String result;
 	private ListView mTaskListData;
@@ -36,18 +41,32 @@ public class QueryTaskListActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_task_details);
 		init();
+		initEvent();
 		getExtraAndSetData();
+	}
+
+	private void initEvent() {
+		mHeadResult.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent =new Intent(QueryTaskListActivity.this,QuestionResponseActivity.class);
+				startActivity(intent);
+			}
+		});
 	}
 
 	private void init() {
 		context = QueryTaskListActivity.this;
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
 		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
+		mHeadResult=(TextView) findViewById(R.id.tv_headTitleRight);
 		mTaskDetailsTitle=(TextView)findViewById(R.id.tv_task_detail_title);
 		
 		
 		mHeadContent.setText("维保清单");
 		mHeadBack.setVisibility(View.VISIBLE);
+		mHeadResult.setText("完成");
+		mHeadResult.setVisibility(View.VISIBLE);
 		mTaskListData = (ListView) findViewById(R.id.lv_task_details);
 	}
 
@@ -55,6 +74,8 @@ public class QueryTaskListActivity extends Activity {
 		Intent intent = getIntent();
 		Bundle bundle = intent.getExtras();
 		result = bundle.getString("result");
+		
+		Utilities.showToast(result, this);
 		if (TextUtils.isEmpty(result) || result == null) {
 			return;
 		} else {
