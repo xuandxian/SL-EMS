@@ -72,7 +72,8 @@
             android:layout_marginRight="20dp"
             android:background="@drawable/shape_input"
             android:ems="10"
-            android:hint="150****5127"
+            android:enabled="false"
+            android:hint=""
             android:inputType="phone"
             android:maxLength="11" />
         <Button

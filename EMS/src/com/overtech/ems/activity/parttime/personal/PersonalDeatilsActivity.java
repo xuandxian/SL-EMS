@@ -24,6 +24,7 @@ public class PersonalDeatilsActivity extends Activity implements
 	private Button mDoExit;
 	private Effectstype effect;
 	private NiftyDialogBuilder dialogBuilder;
+	private TextView mPhone;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,7 @@ public class PersonalDeatilsActivity extends Activity implements
 		mDoBack = (ImageView) findViewById(R.id.iv_headBack);
 		mChangePhoneNo = (RelativeLayout) findViewById(R.id.rl_change_phoneNo);
 		mDoExit = (Button) findViewById(R.id.btn_exit);
+		mPhone=(TextView) findViewById(R.id.textView3);
 		mHeadContent.setText("账号信息");
 	}
 
@@ -62,6 +64,8 @@ public class PersonalDeatilsActivity extends Activity implements
 //					PersonalChangePhoneNoActivity.class);
 			Intent intent = new Intent(PersonalDeatilsActivity.this,
 					ChangePhoneNoVCActivity.class);
+			String phone=mPhone.getText().toString();
+			intent.putExtra("phone", phone);
 			startActivity(intent);
 			break;
 		case R.id.btn_exit:

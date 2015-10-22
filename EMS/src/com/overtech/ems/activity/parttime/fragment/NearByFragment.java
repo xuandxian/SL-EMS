@@ -1,18 +1,19 @@
 package com.overtech.ems.activity.parttime.fragment;
 
-import com.overtech.ems.R;
-import com.overtech.ems.activity.parttime.nearby.NearByListFragment;
-import com.overtech.ems.activity.parttime.nearby.NearByMapFragment;
-
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.overtech.ems.R;
+import com.overtech.ems.activity.parttime.nearby.NearByListFragment;
+import com.overtech.ems.activity.parttime.nearby.NearByMapFragment;
 
 public class NearByFragment extends Fragment implements OnClickListener {
 
@@ -64,11 +65,21 @@ public class NearByFragment extends Fragment implements OnClickListener {
 		switch (view.getId()) {
 		case R.id.btn_nearby_title_map:
 			switchContent(mNearByList, mNearByMap);
+			mNearByMapBtn.setBackgroundResource(R.drawable.btn_selector_left_blue);
+			mNearByListBtn.setBackgroundResource(R.drawable.btn_seletor_right_white);
+			mNearByMapBtn.setTextColor(getResources().getColor(R.color.main_white));
+			mNearByListBtn.setTextColor(Color.rgb(0, 163, 233));
 			break;
 		case R.id.btn_nearby_title_list:
 			switchContent(mNearByMap, mNearByList);
+			mNearByMapBtn.setBackgroundResource(R.drawable.btn_selector_left_white);
+			mNearByListBtn.setBackgroundResource(R.drawable.btn_selector_right_blue);
+			mNearByMapBtn.setTextColor(Color.rgb(0, 163, 233));
+			mNearByListBtn.setTextColor(getResources().getColor(R.color.main_white));
 			break;
 		}
 	}
+
+	
 
 }

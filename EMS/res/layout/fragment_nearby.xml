@@ -16,21 +16,23 @@
 
         <Button
             android:id="@+id/btn_nearby_title_map"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/shape_button_left"
+            android:background="@drawable/btn_selector_left_blue"
             android:text="地图显示"
-            android:textSize="@dimen/text_size_list" />
+            android:textSize="@dimen/text_size_list"
+            android:textColor="@color/main_white"
+             />
 
         <Button
             android:id="@+id/btn_nearby_title_list"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/shape_button_right"
+         	android:background="@drawable/btn_seletor_right_white"
             android:text="列表显示"
-            android:textColor="@color/main_white"
+            android:textColor="#00a3e9"
             android:textSize="@dimen/text_size_list" />
     </LinearLayout>
 
