@@ -15,7 +15,8 @@ import android.widget.TextView;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.adapter.GridViewAdapter;
 
-public class GrabTaskDoFilterActivity extends Activity implements OnClickListener {
+public class GrabTaskDoFilterActivity extends Activity implements
+		OnClickListener {
 
 	private ImageView mHeadBack;
 	private TextView mHeadContent;
@@ -39,27 +40,29 @@ public class GrabTaskDoFilterActivity extends Activity implements OnClickListene
 	private void flushContent() {
 		mZone.setOnClickListener(this);
 		mTime.setOnClickListener(this);
+		mHeadBack.setOnClickListener(this);
 	}
 
 	private void findViewById() {
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
 		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
 		mHeadContentRight = (TextView) findViewById(R.id.tv_headTitleRight);
-		mZone=(Button) findViewById(R.id.button1);
-		mTime=(Button) findViewById(R.id.button2);
+		mZone = (Button) findViewById(R.id.button1);
+		mTime = (Button) findViewById(R.id.button2);
 		gridView = (GridView) findViewById(R.id.gridView1);
+
 	}
 
 	private void init() {
 		mHeadContent.setText("筛 选");
 		mHeadContentRight.setText("确定");
 		mHeadBack.setVisibility(View.VISIBLE);
-		int[] image = { R.drawable.huangpu, R.drawable.xuhui, R.drawable.changning,
-				R.drawable.jingan, R.drawable.zhabei, R.drawable.putuo,
-				R.drawable.hongkou, R.drawable.yangpu, R.drawable.minghang,
-				R.drawable.baoshan, R.drawable.jiading, R.drawable.pudong,
-				R.drawable.jinshan, R.drawable.songjiang, R.drawable.qingpu,
-				R.drawable.fengxian, R.drawable.chongming};
+		int[] image = { R.drawable.huangpu, R.drawable.xuhui,
+				R.drawable.changning, R.drawable.jingan, R.drawable.zhabei,
+				R.drawable.putuo, R.drawable.hongkou, R.drawable.yangpu,
+				R.drawable.minghang, R.drawable.baoshan, R.drawable.jiading,
+				R.drawable.pudong, R.drawable.jinshan, R.drawable.songjiang,
+				R.drawable.qingpu, R.drawable.fengxian, R.drawable.chongming };
 		adapter = new GridViewAdapter(image, getApplicationContext());
 		gridView.setAdapter(adapter);
 		gridView.setOnItemClickListener(new OnItemClickListener() {
@@ -70,14 +73,14 @@ public class GrabTaskDoFilterActivity extends Activity implements OnClickListene
 			}
 		});
 		mZone.setBackgroundResource(R.drawable.selector);
-		
+
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.button1:
-			if(adapter!=null){
+			if (adapter != null) {
 				adapter.notifyDataSetChanged();
 			}
 			gridView.setAdapter(adapter);
@@ -92,12 +95,13 @@ public class GrabTaskDoFilterActivity extends Activity implements OnClickListene
 			mTime.setBackgroundDrawable(null);
 			break;
 		case R.id.button2:
-			int[] image2={R.drawable.one,R.drawable.two,R.drawable.three2five,R.drawable.five2seven,
-					R.drawable.seven,R.drawable.halfmonth,R.drawable.month};
-			if(adapter2!=null){
+			int[] image2 = { R.drawable.one, R.drawable.two,
+					R.drawable.three2five, R.drawable.five2seven,
+					R.drawable.seven, R.drawable.halfmonth, R.drawable.month };
+			if (adapter2 != null) {
 				adapter2.notifyDataSetChanged();
-			}else{
-				adapter2=new GridViewAdapter(image2, getApplicationContext());
+			} else {
+				adapter2 = new GridViewAdapter(image2, getApplicationContext());
 			}
 			gridView.setAdapter(adapter2);
 			gridView.setOnItemClickListener(new OnItemClickListener() {
@@ -110,7 +114,8 @@ public class GrabTaskDoFilterActivity extends Activity implements OnClickListene
 			mTime.setBackgroundResource(R.drawable.selector);
 			mZone.setBackgroundDrawable(null);
 			break;
-		default:
+		case R.id.iv_headBack:
+			finish();
 			break;
 		}
 	}
