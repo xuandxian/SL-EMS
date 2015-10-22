@@ -1,22 +1,32 @@
 package com.overtech.ems.activity.parttime.grabtask;
 
 import java.util.ArrayList;
-
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.PackageDetailAdapter;
 import com.overtech.ems.entity.test.Data2;
+import com.overtech.ems.widget.dialogeffects.Effectstype;
+import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
 
 public class PackageDetailActivity extends BaseActivity {
 	private ListView mPackageDetailListView;
 	private PackageDetailAdapter adapter;
 	private ArrayList<Data2> list;
+	private Button mGrabTaskBtn;
+	private NiftyDialogBuilder dialogBuilder;
+	private Effectstype effect;
+	private Context context;
+	private ImageView mDoBack;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -24,10 +34,12 @@ public class PackageDetailActivity extends BaseActivity {
 		setContentView(R.layout.activity_package_detail);
 		findViewById();
 		initData();
-		initListView();
+		init();
 	}
 
-	private void initListView() {
+	private void init() {
+		context=PackageDetailActivity.this;
+		dialogBuilder = NiftyDialogBuilder.getInstance(context);
 		adapter = new PackageDetailAdapter(context, list);
 		mPackageDetailListView.setAdapter(adapter);
 		mPackageDetailListView
@@ -41,10 +53,49 @@ public class PackageDetailActivity extends BaseActivity {
 						startActivity(intent);
 					}
 				});
+		mGrabTaskBtn.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				showDialog();
+			}
+		});
+		mDoBack.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				finish();
+			}
+		});
 	}
 
 	private void findViewById() {
 		mPackageDetailListView = (ListView) findViewById(R.id.grab_task_package_listview);
+		mGrabTaskBtn=(Button)findViewById(R.id.btn_grab_task_package);
+		mDoBack=(ImageView)findViewById(R.id.iv_grab_headBack);
+	}
+	
+	private void showDialog() {
+		effect = Effectstype.Slideright;
+		dialogBuilder.withTitle("温馨提示").withTitleColor("#FFFFFF")
+				.withDividerColor("#11000000").withMessage("您是否要接此单？")
+				.withMessageColor("#FF333333").withDialogColor("#FFFFFFFF")
+				.withIcon(getResources().getDrawable(R.drawable.icon_dialog))
+				.isCancelableOnTouchOutside(true).withDuration(700)
+				.withEffect(effect).withButtonDrawable(R.color.main_white)
+				.withButton1Text("否").withButton1Color("#FF333333")
+				.withButton2Text("是").withButton2Color("#FF333333")
+				.setButton1Click(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						dialogBuilder.dismiss();
+					}
+				}).setButton2Click(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						dialogBuilder.dismiss();
+					}
+				}).show();
 	}
 
 	private void initData() {
