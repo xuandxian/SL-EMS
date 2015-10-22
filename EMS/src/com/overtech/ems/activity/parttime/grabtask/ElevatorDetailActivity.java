@@ -3,6 +3,7 @@ package com.overtech.ems.activity.parttime.grabtask;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -30,5 +31,12 @@ public class ElevatorDetailActivity extends Activity {
 	private void init() {
 		mGoBack.setVisibility(View.VISIBLE);
 		mHeadContent.setText("电梯详情");
+		mGoBack.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				finish();
+			}
+		});
 	}
 }
