@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 
-public class QuestionResponseActivity extends BaseActivity {
+public class QuestionResponseActivity extends BaseActivity implements OnClickListener {
 	private TextView mHeadContent;
 	private ImageView mDoBack;
 	private Button mConfirm;
@@ -27,14 +27,8 @@ public class QuestionResponseActivity extends BaseActivity {
 	}
 
 	private void initEvent() {
-		mConfirm.setOnClickListener(new OnClickListener() {
-			
-			@Override
-			public void onClick(View v) {
-				Intent intent=new Intent(QuestionResponseActivity.this,EvaluationActivity.class);
-				startActivity(intent);
-			}
-		});
+		mDoBack.setOnClickListener(this);
+		mConfirm.setOnClickListener(this);
 	}
 
 	private void init() {
@@ -43,5 +37,21 @@ public class QuestionResponseActivity extends BaseActivity {
 		mConfirm=(Button) findViewById(R.id.bt_confirm);
 		mHeadContent.setText("问题反馈");
 		mDoBack.setVisibility(View.VISIBLE);
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.iv_headBack:
+			finish();
+			break;
+		case R.id.bt_confirm:
+			Intent intent=new Intent(QuestionResponseActivity.this,EvaluationActivity.class);
+			startActivity(intent);
+			break;
+
+		default:
+			break;
+		}
 	}
 }

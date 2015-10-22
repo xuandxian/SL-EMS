@@ -22,7 +22,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class QueryTaskListActivity extends Activity {
+public class QueryTaskListActivity extends Activity implements OnClickListener {
 	private MainFrameTask mMainFrameTask = null;
 	private CustomProgressDialog progressDialog = null;
 	private Context context;
@@ -46,13 +46,8 @@ public class QueryTaskListActivity extends Activity {
 	}
 
 	private void initEvent() {
-		mHeadResult.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Intent intent =new Intent(QueryTaskListActivity.this,QuestionResponseActivity.class);
-				startActivity(intent);
-			}
-		});
+		mHeadResult.setOnClickListener(this);
+		mHeadBack.setOnClickListener(this);
 	}
 
 	private void init() {
@@ -175,5 +170,20 @@ public class QueryTaskListActivity extends Activity {
 			mMainFrameTask.cancel(true);
 		}
 		super.onDestroy();
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.iv_headBack:
+			finish();
+			break;
+		case R.id.tv_headTitleRight:
+			Intent intent =new Intent(QueryTaskListActivity.this,QuestionResponseActivity.class);
+			startActivity(intent);
+			break;
+		default:
+			break;
+		}
 	}
 }
