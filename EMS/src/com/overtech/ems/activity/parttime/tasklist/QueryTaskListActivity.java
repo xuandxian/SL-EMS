@@ -61,8 +61,6 @@ public class QueryTaskListActivity extends Activity {
 		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
 		mHeadResult=(TextView) findViewById(R.id.tv_headTitleRight);
 		mTaskDetailsTitle=(TextView)findViewById(R.id.tv_task_detail_title);
-		
-		
 		mHeadContent.setText("维保清单");
 		mHeadBack.setVisibility(View.VISIBLE);
 		mHeadResult.setText("完成");

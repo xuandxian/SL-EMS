@@ -1,15 +1,11 @@
 package com.overtech.ems.activity.common;
 
-import java.util.ArrayList;
-
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
-import com.overtech.ems.entity.test.Data3;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.EditTextWithDelete;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -159,13 +155,13 @@ public class LoginActivity extends BaseActivity {
 		@Override
 		protected void onPostExecute(Integer result) {
 			stopProgressDialog();
-			if ("15012345678".equals(sUserName)&&"123456".equals(sPassword)) {
+//			if ("15012345678".equals(sUserName)&&"123456".equals(sPassword)) {
 				Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 				startActivity(intent);
 				finish();
-			}else {
-				Utilities.showToast("用户名或者密码错误", context);
-			}
+//			}else {
+//				Utilities.showToast("用户名或者密码错误", context);
+//			}
 		}
 	}
 
