@@ -40,11 +40,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/linearLayout1"
+        android:layout_centerInParent="true"
         android:layout_margin="5dp"
         android:layout_toRightOf="@+id/linearLayout1"
         android:horizontalSpacing="5dp"
         android:numColumns="3"
-        android:verticalSpacing="7dp" >
+        android:stretchMode="columnWidth" >
     </GridView>
 
 </RelativeLayout>
