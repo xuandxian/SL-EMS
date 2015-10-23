@@ -18,7 +18,7 @@
         android:orientation="horizontal" >
 
         <Button
-            android:id="@+id/btn_nearby_title_map"
+            android:id="@+id/btn_personal_account_donet"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
@@ -29,7 +29,7 @@
              />
 
         <Button
-            android:id="@+id/btn_nearby_title_list"
+            android:id="@+id/btn_personal_account_none"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"

@@ -42,8 +42,8 @@ public class PersonalAccountListActivity extends Activity implements OnClickList
 		mDoBack=(ImageView)findViewById(R.id.iv_headBack);
 		mHeadContent=(TextView)findViewById(R.id.tv_headTitle);
 		mPersonalAccountListView=(ListView)findViewById(R.id.lv_personal_account_list);
-		mHasCount=(Button) findViewById(R.id.btn_nearby_title_map);
-		mNoCount = (Button)findViewById(R.id.btn_nearby_title_list);
+		mHasCount=(Button) findViewById(R.id.btn_personal_account_donet);
+		mNoCount = (Button)findViewById(R.id.btn_personal_account_none);
 	}
 	private ArrayList<Data2> getData2(){
 		list2=new ArrayList<Data2>();
@@ -95,7 +95,7 @@ public class PersonalAccountListActivity extends Activity implements OnClickList
 		case R.id.iv_headBack:
 			finish();
 			break;
-		case R.id.btn_nearby_title_map:
+		case R.id.btn_personal_account_donet:
 			if(adapter!=null){
 				adapter.notifyDataSetChanged();
 			}
@@ -106,7 +106,7 @@ public class PersonalAccountListActivity extends Activity implements OnClickList
 			mHasCount.setTextColor(getResources().getColor(R.color.main_white));
 			mNoCount.setTextColor(Color.rgb(0, 163, 233));
 			break;
-		case R.id.btn_nearby_title_list:
+		case R.id.btn_personal_account_none:
 			if(adapter2!=null){
 				adapter2.notifyDataSetChanged();
 			}
