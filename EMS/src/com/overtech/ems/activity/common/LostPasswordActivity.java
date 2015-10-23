@@ -5,12 +5,10 @@ import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
-import com.overtech.ems.activity.common.LoginActivity.MainFrameTask;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.EditTextWithDelete;
 import com.overtech.ems.widget.TimeButton;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,7 +19,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class LostPasswordActivity extends BaseActivity {
 	private String mPhoneNo;
@@ -46,7 +43,7 @@ public class LostPasswordActivity extends BaseActivity {
 			@Override
 			public void onClick(View arg0) {
 				mSMSCode=mSMSCodeEditText.getText().toString().trim();
-				if (!TextUtils.isEmpty(mSMSCode)) {
+				if (TextUtils.isEmpty(mSMSCode)) {
 					Utilities.showToast("输入不能为空", context);
 				}else {
 					SMSSDK.submitVerificationCode("86", mPhoneNo,
@@ -115,11 +112,10 @@ public class LostPasswordActivity extends BaseActivity {
 				int resId = getStringRes(LostPasswordActivity.this,
 						"smssdk_network_error");
 				if (resId > 0) {
-					Toast.makeText(LostPasswordActivity.this, resId,
-							Toast.LENGTH_SHORT).show();
+					Utilities.showToast("错误码："+resId, context);
 				}else {
-					Toast.makeText(LostPasswordActivity.this, "验证失败",
-							Toast.LENGTH_SHORT).show();
+					Utilities.showToast("验证失败", context);
+					stopProgressDialog();
 				}
 			}
 		}
@@ -127,7 +123,7 @@ public class LostPasswordActivity extends BaseActivity {
 	private void startProgressDialog() {
 		if (progressDialog == null) {
 			progressDialog = CustomProgressDialog.createDialog(this);
-			progressDialog.setMessage("正在登录...");
+			progressDialog.setMessage("正在验证...");
 		}
 		progressDialog.show();
 	}
