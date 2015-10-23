@@ -5,12 +5,19 @@
     android:background="@color/main_white"
     android:orientation="horizontal" >
 
-    
+    <ImageView
+        android:id="@+id/iv_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:src="@drawable/icon_bg_default" />
 
     <RelativeLayout
         android:id="@+id/rl_item_list_hot"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginLeft="15dp" >
 
         <TextView
@@ -25,10 +32,9 @@
         <TextView
             android:id="@+id/textView1"
             style="@style/tv_info_secondary_style"
+            android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:layout_below="@id/tv_name"
             android:layout_marginBottom="15dp"
-            android:layout_marginTop="10dp"
             android:text="徐汇区广元西路" />
 
         <TextView
@@ -56,7 +62,13 @@
             android:layout_alignRight="@+id/textView2"
             android:text="2015/10/10" />
 
-        
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/icon_bg_hot" />
     </RelativeLayout>
 
 </LinearLayout>

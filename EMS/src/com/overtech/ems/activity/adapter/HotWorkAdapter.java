@@ -67,7 +67,7 @@ public class HotWorkAdapter extends BaseAdapter {
 		TextView tv_name;
 
 		public ViewHolder(View view) {
-//			iv_icon = (ImageView) view.findViewById(R.id.iv_icon);
+			iv_icon = (ImageView) view.findViewById(R.id.iv_icon);
 			tv_name = (TextView) view.findViewById(R.id.tv_name);
 			view.setTag(this);
 		}
