@@ -23,6 +23,9 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -65,12 +68,17 @@
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAccountListActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalBoundsActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalChangePhoneNoActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.personal.ChangePhoneNoVCActivity"></activity>
-        <activity android:name="com.overtech.ems.activity.parttime.personal.ChangePhoneNoInVCActivity"></activity>
-        <activity android:name="com.overtech.ems.activity.parttime.personal.ChangePhoneNoSuccessActivity"></activity>
+        <activity android:name="com.overtech.ems.activity.parttime.personal.ChangePhoneNoVCActivity" >
+        </activity>
+        <activity android:name="com.overtech.ems.activity.parttime.personal.ChangePhoneNoInVCActivity" >
+        </activity>
+        <activity android:name="com.overtech.ems.activity.parttime.personal.ChangePhoneNoSuccessActivity" >
+        </activity>
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.QueryTaskListActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.tasklist.QuestionResponseActivity"></activity>
-        <activity android:name="com.overtech.ems.activity.parttime.tasklist.EvaluationActivity"></activity>
+        <activity android:name="com.overtech.ems.activity.parttime.tasklist.QuestionResponseActivity" >
+        </activity>
+        <activity android:name="com.overtech.ems.activity.parttime.tasklist.EvaluationActivity" >
+        </activity>
     </application>
 
 </manifest>

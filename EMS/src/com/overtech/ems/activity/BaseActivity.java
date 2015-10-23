@@ -1,5 +1,7 @@
 package com.overtech.ems.activity;
 
+import cn.smssdk.SMSSDK;
+
 import com.overtech.ems.listener.BackGestureListener;
 import com.overtech.ems.widget.bitmap.ImageLoader;
 
@@ -18,7 +20,7 @@ import android.view.inputmethod.InputMethodManager;
 
 /**
  * @author Tony
- * @description Activity基类(网络、百度地图、返回手势)
+ * @description Activity基类(网络、百度地图、返回手势，短信验证码)
  * @date 2015-10-05
  */
 public class BaseActivity extends Activity {
@@ -43,6 +45,7 @@ public class BaseActivity extends Activity {
 		setNeedBackGesture(true);// 设置需要手势监听
 		context = this;
 		imageLoader = ImageLoader.getInstance();
+		SMSSDK.initSDK(this, "b731c30880f4", "1c3e262449b1c77498f37c78586b8cf1");
 		imageLoader.initContext(context);
 	}
 

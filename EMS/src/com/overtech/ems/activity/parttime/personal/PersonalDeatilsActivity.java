@@ -78,7 +78,7 @@ public class PersonalDeatilsActivity extends Activity implements
 		effect = Effectstype.SlideBottom;
 		dialogBuilder.withTitle("温馨提示").withTitleColor("#FFFFFF")
 				.withDividerColor("#11000000").withMessage("您是否要退出?")
-				.withMessageColor("#FFFFFFFF").withDialogColor("#FF7B68EE")
+				.withMessageColor("#FFFFFFFF").withDialogColor("#FF009BEE")
 				.withIcon(getResources().getDrawable(R.drawable.icon_dialog))
 				.isCancelableOnTouchOutside(true).withDuration(700)
 				.withEffect(effect).withButton1Text("确定").withButton2Text("取消")
