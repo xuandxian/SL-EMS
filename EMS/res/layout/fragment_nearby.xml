@@ -30,7 +30,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-         	android:background="@drawable/btn_seletor_right_white"
+         	android:background="@drawable/btn_selector_right_white"
             android:text="列表显示"
             android:textColor="#00a3e9"
             android:textSize="@dimen/text_size_list" />

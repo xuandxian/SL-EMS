@@ -66,7 +66,7 @@ public class NearByFragment extends Fragment implements OnClickListener {
 		case R.id.btn_nearby_title_map:
 			switchContent(mNearByList, mNearByMap);
 			mNearByMapBtn.setBackgroundResource(R.drawable.btn_selector_left_blue);
-			mNearByListBtn.setBackgroundResource(R.drawable.btn_seletor_right_white);
+			mNearByListBtn.setBackgroundResource(R.drawable.btn_selector_right_white);
 			mNearByMapBtn.setTextColor(getResources().getColor(R.color.main_white));
 			mNearByListBtn.setTextColor(Color.rgb(0, 163, 233));
 			break;

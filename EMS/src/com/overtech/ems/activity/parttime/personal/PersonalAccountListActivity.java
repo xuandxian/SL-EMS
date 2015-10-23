@@ -3,6 +3,7 @@ package com.overtech.ems.activity.parttime.personal;
 import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -99,6 +100,11 @@ public class PersonalAccountListActivity extends Activity implements OnClickList
 				adapter.notifyDataSetChanged();
 			}
 			mPersonalAccountListView.setAdapter(adapter);
+			
+			mHasCount.setBackgroundResource(R.drawable.btn_selector_left_blue);
+			mNoCount.setBackgroundResource(R.drawable.btn_selector_right_white);
+			mHasCount.setTextColor(getResources().getColor(R.color.main_white));
+			mNoCount.setTextColor(Color.rgb(0, 163, 233));
 			break;
 		case R.id.btn_nearby_title_list:
 			if(adapter2!=null){
@@ -106,6 +112,11 @@ public class PersonalAccountListActivity extends Activity implements OnClickList
 			}
 			adapter2=new PersonalAccountListAdapter(context, list2);
 			mPersonalAccountListView.setAdapter(adapter2);
+			
+			mHasCount.setBackgroundResource(R.drawable.btn_selector_left_white);
+			mNoCount.setBackgroundResource(R.drawable.btn_selector_right_blue);
+			mHasCount.setTextColor(Color.rgb(0, 163, 233));
+			mNoCount.setTextColor(getResources().getColor(R.color.main_white));
 			break;
 		default:
 			break;

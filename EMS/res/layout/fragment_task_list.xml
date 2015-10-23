@@ -16,21 +16,22 @@
 
         <Button
             android:id="@+id/btn_task_list_title_none"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/shape_button_left"
+            android:background="@drawable/btn_selector_left_blue"
             android:text="未完成"
-            android:textSize="@dimen/text_size_list" />
+            android:textSize="@dimen/text_size_list"
+            android:textColor="@color/main_white" />
 
         <Button
             android:id="@+id/btn_task_list_title_donet"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/shape_button_right"
+            android:background="@drawable/btn_selector_right_white"
             android:text="已完成"
-            android:textColor="@color/main_white"
+            android:textColor="#00a3e9"
             android:textSize="@dimen/text_size_list" />
     </LinearLayout>
 	

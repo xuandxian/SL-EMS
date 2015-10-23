@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,9 +63,17 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.btn_task_list_title_none:
 			switchContent(mTaskDonet,mTaskNone);
+			mNone.setBackgroundResource(R.drawable.btn_selector_left_blue);
+			mDonet.setBackgroundResource(R.drawable.btn_selector_right_white);
+			mNone.setTextColor(getResources().getColor(R.color.main_white));
+			mDonet.setTextColor(Color.rgb(0, 163, 233));
 			break;
 		case R.id.btn_task_list_title_donet:
 			switchContent(mTaskNone,mTaskDonet);
+			mNone.setBackgroundResource(R.drawable.btn_selector_left_white);
+			mDonet.setBackgroundResource(R.drawable.btn_selector_right_blue);
+			mNone.setTextColor(Color.rgb(0, 163, 233));
+			mDonet.setTextColor(getResources().getColor(R.color.main_white));
 			break;
 		default:
 			break;
