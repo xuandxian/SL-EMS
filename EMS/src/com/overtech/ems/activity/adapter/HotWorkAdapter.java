@@ -11,7 +11,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class GrabTaskAdapter extends BaseAdapter {
+public class HotWorkAdapter extends BaseAdapter {
 
 	private List<Data> list;
 	private Context context;
@@ -24,13 +24,13 @@ public class GrabTaskAdapter extends BaseAdapter {
 		this.list = data;
 	}
 
-	public GrabTaskAdapter(List<Data> list, Context context) {
+	public HotWorkAdapter(List<Data> list, Context context) {
 		super();
 		this.list = list;
 		this.context = context;
 	}
 
-	public GrabTaskAdapter(Context context) {
+	public HotWorkAdapter(Context context) {
 		super();
 		this.context = context;
 	}

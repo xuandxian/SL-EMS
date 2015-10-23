@@ -1,7 +1,7 @@
 package com.overtech.ems.activity.parttime.fragment;
 
 import com.overtech.ems.R;
-import com.overtech.ems.activity.adapter.GrabTaskAdapter;
+import com.overtech.ems.activity.adapter.HotWorkAdapter;
 import com.overtech.ems.activity.parttime.grabtask.GrabTaskDoFilterActivity;
 import com.overtech.ems.activity.parttime.grabtask.PackageDetailActivity;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
@@ -34,7 +34,6 @@ public class GrabTaskFragment extends Fragment {
 	private ImageView mPartTimeDoFifter;
 	private NiftyDialogBuilder dialogBuilder;
 	private Effectstype effect;
-	private GrabTaskAdapter mAdapter;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -63,7 +62,7 @@ public class GrabTaskFragment extends Fragment {
 		dialogBuilder = NiftyDialogBuilder.getInstance(mActivity);
 		initListView();
 		mSwipeListView.setMenuCreator(creator);
-		mAdapter= new GrabTaskAdapter(mActivity);
+		HotWorkAdapter mAdapter = new HotWorkAdapter(mActivity);
 		mSwipeListView.setAdapter(mAdapter);
 		mSwipeListView
 				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
