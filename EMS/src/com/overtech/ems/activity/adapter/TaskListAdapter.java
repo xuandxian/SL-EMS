@@ -3,7 +3,7 @@ package com.overtech.ems.activity.adapter;
 import java.util.List;
 
 import com.overtech.ems.R;
-import com.overtech.ems.activity.adapter.HotWorkAdapter.ViewHolder;
+import com.overtech.ems.activity.adapter.GrabTaskAdapter.ViewHolder;
 import com.overtech.ems.entity.test.Data;
 
 import android.content.Context;
@@ -13,7 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class HotWork2Adapter extends BaseAdapter {
+public class TaskListAdapter extends BaseAdapter {
 
 	private List<Data> list;
 	private Context context;
@@ -26,13 +26,13 @@ public class HotWork2Adapter extends BaseAdapter {
 		this.list = data;
 	}
 
-	public HotWork2Adapter(List<Data> list, Context context) {
+	public TaskListAdapter(List<Data> list, Context context) {
 		super();
 		this.list = list;
 		this.context = context;
 	}
 
-	public HotWork2Adapter(Context context) {
+	public TaskListAdapter(Context context) {
 		super();
 		this.context = context;
 	}

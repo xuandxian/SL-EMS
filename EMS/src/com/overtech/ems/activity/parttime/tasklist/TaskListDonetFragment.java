@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.overtech.ems.R;
-import com.overtech.ems.activity.adapter.HotWork2Adapter;
+import com.overtech.ems.activity.adapter.TaskListAdapter;
 
 public class TaskListDonetFragment extends Fragment {
 	private ListView mDonet;
@@ -29,7 +29,7 @@ public class TaskListDonetFragment extends Fragment {
 	}
 
 	private void initView() {
-		HotWork2Adapter adapter=new HotWork2Adapter(mActivity);
+		TaskListAdapter adapter=new TaskListAdapter(mActivity);
 		mDonet.setAdapter(adapter);
 	}
 
