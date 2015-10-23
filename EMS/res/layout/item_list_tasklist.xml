@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/main_white"
+    android:orientation="horizontal" >
+
+    
+
+    <RelativeLayout
+        android:id="@+id/rl_item_list_hot"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp" >
+
+        <TextView
+            android:id="@+id/tv_name"
+            style="@style/tv_list_primary_style"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="10dp"
+            android:singleLine="true"
+            android:text="徐家汇景园" />
+
+        <TextView
+            android:id="@+id/textView1"
+            style="@style/tv_info_secondary_style"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/tv_name"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="15dp"
+            android:text="徐汇区广元西路" />
+
+        <TextView
+            android:id="@+id/textView2"
+            style="@style/tv_info_secondary_style"
+            android:layout_alignBaseline="@+id/tv_name"
+            android:layout_alignBottom="@+id/tv_name"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="16dp"
+            android:text="5部" />
+
+        <TextView
+            android:id="@+id/textView3"
+            style="@style/tv_info_secondary_style"
+            android:layout_alignBottom="@+id/textView1"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@+id/textView1"
+            android:text="13.5km" />
+
+        <TextView
+            android:id="@+id/textView4"
+            style="@style/tv_info_secondary_style"
+            android:layout_alignBaseline="@+id/textView3"
+            android:layout_alignBottom="@+id/textView3"
+            android:layout_alignRight="@+id/textView2"
+            android:text="2015/10/10" />
+
+        
+    </RelativeLayout>
+
+</LinearLayout>
