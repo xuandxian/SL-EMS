@@ -1,6 +1,7 @@
 package com.overtech.ems.activity.adapter;
 
 import com.overtech.ems.R;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -82,7 +83,7 @@ public class GridViewAdapter extends BaseAdapter {
 			array[1] = new BitmapDrawable(bitmap2);
 			la = new LayerDrawable(array);
 			la.setLayerInset(0, 0, 0, 0, 0); // 第几张图离各边的间距
-			la.setLayerInset(1, 0, 65, 65, 0);
+			la.setLayerInset(1, 0, 30, 20, 0);
 		} else {
 			Drawable[] array = new Drawable[1];
 			array[0] = new BitmapDrawable(bitmap);

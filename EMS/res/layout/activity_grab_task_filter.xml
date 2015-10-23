@@ -38,14 +38,15 @@
     <GridView
         android:id="@+id/gridView1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignTop="@+id/linearLayout1"
-        android:layout_centerInParent="true"
-        android:layout_margin="5dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
         android:layout_toRightOf="@+id/linearLayout1"
-        android:horizontalSpacing="5dp"
+        android:horizontalSpacing="3dp"
         android:numColumns="3"
-        android:stretchMode="columnWidth" >
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="10dp" >
     </GridView>
 
 </RelativeLayout>

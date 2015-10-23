@@ -57,22 +57,17 @@ public class GrabTaskDoFilterActivity extends Activity implements
 		mHeadContent.setText("筛 选");
 		mHeadContentRight.setText("确定");
 		mHeadBack.setVisibility(View.VISIBLE);
-		// int[] image = { R.drawable.filter_zone_baoshan,
-		// R.drawable.filter_zone_changning,
-		// R.drawable.filter_zone_chongming,
-		// R.drawable.filter_zone_fengxian,
-		// R.drawable.filter_zone_hongkou, R.drawable.filter_zone_huangpu,
-		// R.drawable.filter_zone_jiading, R.drawable.filter_zone_jingan,
-		// R.drawable.filter_zone_jinshan,
-		// R.drawable.filter_zone_minghang, R.drawable.filter_zone_putuo,
-		// R.drawable.filter_zone_qingpu, R.drawable.filter_zone_qingpu,
-		// R.drawable.filter_zone_xuhui, R.drawable.filter_zone_yangpu,
-		// R.drawable.filter_zone_zhabei };
-		int[] image = { R.drawable.lan, R.drawable.lan, R.drawable.lan,
-				R.drawable.lan, R.drawable.lan, R.drawable.lan, R.drawable.lan,
-				R.drawable.lan, R.drawable.lan, R.drawable.lan, R.drawable.lan,
-				R.drawable.lan, R.drawable.lan, R.drawable.lan, R.drawable.lan,
-				R.drawable.lan, R.drawable.lan, R.drawable.lan, };
+		 int[] image = { R.drawable.filter_zone_baoshan,
+		 R.drawable.filter_zone_changning,
+		 R.drawable.filter_zone_chongming,
+		 R.drawable.filter_zone_fengxian,
+		 R.drawable.filter_zone_hongkou, R.drawable.filter_zone_huangpu,
+		 R.drawable.filter_zone_jiading, R.drawable.filter_zone_jingan,
+		 R.drawable.filter_zone_jinshan,
+		 R.drawable.filter_zone_minghang, R.drawable.filter_zone_putuo,
+		 R.drawable.filter_zone_qingpu, R.drawable.filter_zone_qingpu,
+		 R.drawable.filter_zone_xuhui, R.drawable.filter_zone_yangpu,
+		 R.drawable.filter_zone_zhabei };
 		adapter = new GridViewAdapter(image, getApplicationContext());
 		gridView.setAdapter(adapter);
 		gridView.setOnItemClickListener(new OnItemClickListener() {
