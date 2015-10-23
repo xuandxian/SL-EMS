@@ -1,7 +1,7 @@
 package com.overtech.ems.activity.parttime.nearby;
 
 import com.overtech.ems.R;
-import com.overtech.ems.activity.adapter.HotWorkAdapter;
+import com.overtech.ems.activity.adapter.GrabTaskAdapter;
 import com.overtech.ems.activity.parttime.grabtask.PackageDetailActivity;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
@@ -66,7 +66,7 @@ public class NearByListFragment extends Fragment {
 			}
 		};
 		mNearBySwipeListView.setMenuCreator(creator);
-		HotWorkAdapter mAdapter = new HotWorkAdapter(mActivity);
+		GrabTaskAdapter mAdapter = new GrabTaskAdapter(mActivity);
 		mNearBySwipeListView.setAdapter(mAdapter);
 		mNearBySwipeListView
 				.setOnMenuItemClickListener(new OnMenuItemClickListener() {

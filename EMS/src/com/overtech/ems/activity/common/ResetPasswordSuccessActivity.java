@@ -1,25 +1,32 @@
 package com.overtech.ems.activity.common;
 
 import com.overtech.ems.R;
-import com.overtech.ems.R.id;
-import com.overtech.ems.R.layout;
-import com.overtech.ems.activity.BaseActivity;
-
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class ResetPasswordSuccessActivity extends BaseActivity {
+public class ResetPasswordSuccessActivity extends Activity {
 	private TextView mHeadContent;
 	private ImageView mHeadBack;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_reset_password_success);
 		findViewById();
 		init();
+		mHeadBack.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				finish();
+			}
+		});
 	}
 
 	private void findViewById() {
@@ -31,5 +38,4 @@ public class ResetPasswordSuccessActivity extends BaseActivity {
 		mHeadContent.setText("密码重置");
 		mHeadBack.setVisibility(View.VISIBLE);
 	}
-
 }

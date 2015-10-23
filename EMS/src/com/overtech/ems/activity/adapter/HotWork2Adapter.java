@@ -3,7 +3,7 @@ package com.overtech.ems.activity.adapter;
 import java.util.List;
 
 import com.overtech.ems.R;
-import com.overtech.ems.activity.adapter.HotWorkAdapter.ViewHolder;
+import com.overtech.ems.activity.adapter.GrabTaskAdapter.ViewHolder;
 import com.overtech.ems.entity.test.Data;
 
 import android.content.Context;
