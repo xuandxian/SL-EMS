@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ import com.overtech.ems.R;
 import com.overtech.ems.activity.adapter.TaskListAdapter;
 import com.overtech.ems.entity.test.Data4;
 import com.overtech.ems.utils.Utilities;
+import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
 import com.overtech.ems.widget.swipemenu.SwipeMenu;
@@ -42,46 +44,60 @@ public class TaskListNoneFragment extends Fragment {
 	private NiftyDialogBuilder dialogBuilder;
 	private Effectstype effect;
 	private ArrayList<Data4> list;
+	private CustomProgressDialog progressDialog;
+
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
 		mActivity = activity;
 	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view=inflater.inflate(R.layout.fragment_task_list_none, container, false);
+		View view = inflater.inflate(R.layout.fragment_task_list_none,
+				container, false);
 		findViewById(view);
 		getData();
 		init();
 		return view;
-		
+
 	}
 
 	private void findViewById(View view) {
 		mSwipeListView = (SwipeMenuListView) view
 				.findViewById(R.id.sl_task_list_listview);
 	}
+
 	private void getData() {
-		Data4 data=new Data4("南虹小区", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
-		Data4 data1=new Data4("徐家汇景园", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
-		Data4 data2=new Data4("丰业广元公寓", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
-		Data4 data3=new Data4("虹桥小区", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
-		Data4 data4=new Data4("徐家汇景园", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
-		Data4 data5=new Data4("虹桥小区", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
-		Data4 data6=new Data4("虹桥小区", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
-		Data4 data7=new Data4("丰业广元公寓", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
-		Data4 data8=new Data4("丰业广元公寓", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
-		Data4 data9=new Data4("南虹小区0", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
-		Data4 data10=new Data4("南虹小区1", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
-		Data4 data11=new Data4("南虹小区2", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
-		Data4 data12=new Data4("虹桥小区", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
-		Data4 data13=new Data4("南虹小区4", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
-		Data4 data14=new Data4("虹桥小区", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
-		Data4 data15=new Data4("丰业广元公寓", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
-		Data4 data16=new Data4("南虹小区7", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
-		Data4 data17=new Data4("丰业广元公寓", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
-		list=new ArrayList<Data4>();
+		Data4 data = new Data4("南虹小区", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
+		Data4 data1 = new Data4("徐家汇景园", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
+		Data4 data2 = new Data4("丰业广元公寓", "5", "徐汇区广元西路", "13.5km",
+				"2015-10-10");
+		Data4 data3 = new Data4("虹桥小区", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
+		Data4 data4 = new Data4("徐家汇景园", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
+		Data4 data5 = new Data4("虹桥小区", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
+		Data4 data6 = new Data4("虹桥小区", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
+		Data4 data7 = new Data4("丰业广元公寓", "5", "徐汇区广元西路", "13.5km",
+				"2015-10-10");
+		Data4 data8 = new Data4("丰业广元公寓", "5", "徐汇区广元西路", "13.5km",
+				"2015-10-10");
+		Data4 data9 = new Data4("南虹小区0", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
+		Data4 data10 = new Data4("南虹小区1", "5", "徐汇区广元西路", "13.5km",
+				"2015-10-10");
+		Data4 data11 = new Data4("南虹小区2", "5", "徐汇区广元西路", "13.5km",
+				"2015-10-10");
+		Data4 data12 = new Data4("虹桥小区", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
+		Data4 data13 = new Data4("南虹小区4", "5", "徐汇区广元西路", "13.5km",
+				"2015-10-10");
+		Data4 data14 = new Data4("虹桥小区", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
+		Data4 data15 = new Data4("丰业广元公寓", "5", "徐汇区广元西路", "13.5km",
+				"2015-10-10");
+		Data4 data16 = new Data4("南虹小区7", "5", "徐汇区广元西路", "13.5km",
+				"2015-10-10");
+		Data4 data17 = new Data4("丰业广元公寓", "5", "徐汇区广元西路", "13.5km",
+				"2015-10-10");
+		list = new ArrayList<Data4>();
 		list.add(data);
 		list.add(data1);
 		list.add(data2);
@@ -115,24 +131,25 @@ public class TaskListNoneFragment extends Fragment {
 		mLocClient.start();
 	}
 
-
 	private void init() {
 		dialogBuilder = NiftyDialogBuilder.getInstance(mActivity);
+		progressDialog=CustomProgressDialog.createDialog(mActivity);
 		initListView();
 		mSwipeListView.setMenuCreator(creator);
-		TaskListAdapter mAdapter = new TaskListAdapter(list,mActivity);
+		TaskListAdapter mAdapter = new TaskListAdapter(list, mActivity);
 		mSwipeListView.setAdapter(mAdapter);
 		mSwipeListView
 				.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
-					
+
 					@Override
-					public void onMenuItemClick(int position, SwipeMenu menu, int index) {
+					public void onMenuItemClick(int position, SwipeMenu menu,
+							int index) {
 						switch (index) {
 						case 0:
 							initBaiduMapLocation();
 							break;
 						case 1:
-//							Utilities.showToast("退单", mActivity);
+							// Utilities.showToast("退单", mActivity);
 							showDialog();
 							break;
 						}
@@ -144,7 +161,8 @@ public class TaskListNoneFragment extends Fragment {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				Utilities.showToast("你点击了" + position + "位置", mActivity);
-				Intent intent=new Intent(mActivity,TaskListPackageDetailActivity.class);
+				Intent intent = new Intent(mActivity,
+						TaskListPackageDetailActivity.class);
 				startActivity(intent);
 			}
 		});
@@ -169,6 +187,15 @@ public class TaskListNoneFragment extends Fragment {
 					@Override
 					public void onClick(View v) {
 						dialogBuilder.dismiss();
+						progressDialog.setMessage("正在退单");
+						progressDialog.show();
+						new Handler().postDelayed(new Runnable() {
+
+							@Override
+							public void run() {
+								progressDialog.dismiss();
+							}
+						}, 3000);
 					}
 				}).show();
 	}
