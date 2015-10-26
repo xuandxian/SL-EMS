@@ -1,7 +1,6 @@
 package com.overtech.ems.activity.adapter;
 
 import java.util.List;
-
 import com.overtech.ems.R;
 import com.overtech.ems.entity.test.Data4;
 import android.content.Context;
@@ -36,12 +35,12 @@ public class TaskListAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		return 50;
+		return list.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		return position;
+		return list.get(position);
 	}
 
 	@Override
