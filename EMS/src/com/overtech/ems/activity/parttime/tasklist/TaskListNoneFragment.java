@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -22,7 +21,7 @@ import com.baidu.mapapi.utils.route.BaiduMapRoutePlan;
 import com.baidu.mapapi.utils.route.RouteParaOption;
 import com.baidu.mapapi.utils.route.RouteParaOption.EBusStrategyType;
 import com.overtech.ems.R;
-import com.overtech.ems.activity.adapter.GrabTaskAdapter;
+import com.overtech.ems.activity.adapter.TaskListAdapter;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
@@ -77,7 +76,7 @@ public class TaskListNoneFragment extends Fragment {
 		dialogBuilder = NiftyDialogBuilder.getInstance(mActivity);
 		initListView();
 		mSwipeListView.setMenuCreator(creator);
-		GrabTaskAdapter mAdapter = new GrabTaskAdapter(mActivity);
+		TaskListAdapter mAdapter = new TaskListAdapter(mActivity);
 		mSwipeListView.setAdapter(mAdapter);
 		mSwipeListView
 				.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
