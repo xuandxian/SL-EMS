@@ -2,16 +2,17 @@ package com.overtech.ems.activity.parttime.tasklist;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
-import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -100,6 +101,8 @@ public class TaskListNoneFragment extends Fragment {
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				Utilities.showToast("你点击了" + position + "位置", mActivity);
+				Intent intent=new Intent(mActivity,TaskListPackageDetailActivity.class);
+				startActivity(intent);
 			}
 		});
 	}
