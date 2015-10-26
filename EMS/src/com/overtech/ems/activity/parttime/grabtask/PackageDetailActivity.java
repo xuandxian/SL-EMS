@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -15,6 +16,7 @@ import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.PackageDetailAdapter;
 import com.overtech.ems.entity.test.Data2;
+import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
 
@@ -27,6 +29,7 @@ public class PackageDetailActivity extends BaseActivity {
 	private Effectstype effect;
 	private Context context;
 	private ImageView mDoBack;
+	private CustomProgressDialog progressDialog;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +43,7 @@ public class PackageDetailActivity extends BaseActivity {
 	private void init() {
 		context=PackageDetailActivity.this;
 		dialogBuilder = NiftyDialogBuilder.getInstance(context);
+		progressDialog=CustomProgressDialog.createDialog(context);
 		adapter = new PackageDetailAdapter(context, list);
 		mPackageDetailListView.setAdapter(adapter);
 		mPackageDetailListView
@@ -94,6 +98,15 @@ public class PackageDetailActivity extends BaseActivity {
 					@Override
 					public void onClick(View v) {
 						dialogBuilder.dismiss();
+						progressDialog.setMessage("正在抢单");
+						progressDialog.show();
+						new Handler().postDelayed(new Runnable() {
+
+							@Override
+							public void run() {
+								progressDialog.dismiss();
+							}
+						}, 3000);
 					}
 				}).show();
 	}

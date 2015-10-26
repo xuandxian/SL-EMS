@@ -3,7 +3,7 @@ package com.overtech.ems.activity.parttime.nearby;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.adapter.GrabTaskAdapter;
 import com.overtech.ems.activity.parttime.grabtask.PackageDetailActivity;
-import com.overtech.ems.utils.Utilities;
+import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
 import com.overtech.ems.widget.swipemenu.SwipeMenu;
@@ -11,13 +11,13 @@ import com.overtech.ems.widget.swipemenu.SwipeMenuCreator;
 import com.overtech.ems.widget.swipemenu.SwipeMenuItem;
 import com.overtech.ems.widget.swipemenu.SwipeMenuListView;
 import com.overtech.ems.widget.swipemenu.SwipeMenuListView.OnMenuItemClickListener;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +32,7 @@ public class NearByListFragment extends Fragment {
 	private Activity mActivity;
 	private NiftyDialogBuilder dialogBuilder;
 	private Effectstype effect;
+	private CustomProgressDialog progressDialog;
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -45,6 +46,7 @@ public class NearByListFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_nearby_list, container,
 				false);
 		dialogBuilder = NiftyDialogBuilder.getInstance(mActivity);
+		progressDialog=CustomProgressDialog.createDialog(mActivity);
 		initListView(view);
 		return view;
 	}
@@ -106,6 +108,15 @@ public class NearByListFragment extends Fragment {
 					@Override
 					public void onClick(View v) {
 						dialogBuilder.dismiss();
+						progressDialog.setMessage("正在抢单...");
+						progressDialog.show();
+						new Handler().postDelayed(new Runnable() {
+
+							@Override
+							public void run() {
+								progressDialog.dismiss();
+							}
+						}, 3000);
 					}
 				}).show();
 	}

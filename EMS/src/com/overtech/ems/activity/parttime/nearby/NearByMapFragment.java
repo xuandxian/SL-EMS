@@ -19,9 +19,13 @@ import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.overtech.ems.R;
+import com.overtech.ems.activity.parttime.grabtask.PackageDetailActivity;
 import com.overtech.ems.entity.test.Data;
 import com.overtech.ems.utils.Utilities;
+
+import android.app.Activity;
 import android.app.Fragment;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -44,6 +48,13 @@ public class NearByMapFragment extends Fragment {
 	private Marker mMarker;
 	private View view;
 	private Data data;
+	private Activity mActivity;
+
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
+		mActivity = activity;
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -156,7 +167,9 @@ public class NearByMapFragment extends Fragment {
 			@Override
 			public boolean onMarkerClick(final Marker marker) {
 				data = mHashMap.get(String.valueOf(marker.getZIndex()));
-				Utilities.showToast("你点击了：" + data.name, getActivity());
+				Intent intent = new Intent(mActivity,
+						PackageDetailActivity.class);
+				startActivity(intent);
 				return true;
 			}
 		});
