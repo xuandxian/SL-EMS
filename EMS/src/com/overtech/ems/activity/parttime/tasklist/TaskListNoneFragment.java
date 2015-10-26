@@ -1,5 +1,7 @@
 package com.overtech.ems.activity.parttime.tasklist;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -22,6 +24,7 @@ import com.baidu.mapapi.utils.route.RouteParaOption;
 import com.baidu.mapapi.utils.route.RouteParaOption.EBusStrategyType;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.adapter.TaskListAdapter;
+import com.overtech.ems.entity.test.Data4;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
@@ -38,6 +41,7 @@ public class TaskListNoneFragment extends Fragment {
 	private LatLng mLocation;
 	private NiftyDialogBuilder dialogBuilder;
 	private Effectstype effect;
+	private ArrayList<Data4> list;
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -48,6 +52,7 @@ public class TaskListNoneFragment extends Fragment {
 			Bundle savedInstanceState) {
 		View view=inflater.inflate(R.layout.fragment_task_list_none, container, false);
 		findViewById(view);
+		getData();
 		init();
 		return view;
 		
@@ -56,6 +61,45 @@ public class TaskListNoneFragment extends Fragment {
 	private void findViewById(View view) {
 		mSwipeListView = (SwipeMenuListView) view
 				.findViewById(R.id.sl_task_list_listview);
+	}
+	private void getData() {
+		Data4 data=new Data4("南虹小区0", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
+		Data4 data1=new Data4("南虹小区1", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
+		Data4 data2=new Data4("南虹小区2", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
+		Data4 data3=new Data4("南虹小区3", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
+		Data4 data4=new Data4("南虹小区4", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
+		Data4 data5=new Data4("南虹小区5", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
+		Data4 data6=new Data4("南虹小区6", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
+		Data4 data7=new Data4("南虹小区7", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
+		Data4 data8=new Data4("南虹小区8", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
+		Data4 data9=new Data4("南虹小区0", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
+		Data4 data10=new Data4("南虹小区1", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
+		Data4 data11=new Data4("南虹小区2", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
+		Data4 data12=new Data4("南虹小区3", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
+		Data4 data13=new Data4("南虹小区4", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
+		Data4 data14=new Data4("南虹小区5", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
+		Data4 data15=new Data4("南虹小区6", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
+		Data4 data16=new Data4("南虹小区7", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
+		Data4 data17=new Data4("南虹小区8", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
+		list=new ArrayList<Data4>();
+		list.add(data);
+		list.add(data1);
+		list.add(data2);
+		list.add(data3);
+		list.add(data4);
+		list.add(data5);
+		list.add(data6);
+		list.add(data7);
+		list.add(data8);
+		list.add(data9);
+		list.add(data10);
+		list.add(data11);
+		list.add(data12);
+		list.add(data13);
+		list.add(data14);
+		list.add(data15);
+		list.add(data16);
+		list.add(data17);
 	}
 
 	private void initBaiduMapLocation() {
@@ -76,7 +120,7 @@ public class TaskListNoneFragment extends Fragment {
 		dialogBuilder = NiftyDialogBuilder.getInstance(mActivity);
 		initListView();
 		mSwipeListView.setMenuCreator(creator);
-		TaskListAdapter mAdapter = new TaskListAdapter(mActivity);
+		TaskListAdapter mAdapter = new TaskListAdapter(list,mActivity);
 		mSwipeListView.setAdapter(mAdapter);
 		mSwipeListView
 				.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
