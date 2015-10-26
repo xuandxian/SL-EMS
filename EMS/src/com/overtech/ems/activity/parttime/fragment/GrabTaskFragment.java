@@ -4,6 +4,7 @@ import com.overtech.ems.R;
 import com.overtech.ems.activity.adapter.GrabTaskAdapter;
 import com.overtech.ems.activity.parttime.grabtask.GrabTaskDoFilterActivity;
 import com.overtech.ems.activity.parttime.grabtask.PackageDetailActivity;
+import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
 import com.overtech.ems.widget.swipemenu.SwipeMenu;
@@ -17,6 +18,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +36,7 @@ public class GrabTaskFragment extends Fragment {
 	private ImageView mPartTimeDoFifter;
 	private NiftyDialogBuilder dialogBuilder;
 	private Effectstype effect;
+	private CustomProgressDialog progressDialog;
 	private GrabTaskAdapter mAdapter;
 
 	@Override
@@ -61,6 +64,7 @@ public class GrabTaskFragment extends Fragment {
 
 	private void init() {
 		dialogBuilder = NiftyDialogBuilder.getInstance(mActivity);
+		progressDialog = CustomProgressDialog.createDialog(mActivity); 
 		initListView();
 		mSwipeListView.setMenuCreator(creator);
 		mAdapter = new GrabTaskAdapter(mActivity);
@@ -132,6 +136,15 @@ public class GrabTaskFragment extends Fragment {
 					@Override
 					public void onClick(View v) {
 						dialogBuilder.dismiss();
+						progressDialog.setMessage("正在抢单...");
+						progressDialog.show();
+						new Handler().postDelayed(new Runnable() {
+							
+							@Override
+							public void run() {
+								progressDialog.dismiss();
+							}
+						}, 3000);
 					}
 				}).show();
 	}
