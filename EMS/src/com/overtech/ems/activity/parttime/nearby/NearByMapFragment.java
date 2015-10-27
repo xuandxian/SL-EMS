@@ -19,7 +19,7 @@ import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.overtech.ems.R;
-import com.overtech.ems.activity.parttime.grabtask.PackageDetailActivity;
+import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
 import com.overtech.ems.entity.test.Data;
 import com.overtech.ems.utils.Utilities;
 
@@ -168,7 +168,7 @@ public class NearByMapFragment extends Fragment {
 			public boolean onMarkerClick(final Marker marker) {
 				data = mHashMap.get(String.valueOf(marker.getZIndex()));
 				Intent intent = new Intent(mActivity,
-						PackageDetailActivity.class);
+						PackageTaskActivity.class);
 				startActivity(intent);
 				return true;
 			}
