@@ -36,9 +36,9 @@
     </string-array>
     <string-array name="education">
         <item>学历</item>
-        <item>专科</item>
-        <item>本科</item>
-        <item>硕士</item>
-        <item>博士</item>
+        <item>初中</item>
+        <item>高中</item>
+        <item>大专</item>
+        <item>本科及以上</item>
     </string-array>
 </resources>
