@@ -8,9 +8,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.overtech.ems.R;
-import com.overtech.ems.entity.test.Data;
 import com.overtech.ems.entity.test.Data5;
 
 public class GrabTaskAdapter extends BaseAdapter {

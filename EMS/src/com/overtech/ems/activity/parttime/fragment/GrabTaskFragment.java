@@ -68,7 +68,6 @@ public class GrabTaskFragment extends Fragment {
 	}
 	private void getData() {
 		list=new ArrayList<Data5>();
-		Data5 data=new Data5("0", "徐家汇景园", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
 		Data5 data0=new Data5("0", "徐家汇景园", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
 		Data5 data1=new Data5("0", "徐家汇景园", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
 		Data5 data2=new Data5("0", "徐家汇景园", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
@@ -82,6 +81,7 @@ public class GrabTaskFragment extends Fragment {
 		Data5 data10=new Data5("0", "徐家汇景园", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
 		Data5 data11=new Data5("0", "徐家汇景园", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
 		Data5 data12=new Data5("0", "徐家汇景园", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
+		list.add(data0);
 		list.add(data1);
 		list.add(data2);
 		list.add(data3);
