@@ -1,8 +1,11 @@
 package com.overtech.ems.activity.parttime.nearby;
 
+import java.util.ArrayList;
+
 import com.overtech.ems.R;
 import com.overtech.ems.activity.adapter.GrabTaskAdapter;
 import com.overtech.ems.activity.parttime.grabtask.PackageDetailActivity;
+import com.overtech.ems.entity.test.Data5;
 import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
@@ -33,6 +36,7 @@ public class NearByListFragment extends Fragment {
 	private NiftyDialogBuilder dialogBuilder;
 	private Effectstype effect;
 	private CustomProgressDialog progressDialog;
+	private ArrayList<Data5> list;
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -47,6 +51,7 @@ public class NearByListFragment extends Fragment {
 				false);
 		dialogBuilder = NiftyDialogBuilder.getInstance(mActivity);
 		progressDialog=CustomProgressDialog.createDialog(mActivity);
+		getData();
 		initListView(view);
 		return view;
 	}
@@ -68,7 +73,7 @@ public class NearByListFragment extends Fragment {
 			}
 		};
 		mNearBySwipeListView.setMenuCreator(creator);
-		GrabTaskAdapter mAdapter = new GrabTaskAdapter(mActivity);
+		GrabTaskAdapter mAdapter = new GrabTaskAdapter(list,mActivity);
 		mNearBySwipeListView.setAdapter(mAdapter);
 		mNearBySwipeListView
 				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
@@ -88,6 +93,35 @@ public class NearByListFragment extends Fragment {
 				startActivity(intent);
 			}
 		});
+	}
+	private void getData() {
+		list=new ArrayList<Data5>();
+		Data5 data0=new Data5("0", "徐家汇景园0", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
+		Data5 data1=new Data5("0", "徐家汇景园1", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
+		Data5 data2=new Data5("0", "徐家汇景园2", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
+		Data5 data3=new Data5("0", "虹桥小区0", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
+		Data5 data4=new Data5("0", "虹桥小区1", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
+		Data5 data5=new Data5("0", "虹桥小区2", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
+		Data5 data6=new Data5("0", "虹桥小区3", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
+		Data5 data7=new Data5("0", "丰业广元公寓0", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
+		Data5 data8=new Data5("0", "丰业广元公寓1", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
+		Data5 data9=new Data5("0", "丰业广元公寓2", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
+		Data5 data10=new Data5("0", "丰业广元公寓3", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
+		Data5 data11=new Data5("0", "乐山公寓0", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
+		Data5 data12=new Data5("0", "乐山公寓1", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
+		list.add(data0);
+		list.add(data1);
+		list.add(data2);
+		list.add(data3);
+		list.add(data4);
+		list.add(data5);
+		list.add(data6);
+		list.add(data7);
+		list.add(data8);
+		list.add(data9);
+		list.add(data10);
+		list.add(data11);
+		list.add(data12);
 	}
 	private void showDialog() {
 		effect = Effectstype.Slideright;

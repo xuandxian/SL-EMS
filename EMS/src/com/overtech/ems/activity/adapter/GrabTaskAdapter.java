@@ -1,7 +1,6 @@
 package com.overtech.ems.activity.adapter;
 
 import java.util.List;
-
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +41,7 @@ public class GrabTaskAdapter extends BaseAdapter {
 
 	@Override
 	public Object getItem(int position) {
-		return position;
+		return list.get(position);
 	}
 
 	@Override
