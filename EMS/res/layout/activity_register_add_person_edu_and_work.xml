@@ -134,11 +134,17 @@
                 android:layout_below="@+id/rl_register_add_info_3"
                 android:background="@color/main_white" >
 
-                <Spinner
-                    android:id="@+id/sp_add_evelator"
-                    style="@style/spinner_style"
-                    android:entries="@array/type_evelator" >
-                </Spinner>
+                <TextView 
+                    android:id="@+id/tv_elevator_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+					android:text="电梯品牌"  
+					android:layout_marginLeft="20dp"
+					android:layout_marginTop="20dp"
+					android:singleLine="true"
+					android:background="@drawable/shape_input"
+					android:textSize="18dp"          
+                    />
             </RelativeLayout>
 
             <Button
