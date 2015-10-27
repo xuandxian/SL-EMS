@@ -114,7 +114,6 @@ public class LostPasswordActivity extends BaseActivity {
 				if (resId > 0) {
 					Utilities.showToast("错误码："+resId, context);
 				}else {
-					Utilities.showToast("验证失败", context);
 					stopProgressDialog();
 				}
 			}

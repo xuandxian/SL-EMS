@@ -49,7 +49,10 @@
             android:value="pRtgsRZyxmePt5lPifOnVSS4" />
 
         <activity android:name="com.overtech.ems.activity.BaseActivity" />
-        <activity android:name="com.overtech.ems.activity.common.LoginActivity" />
+        <activity
+            android:name="com.overtech.ems.activity.common.LoginActivity"
+            android:launchMode="singleTask" >
+        </activity>
         <activity android:name="com.overtech.ems.activity.parttime.MainActivity" />
         <activity android:name="com.overtech.ems.activity.common.LostPasswordActivity" />
         <activity android:name="com.overtech.ems.activity.common.ResetPasswordActivity" />
@@ -74,9 +77,9 @@
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.QueryTaskListActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.QuestionResponseActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.EvaluationActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.tasklist.TaskListPackageDetailActivity"/>
-        <activity android:name="com.overtech.ems.activity.parttime.tasklist.TaskListPackageTaskDetailActivity"/>
-        <activity android:name="com.overtech.ems.activity.parttime.nearby.TaskPackageListActivity"/>
+        <activity android:name="com.overtech.ems.activity.parttime.tasklist.TaskListPackageDetailActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.tasklist.TaskListPackageTaskDetailActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.nearby.TaskPackageListActivity" />
     </application>
 
 </manifest>
