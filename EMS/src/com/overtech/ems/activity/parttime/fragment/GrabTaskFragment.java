@@ -1,9 +1,12 @@
 package com.overtech.ems.activity.parttime.fragment;
 
+import java.util.ArrayList;
+
 import com.overtech.ems.R;
 import com.overtech.ems.activity.adapter.GrabTaskAdapter;
 import com.overtech.ems.activity.parttime.grabtask.GrabTaskDoFilterActivity;
 import com.overtech.ems.activity.parttime.grabtask.PackageDetailActivity;
+import com.overtech.ems.entity.test.Data5;
 import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
@@ -38,6 +41,7 @@ public class GrabTaskFragment extends Fragment {
 	private Effectstype effect;
 	private CustomProgressDialog progressDialog;
 	private GrabTaskAdapter mAdapter;
+	private ArrayList<Data5> list;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -51,6 +55,7 @@ public class GrabTaskFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_grab_task, container,
 				false);
 		findViewById(view);
+		getData();
 		init();
 		return view;
 	}
@@ -60,6 +65,22 @@ public class GrabTaskFragment extends Fragment {
 				.findViewById(R.id.sl_qiandan_listview);
 		mPartTimeDoFifter = (ImageView) view
 				.findViewById(R.id.iv_parttime_do_fifter);
+	}
+	private void getData() {
+		Data5 data=new Data5("0", "徐家汇景园", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
+		Data5 data0=new Data5("0", "徐家汇景园", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
+		Data5 data1=new Data5("0", "徐家汇景园", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
+		Data5 data2=new Data5("0", "徐家汇景园", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
+		Data5 data3=new Data5("0", "徐家汇景园", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
+		Data5 data4=new Data5("0", "徐家汇景园", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
+		Data5 data5=new Data5("0", "徐家汇景园", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
+		Data5 data6=new Data5("0", "徐家汇景园", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
+		Data5 data7=new Data5("0", "徐家汇景园", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
+		Data5 data8=new Data5("0", "徐家汇景园", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
+		Data5 data9=new Data5("0", "徐家汇景园", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
+		Data5 data10=new Data5("0", "徐家汇景园", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
+		Data5 data11=new Data5("0", "徐家汇景园", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
+		Data5 data12=new Data5("0", "徐家汇景园", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
 	}
 
 	private void init() {
