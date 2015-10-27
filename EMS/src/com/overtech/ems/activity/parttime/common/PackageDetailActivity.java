@@ -12,6 +12,8 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
+
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.PackageDetailAdapter;
@@ -30,6 +32,8 @@ public class PackageDetailActivity extends BaseActivity {
 	private Context context;
 	private ImageView mDoBack;
 	private CustomProgressDialog progressDialog;
+	private String mCommunityName;
+	private TextView mHeadTitle;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,9 +45,12 @@ public class PackageDetailActivity extends BaseActivity {
 	}
 
 	private void init() {
-		context=PackageDetailActivity.this;
+		context = PackageDetailActivity.this;
 		dialogBuilder = NiftyDialogBuilder.getInstance(context);
-		progressDialog=CustomProgressDialog.createDialog(context);
+		progressDialog = CustomProgressDialog.createDialog(context);
+		Bundle bundle = getIntent().getExtras();
+		mCommunityName = bundle.getString("CommunityName");
+		mHeadTitle.setText(mCommunityName);
 		adapter = new PackageDetailAdapter(context, list);
 		mPackageDetailListView.setAdapter(adapter);
 		mPackageDetailListView
@@ -58,14 +65,14 @@ public class PackageDetailActivity extends BaseActivity {
 					}
 				});
 		mGrabTaskBtn.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				showDialog();
 			}
 		});
 		mDoBack.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				finish();
@@ -75,10 +82,11 @@ public class PackageDetailActivity extends BaseActivity {
 
 	private void findViewById() {
 		mPackageDetailListView = (ListView) findViewById(R.id.grab_task_package_listview);
-		mGrabTaskBtn=(Button)findViewById(R.id.btn_grab_task_package);
-		mDoBack=(ImageView)findViewById(R.id.iv_grab_headBack);
+		mGrabTaskBtn = (Button) findViewById(R.id.btn_grab_task_package);
+		mHeadTitle = (TextView) findViewById(R.id.tv_grab_package_headTitle);
+		mDoBack = (ImageView) findViewById(R.id.iv_grab_headBack);
 	}
-	
+
 	private void showDialog() {
 		effect = Effectstype.Slideright;
 		dialogBuilder.withTitle("温馨提示").withTitleColor("#FFFFFF")

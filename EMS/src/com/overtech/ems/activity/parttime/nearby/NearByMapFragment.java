@@ -168,7 +168,10 @@ public class NearByMapFragment extends Fragment {
 			public boolean onMarkerClick(final Marker marker) {
 				data = mHashMap.get(String.valueOf(marker.getZIndex()));
 				Intent intent = new Intent(mActivity,
-						PackageTaskActivity.class);
+						TaskPackageListActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putString("name", data.getName());
+				intent.putExtras(bundle);
 				startActivity(intent);
 				return true;
 			}

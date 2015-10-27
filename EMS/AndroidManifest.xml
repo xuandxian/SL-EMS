@@ -76,7 +76,7 @@
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.EvaluationActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.TaskListPackageDetailActivity"/>
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.TaskListPackageTaskDetailActivity"/>
-        <activity android:name="com.overtech.ems.activity.parttime.nearby.PackageTaskActivity"/>
+        <activity android:name="com.overtech.ems.activity.parttime.nearby.TaskPackageListActivity"/>
     </application>
 
 </manifest>

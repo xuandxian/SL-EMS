@@ -1,11 +1,9 @@
-package com.overtech.ems.activity.parttime.fragment;
+package com.overtech.ems.activity.parttime.nearby;
 
 import java.util.ArrayList;
-
 import com.overtech.ems.R;
 import com.overtech.ems.activity.adapter.GrabTaskAdapter;
 import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
-import com.overtech.ems.activity.parttime.grabtask.GrabTaskDoFilterActivity;
 import com.overtech.ems.entity.test.Data5;
 import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
@@ -16,71 +14,80 @@ import com.overtech.ems.widget.swipemenu.SwipeMenuItem;
 import com.overtech.ems.widget.swipemenu.SwipeMenuListView;
 import com.overtech.ems.widget.swipemenu.SwipeMenuListView.OnMenuItemClickListener;
 import android.app.Activity;
-import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-public class GrabTaskFragment extends Fragment {
-
-	private SwipeMenuListView mSwipeListView;
+/**
+ * @author Tony
+ * @description 点击地图Marker（小区名称），显示该小区具体任务包
+ * @date 2015-10-27
+ */
+public class TaskPackageListActivity extends Activity {
+	private TextView mHeadContent;
+	private ImageView mHeadBack;
+	private SwipeMenuListView mTaskPackageList;
+	private ArrayList<Data5> list;
+	private Context context;
+	private GrabTaskAdapter adapter;
+	private String mCommunity;
 	private SwipeMenuCreator creator;
-	private Activity mActivity;
-	private ImageView mPartTimeDoFifter;
 	private NiftyDialogBuilder dialogBuilder;
 	private Effectstype effect;
 	private CustomProgressDialog progressDialog;
-	private GrabTaskAdapter mAdapter;
-	private ArrayList<Data5> list;
 
 	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		mActivity = activity;
-	}
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_grab_task, container,
-				false);
-		findViewById(view);
-		getData();
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+		Bundle bundle = this.getIntent().getExtras();
+		mCommunity = bundle.getString("name");
+		setContentView(R.layout.activity_task_package_list);
+		findViewById();
+		getData(mCommunity);
+		initListView();
 		init();
-		return view;
 	}
 
-	private void findViewById(View view) {
-		mSwipeListView = (SwipeMenuListView) view
-				.findViewById(R.id.sl_qiandan_listview);
-		mPartTimeDoFifter = (ImageView) view
-				.findViewById(R.id.iv_parttime_do_fifter);
+	private void findViewById() {
+		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
+		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
+		mTaskPackageList = (SwipeMenuListView) findViewById(R.id.lv_task_package_list);
 	}
-	private void getData() {
-		list=new ArrayList<Data5>();
-		Data5 data0=new Data5("0", "徐家汇景园0", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data1=new Data5("0", "徐家汇景园1", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data2=new Data5("0", "徐家汇景园2", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data3=new Data5("0", "虹桥小区0", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data4=new Data5("0", "虹桥小区1", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data5=new Data5("0", "虹桥小区2", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data6=new Data5("0", "虹桥小区3", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data7=new Data5("0", "丰业广元公寓0", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data8=new Data5("0", "丰业广元公寓1", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data9=new Data5("0", "丰业广元公寓2", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data10=new Data5("0", "丰业广元公寓3", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data11=new Data5("0", "乐山公寓0", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data12=new Data5("0", "乐山公寓1", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
+
+	private void getData(String mCommunity) {
+		list = new ArrayList<Data5>();
+		Data5 data0 = new Data5("0", mCommunity + "0", "5", "1", "徐汇区广元西路",
+				"13.5km", "2015/10/10");
+		Data5 data1 = new Data5("0", mCommunity + "1", "5", "1", "徐汇区广元西路",
+				"13.5km", "2015/10/10");
+		Data5 data2 = new Data5("0", mCommunity + "2", "5", "0", "徐汇区广元西路",
+				"13.5km", "2015/10/10");
+		Data5 data3 = new Data5("0", mCommunity + "3", "5", "0", "徐汇区广元西路",
+				"13.5km", "2015/10/10");
+		Data5 data4 = new Data5("0", mCommunity + "4", "5", "1", "徐汇区广元西路",
+				"13.5km", "2015/10/10");
+		Data5 data5 = new Data5("0", mCommunity + "5", "5", "1", "徐汇区广元西路",
+				"13.5km", "2015/10/10");
+		Data5 data6 = new Data5("0", mCommunity + "6", "5", "1", "徐汇区广元西路",
+				"13.5km", "2015/10/10");
+		Data5 data7 = new Data5("0", mCommunity + "7", "5", "0", "徐汇区广元西路",
+				"13.5km", "2015/10/10");
+		Data5 data8 = new Data5("0", mCommunity + "8", "5", "0", "徐汇区广元西路",
+				"13.5km", "2015/10/10");
+		Data5 data9 = new Data5("0", mCommunity + "9", "5", "1", "徐汇区广元西路",
+				"13.5km", "2015/10/10");
 		list.add(data0);
 		list.add(data1);
 		list.add(data2);
@@ -91,19 +98,18 @@ public class GrabTaskFragment extends Fragment {
 		list.add(data7);
 		list.add(data8);
 		list.add(data9);
-		list.add(data10);
-		list.add(data11);
-		list.add(data12);
 	}
 
 	private void init() {
-		dialogBuilder = NiftyDialogBuilder.getInstance(mActivity);
-		progressDialog = CustomProgressDialog.createDialog(mActivity); 
-		initListView();
-		mSwipeListView.setMenuCreator(creator);
-		mAdapter = new GrabTaskAdapter(list,mActivity);
-		mSwipeListView.setAdapter(mAdapter);
-		mSwipeListView
+		context = TaskPackageListActivity.this;
+		dialogBuilder = NiftyDialogBuilder.getInstance(context);
+		progressDialog = CustomProgressDialog.createDialog(context);
+		mHeadContent.setText(mCommunity);
+		mHeadBack.setVisibility(View.VISIBLE);
+		mTaskPackageList.setMenuCreator(creator);
+		adapter = new GrabTaskAdapter(list, context);
+		mTaskPackageList.setAdapter(adapter);
+		mTaskPackageList
 				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
 					@Override
@@ -112,13 +118,13 @@ public class GrabTaskFragment extends Fragment {
 						showDialog();
 					}
 				});
-		mSwipeListView.setOnItemClickListener(new OnItemClickListener() {
+		mTaskPackageList.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
 				Data5 data=(Data5) parent.getItemAtPosition(position);
-				Intent intent = new Intent(mActivity,
+				Intent intent = new Intent(TaskPackageListActivity.this,
 						PackageDetailActivity.class);
 				Bundle bundle = new Bundle();
 				bundle.putString("CommunityName",data.getName());
@@ -126,14 +132,11 @@ public class GrabTaskFragment extends Fragment {
 				startActivity(intent);
 			}
 		});
-		mPartTimeDoFifter.setOnClickListener(new OnClickListener() {
+		mHeadBack.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View arg0) {
-				Intent intent = new Intent(mActivity,
-						GrabTaskDoFilterActivity.class);
-				startActivity(intent);
-
+				finish();
 			}
 		});
 	}
@@ -142,7 +145,7 @@ public class GrabTaskFragment extends Fragment {
 		creator = new SwipeMenuCreator() {
 			@Override
 			public void create(SwipeMenu menu) {
-				SwipeMenuItem openItem = new SwipeMenuItem(mActivity);
+				SwipeMenuItem openItem = new SwipeMenuItem(context);
 				openItem.setBackground(new ColorDrawable(Color.rgb(0x00, 0xff,
 						0x00)));
 				openItem.setWidth(dp2px(90));
@@ -176,7 +179,7 @@ public class GrabTaskFragment extends Fragment {
 						progressDialog.setMessage("正在抢单...");
 						progressDialog.show();
 						new Handler().postDelayed(new Runnable() {
-							
+
 							@Override
 							public void run() {
 								progressDialog.dismiss();
