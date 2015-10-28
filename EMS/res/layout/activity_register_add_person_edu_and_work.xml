@@ -85,7 +85,7 @@
                 android:layout_marginTop="1px"
                 android:background="@color/main_white" >
 
-                <com.overtech.ems.widget.EditTextWithDelete
+                <EditText
                     android:id="@+id/et_register_add_id_card"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
@@ -93,6 +93,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
+                    android:clickable="false"
                     android:background="@drawable/shape_input"
                     android:hint="入行时间" />
 
@@ -114,16 +115,19 @@
                 android:layout_marginTop="1px"
                 android:background="@color/main_white" >
 
-                <com.overtech.ems.widget.EditTextWithDelete
+                <TextView 
                     android:id="@+id/et_register_add_workno"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentRight="true"
+                    android:layout_marginTop="20dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
                     android:background="@drawable/shape_input"
-                    android:hint="工作年限" />
+                    android:textSize="@dimen/text_size_title"
+                    android:textColor="@color/btn_press_color"
+                    android:text="工作年限" />
             </RelativeLayout>
 
             <RelativeLayout
