@@ -121,15 +121,15 @@ public class PackageDetailActivity extends BaseActivity {
 
 	private void initData() {
 		// 测试数据
-		Data2 data1 = new Data2("31号楼1号电梯（全包）", "上海三菱", "80032981234",
+		Data2 data1 = new Data2("31号楼1号电梯（月包）", "上海三菱", "80032981234",
 				"20层/20站");
-		Data2 data2 = new Data2("31号楼2号电梯（半包）", "上海三菱", "80032981235",
+		Data2 data2 = new Data2("31号楼2号电梯（季包）", "上海三菱", "80032981235",
 				"23层/20站");
-		Data2 data3 = new Data2("32号楼1号电梯（全包）", "上海三菱", "80032981236",
+		Data2 data3 = new Data2("32号楼1号电梯（半年包）", "上海三菱", "80032981236",
 				"20层/20站");
-		Data2 data4 = new Data2("32号楼2号电梯（半包）", "上海三菱", "80032981237",
+		Data2 data4 = new Data2("32号楼2号电梯（月包）", "上海三菱", "80032981237",
 				"25层/20站");
-		Data2 data5 = new Data2("33号楼2号电梯（半包）", "上海三菱", "80032981238",
+		Data2 data5 = new Data2("33号楼2号电梯（半年包）", "上海三菱", "80032981238",
 				"25层/20站");
 		list = new ArrayList<Data2>();
 		list.add(0, data1);

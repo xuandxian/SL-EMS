@@ -38,7 +38,8 @@
         <item>学历</item>
         <item>初中</item>
         <item>高中</item>
-        <item>大专</item>
+        <item>职技</item>
+        <item>高职</item>
         <item>本科及以上</item>
     </string-array>
 </resources>

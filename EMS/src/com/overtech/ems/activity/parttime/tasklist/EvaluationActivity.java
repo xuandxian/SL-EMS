@@ -84,6 +84,9 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 			if(TextUtils.isEmpty(content)){
 				Utilities.showToast("请告诉我们您选择差评的原因", this);
 				return;
+			}else if(content.length()<15){
+				Utilities.showToast("输入的字符少于15个", this);
+				return;
 			}
 			break;
 		}

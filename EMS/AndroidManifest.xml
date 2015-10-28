@@ -80,6 +80,8 @@
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.TaskListPackageDetailActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.TaskListPackageTaskDetailActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.nearby.TaskPackageListActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalCancleListActivity"/>
+        <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalHelpDocActivity"/>
     </application>
 
 </manifest>

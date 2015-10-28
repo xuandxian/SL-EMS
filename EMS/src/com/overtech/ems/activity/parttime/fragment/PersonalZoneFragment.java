@@ -3,7 +3,9 @@ package com.overtech.ems.activity.parttime.fragment;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.parttime.personal.PersonalAccountListActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalBoundsActivity;
+import com.overtech.ems.activity.parttime.personal.PersonalCancleListActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalDeatilsActivity;
+import com.overtech.ems.activity.parttime.personal.PersonalHelpDocActivity;
 import com.overtech.ems.utils.Utilities;
 
 import android.app.Activity;
@@ -23,6 +25,8 @@ public class PersonalZoneFragment extends Fragment implements OnClickListener {
 	private RelativeLayout mPersonalAccountList;
 	private RelativeLayout mPersonalBounds;
 	private RelativeLayout mCompanyNotice;
+	private RelativeLayout mCancleList;
+	private RelativeLayout mHelpDoc;
 	private Activity mActivity;
 	
 	@Override
@@ -50,6 +54,10 @@ public class PersonalZoneFragment extends Fragment implements OnClickListener {
 				.findViewById(R.id.rl_personal_bounds);
 		mCompanyNotice = (RelativeLayout) view
 				.findViewById(R.id.rl_personal_notice);
+		mCancleList = (RelativeLayout) view
+				.findViewById(R.id.rl_cancle_list);
+		mHelpDoc = (RelativeLayout) view
+				.findViewById(R.id.rl_help_doc);
 	}
 
 	private void initEvents() {
@@ -57,6 +65,8 @@ public class PersonalZoneFragment extends Fragment implements OnClickListener {
 		mPersonalAccountList.setOnClickListener(this);
 		mPersonalBounds.setOnClickListener(this);
 		mCompanyNotice.setOnClickListener(this);
+		mCancleList.setOnClickListener(this);
+		mHelpDoc.setOnClickListener(this);
 	}
 
 	@Override
@@ -78,6 +88,14 @@ public class PersonalZoneFragment extends Fragment implements OnClickListener {
 			break;
 		case R.id.rl_personal_notice:
 			Utilities.showToast("你点击了公告", mActivity);
+			break;
+		case R.id.rl_cancle_list:
+			intent.setClass(mActivity, PersonalCancleListActivity.class);
+			startActivity(intent);
+			break;
+		case R.id.rl_help_doc:
+			intent.setClass(mActivity, PersonalHelpDocActivity.class);
+			startActivity(intent);
 			break;
 		}
 	}

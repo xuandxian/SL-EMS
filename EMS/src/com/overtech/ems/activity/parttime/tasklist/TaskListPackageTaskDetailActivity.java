@@ -1,5 +1,7 @@
 package com.overtech.ems.activity.parttime.tasklist;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -9,6 +11,7 @@ import android.widget.TextView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
+import com.overtech.ems.activity.parttime.common.ElevatorDetailActivity;
 
 public class TaskListPackageTaskDetailActivity extends BaseActivity {
 	private ImageView mDoBack;
@@ -22,6 +25,7 @@ public class TaskListPackageTaskDetailActivity extends BaseActivity {
 	private TextView mPartnerPhone;
 	private TextView mMaintainTime;
 	private RelativeLayout mElavator;
+	private Context mActivity;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -43,12 +47,14 @@ public class TaskListPackageTaskDetailActivity extends BaseActivity {
 		mElavator.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				
+				Intent intent=new Intent(mActivity,ElevatorDetailActivity.class);
+				startActivity(intent);
 			}
 		});
 	}
 
 	private void initView() {
+		mActivity=TaskListPackageTaskDetailActivity.this;
 		mDoBack=(ImageView) findViewById(R.id.iv_headBack);
 		mHeadContent=(TextView) findViewById(R.id.tv_headTitle);
 		mCourtName=(TextView) findViewById(R.id.tv_task_detail_court_name);
