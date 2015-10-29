@@ -82,6 +82,8 @@
         <activity android:name="com.overtech.ems.activity.parttime.nearby.TaskPackageListActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalCancleListActivity"/>
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalHelpDocActivity"/>
+        <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAnnouncementActivity"/>
+        <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAnnouncementDetailActivity"/>
     </application>
 
 </manifest>

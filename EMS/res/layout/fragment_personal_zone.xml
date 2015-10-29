@@ -125,11 +125,28 @@
             android:layout_marginRight="15dp"
             android:src="@drawable/icon_arrow_right" />
     </RelativeLayout>
+    
+
+    <RelativeLayout
+        android:id="@+id/rl_personal_notice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_cancle_list"
+        android:layout_marginTop="20dip"
+        android:background="@color/main_white" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dip"
+            android:text="公告"
+            android:textSize="17sp" />
+    </RelativeLayout>
     <RelativeLayout
         android:id="@+id/rl_help_doc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/rl_cancle_list"
+        android:layout_below="@id/rl_personal_notice"
         android:layout_marginTop="1dip"
         android:background="@color/main_white" >
 
@@ -146,22 +163,6 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="15dp"
             android:src="@drawable/icon_arrow_right" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/rl_personal_notice"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/rl_help_doc"
-        android:layout_marginTop="20dip"
-        android:background="@color/main_white" >
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="10dip"
-            android:text="公告"
-            android:textSize="17sp" />
     </RelativeLayout>
 
 </RelativeLayout>

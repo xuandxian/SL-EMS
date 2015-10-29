@@ -2,6 +2,7 @@ package com.overtech.ems.activity.parttime.fragment;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.parttime.personal.PersonalAccountListActivity;
+import com.overtech.ems.activity.parttime.personal.PersonalAnnouncementActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalBoundsActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalCancleListActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalDeatilsActivity;
@@ -88,6 +89,8 @@ public class PersonalZoneFragment extends Fragment implements OnClickListener {
 			break;
 		case R.id.rl_personal_notice:
 			Utilities.showToast("你点击了公告", mActivity);
+			intent.setClass(mActivity, PersonalAnnouncementActivity.class);
+			startActivity(intent);
 			break;
 		case R.id.rl_cancle_list:
 			intent.setClass(mActivity, PersonalCancleListActivity.class);

@@ -33,6 +33,9 @@ public class RegisterAddPersonEduAndWorkActivity extends BaseActivity {
 	private Context mActivity;
 	private ImageView mCalendar;
 	private RelativeLayout mElevatorBrand;
+	/**
+	 * 入行时间
+	 * */
 	private EditText mShowCalendar;
 	private TextView mElevator;
 	private DimPopupWindow mPopupWindow;
@@ -90,16 +93,17 @@ public class RegisterAddPersonEduAndWorkActivity extends BaseActivity {
 		mHeadContent.setText("学历/工作信息");
 		mHeadBack.setVisibility(View.VISIBLE);
 		mElevatorBrand.setOnClickListener(new OnClickListener() {
-			
 			@Override
 			public void onClick(View v) {
 				showPopupWindow();
 			}
 		});
+		
 		mCalendar.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
+				//打开日历选择器
 				showCalendar();
 			}
 		});
