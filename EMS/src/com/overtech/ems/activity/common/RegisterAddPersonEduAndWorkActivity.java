@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.GridViewAdapter2;
+import com.overtech.ems.activity.common.photo.view.PublishActivity;
 import com.overtech.ems.utils.DateTimePickDialogUtil;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.popwindow.DimPopupWindow;
@@ -67,9 +68,12 @@ public class RegisterAddPersonEduAndWorkActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View arg0) {
+//				Intent intent = new Intent(
+//						RegisterAddPersonEduAndWorkActivity.this,
+//						RegisterAddIdCardActivity.class);
 				Intent intent = new Intent(
 						RegisterAddPersonEduAndWorkActivity.this,
-						RegisterAddIdCardActivity.class);
+						PublishActivity.class);
 				startActivity(intent);
 			}
 		});
