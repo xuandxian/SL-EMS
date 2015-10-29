@@ -3,9 +3,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    <include 
+    <RelativeLayout 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+        <include 
         layout="@layout/headview_grabtask"
         />
+        <TextView
+            android:id="@+id/tv_headTitleRight" 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="15dp"
+            android:textSize="@dimen/text_size_list"
+            android:textColor="@color/bg_main"
+            android:text="导航"
+            />
+    </RelativeLayout>
     <ListView 
         android:id="@+id/lv_tasklist"
         android:layout_width="match_parent"
