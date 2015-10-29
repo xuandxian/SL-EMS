@@ -1,15 +1,10 @@
 package com.overtech.ems.activity.common;
 
 import com.overtech.ems.R;
-import com.overtech.ems.R.drawable;
-import com.overtech.ems.R.id;
-import com.overtech.ems.R.layout;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
 import com.overtech.ems.widget.ValicateCode;
-
-import android.R.bool;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;

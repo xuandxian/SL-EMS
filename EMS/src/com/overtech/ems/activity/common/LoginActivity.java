@@ -2,6 +2,7 @@ package com.overtech.ems.activity.common;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
+import com.overtech.ems.activity.common.photo.view.PublishActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.CustomProgressDialog;
@@ -74,8 +75,10 @@ public class LoginActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View arg0) {
+//				Intent intent = new Intent(LoginActivity.this,
+//						RegisterActivity.class);
 				Intent intent = new Intent(LoginActivity.this,
-						RegisterActivity.class);
+						PublishActivity.class);
 				startActivity(intent);
 			}
 		});
