@@ -8,11 +8,11 @@ import com.overtech.ems.entity.test.Data5;
 import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
-import com.overtech.ems.widget.swipemenu.SwipeMenu;
-import com.overtech.ems.widget.swipemenu.SwipeMenuCreator;
-import com.overtech.ems.widget.swipemenu.SwipeMenuItem;
-import com.overtech.ems.widget.swipemenu.SwipeMenuListView;
-import com.overtech.ems.widget.swipemenu.SwipeMenuListView.OnMenuItemClickListener;
+import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView;
+import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView.OnMenuItemClickListener;
+import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenu;
+import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuCreator;
+import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuItem;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -37,7 +37,7 @@ import android.widget.TextView;
 public class TaskPackageListActivity extends Activity {
 	private TextView mHeadContent;
 	private ImageView mHeadBack;
-	private SwipeMenuListView mTaskPackageList;
+	private PullToRefreshSwipeMenuListView mTaskPackageList;
 	private ArrayList<Data5> list;
 	private Context context;
 	private GrabTaskAdapter adapter;
@@ -63,7 +63,7 @@ public class TaskPackageListActivity extends Activity {
 	private void findViewById() {
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
 		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
-		mTaskPackageList = (SwipeMenuListView) findViewById(R.id.lv_task_package_list);
+		mTaskPackageList = (PullToRefreshSwipeMenuListView) findViewById(R.id.lv_task_package_list);
 	}
 
 	private void getData(String mCommunity) {

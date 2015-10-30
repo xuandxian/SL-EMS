@@ -7,7 +7,7 @@
         android:id="@+id/head_company_notice"
         layout="@layout/headview" />
 
-    <com.overtech.ems.widget.pulltorefresh.PullToRefreshListView
+    <com.overtech.ems.widget.swiperefreshlistview.pulltorefresh.PullToRefreshListView
         android:id="@+id/lv_company_notice"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

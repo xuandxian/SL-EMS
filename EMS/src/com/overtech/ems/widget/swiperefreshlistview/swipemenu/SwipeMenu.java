@@ -1,16 +1,10 @@
-package com.overtech.ems.widget.swipemenu;
+package com.overtech.ems.widget.swiperefreshlistview.swipemenu;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
 
-/**
- * 
- * @author baoyz
- * @date 2014-8-23
- * 
- */
 public class SwipeMenu {
 
 	private Context mContext;

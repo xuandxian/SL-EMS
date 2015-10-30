@@ -7,7 +7,7 @@
         android:id="@+id/include1"
         layout="@layout/headview" />
 
-    <com.overtech.ems.widget.swipemenu.SwipeMenuListView
+    <com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView
         android:id="@+id/lv_task_package_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

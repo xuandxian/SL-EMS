@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <com.overtech.ems.widget.swipemenu.SwipeMenuListView
+    <com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView
         android:id="@+id/sl_nearby_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

@@ -3,10 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
-    <com.overtech.ems.widget.swipemenu.SwipeMenuListView
+
+    <com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView
         android:id="@+id/sl_task_list_listview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-         />
+        android:layout_height="match_parent" />
 
 </LinearLayout>

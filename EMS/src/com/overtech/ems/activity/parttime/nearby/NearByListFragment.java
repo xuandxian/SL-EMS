@@ -1,7 +1,6 @@
 package com.overtech.ems.activity.parttime.nearby;
 
 import java.util.ArrayList;
-
 import com.overtech.ems.R;
 import com.overtech.ems.activity.adapter.GrabTaskAdapter;
 import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
@@ -9,11 +8,11 @@ import com.overtech.ems.entity.test.Data5;
 import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
-import com.overtech.ems.widget.swipemenu.SwipeMenu;
-import com.overtech.ems.widget.swipemenu.SwipeMenuCreator;
-import com.overtech.ems.widget.swipemenu.SwipeMenuItem;
-import com.overtech.ems.widget.swipemenu.SwipeMenuListView;
-import com.overtech.ems.widget.swipemenu.SwipeMenuListView.OnMenuItemClickListener;
+import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView;
+import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView.OnMenuItemClickListener;
+import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenu;
+import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuCreator;
+import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuItem;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -30,7 +29,7 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public class NearByListFragment extends Fragment {
 
-	private SwipeMenuListView mNearBySwipeListView;
+	private PullToRefreshSwipeMenuListView mNearBySwipeListView;
 	private SwipeMenuCreator creator;
 	private Activity mActivity;
 	private NiftyDialogBuilder dialogBuilder;
@@ -57,7 +56,7 @@ public class NearByListFragment extends Fragment {
 	}
 
 	private void initListView(View view) {
-		mNearBySwipeListView = (SwipeMenuListView) view
+		mNearBySwipeListView = (PullToRefreshSwipeMenuListView) view
 				.findViewById(R.id.sl_nearby_listview);
 		creator = new SwipeMenuCreator() {
 			@Override

@@ -1,7 +1,8 @@
-package com.overtech.ems.widget.swipemenu;
+package com.overtech.ems.widget.swiperefreshlistview.swipemenu;
 
-import com.overtech.ems.widget.swipemenu.SwipeMenuListView.OnMenuItemClickListener;
-import com.overtech.ems.widget.swipemenu.SwipeMenuView.OnItemClickListener;
+import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView;
+import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView.OnMenuItemClickListener;
+import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuView.OnSwipeItemClickListener;
 
 import android.content.Context;
 import android.database.DataSetObserver;
@@ -12,14 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ListAdapter;
 import android.widget.WrapperListAdapter;
 
-/**
- * 
- * @author baoyz
- * @date 2014-8-24
- * 
- */
 public class SwipeMenuAdapter implements WrapperListAdapter,
-		OnItemClickListener {
+		OnSwipeItemClickListener {
 
 	private ListAdapter mAdapter;
 	private Context mContext;
@@ -54,9 +49,9 @@ public class SwipeMenuAdapter implements WrapperListAdapter,
 			menu.setViewType(mAdapter.getItemViewType(position));
 			createMenu(menu);
 			SwipeMenuView menuView = new SwipeMenuView(menu,
-					(SwipeMenuListView) parent);
-			menuView.setOnItemClickListener(this);
-			SwipeMenuListView listView = (SwipeMenuListView) parent;
+					(PullToRefreshSwipeMenuListView) parent);
+			menuView.setOnSwipeItemClickListener(this);
+			PullToRefreshSwipeMenuListView listView = (PullToRefreshSwipeMenuListView) parent;
 			layout = new SwipeMenuLayout(contentView, menuView,
 					listView.getCloseInterpolator(),
 					listView.getOpenInterpolator());

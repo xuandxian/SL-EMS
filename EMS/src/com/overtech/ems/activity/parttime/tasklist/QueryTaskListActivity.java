@@ -7,8 +7,6 @@ import com.overtech.ems.activity.adapter.TaskListDetailsAdapter;
 import com.overtech.ems.entity.test.Data3;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.CustomProgressDialog;
-import com.overtech.ems.widget.pulltorefresh.internal.Utils;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;

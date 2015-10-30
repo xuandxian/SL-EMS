@@ -15,7 +15,6 @@ import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.CustomProgressDialog;
-import com.overtech.ems.widget.pulltorefresh.internal.Utils;
 
 public class EvaluationActivity extends BaseActivity implements OnClickListener {
 	private TextView mHeadContent;

@@ -1,7 +1,6 @@
 package com.overtech.ems.activity.parttime.tasklist;
 
 import java.util.ArrayList;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -30,13 +29,14 @@ import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
-import com.overtech.ems.widget.swipemenu.SwipeMenu;
-import com.overtech.ems.widget.swipemenu.SwipeMenuCreator;
-import com.overtech.ems.widget.swipemenu.SwipeMenuItem;
-import com.overtech.ems.widget.swipemenu.SwipeMenuListView;
+import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView;
+import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView.OnMenuItemClickListener;
+import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenu;
+import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuCreator;
+import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuItem;
 
 public class TaskListNoneFragment extends Fragment {
-	private SwipeMenuListView mSwipeListView;
+	private PullToRefreshSwipeMenuListView mSwipeListView;
 	private SwipeMenuCreator creator;
 	private Activity mActivity;
 	private LocationClient mLocClient;
@@ -65,7 +65,7 @@ public class TaskListNoneFragment extends Fragment {
 	}
 
 	private void findViewById(View view) {
-		mSwipeListView = (SwipeMenuListView) view
+		mSwipeListView = (PullToRefreshSwipeMenuListView) view
 				.findViewById(R.id.sl_task_list_listview);
 	}
 
@@ -139,7 +139,7 @@ public class TaskListNoneFragment extends Fragment {
 		TaskListAdapter mAdapter = new TaskListAdapter(list, mActivity);
 		mSwipeListView.setAdapter(mAdapter);
 		mSwipeListView
-				.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
 					@Override
 					public void onMenuItemClick(int position, SwipeMenu menu,
