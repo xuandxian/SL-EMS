@@ -110,9 +110,11 @@ public class BaseActivity extends Activity {
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		im.hideSoftInputFromWindow(getCurrentFocus()
-				.getApplicationWindowToken(),
-				InputMethodManager.HIDE_NOT_ALWAYS);
+		if(getCurrentFocus()!=null){
+			im.hideSoftInputFromWindow(getCurrentFocus()
+					.getApplicationWindowToken(),
+					InputMethodManager.HIDE_NOT_ALWAYS);
+		}
 		return super.onTouchEvent(event);
 	}
 }
