@@ -1,6 +1,9 @@
 package com.overtech.ems.activity.parttime.fragment;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.adapter.GrabTaskAdapter;
 import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
@@ -10,7 +13,9 @@ import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
 import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView;
+import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView.IXListViewListener;
 import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView.OnMenuItemClickListener;
+import com.overtech.ems.widget.swiperefreshlistview.pulltorefresh.RefreshTime;
 import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenu;
 import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuCreator;
 import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuItem;
@@ -30,7 +35,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 
-public class GrabTaskFragment extends Fragment {
+public class GrabTaskFragment extends Fragment implements IXListViewListener {
 
 	private PullToRefreshSwipeMenuListView mSwipeListView;
 	private SwipeMenuCreator creator;
@@ -41,6 +46,7 @@ public class GrabTaskFragment extends Fragment {
 	private CustomProgressDialog progressDialog;
 	private GrabTaskAdapter mAdapter;
 	private ArrayList<Data5> list;
+	private Handler mHandler;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -65,21 +71,35 @@ public class GrabTaskFragment extends Fragment {
 		mPartTimeDoFifter = (ImageView) view
 				.findViewById(R.id.iv_parttime_do_fifter);
 	}
+
 	private void getData() {
-		list=new ArrayList<Data5>();
-		Data5 data0=new Data5("0", "徐家汇景园0", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data1=new Data5("0", "徐家汇景园1", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data2=new Data5("0", "徐家汇景园2", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data3=new Data5("0", "虹桥小区0", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data4=new Data5("0", "虹桥小区1", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data5=new Data5("0", "虹桥小区2", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data6=new Data5("0", "虹桥小区3", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data7=new Data5("0", "丰业广元公寓0", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data8=new Data5("0", "丰业广元公寓1", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data9=new Data5("0", "丰业广元公寓2", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data10=new Data5("0", "丰业广元公寓3", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data11=new Data5("0", "乐山公寓0", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data12=new Data5("0", "乐山公寓1", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
+		list = new ArrayList<Data5>();
+		Data5 data0 = new Data5("0", "徐家汇景园0", "5", "1", "徐汇区广元西路", "13.5km",
+				"2015/10/10");
+		Data5 data1 = new Data5("0", "徐家汇景园1", "5", "1", "徐汇区广元西路", "13.5km",
+				"2015/10/10");
+		Data5 data2 = new Data5("0", "徐家汇景园2", "5", "0", "徐汇区广元西路", "13.5km",
+				"2015/10/10");
+		Data5 data3 = new Data5("0", "虹桥小区0", "5", "0", "徐汇区广元西路", "13.5km",
+				"2015/10/10");
+		Data5 data4 = new Data5("0", "虹桥小区1", "5", "1", "徐汇区广元西路", "13.5km",
+				"2015/10/10");
+		Data5 data5 = new Data5("0", "虹桥小区2", "5", "1", "徐汇区广元西路", "13.5km",
+				"2015/10/10");
+		Data5 data6 = new Data5("0", "虹桥小区3", "5", "0", "徐汇区广元西路", "13.5km",
+				"2015/10/10");
+		Data5 data7 = new Data5("0", "丰业广元公寓0", "5", "0", "徐汇区广元西路", "13.5km",
+				"2015/10/10");
+		Data5 data8 = new Data5("0", "丰业广元公寓1", "5", "0", "徐汇区广元西路", "13.5km",
+				"2015/10/10");
+		Data5 data9 = new Data5("0", "丰业广元公寓2", "5", "0", "徐汇区广元西路", "13.5km",
+				"2015/10/10");
+		Data5 data10 = new Data5("0", "丰业广元公寓3", "5", "1", "徐汇区广元西路", "13.5km",
+				"2015/10/10");
+		Data5 data11 = new Data5("0", "乐山公寓0", "5", "0", "徐汇区广元西路", "13.5km",
+				"2015/10/10");
+		Data5 data12 = new Data5("0", "乐山公寓1", "5", "1", "徐汇区广元西路", "13.5km",
+				"2015/10/10");
 		list.add(data0);
 		list.add(data1);
 		list.add(data2);
@@ -97,11 +117,15 @@ public class GrabTaskFragment extends Fragment {
 
 	private void init() {
 		dialogBuilder = NiftyDialogBuilder.getInstance(mActivity);
-		progressDialog = CustomProgressDialog.createDialog(mActivity); 
+		progressDialog = CustomProgressDialog.createDialog(mActivity);
 		initListView();
 		mSwipeListView.setMenuCreator(creator);
-		mAdapter = new GrabTaskAdapter(list,mActivity);
+		mAdapter = new GrabTaskAdapter(list, mActivity);
 		mSwipeListView.setAdapter(mAdapter);
+		mSwipeListView.setPullRefreshEnable(true);
+		mSwipeListView.setPullLoadEnable(true);
+		mSwipeListView.setXListViewListener(this);
+		mHandler = new Handler();
 		mSwipeListView
 				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
@@ -116,11 +140,11 @@ public class GrabTaskFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				Data5 data=(Data5) parent.getItemAtPosition(position);
+				Data5 data = (Data5) parent.getItemAtPosition(position);
 				Intent intent = new Intent(mActivity,
 						PackageDetailActivity.class);
 				Bundle bundle = new Bundle();
-				bundle.putString("CommunityName",data.getName());
+				bundle.putString("CommunityName", data.getName());
 				intent.putExtras(bundle);
 				startActivity(intent);
 			}
@@ -175,7 +199,7 @@ public class GrabTaskFragment extends Fragment {
 						progressDialog.setMessage("正在抢单...");
 						progressDialog.show();
 						new Handler().postDelayed(new Runnable() {
-							
+
 							@Override
 							public void run() {
 								progressDialog.dismiss();
@@ -183,6 +207,33 @@ public class GrabTaskFragment extends Fragment {
 						}, 3000);
 					}
 				}).show();
+	}
+
+	public void onRefresh() {
+		mHandler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				SimpleDateFormat df = new SimpleDateFormat("MM-dd HH:mm",
+						Locale.getDefault());
+				RefreshTime.setRefreshTime(mActivity, df.format(new Date()));
+				onLoad();
+			}
+		}, 2000);
+	}
+
+	public void onLoadMore() {
+		mHandler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				onLoad();
+			}
+		}, 2000);
+	}
+
+	private void onLoad() {
+		mSwipeListView.setRefreshTime(RefreshTime.getRefreshTime(mActivity));
+		mSwipeListView.stopRefresh();
+		mSwipeListView.stopLoadMore();
 	}
 
 	private int dp2px(int dp) {

@@ -8,11 +8,9 @@ import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuAdapter;
 import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuCreator;
 import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuLayout;
 import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuView;
-
 import android.content.Context;
 import android.os.AsyncTask;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
@@ -27,18 +25,11 @@ import android.widget.RelativeLayout;
 import android.widget.Scroller;
 import android.widget.TextView;
 
-/**
- * 
- * @author licaomeng
- * @date Jul 14, 2015
- * @blog http://blog.csdn.net/licaomengrice
- */
 public class PullToRefreshSwipeMenuListView extends ListView implements OnScrollListener {
 
     private static final int TOUCH_STATE_NONE = 0;
     private static final int TOUCH_STATE_X = 1;
     private static final int TOUCH_STATE_Y = 2;
-
     private int MAX_Y = 5;
     private int MAX_X = 3;
     private float mDownX;
@@ -47,7 +38,6 @@ public class PullToRefreshSwipeMenuListView extends ListView implements OnScroll
     private int mTouchPosition;
     private SwipeMenuLayout mTouchView;
     private OnSwipeListener mOnSwipeListener;
-
     private SwipeMenuCreator mMenuCreator;
     private OnMenuItemClickListener mOnMenuItemClickListener;
     private Interpolator mCloseInterpolator;
