@@ -1,6 +1,10 @@
 package com.overtech.ems.activity.parttime.nearby;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Locale;
+
 import com.overtech.ems.R;
 import com.overtech.ems.activity.adapter.GrabTaskAdapter;
 import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
@@ -9,7 +13,9 @@ import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
 import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView;
+import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView.IXListViewListener;
 import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView.OnMenuItemClickListener;
+import com.overtech.ems.widget.swiperefreshlistview.pulltorefresh.RefreshTime;
 import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenu;
 import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuCreator;
 import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuItem;
@@ -27,7 +33,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class NearByListFragment extends Fragment {
+public class NearByListFragment extends Fragment implements IXListViewListener {
 
 	private PullToRefreshSwipeMenuListView mNearBySwipeListView;
 	private SwipeMenuCreator creator;
@@ -35,6 +41,7 @@ public class NearByListFragment extends Fragment {
 	private NiftyDialogBuilder dialogBuilder;
 	private Effectstype effect;
 	private CustomProgressDialog progressDialog;
+	private Handler mHandler;
 	private ArrayList<Data5> list;
 	@Override
 	public void onAttach(Activity activity) {
@@ -74,6 +81,13 @@ public class NearByListFragment extends Fragment {
 		mNearBySwipeListView.setMenuCreator(creator);
 		GrabTaskAdapter mAdapter = new GrabTaskAdapter(list,mActivity);
 		mNearBySwipeListView.setAdapter(mAdapter);
+		mNearBySwipeListView.setPullRefreshEnable(true);
+		mNearBySwipeListView.setPullLoadEnable(true);
+		mNearBySwipeListView.setXListViewListener(this);
+		mHandler = new Handler();
+		
+		
+		
 		mNearBySwipeListView
 				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
@@ -153,6 +167,33 @@ public class NearByListFragment extends Fragment {
 					}
 				}).show();
 	}
+	public void onRefresh() {
+		mHandler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				SimpleDateFormat df = new SimpleDateFormat("MM-dd HH:mm",
+						Locale.getDefault());
+				RefreshTime.setRefreshTime(mActivity, df.format(new Date()));
+				onLoad();
+			}
+		}, 2000);
+	}
+
+	public void onLoadMore() {
+		mHandler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				onLoad();
+			}
+		}, 2000);
+	}
+
+	private void onLoad() {
+		mNearBySwipeListView.setRefreshTime(RefreshTime.getRefreshTime(mActivity));
+		mNearBySwipeListView.stopRefresh();
+		mNearBySwipeListView.stopLoadMore();
+	}
+
 	private int dp2px(int dp) {
 		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
 				getResources().getDisplayMetrics());
