@@ -98,6 +98,7 @@ public class PackageDetailActivity extends BaseActivity {
 		mHeadTitle = (TextView) findViewById(R.id.tv_grab_package_headTitle);
 		mDoBack = (ImageView) findViewById(R.id.iv_grab_headBack);
 		mRightContent=(ImageView)findViewById(R.id.iv_map);
+		mRightContent.setVisibility(View.VISIBLE);
 	}
 	private void showDialog() {
 		effect = Effectstype.Slideright;

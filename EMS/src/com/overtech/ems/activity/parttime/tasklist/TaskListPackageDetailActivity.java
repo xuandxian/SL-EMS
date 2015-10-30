@@ -1,7 +1,6 @@
 package com.overtech.ems.activity.parttime.tasklist;
 
 import java.util.ArrayList;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -36,7 +35,6 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 	private ImageView mDoBack;
 	private ListView mTask;
 	private Button mCancle;
-	private TextView mNavigation;
 	private TaskListPackageDetailAdapter adapter;
 	private ArrayList<Data2> list;
 	private Context mActivity;
@@ -45,9 +43,10 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 	private CustomProgressDialog progressDialog;
 	private LocationClient mLocClient;
 	private LatLng mLocation;
+	private TextView mDoNavicate;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_tasklist_package_detail);
@@ -57,10 +56,10 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 	}
 
 	private void init() {
-		mActivity=TaskListPackageDetailActivity.this;
-		dialogBuilder=NiftyDialogBuilder.getInstance(context);
-		progressDialog=CustomProgressDialog.createDialog(context);
-		TaskListPackageDetailAdapter adapter=new TaskListPackageDetailAdapter(context, list);
+		mActivity = TaskListPackageDetailActivity.this;
+		dialogBuilder = NiftyDialogBuilder.getInstance(context);
+		progressDialog = CustomProgressDialog.createDialog(context);
+		adapter = new TaskListPackageDetailAdapter(context, list);
 		mTask.setAdapter(adapter);
 		mDoBack.setOnClickListener(new OnClickListener() {
 			@Override
@@ -70,57 +69,64 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 		});
 		mTask.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
-					long arg3) {
-				Intent intent=new Intent(context,TaskListPackageTaskDetailActivity.class);
+			public void onItemClick(AdapterView<?> arg0, View arg1,
+					int position, long arg3) {
+				Intent intent = new Intent(context,
+						TaskListPackageTaskDetailActivity.class);
 				startActivity(intent);
 			}
-			
+
 		});
 		mCancle.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
-				effect=Effectstype.Slideright;
-				dialogBuilder.withTitle("温馨提示").withTitleColor("#FFFFFF")
-				.withDividerColor("#11000000").withMessage("您是否要退掉此单？")
-				.withMessageColor("#FF333333").withDialogColor("#FFFFFFFF")
-				.withIcon(getResources().getDrawable(R.drawable.icon_dialog))
-				.isCancelableOnTouchOutside(true).withDuration(700)
-				.withEffect(effect).withButtonDrawable(R.color.main_white)
-				.withButton1Text("否").withButton1Color("#FF333333")
-				.withButton2Text("是").withButton2Color("#FF333333")
-				.setButton1Click(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						dialogBuilder.dismiss();
-					}
-				}).setButton2Click(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						dialogBuilder.dismiss();
-						progressDialog.setMessage("正在退单");
-						progressDialog.show();
-						new Handler().postDelayed(new Runnable() {
-							
+				effect = Effectstype.Slideright;
+				dialogBuilder
+						.withTitle("温馨提示")
+						.withTitleColor("#FFFFFF")
+						.withDividerColor("#11000000")
+						.withMessage("您是否要退掉此单？")
+						.withMessageColor("#FF333333")
+						.withDialogColor("#FFFFFFFF")
+						.withIcon(
+								getResources().getDrawable(
+										R.drawable.icon_dialog))
+						.isCancelableOnTouchOutside(true).withDuration(700)
+						.withEffect(effect)
+						.withButtonDrawable(R.color.main_white)
+						.withButton1Text("否").withButton1Color("#FF333333")
+						.withButton2Text("是").withButton2Color("#FF333333")
+						.setButton1Click(new View.OnClickListener() {
 							@Override
-							public void run() {
-								finish();
+							public void onClick(View v) {
+								dialogBuilder.dismiss();
 							}
-						}, 3000);
-					} 
-				}).show();
+						}).setButton2Click(new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								dialogBuilder.dismiss();
+								progressDialog.setMessage("正在退单");
+								progressDialog.show();
+								new Handler().postDelayed(new Runnable() {
+
+									@Override
+									public void run() {
+										finish();
+									}
+								}, 3000);
+							}
+						}).show();
 			}
 		});
-		mNavigation.setOnClickListener(new OnClickListener() {
-			
+		mDoNavicate.setOnClickListener(new OnClickListener() {
+
 			@Override
 			public void onClick(View v) {
 				initBaiduMapLocation();
 			}
 		});
 	}
-
 
 	protected void initBaiduMapLocation() {
 		// 实例化定位服务，LocationClient类必须在主线程中声明
@@ -134,6 +140,7 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 		mLocClient.setLocOption(option); // 设置定位参数
 		mLocClient.start();
 	}
+
 	public class BDLocationListenerImpl implements BDLocationListener {
 
 		/**
@@ -166,12 +173,17 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 	}
 
 	private void initData() {
-		list=new ArrayList<Data2>();
-		Data2 data1=new Data2("31号楼1号电梯(全包)","上海三菱","80032984590","20层/20站");
-		Data2 data2=new Data2("31号楼2号电梯(半包)","上海三菱","80032984591","20层/20站");
-		Data2 data3=new Data2("31号楼2号电梯(半包)","上海三菱","80032984592","20层/20站");
-		Data2 data4=new Data2("31号楼3号电梯(半包)","上海三菱","80032984593","20层/20站");
-		Data2 data5=new Data2("31号楼3号电梯(清包)","上海三菱","80032984594","20层/20站");
+		list = new ArrayList<Data2>();
+		Data2 data1 = new Data2("31号楼1号电梯(全包)", "上海三菱", "80032984590",
+				"20层/20站");
+		Data2 data2 = new Data2("31号楼2号电梯(半包)", "上海三菱", "80032984591",
+				"20层/20站");
+		Data2 data3 = new Data2("31号楼2号电梯(半包)", "上海三菱", "80032984592",
+				"20层/20站");
+		Data2 data4 = new Data2("31号楼3号电梯(半包)", "上海三菱", "80032984593",
+				"20层/20站");
+		Data2 data5 = new Data2("31号楼3号电梯(清包)", "上海三菱", "80032984594",
+				"20层/20站");
 		list.add(data1);
 		list.add(data2);
 		list.add(data3);
@@ -180,9 +192,10 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 	}
 
 	private void initView() {
-		mDoBack=(ImageView) findViewById(R.id.iv_grab_headBack);
-		mTask=(ListView) findViewById(R.id.lv_tasklist);
-		mCancle=(Button) findViewById(R.id.bt_cancle_task);
-		mNavigation=(TextView) findViewById(R.id.tv_headTitleRight);
+		mDoBack = (ImageView) findViewById(R.id.iv_grab_headBack);
+		mTask = (ListView) findViewById(R.id.lv_tasklist);
+		mCancle = (Button) findViewById(R.id.bt_cancle_task);
+		mDoNavicate = (TextView) findViewById(R.id.tv_navicate);
+		mDoNavicate.setVisibility(View.VISIBLE);
 	}
 }

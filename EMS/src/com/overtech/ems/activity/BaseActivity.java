@@ -33,9 +33,9 @@ public class BaseActivity extends Activity {
 	private boolean mNeedBackGesture = false;
 	/** 图片加载 */
 	public ImageLoader imageLoader;
-	
+
 	public Context context;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -110,9 +110,8 @@ public class BaseActivity extends Activity {
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
 		InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		if(getCurrentFocus()!=null){
-			im.hideSoftInputFromWindow(getCurrentFocus()
-					.getApplicationWindowToken(),
+		if (im.isActive()) {
+			im.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,
 					InputMethodManager.HIDE_NOT_ALWAYS);
 		}
 		return super.onTouchEvent(event);
