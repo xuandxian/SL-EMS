@@ -1,12 +1,5 @@
 package com.overtech.ems.activity.common;
 
-import com.overtech.ems.R;
-import com.overtech.ems.activity.BaseActivity;
-import com.overtech.ems.activity.common.photo.view.PublishActivity;
-import com.overtech.ems.activity.parttime.MainActivity;
-import com.overtech.ems.utils.Utilities;
-import com.overtech.ems.widget.CustomProgressDialog;
-import com.overtech.ems.widget.EditTextWithDelete;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -18,10 +11,17 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
+
+import com.overtech.ems.R;
+import com.overtech.ems.activity.BaseActivity;
+import com.overtech.ems.activity.parttime.MainActivity;
+import com.overtech.ems.utils.Utilities;
+import com.overtech.ems.widget.CustomProgressDialog;
+import com.overtech.ems.widget.EditTextWithDelete;
 
 /**
  * @author Tony
@@ -75,10 +75,9 @@ public class LoginActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View arg0) {
-//				Intent intent = new Intent(LoginActivity.this,
-//						RegisterActivity.class);
 				Intent intent = new Intent(LoginActivity.this,
-						PublishActivity.class);
+						RegisterActivity.class);
+				
 				startActivity(intent);
 			}
 		});

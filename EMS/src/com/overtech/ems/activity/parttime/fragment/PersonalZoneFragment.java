@@ -88,7 +88,7 @@ public class PersonalZoneFragment extends Fragment implements OnClickListener {
 			startActivity(intent);
 			break;
 		case R.id.rl_personal_notice:
-			Utilities.showToast("你点击了公告", mActivity);
+//			Utilities.showToast("你点击了公告", mActivity);
 			intent.setClass(mActivity, PersonalAnnouncementActivity.class);
 			startActivity(intent);
 			break;
