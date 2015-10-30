@@ -16,6 +16,7 @@ import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
+import com.baidu.mapapi.map.MarkerOptions.MarkerAnimateType;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.overtech.ems.R;
@@ -41,11 +42,12 @@ public class NearByMapFragment extends Fragment {
 	private BaiduMap mBaiduMap = null;
 	private LocationClient mLocationClient;
 	private BitmapDescriptor bitmap;
-	private OverlayOptions mOverlayOptions;
+	private MarkerOptions mOverlayOptions;
 	private Marker mMarker;
 	private View view;
 	private Data data;
 	private Activity mActivity;
+	private Object animationBox;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -78,14 +80,15 @@ public class NearByMapFragment extends Fragment {
 		option.setScanSpan(5000); // 设置发起定位请求的间隔时间为5000ms
 		mLocationClient.setLocOption(option); // 设置定位参数
 		mLocationClient.start();
-		mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(16.0f));// 缩放到16
+		mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(17.0f));// 缩放到16
 	}
 
 	private void setBaiduMapMarker(LatLng point) {
 		BitmapDescriptor bitmap = BitmapDescriptorFactory
 				.fromResource(R.drawable.icon_location);
-		OverlayOptions option = new MarkerOptions().position(point)
-				.icon(bitmap);
+		MarkerOptions option = new MarkerOptions().position(point).icon(bitmap)
+				.zIndex(0);
+		option.animateType(MarkerAnimateType.grow);
 		mBaiduMap.addOverlay(option);
 	}
 
@@ -149,7 +152,8 @@ public class NearByMapFragment extends Fragment {
 				button.setText(data.name);
 				bitmap = BitmapDescriptorFactory.fromView(button);
 				mOverlayOptions = new MarkerOptions().position(ll).icon(bitmap)
-						.zIndex(11).draggable(false);
+						.zIndex(11).draggable(false).period(10);
+				mOverlayOptions.animateType(MarkerAnimateType.drop);
 				mMarker = (Marker) (mBaiduMap.addOverlay(mOverlayOptions));
 				mMarker.setZIndex(Integer.parseInt(data.id));
 				mHashMap.put(data.id, data);
@@ -164,7 +168,7 @@ public class NearByMapFragment extends Fragment {
 			@Override
 			public boolean onMarkerClick(final Marker marker) {
 				data = mHashMap.get(String.valueOf(marker.getZIndex()));
-				if (data==null) {
+				if (data == null) {
 					return false;
 				}
 				Intent intent = new Intent(mActivity,

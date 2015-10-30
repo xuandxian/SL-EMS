@@ -28,4 +28,13 @@
         android:layout_centerHorizontal="true"
         android:text="丰业广元公寓31—35号" />
 
+    <ImageView
+        android:id="@+id/iv_map"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:src="@drawable/icon_map2" />
+
 </RelativeLayout>

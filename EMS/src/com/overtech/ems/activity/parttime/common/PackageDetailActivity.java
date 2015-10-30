@@ -18,6 +18,7 @@ import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.PackageDetailAdapter;
 import com.overtech.ems.entity.test.Data2;
+import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
@@ -34,6 +35,7 @@ public class PackageDetailActivity extends BaseActivity {
 	private CustomProgressDialog progressDialog;
 	private String mCommunityName;
 	private TextView mHeadTitle;
+	private ImageView mRightContent;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +51,10 @@ public class PackageDetailActivity extends BaseActivity {
 		dialogBuilder = NiftyDialogBuilder.getInstance(context);
 		progressDialog = CustomProgressDialog.createDialog(context);
 		Bundle bundle = getIntent().getExtras();
+        //TODO下一行会出现空指针，什么情况？
+		if (bundle==null) {
+			return;
+		}
 		mCommunityName = bundle.getString("CommunityName");
 		mHeadTitle.setText(mCommunityName);
 		adapter = new PackageDetailAdapter(context, list);
@@ -78,6 +84,13 @@ public class PackageDetailActivity extends BaseActivity {
 				finish();
 			}
 		});
+		mRightContent.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				Utilities.showToast("hahahahahaha", context);
+			}
+		});
 	}
 
 	private void findViewById() {
@@ -85,8 +98,8 @@ public class PackageDetailActivity extends BaseActivity {
 		mGrabTaskBtn = (Button) findViewById(R.id.btn_grab_task_package);
 		mHeadTitle = (TextView) findViewById(R.id.tv_grab_package_headTitle);
 		mDoBack = (ImageView) findViewById(R.id.iv_grab_headBack);
+		mRightContent=(ImageView)findViewById(R.id.iv_map);
 	}
-
 	private void showDialog() {
 		effect = Effectstype.Slideright;
 		dialogBuilder.withTitle("温馨提示").withTitleColor("#FFFFFF")
