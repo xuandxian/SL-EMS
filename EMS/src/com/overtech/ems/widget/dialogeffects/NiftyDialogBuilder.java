@@ -122,7 +122,7 @@ public class NiftyDialogBuilder extends Dialog implements DialogInterface {
     
     private void init(Context context) {
         
-        mDialogView = View.inflate(context, R.layout.dialog_layout, null);
+        mDialogView = View.inflate(context, R.layout.layout_nifity_dialog, null);
         
         mLinearLayoutView=(LinearLayout)mDialogView.findViewById(R.id.parentPanel);
         mRelativeLayoutView=(RelativeLayout)mDialogView.findViewById(R.id.main);

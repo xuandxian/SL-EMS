@@ -1,12 +1,6 @@
 <resources>
     <!-- dialog UI  -->
     <dimen name="dialog_padding">35dp</dimen>
-    <!-- pullToRefresh UI  -->
-    <dimen name="header_footer_left_right_padding">24dp</dimen>
-    <dimen name="header_footer_top_bottom_padding">12dp</dimen>
-    <dimen name="indicator_right_padding">10dp</dimen>
-    <dimen name="indicator_corner_radius">12dp</dimen>
-    <dimen name="indicator_internal_padding">4dp</dimen>
     <!-- 文字大小样式 -->
     <dimen name="text_size_xlarge">22sp</dimen>
     <dimen name="text_size_large">20sp</dimen>
