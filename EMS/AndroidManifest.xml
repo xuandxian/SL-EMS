@@ -88,6 +88,7 @@
         <activity android:name="com.overtech.ems.activity.common.photo.view.ImageBucketChooseActivity"/>
         <activity android:name="com.overtech.ems.activity.common.photo.view.ImageChooseActivity"/>
         <activity android:name="com.overtech.ems.activity.common.photo.view.ImageZoomActivity"/>
+        <activity android:name="com.overtech.ems.activity.parttime.common.ShowCommunityLocationActivity"/>
 
     </application>
 

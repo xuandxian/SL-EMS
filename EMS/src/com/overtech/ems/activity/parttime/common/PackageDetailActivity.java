@@ -13,12 +13,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.PackageDetailAdapter;
 import com.overtech.ems.entity.test.Data2;
-import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
@@ -88,7 +86,8 @@ public class PackageDetailActivity extends BaseActivity {
 			
 			@Override
 			public void onClick(View arg0) {
-				Utilities.showToast("hahahahahaha", context);
+				Intent intent=new Intent(PackageDetailActivity.this, ShowCommunityLocationActivity.class);
+				startActivity(intent);
 			}
 		});
 	}

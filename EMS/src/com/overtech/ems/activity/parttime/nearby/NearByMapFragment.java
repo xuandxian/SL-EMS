@@ -2,7 +2,6 @@ package com.overtech.ems.activity.parttime.nearby;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -17,7 +16,6 @@ import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MarkerOptions.MarkerAnimateType;
-import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.overtech.ems.R;
 import com.overtech.ems.entity.test.Data;
@@ -47,7 +45,6 @@ public class NearByMapFragment extends Fragment {
 	private View view;
 	private Data data;
 	private Activity mActivity;
-	private Object animationBox;
 
 	@Override
 	public void onAttach(Activity activity) {
