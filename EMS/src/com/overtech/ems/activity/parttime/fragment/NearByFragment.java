@@ -3,13 +3,19 @@ package com.overtech.ems.activity.parttime.fragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.overtech.ems.R;
@@ -18,13 +24,14 @@ import com.overtech.ems.activity.parttime.nearby.NearByMapFragment;
 
 public class NearByFragment extends Fragment implements OnClickListener {
 
-	private Button mNearByMapBtn;
-	private Button mNearByListBtn;
+	private TextView mNearByMapTextView;
+	private TextView mNearByListTextView;
 	private View view;
 	private FragmentManager manager;
 	private FragmentTransaction transaction;
 	private Fragment mNearByMap;
 	private Fragment mNearByList;
+	private int one;
 	private TextView mHeadTitle;
 
 	@Override
@@ -36,13 +43,14 @@ public class NearByFragment extends Fragment implements OnClickListener {
 		return view;
 	}
 
+
 	private void init() {
-		mNearByMapBtn = (Button) view.findViewById(R.id.btn_nearby_title_map);
-		mNearByListBtn = (Button) view.findViewById(R.id.btn_nearby_title_list);
+		mNearByMapTextView = (TextView) view.findViewById(R.id.tv_nearby_map);
+		mNearByListTextView = (TextView) view.findViewById(R.id.tv_nearby_list);
 		mHeadTitle=(TextView)view.findViewById(R.id.tv_headTitle);
 		mHeadTitle.setText("附近");
-		mNearByMapBtn.setOnClickListener(this);
-		mNearByListBtn.setOnClickListener(this);
+		mNearByMapTextView.setOnClickListener(this);
+		mNearByListTextView.setOnClickListener(this);
 		manager = getFragmentManager();
 		mNearByMap = new NearByMapFragment();
 		mNearByList=new NearByListFragment();
@@ -66,19 +74,19 @@ public class NearByFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
-		case R.id.btn_nearby_title_map:
+		case R.id.tv_nearby_map:
 			switchContent(mNearByList, mNearByMap);
-			mNearByMapBtn.setBackgroundResource(R.drawable.btn_selector_left_blue);
-			mNearByListBtn.setBackgroundResource(R.drawable.btn_selector_right_white);
-			mNearByMapBtn.setTextColor(getResources().getColor(R.color.main_white));
-			mNearByListBtn.setTextColor(Color.rgb(0, 163, 233));
+			mNearByMapTextView.setBackgroundResource(R.drawable.horizontal_line);
+			mNearByListTextView.setBackgroundResource(R.drawable.bg_white);
+			mNearByMapTextView.setTextColor(Color.rgb(0, 163, 233));
+			mNearByListTextView.setTextColor(getResources().getColor(R.color.main_secondary));
 			break;
-		case R.id.btn_nearby_title_list:
+		case R.id.tv_nearby_list:
 			switchContent(mNearByMap, mNearByList);
-			mNearByMapBtn.setBackgroundResource(R.drawable.btn_selector_left_white);
-			mNearByListBtn.setBackgroundResource(R.drawable.btn_selector_right_blue);
-			mNearByMapBtn.setTextColor(Color.rgb(0, 163, 233));
-			mNearByListBtn.setTextColor(getResources().getColor(R.color.main_white));
+			mNearByMapTextView.setBackgroundResource(R.drawable.bg_white);
+			mNearByListTextView.setBackgroundResource(R.drawable.horizontal_line);
+			mNearByMapTextView.setTextColor(getResources().getColor(R.color.main_secondary));
+			mNearByListTextView.setTextColor(Color.rgb(0, 163, 233));
 			break;
 		}
 	}

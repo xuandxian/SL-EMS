@@ -1,52 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_main" >
+    android:background="@color/bg_main"
+    android:orientation="vertical" >
 
     <include
         android:id="@+id/title_grab_nearby"
         layout="@layout/headview" />
 
     <LinearLayout
-        android:id="@+id/ll_nearby_title_content"
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_below="@+id/title_grab_nearby"
-        android:layout_marginBottom="5dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_marginTop="5dp"
+        android:background="#ffffff"
         android:orientation="horizontal" >
 
-        <Button
-            android:id="@+id/btn_nearby_title_map"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+        <TextView
+            android:id="@+id/tv_nearby_map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/btn_selector_left_blue"
+            android:background="@drawable/horizontal_line"
+            android:gravity="center"
             android:text="地图显示"
-            android:textColor="@color/main_white"
-            android:textSize="@dimen/text_size_list" />
+            android:textColor="#666666"
+            android:textSize="15sp" />
 
-        <Button
-            android:id="@+id/btn_nearby_title_list"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
+        <View
+            android:layout_width="1px"
+            android:layout_height="match_parent"
+            android:background="@color/main_line" />
+
+        <TextView
+            android:id="@+id/tv_nearby_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:background="@drawable/btn_selector_right_white"
+            android:gravity="center"
             android:text="列表显示"
-            android:textColor="#00a3e9"
-            android:textSize="@dimen/text_size_list" />
+            android:textColor="#666666"
+            android:textSize="15sp" />
     </LinearLayout>
 
     <RelativeLayout
         android:id="@+id/rl_nearby_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/ll_nearby_title_content" >
+        android:layout_height="match_parent" >
     </RelativeLayout>
 
-</RelativeLayout>
+</LinearLayout>
