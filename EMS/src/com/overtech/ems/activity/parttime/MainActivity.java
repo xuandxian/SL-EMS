@@ -9,7 +9,6 @@ import com.overtech.ems.activity.parttime.fragment.TaskListFragment;
 import com.overtech.ems.activity.parttime.tasklist.ScanCodeActivity;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -36,8 +35,8 @@ public class MainActivity extends Activity implements OnClickListener {
 	private Context mContext;
 	private Effectstype effect;
 	private NiftyDialogBuilder dialogBuilder;
-	private TextView mHeadContent;
-	private TextView mHeadRightContent;
+//	private TextView mHeadContent;
+//	private TextView mHeadRightContent;
 	private Fragment mGrabTaskFragment;
 	private Fragment mTaskListFragment;
 	private Fragment mPersonalZoneFragment;
@@ -66,8 +65,8 @@ public class MainActivity extends Activity implements OnClickListener {
 	}
 
 	private void findViewById() {
-		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
-		mHeadRightContent = (TextView) findViewById(R.id.tv_headTitleRight);
+//		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
+//		mHeadRightContent = (TextView) findViewById(R.id.tv_headTitleRight);
 		mRelGrabTask = (RelativeLayout) findViewById(R.id.rl_parttime_grab_task);
 		mRelNearBy = (RelativeLayout) findViewById(R.id.rl_parttime_nearby);
 		mRelTaskList = (RelativeLayout) findViewById(R.id.rl_parttime_task_list);
@@ -84,7 +83,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
 	private void init() {
 		mContext = MainActivity.this;
-		mHeadContent.setText("抢单");
+//		mHeadContent.setText("抢单");
 		dialogBuilder = NiftyDialogBuilder.getInstance(this);
 		FragmentManager manager = getFragmentManager();
 		FragmentTransaction transaction = manager.beginTransaction();
@@ -95,7 +94,7 @@ public class MainActivity extends Activity implements OnClickListener {
 		mRelNearBy.setOnClickListener(this);
 		mRelTaskList.setOnClickListener(this);
 		mRelPersonalZone.setOnClickListener(this);
-		mHeadRightContent.setOnClickListener(this);
+//		mHeadRightContent.setOnClickListener(this);
 	}
 
 	@Override
@@ -104,8 +103,8 @@ public class MainActivity extends Activity implements OnClickListener {
 		FragmentTransaction transaction = manager.beginTransaction();
 		switch (v.getId()) {
 		case R.id.rl_parttime_grab_task:
-			mHeadContent.setText("抢单");
-			mHeadRightContent.setText("");
+//			mHeadContent.setText("抢单");
+//			mHeadRightContent.setText("");
 			mTabGrabTaskIv
 					.setBackgroundResource(R.drawable.shopping_home_tab_take_out_selected);
 			mTabGrabTaskContent.setTextColor(Color.argb(255, 49, 144, 232));
@@ -125,8 +124,8 @@ public class MainActivity extends Activity implements OnClickListener {
 			transaction.commit();
 			break;
 		case R.id.rl_parttime_nearby:
-			mHeadContent.setText("附近");
-			mHeadRightContent.setText("");
+//			mHeadContent.setText("附近");
+//			mHeadRightContent.setText("");
 			mTabNearByIv
 					.setBackgroundResource(R.drawable.shopping_home_tab_found_selected);
 			mTabNearByContent.setTextColor(Color.argb(255, 49, 144, 232));
@@ -145,8 +144,8 @@ public class MainActivity extends Activity implements OnClickListener {
 			transaction.commit();
 			break;
 		case R.id.rl_parttime_task_list:
-			mHeadContent.setText("任务单");
-			mHeadRightContent.setText("开始");
+//			mHeadContent.setText("");
+//			mHeadRightContent.setText("开始");
 			mTabTaskListIv
 					.setBackgroundResource(R.drawable.shopping_home_tab_order_selected);
 			mTabTaskListContent.setTextColor(Color.argb(255, 49, 144, 232));
@@ -165,8 +164,8 @@ public class MainActivity extends Activity implements OnClickListener {
 			transaction.commit();
 			break;
 		case R.id.rl_parttime_personal_zone:
-			mHeadContent.setText("我的");
-			mHeadRightContent.setText("");
+//			mHeadContent.setText("我的");
+//			mHeadRightContent.setText("");
 			mTabPersonalZoneIv
 					.setBackgroundResource(R.drawable.shopping_home_tab_personal_selected);
 			mTabPersonalZoneContent.setTextColor(Color.argb(255, 49, 144, 232));

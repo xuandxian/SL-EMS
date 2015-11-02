@@ -4,9 +4,6 @@
     android:layout_height="match_parent"
     android:background="@color/bg_main" >
 
-    <include
-        android:id="@+id/include_parttime_main"
-        layout="@layout/headview" />
 
     <LinearLayout
         android:id="@+id/tab_parttime"
