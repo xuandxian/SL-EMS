@@ -20,8 +20,8 @@ public class PersonalAccountListActivity extends Activity implements OnClickList
 	private ImageView mDoBack;
 	private TextView mHeadContent;
 	private ListView mPersonalAccountListView;
-	private Button mHasCount;
-	private Button mNoCount;
+	private TextView mHasCount;
+	private TextView mNoCount;
 	private PersonalAccountListAdapter adapter;
 	private PersonalAccountListAdapter adapter2;
 	private ArrayList<Data2> list;
@@ -42,8 +42,8 @@ public class PersonalAccountListActivity extends Activity implements OnClickList
 		mDoBack=(ImageView)findViewById(R.id.iv_headBack);
 		mHeadContent=(TextView)findViewById(R.id.tv_headTitle);
 		mPersonalAccountListView=(ListView)findViewById(R.id.lv_personal_account_list);
-		mHasCount=(Button) findViewById(R.id.btn_nearby_title_map);
-		mNoCount = (Button)findViewById(R.id.btn_nearby_title_list);
+		mHasCount=(TextView) findViewById(R.id.tv_account_donet);
+		mNoCount = (TextView)findViewById(R.id.tv_account_none);
 	}
 	private ArrayList<Data2> getData2(){
 		list2=new ArrayList<Data2>();
@@ -95,28 +95,28 @@ public class PersonalAccountListActivity extends Activity implements OnClickList
 		case R.id.iv_headBack:
 			finish();
 			break;
-		case R.id.btn_nearby_title_map:
+		case R.id.tv_account_donet:
 			if(adapter!=null){
 				adapter.notifyDataSetChanged();
 			}
 			mPersonalAccountListView.setAdapter(adapter);
 			
-			mHasCount.setBackgroundResource(R.drawable.btn_selector_left_blue);
-			mNoCount.setBackgroundResource(R.drawable.btn_selector_right_white);
-			mHasCount.setTextColor(getResources().getColor(R.color.main_white));
-			mNoCount.setTextColor(Color.rgb(0, 163, 233));
+			mHasCount.setBackgroundResource(R.drawable.horizontal_line);
+			mNoCount.setBackgroundResource(R.drawable.bg_white);
+			mHasCount.setTextColor(Color.rgb(0, 163, 233));
+			mNoCount.setTextColor(getResources().getColor(R.color.main_secondary));
 			break;
-		case R.id.btn_nearby_title_list:
+		case R.id.tv_account_none:
 			if(adapter2!=null){
 				adapter2.notifyDataSetChanged();
 			}
 			adapter2=new PersonalAccountListAdapter(context, list2);
 			mPersonalAccountListView.setAdapter(adapter2);
 			
-			mHasCount.setBackgroundResource(R.drawable.btn_selector_left_white);
-			mNoCount.setBackgroundResource(R.drawable.btn_selector_right_blue);
-			mHasCount.setTextColor(Color.rgb(0, 163, 233));
-			mNoCount.setTextColor(getResources().getColor(R.color.main_white));
+			mHasCount.setBackgroundResource(R.drawable.bg_white);
+			mNoCount.setBackgroundResource(R.drawable.horizontal_line);
+			mHasCount.setTextColor(getResources().getColor(R.color.main_secondary));
+			mNoCount.setTextColor(Color.rgb(0, 163, 233));
 			break;
 		default:
 			break;

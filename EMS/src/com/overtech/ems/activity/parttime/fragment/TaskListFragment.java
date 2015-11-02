@@ -23,8 +23,8 @@ import com.overtech.ems.activity.parttime.tasklist.TaskListNoneFragment;
 public class TaskListFragment extends Fragment implements OnClickListener {
 
 	private Activity mActivity;
-	private Button mNone;
-	private Button mDonet;
+	private TextView mNone;
+	private TextView mDonet;
 	private TextView mHead;
 	private TextView mHeadRightContent;
 	private FragmentManager manager;
@@ -50,10 +50,10 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 	}
 
 	private void initView(View view) {
-		mNone=(Button) view.findViewById(R.id.btn_task_list_title_none);
-		mDonet=(Button) view.findViewById(R.id.btn_task_list_title_donet);
 		mHead=(TextView) view.findViewById(R.id.tv_headTitle);
 		mHeadRightContent=(TextView) view.findViewById(R.id.tv_headTitleRight);		
+		mNone=(TextView) view.findViewById(R.id.tv_tasklist_none);
+		mDonet=(TextView) view.findViewById(R.id.tv_tasklist_donet);
 		mNone.setOnClickListener(this);
 		mDonet.setOnClickListener(this);
 		mHeadRightContent.setOnClickListener(this);
@@ -74,19 +74,19 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 
-		case R.id.btn_task_list_title_none:
+		case R.id.tv_tasklist_none:
 			switchContent(mTaskDonet,mTaskNone);
-			mNone.setBackgroundResource(R.drawable.btn_selector_left_blue);
-			mDonet.setBackgroundResource(R.drawable.btn_selector_right_white);
-			mNone.setTextColor(getResources().getColor(R.color.main_white));
-			mDonet.setTextColor(Color.rgb(0, 163, 233));
-			break;
-		case R.id.btn_task_list_title_donet:
-			switchContent(mTaskNone,mTaskDonet);
-			mNone.setBackgroundResource(R.drawable.btn_selector_left_white);
-			mDonet.setBackgroundResource(R.drawable.btn_selector_right_blue);
+			mNone.setBackgroundResource(R.drawable.horizontal_line);
+			mDonet.setBackgroundResource(R.drawable.bg_white);
 			mNone.setTextColor(Color.rgb(0, 163, 233));
-			mDonet.setTextColor(getResources().getColor(R.color.main_white));
+			mDonet.setTextColor(getResources().getColor(R.color.main_secondary));
+			break;
+		case R.id.tv_tasklist_donet:
+			switchContent(mTaskNone,mTaskDonet);
+			mNone.setBackgroundResource(R.drawable.bg_white);
+			mDonet.setBackgroundResource(R.drawable.horizontal_line);
+			mNone.setTextColor(getResources().getColor(R.color.main_secondary));
+			mDonet.setTextColor(Color.rgb(0, 163, 233));
 			break;
 		case R.id.tv_headTitleRight:
 			Intent intent = new Intent();

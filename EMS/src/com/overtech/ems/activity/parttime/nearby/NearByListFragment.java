@@ -102,7 +102,11 @@ public class NearByListFragment extends Fragment implements IXListViewListener {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
+				Data5 data=(Data5) parent.getItemAtPosition(position);
 				Intent intent=new Intent(mActivity, PackageDetailActivity.class);
+				Bundle bundle=new Bundle();
+				bundle.putString("CommunityName", data.getName());
+				intent.putExtras(bundle);
 				startActivity(intent);
 			}
 		});
