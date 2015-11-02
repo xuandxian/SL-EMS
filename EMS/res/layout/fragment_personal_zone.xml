@@ -3,14 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_main" >
-
+	<include 
+	    android:id="@+id/personal_zone_header"
+	    layout="@layout/headview"
+	    />
     <RelativeLayout
         android:id="@+id/rl_personal_details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dip"
         android:background="@color/main_white"
-        android:orientation="horizontal"
+        android:layout_below="@id/personal_zone_header"
         android:padding="15dip" >
 
         <ImageView

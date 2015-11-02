@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,7 +12,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
+
 import com.overtech.ems.R;
+import com.overtech.ems.activity.parttime.MainActivity;
+import com.overtech.ems.activity.parttime.tasklist.ScanCodeActivity;
 import com.overtech.ems.activity.parttime.tasklist.TaskListDonetFragment;
 import com.overtech.ems.activity.parttime.tasklist.TaskListNoneFragment;
 
@@ -20,6 +25,8 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 	private Activity mActivity;
 	private Button mNone;
 	private Button mDonet;
+	private TextView mHead;
+	private TextView mHeadRightContent;
 	private FragmentManager manager;
 	private FragmentTransaction transaction;
 	private Fragment mTaskNone;
@@ -45,14 +52,21 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 	private void initView(View view) {
 		mNone=(Button) view.findViewById(R.id.btn_task_list_title_none);
 		mDonet=(Button) view.findViewById(R.id.btn_task_list_title_donet);
+		mHead=(TextView) view.findViewById(R.id.tv_headTitle);
+		mHeadRightContent=(TextView) view.findViewById(R.id.tv_headTitleRight);
+		
 		mNone.setOnClickListener(this);
 		mDonet.setOnClickListener(this);
+		mHeadRightContent.setOnClickListener(this);
+		
 		manager = getFragmentManager();
 		mTaskNone=new TaskListNoneFragment();
 		mTaskDonet=new TaskListDonetFragment();
 	}
 	
 	private void setDefaultView() {
+		mHead.setText("任务单");
+		mHeadRightContent.setText("开始");
 		transaction=manager.beginTransaction();
 		transaction.replace(R.id.fl_container, mTaskNone).commit();
 	}
@@ -74,6 +88,11 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 			mDonet.setBackgroundResource(R.drawable.btn_selector_right_blue);
 			mNone.setTextColor(Color.rgb(0, 163, 233));
 			mDonet.setTextColor(getResources().getColor(R.color.main_white));
+			break;
+		case R.id.tv_headTitleRight:
+			Intent intent = new Intent();
+			intent.setClass(mActivity, ScanCodeActivity.class);
+			startActivity(intent);
 			break;
 		default:
 			break;

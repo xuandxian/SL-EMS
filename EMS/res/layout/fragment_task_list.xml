@@ -3,7 +3,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_main" >
-
+	<include 
+	    android:id="@+id/task_list_headview"
+	    layout="@layout/headview"
+	    />
     <LinearLayout
         android:id="@+id/ll_task_list_title_content"
         android:layout_width="match_parent"
@@ -12,6 +15,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="5dp"
+        android:layout_below="@id/task_list_headview"
         android:orientation="horizontal" >
 
         <Button

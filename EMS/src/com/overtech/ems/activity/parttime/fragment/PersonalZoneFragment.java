@@ -1,14 +1,5 @@
 package com.overtech.ems.activity.parttime.fragment;
 
-import com.overtech.ems.R;
-import com.overtech.ems.activity.parttime.personal.PersonalAccountListActivity;
-import com.overtech.ems.activity.parttime.personal.PersonalAnnouncementActivity;
-import com.overtech.ems.activity.parttime.personal.PersonalBoundsActivity;
-import com.overtech.ems.activity.parttime.personal.PersonalCancleListActivity;
-import com.overtech.ems.activity.parttime.personal.PersonalDeatilsActivity;
-import com.overtech.ems.activity.parttime.personal.PersonalHelpDocActivity;
-import com.overtech.ems.utils.Utilities;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -17,8 +8,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.overtech.ems.R;
+import com.overtech.ems.activity.parttime.personal.PersonalAccountListActivity;
+import com.overtech.ems.activity.parttime.personal.PersonalAnnouncementActivity;
+import com.overtech.ems.activity.parttime.personal.PersonalBoundsActivity;
+import com.overtech.ems.activity.parttime.personal.PersonalCancleListActivity;
+import com.overtech.ems.activity.parttime.personal.PersonalDeatilsActivity;
+import com.overtech.ems.activity.parttime.personal.PersonalHelpDocActivity;
 
 public class PersonalZoneFragment extends Fragment implements OnClickListener {
 	private View view;
@@ -28,6 +27,7 @@ public class PersonalZoneFragment extends Fragment implements OnClickListener {
 	private RelativeLayout mCompanyNotice;
 	private RelativeLayout mCancleList;
 	private RelativeLayout mHelpDoc;
+	private TextView mHeadContent;
 	private Activity mActivity;
 	
 	@Override
@@ -59,6 +59,9 @@ public class PersonalZoneFragment extends Fragment implements OnClickListener {
 				.findViewById(R.id.rl_cancle_list);
 		mHelpDoc = (RelativeLayout) view
 				.findViewById(R.id.rl_help_doc);
+		mHeadContent=(TextView) view
+				.findViewById(R.id.tv_headTitle);
+		mHeadContent.setText("我的");
 	}
 
 	private void initEvents() {
