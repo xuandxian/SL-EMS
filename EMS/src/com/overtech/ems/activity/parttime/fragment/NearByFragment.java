@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.parttime.nearby.NearByListFragment;
@@ -22,9 +23,9 @@ public class NearByFragment extends Fragment implements OnClickListener {
 	private View view;
 	private FragmentManager manager;
 	private FragmentTransaction transaction;
-	private Fragment mContent;
 	private Fragment mNearByMap;
 	private Fragment mNearByList;
+	private TextView mHeadTitle;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -38,6 +39,8 @@ public class NearByFragment extends Fragment implements OnClickListener {
 	private void init() {
 		mNearByMapBtn = (Button) view.findViewById(R.id.btn_nearby_title_map);
 		mNearByListBtn = (Button) view.findViewById(R.id.btn_nearby_title_list);
+		mHeadTitle=(TextView)view.findViewById(R.id.tv_headTitle);
+		mHeadTitle.setText("附近");
 		mNearByMapBtn.setOnClickListener(this);
 		mNearByListBtn.setOnClickListener(this);
 		manager = getFragmentManager();
@@ -79,7 +82,4 @@ public class NearByFragment extends Fragment implements OnClickListener {
 			break;
 		}
 	}
-
-	
-
 }

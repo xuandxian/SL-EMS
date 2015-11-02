@@ -182,11 +182,6 @@ public class MainActivity extends Activity implements OnClickListener {
 			transaction.replace(R.id.fragment_content, mPersonalZoneFragment);
 			transaction.commit();
 			break;
-		case R.id.tv_headTitleRight:
-			Intent intent = new Intent();
-			intent.setClass(MainActivity.this, ScanCodeActivity.class);
-			startActivity(intent);
-			break;
 		}
 	}
 

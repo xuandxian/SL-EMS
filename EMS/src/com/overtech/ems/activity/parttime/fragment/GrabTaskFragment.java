@@ -34,6 +34,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 public class GrabTaskFragment extends Fragment implements IXListViewListener {
 
@@ -47,6 +48,7 @@ public class GrabTaskFragment extends Fragment implements IXListViewListener {
 	private GrabTaskAdapter mAdapter;
 	private ArrayList<Data5> list;
 	private Handler mHandler;
+	private TextView mHeadTitle;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -68,6 +70,7 @@ public class GrabTaskFragment extends Fragment implements IXListViewListener {
 	private void findViewById(View view) {
 		mSwipeListView = (PullToRefreshSwipeMenuListView) view
 				.findViewById(R.id.sl_qiandan_listview);
+		mHeadTitle=(TextView)view.findViewById(R.id.tv_headTitle);
 	}
 
 	private void getData() {
@@ -116,6 +119,7 @@ public class GrabTaskFragment extends Fragment implements IXListViewListener {
 	private void init() {
 		dialogBuilder = NiftyDialogBuilder.getInstance(mActivity);
 		progressDialog = CustomProgressDialog.createDialog(mActivity);
+		mHeadTitle.setText("抢单");
 		initListView();
 		mSwipeListView.setMenuCreator(creator);
 		mAdapter = new GrabTaskAdapter(list, mActivity);
@@ -124,7 +128,7 @@ public class GrabTaskFragment extends Fragment implements IXListViewListener {
 		mSwipeListView.setPullLoadEnable(true);
 		mSwipeListView.setXListViewListener(this);
 		View mHeadView=LayoutInflater.from(mActivity).inflate(
-				R.layout.header_listview_grabtask, null);
+				R.layout.listview_header_filter, null);
 		mSwipeListView.addHeaderView(mHeadView);
 		mPartTimeDoFifter=(ImageView) mHeadView.findViewById(R.id.iv_parttime_do_fifter);
 		mHandler = new Handler();

@@ -4,10 +4,15 @@
     android:layout_height="match_parent"
     android:background="@color/bg_main" >
 
+    <include
+        android:id="@+id/title_grab_nearby"
+        layout="@layout/headview" />
+
     <LinearLayout
         android:id="@+id/ll_nearby_title_content"
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:layout_below="@+id/title_grab_nearby"
         android:layout_marginBottom="5dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
@@ -21,16 +26,15 @@
             android:layout_weight="1"
             android:background="@drawable/btn_selector_left_blue"
             android:text="地图显示"
-            android:textSize="@dimen/text_size_list"
             android:textColor="@color/main_white"
-             />
+            android:textSize="@dimen/text_size_list" />
 
         <Button
             android:id="@+id/btn_nearby_title_list"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-         	android:background="@drawable/btn_selector_right_white"
+            android:background="@drawable/btn_selector_right_white"
             android:text="列表显示"
             android:textColor="#00a3e9"
             android:textSize="@dimen/text_size_list" />
@@ -43,7 +47,6 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/ll_nearby_title_content" >
-
     </RelativeLayout>
 
 </RelativeLayout>

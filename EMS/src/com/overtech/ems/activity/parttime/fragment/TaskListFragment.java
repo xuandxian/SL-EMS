@@ -43,10 +43,10 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 	}
 
 	private void initView(View view) {
-		mNone=(Button) view.findViewById(R.id.btn_task_list_title_none);
-		mDonet=(Button) view.findViewById(R.id.btn_task_list_title_donet);
-		mNone.setOnClickListener(this);
-		mDonet.setOnClickListener(this);
+//		mNone=(Button) view.findViewById(R.id.btn_task_list_title_none);
+//		mDonet=(Button) view.findViewById(R.id.btn_task_list_title_donet);
+//		mNone.setOnClickListener(this);
+//		mDonet.setOnClickListener(this);
 		manager = getFragmentManager();
 		mTaskNone=new TaskListNoneFragment();
 		mTaskDonet=new TaskListDonetFragment();
@@ -61,20 +61,20 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.btn_task_list_title_none:
-			switchContent(mTaskDonet,mTaskNone);
-			mNone.setBackgroundResource(R.drawable.btn_selector_left_blue);
-			mDonet.setBackgroundResource(R.drawable.btn_selector_right_white);
-			mNone.setTextColor(getResources().getColor(R.color.main_white));
-			mDonet.setTextColor(Color.rgb(0, 163, 233));
-			break;
-		case R.id.btn_task_list_title_donet:
-			switchContent(mTaskNone,mTaskDonet);
-			mNone.setBackgroundResource(R.drawable.btn_selector_left_white);
-			mDonet.setBackgroundResource(R.drawable.btn_selector_right_blue);
-			mNone.setTextColor(Color.rgb(0, 163, 233));
-			mDonet.setTextColor(getResources().getColor(R.color.main_white));
-			break;
+//		case R.id.btn_task_list_title_none:
+//			switchContent(mTaskDonet,mTaskNone);
+//			mNone.setBackgroundResource(R.drawable.btn_selector_left_blue);
+//			mDonet.setBackgroundResource(R.drawable.btn_selector_right_white);
+//			mNone.setTextColor(getResources().getColor(R.color.main_white));
+//			mDonet.setTextColor(Color.rgb(0, 163, 233));
+//			break;
+//		case R.id.btn_task_list_title_donet:
+//			switchContent(mTaskNone,mTaskDonet);
+//			mNone.setBackgroundResource(R.drawable.btn_selector_left_white);
+//			mDonet.setBackgroundResource(R.drawable.btn_selector_right_blue);
+//			mNone.setTextColor(Color.rgb(0, 163, 233));
+//			mDonet.setTextColor(getResources().getColor(R.color.main_white));
+//			break;
 		default:
 			break;
 		}
