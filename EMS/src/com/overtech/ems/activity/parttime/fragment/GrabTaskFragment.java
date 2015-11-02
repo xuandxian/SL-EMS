@@ -68,8 +68,6 @@ public class GrabTaskFragment extends Fragment implements IXListViewListener {
 	private void findViewById(View view) {
 		mSwipeListView = (PullToRefreshSwipeMenuListView) view
 				.findViewById(R.id.sl_qiandan_listview);
-		mPartTimeDoFifter = (ImageView) view
-				.findViewById(R.id.iv_parttime_do_fifter);
 	}
 
 	private void getData() {
@@ -125,6 +123,10 @@ public class GrabTaskFragment extends Fragment implements IXListViewListener {
 		mSwipeListView.setPullRefreshEnable(true);
 		mSwipeListView.setPullLoadEnable(true);
 		mSwipeListView.setXListViewListener(this);
+		View mHeadView=LayoutInflater.from(mActivity).inflate(
+				R.layout.header_listview_grabtask, null);
+		mSwipeListView.addHeaderView(mHeadView);
+		mPartTimeDoFifter=(ImageView) mHeadView.findViewById(R.id.iv_parttime_do_fifter);
 		mHandler = new Handler();
 		mSwipeListView
 				.setOnMenuItemClickListener(new OnMenuItemClickListener() {

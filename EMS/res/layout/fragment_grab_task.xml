@@ -4,58 +4,9 @@
     android:layout_height="match_parent"
     android:background="@color/bg_main" >
 
-    <RelativeLayout
-        android:id="@+id/relativeLayout1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <RelativeLayout
-            android:id="@+id/rl_do_filter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginTop="5dp"
-            android:focusable="true"
-            android:focusableInTouchMode="true" >
-
-            <ImageView
-                android:id="@+id/iv_parttime_do_fifter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/selector_do_fifter"
-                android:contentDescription="@null" />
-
-            <TextView
-                android:id="@+id/tv_parttime_do_fifter"
-                style="@style/tv_hint_hint_style"
-                android:layout_below="@+id/iv_parttime_do_fifter"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="-5dp"
-                android:text="筛选" />
-
-            <com.overtech.ems.widget.EditTextWithDelete
-                android:id="@+id/et_do_parttime_search"
-                android:layout_width="match_parent"
-                android:layout_height="38dp"
-                android:layout_centerVertical="true"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="5dp"
-                android:layout_marginTop="8dp"
-                android:layout_toRightOf="@+id/tv_parttime_do_fifter"
-                android:background="@drawable/shape_input"
-                android:drawableLeft="@drawable/icon_search"
-                android:hint="小区名称、所属区域"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp" />
-        </RelativeLayout>
-    </RelativeLayout>
-
     <com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView
         android:id="@+id/sl_qiandan_listview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/relativeLayout1" />
+        android:layout_height="match_parent" />
 
 </RelativeLayout>
