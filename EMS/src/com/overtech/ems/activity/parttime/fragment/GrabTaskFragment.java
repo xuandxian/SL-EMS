@@ -74,11 +74,11 @@ public class GrabTaskFragment extends Fragment implements IXListViewListener {
 		list = new ArrayList<Data5>();
 		Data5 data0 = new Data5("0", "徐家汇景园0", "5", "1", "徐汇区广元西路", "13.5km",
 				"2015/10/10");
-		Data5 data1 = new Data5("0", "徐家汇景园1", "5", "1", "徐汇区广元西路", "13.5km",
+		Data5 data1 = new Data5("1", "徐家汇景园1", "5", "1", "徐汇区广元西路", "13.5km",
 				"2015/10/10");
 		Data5 data2 = new Data5("0", "徐家汇景园2", "5", "0", "徐汇区广元西路", "13.5km",
 				"2015/10/10");
-		Data5 data3 = new Data5("0", "虹桥小区0", "5", "0", "徐汇区广元西路", "13.5km",
+		Data5 data3 = new Data5("1", "虹桥小区0", "5", "0", "徐汇区广元西路", "13.5km",
 				"2015/10/10");
 		Data5 data4 = new Data5("0", "虹桥小区1", "5", "1", "徐汇区广元西路", "13.5km",
 				"2015/10/10");
@@ -86,13 +86,13 @@ public class GrabTaskFragment extends Fragment implements IXListViewListener {
 				"2015/10/10");
 		Data5 data6 = new Data5("0", "虹桥小区3", "5", "0", "徐汇区广元西路", "13.5km",
 				"2015/10/10");
-		Data5 data7 = new Data5("0", "丰业广元公寓0", "5", "0", "徐汇区广元西路", "13.5km",
+		Data5 data7 = new Data5("1", "丰业广元公寓0", "5", "0", "徐汇区广元西路", "13.5km",
 				"2015/10/10");
 		Data5 data8 = new Data5("0", "丰业广元公寓1", "5", "0", "徐汇区广元西路", "13.5km",
 				"2015/10/10");
 		Data5 data9 = new Data5("0", "丰业广元公寓2", "5", "0", "徐汇区广元西路", "13.5km",
 				"2015/10/10");
-		Data5 data10 = new Data5("0", "丰业广元公寓3", "5", "1", "徐汇区广元西路", "13.5km",
+		Data5 data10 = new Data5("1", "丰业广元公寓3", "5", "1", "徐汇区广元西路", "13.5km",
 				"2015/10/10");
 		Data5 data11 = new Data5("0", "乐山公寓0", "5", "0", "徐汇区广元西路", "13.5km",
 				"2015/10/10");

@@ -63,6 +63,11 @@ public class GrabTaskAdapter extends BaseAdapter {
 		holder.addressName.setText(data.getAddress());
 		holder.distance.setText(data.getDistance());
 		holder.date.setText(data.getDate());
+		if(data.getImageStatusUrl().equals("0")){
+			holder.iv_icon.setImageResource(R.drawable.icon_task_none);
+		}else if(data.getImageStatusUrl().equals("1")){
+			holder.iv_icon.setImageResource(R.drawable.icon_task_done);
+		}
 		if(data.getHot().equals("1")){
 			holder.hot.setVisibility(View.VISIBLE);
 		}else{

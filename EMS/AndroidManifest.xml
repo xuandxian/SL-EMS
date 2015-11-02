@@ -53,7 +53,8 @@
             android:name="com.overtech.ems.activity.common.LoginActivity"
             android:launchMode="singleTask" >
         </activity>
-        <activity android:name="com.overtech.ems.activity.parttime.MainActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.MainActivity" 
+            android:windowSoftInputMode="adjustPan|stateHidden"/>
         <activity android:name="com.overtech.ems.activity.common.LostPasswordActivity" />
         <activity android:name="com.overtech.ems.activity.common.ResetPasswordActivity" />
         <activity android:name="com.overtech.ems.activity.common.ResetPasswordSuccessActivity" />
