@@ -5,6 +5,7 @@ import com.overtech.ems.R;
 import com.overtech.ems.activity.parttime.fragment.GrabTaskFragment;
 import com.overtech.ems.activity.parttime.fragment.NearByFragment;
 import com.overtech.ems.activity.parttime.fragment.PersonalZoneFragment;
+import com.overtech.ems.activity.parttime.fragment.PersonalZoneFragment2;
 import com.overtech.ems.activity.parttime.fragment.TaskListFragment;
 import com.overtech.ems.activity.parttime.tasklist.ScanCodeActivity;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
@@ -179,6 +180,7 @@ public class MainActivity extends Activity implements OnClickListener {
 					.setBackgroundResource(R.drawable.shopping_home_tab_take_out);
 			mTabGrabTaskContent.setTextColor(Color.argb(255, 153, 153, 153));
 			mPersonalZoneFragment = new PersonalZoneFragment();
+//			mPersonalZoneFragment = new PersonalZoneFragment2();
 			transaction.replace(R.id.fragment_content, mPersonalZoneFragment);
 			transaction.commit();
 			break;
