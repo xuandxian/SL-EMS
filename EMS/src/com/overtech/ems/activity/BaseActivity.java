@@ -42,7 +42,8 @@ public class BaseActivity extends Activity {
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		initGestureDetector();
-		setNeedBackGesture(true);// 设置需要手势监听
+//		setNeedBackGesture(true);// 设置需要手势监听
+		setNeedBackGesture(false);
 		context = this;
 		imageLoader = ImageLoader.getInstance();
 		SMSSDK.initSDK(this, "b731c30880f4", "1c3e262449b1c77498f37c78586b8cf1");
@@ -56,14 +57,14 @@ public class BaseActivity extends Activity {
 		}
 	}
 
-	@Override
-	public boolean dispatchTouchEvent(MotionEvent ev) {
-		if (mNeedBackGesture) {
-			return mGestureDetector.onTouchEvent(ev)
-					|| super.dispatchTouchEvent(ev);
-		}
-		return super.dispatchTouchEvent(ev);
-	}
+//	@Override
+//	public boolean dispatchTouchEvent(MotionEvent ev) {
+//		if (mNeedBackGesture) {
+//			return mGestureDetector.onTouchEvent(ev)
+//					|| super.dispatchTouchEvent(ev);
+//		}
+//		return super.dispatchTouchEvent(ev);
+//	}
 
 	/*
 	 * 设置是否进行手势监听
@@ -107,13 +108,13 @@ public class BaseActivity extends Activity {
 		}
 	};
 
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-		if (im.isActive()) {
-			im.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,
-					InputMethodManager.HIDE_NOT_ALWAYS);
-		}
-		return super.onTouchEvent(event);
-	}
+//	@Override
+//	public boolean onTouchEvent(MotionEvent event) {
+//		InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+//		if (im.isActive()) {
+//			im.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,
+//					InputMethodManager.HIDE_NOT_ALWAYS);
+//		}
+//		return super.onTouchEvent(event);
+//	}
 }

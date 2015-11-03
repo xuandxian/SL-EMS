@@ -5,9 +5,12 @@ import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -18,8 +21,9 @@ import com.overtech.ems.activity.parttime.personal.PersonalBoundsActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalCancleListActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalDeatilsActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalHelpDocActivity;
+import com.overtech.ems.widget.CustomScrollView;
 
-public class PersonalZoneFragment extends Fragment implements OnClickListener {
+public class PersonalZoneFragment extends Fragment implements OnClickListener ,OnTouchListener {
 	private View view;
 	private RelativeLayout mPersonalDetail;
 	private RelativeLayout mPersonalAccountList;
@@ -29,6 +33,8 @@ public class PersonalZoneFragment extends Fragment implements OnClickListener {
 	private RelativeLayout mHelpDoc;
 	private TextView mHeadContent;
 	private Activity mActivity;
+	private CustomScrollView mScrollView;
+	private ImageView mBackgroundImageView;
 	
 	@Override
 	public void onAttach(Activity activity) {
@@ -47,6 +53,10 @@ public class PersonalZoneFragment extends Fragment implements OnClickListener {
 	}
 
 	private void initViews() {
+		mBackgroundImageView = (ImageView) view
+				.findViewById(R.id.personal_background_image);
+		mScrollView=(CustomScrollView) view
+				.findViewById(R.id.personal_scrollView);
 		mPersonalDetail = (RelativeLayout) view
 				.findViewById(R.id.rl_personal_details);
 		mPersonalAccountList = (RelativeLayout) view
@@ -61,10 +71,12 @@ public class PersonalZoneFragment extends Fragment implements OnClickListener {
 				.findViewById(R.id.rl_help_doc);
 		mHeadContent=(TextView) view
 				.findViewById(R.id.tv_headTitle);
+		
 		mHeadContent.setText("我的");
 	}
 
 	private void initEvents() {
+		mScrollView.setImageView(mBackgroundImageView);
 		mPersonalDetail.setOnClickListener(this);
 		mPersonalAccountList.setOnClickListener(this);
 		mPersonalBounds.setOnClickListener(this);
@@ -75,7 +87,7 @@ public class PersonalZoneFragment extends Fragment implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-
+		
 		Intent intent = new Intent();
 		switch (v.getId()) {
 		case R.id.rl_personal_details:
@@ -105,5 +117,22 @@ public class PersonalZoneFragment extends Fragment implements OnClickListener {
 			break;
 		}
 	}
+	
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		
+		switch (v.getId()) {
+		case R.id.rl_personal_details:
+			if(event.getAction()==MotionEvent.ACTION_UP){
+				v.getParent().requestDisallowInterceptTouchEvent(true);
+			}
+			break;
+
+		default:
+			break;
+		}
+		return false;
+	}
+	
 
 }
