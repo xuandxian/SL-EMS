@@ -64,8 +64,9 @@ public class CustomScrollView extends ScrollView {
 		int action = ev.getAction();
 		switch (action) {
 		case MotionEvent.ACTION_DOWN:
-			top = initTop = imageView.getTop();
-			bottom = initbottom = imageView.getBottom();
+			//因为涉及到事件的中断处理，所以此处对imageView的处理移到onInterceptTouchEvent中进行处理
+//			top = initTop = imageView.getTop();
+//			bottom = initbottom = imageView.getBottom();
 			break;
 
 		case MotionEvent.ACTION_UP:
@@ -84,7 +85,9 @@ public class CustomScrollView extends ScrollView {
 		 * 然而我们也要进行初始化，就是第一次移动的时候让滑动距离归0. 之后记录准确了就正常执行.
 		 */
 		case MotionEvent.ACTION_MOVE:
-
+			
+			
+			
 			final float preY = y;// 按下时的y坐标
 
 			float nowY = ev.getY();// 时时y坐标
@@ -174,14 +177,63 @@ public class CustomScrollView extends ScrollView {
 			isMoveing = true;
 		}
 	}
+	/**
+	 * 记录点击时的x的位置
+	 * */
+	private int downX;
+	/**
+	 * 记录点击时的y的位置
+	 * */
+	private int downY;
+//	@Override
+//	public boolean dispatchTouchEvent(MotionEvent ev) {
+//		boolean result=false;
+//		int action = ev.getAction();
+//		switch (action) {
+//		case MotionEvent.ACTION_DOWN:
+//			downX=(int) ev.getX();
+//			downY=(int) ev.getY();
+//		case MotionEvent.ACTION_MOVE:
+//			int disX=(int) Math.abs(ev.getX()-downX);
+//			int disY=(int) Math.abs(ev.getY()-downY);
+//			if(disX>3||disY>3){
+//				result=true;
+//			}
+//			break;
+//		case MotionEvent.ACTION_UP:
+//			
+//			break;
+//		default:
+//			break;
+//		}
+//		 return result;
+//	}
+	
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev) {
-		// TODO Auto-generated method stub
-		 return super.onInterceptTouchEvent(ev);
+		boolean result=false;
+		int action = ev.getAction();
+		switch (action) {
+		case MotionEvent.ACTION_DOWN:
+			top = initTop = imageView.getTop();
+			bottom = initbottom = imageView.getBottom();
+			downX=(int) ev.getX();
+			downY=(int) ev.getY();
+		case MotionEvent.ACTION_MOVE:
+			//当发生move事件时就中断事件，让CustomScrollView自身来消费事件
+			int disX=(int) Math.abs(ev.getX()-downX);
+			int disY=(int) Math.abs(ev.getY()-downY);
+			if(disX>1||disY>1){
+				result=true;
+			}
+			break;
+		case MotionEvent.ACTION_UP:
+			
+			break;
+		default:
+			break;
+		}
+		 return result;
 	}
-	@Override
-	public boolean dispatchTouchEvent(MotionEvent ev) {
-		// TODO Auto-generated method stub
-		return super.dispatchTouchEvent(ev);
-	}
+	
 }
