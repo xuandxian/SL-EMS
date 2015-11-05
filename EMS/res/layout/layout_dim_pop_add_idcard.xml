@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_mask" >
+
+    <LinearLayout
+        android:id="@+id/ll_popup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="10dp"
+    	android:layout_marginRight="10dp"
+        android:background="@color/c_tcolor_dark_grey"
+        android:orientation="vertical" >
+
+        <Button
+            android:id="@+id/item_popupwindows_camera"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/shape_button_camera"
+            android:text="拍照上传"
+            android:textColor="#3881cf"
+            android:textSize="18sp" />
+		<View 
+		    android:layout_width="match_parent"
+		    android:layout_height="1dp"
+		    android:background="@color/main_line"
+		    />
+        <Button
+            android:id="@+id/item_popupwindows_Photo"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/shape_button_photo"
+            android:text="从相册中选取"
+            android:textColor="#3881cf"
+            android:textSize="18sp" />
+		<View 
+		    android:layout_width="match_parent"
+		    android:layout_height="1dp"
+		    android:background="@color/btn_press_color"
+		    />
+        <Button
+            android:id="@+id/item_popupwindows_cancel"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/shape_input"
+            android:text="取消"
+            android:textColor="#3881cf"
+            android:textSize="18sp" />
+    </LinearLayout>
+
+</RelativeLayout>
