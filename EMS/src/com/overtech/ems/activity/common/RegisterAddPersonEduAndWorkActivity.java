@@ -3,7 +3,11 @@ package com.overtech.ems.activity.common;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -13,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
@@ -22,7 +27,6 @@ import android.widget.TextView;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.GridViewAdapter2;
-import com.overtech.ems.utils.DateTimePickDialogUtil;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.popwindow.DimPopupWindow;
 
@@ -44,7 +48,6 @@ public class RegisterAddPersonEduAndWorkActivity extends BaseActivity {
 	private Button mConfirm;
 	private Button mCancle;
 	private TextView mWorkTime;
-	private DateTimePickDialogUtil dateTimePicKDialog;
 	private HashMap<Integer,Boolean> isSelected;
 	private StringBuilder mCheckedMessage;
 	private String[] data={"日立","广日","上海三菱","日本三菱",
@@ -57,6 +60,9 @@ public class RegisterAddPersonEduAndWorkActivity extends BaseActivity {
 			"江南嘉捷","扬州三星","东南","康力","宏大","京都",
 			"曼隆","巨立","帝奥","德奥","霍普曼","怡达","快速",
 			"沃克斯","恒达富士","西屋","铃木","菱王"," 其他"};
+	private Dialog dialog;
+	private final int SHOW_TIME_DIALOG=1;
+	private Calendar c = null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -107,61 +113,66 @@ public class RegisterAddPersonEduAndWorkActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				//打开日历选择器
-				showCalendar();
+				showDialog(SHOW_TIME_DIALOG);
 			}
 		});
-		mShowCalendar.addTextChangedListener(new TextWatcher() {
+	}
+	
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		switch (id) {
+		case SHOW_TIME_DIALOG:
+			dialog = new DatePickerDialog(this,
+					new DatePickerDialog.OnDateSetListener() {
+						public void onDateSet(DatePicker dp, int year,
+								int month, int dayOfMonth) {
+							mShowCalendar.setText(year + "-" + (month + 1)
+									+ "-" + dayOfMonth);
+						}
+					}, c.get(Calendar.YEAR), // 传入年份
+					c.get(Calendar.MONTH), // 传入月份
+					c.get(Calendar.DAY_OF_MONTH) // 传入天数
+			);
 			
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				// TODO Auto-generated method stub
+			//此处的监听是为了当选择时间是未来的时间时候，就得重新选择
+			dialog.setOnDismissListener(new OnDismissListener() {
 				
-			}
-			
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-				// TODO Auto-generated method stub
-				
-			}
-			
-			@Override
-			public void afterTextChanged(Editable s) {
-				String info=dealMessage(s);
-				if(info!=null){
-					mWorkTime.setText("您的相关工作年限是"+info+"年");
-				}else{
-					mWorkTime.setText("工作年限");
-				}
-			}
-
-			private String dealMessage(Editable s) {
-				String str=s.toString();
-				if(!(str.length()<=4)){
-					String subStr=str.substring(0, 4);
-					int year=Calendar.getInstance().get(Calendar.YEAR);
-					int lastYear=Integer.parseInt(subStr);
-					int workTime=year-lastYear;
-					if(workTime<0){
-						Utilities.showToast("你确定不是穿越回来的？请重选", context);
-						dateTimePicKDialog.dateTimePicKDialog(mShowCalendar);
-						return null;
-					}else if(workTime==0){
-						return 1+"";
+				@Override
+				public void onDismiss(DialogInterface dialog) {
+					String time=mShowCalendar.getText().toString();
+					String info= dealMessage(time);
+					if(info!=null){
+						mWorkTime.setText("您的相关工作年限是"+info+"年");
 					}else{
-						return workTime+"";
+						mWorkTime.setText("工作年限");
+						showDialog(SHOW_TIME_DIALOG);
 					}
 				}
-				return null;
-			}
-		});
+				private String dealMessage(String s) {
+					String str=s.toString();
+					if(!(str.length()<=4)){
+						String subStr=str.substring(0, 4);
+						int year=Calendar.getInstance().get(Calendar.YEAR);
+						int lastYear=Integer.parseInt(subStr);
+						int workTime=year-lastYear;
+						if(workTime<0){
+							Utilities.showToast("你确定不是穿越回来的？请重选", context);
+							return null;
+						}else if(workTime==0){
+							return 1+"";
+						}else{
+							return workTime+"";
+						}
+					}
+					return null;
+				}
+			});
+			break;
+		default:
+			break;
+		}
+		return dialog;
 	}
-
-	protected void showCalendar() {
-		dateTimePicKDialog = new DateTimePickDialogUtil(RegisterAddPersonEduAndWorkActivity.this);  
-        dateTimePicKDialog.dateTimePicKDialog(mShowCalendar);
-	}
-
 	protected void showPopupWindow() {
 		mPopupWindow=new DimPopupWindow(this);
 		View view=LayoutInflater.from(context).inflate(R.layout.register_gridview_elevator_brand, null);
@@ -193,6 +204,7 @@ public class RegisterAddPersonEduAndWorkActivity extends BaseActivity {
 
 	private void findViewById() {
 		mActivity=RegisterAddPersonEduAndWorkActivity.this;
+		c=Calendar.getInstance();
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
 		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
 		mGoIdCard = (Button) findViewById(R.id.btn_add_id_card);

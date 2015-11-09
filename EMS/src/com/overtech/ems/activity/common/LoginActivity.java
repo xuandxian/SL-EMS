@@ -1,5 +1,22 @@
 package com.overtech.ems.activity.common;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -16,6 +33,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.google.gson.JsonObject;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
@@ -28,7 +46,7 @@ import com.overtech.ems.widget.EditTextWithDelete;
  * @description 登录界面
  * @date 2015-10-05
  */
-public class LoginActivity extends BaseActivity {
+public class LoginActivity extends BaseActivity implements OnClickListener {
 	private EditTextWithDelete mUserName, mPassword;
 	private String sUserName, sPassword;
 	private TextView mHeadContent;
@@ -39,7 +57,10 @@ public class LoginActivity extends BaseActivity {
 	private ToggleButton mChangePasswordState;
 	private MainFrameTask mMainFrameTask = null;
 	private CustomProgressDialog progressDialog = null;
-
+	/**
+	 * 模拟地址
+	 * */
+	private String path="http://192.168.1.110:8080/EMSServlet/servlet/LoginAction";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -58,37 +79,13 @@ public class LoginActivity extends BaseActivity {
 					Utilities.showToast("输入不能为空", context);
 				} else {
 					mMainFrameTask = new MainFrameTask(context);
-					mMainFrameTask.execute();
+					mMainFrameTask.execute(path,sUserName,sPassword);
 				}
 			}
 		});
-		mLostPassword.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				Intent intent = new Intent(LoginActivity.this,
-						LostPasswordActivity.class);
-				startActivity(intent);
-			}
-		});
-		mRegister.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				Intent intent = new Intent(LoginActivity.this,
-						RegisterActivity.class);
-				
-				startActivity(intent);
-			}
-		});
-
-		mHeadBack.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				onBackPressed();
-			}
-		});
+		mLostPassword.setOnClickListener(this);
+		mRegister.setOnClickListener(this); 
+		mHeadBack.setOnClickListener(this);
 		mChangePasswordState
 				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
@@ -125,7 +122,7 @@ public class LoginActivity extends BaseActivity {
 		mHeadBack.setVisibility(View.VISIBLE);
 	}
 
-	public class MainFrameTask extends AsyncTask<Integer, String, Integer> {
+	public class MainFrameTask extends AsyncTask<String, Integer, String> {
 		private Context mainFrame = null;
 
 		public MainFrameTask(Context mainFrame) {
@@ -139,13 +136,36 @@ public class LoginActivity extends BaseActivity {
 		}
 
 		@Override
-		protected Integer doInBackground(Integer... params) {
-
+		protected String doInBackground(String... params) {
+			NameValuePair pair1=new BasicNameValuePair("phone", params[1]);
+			NameValuePair pair2=new BasicNameValuePair("password",params[2]);
+			List<NameValuePair> pairList=new ArrayList<NameValuePair>();
+			pairList.add(pair1);
+			pairList.add(pair2);
 			try {
-				Thread.sleep(3 * 1000);
-			} catch (InterruptedException e) {
+				HttpEntity requestHttpEntity = new UrlEncodedFormEntity(
+				        pairList);
+				HttpPost post=new HttpPost(params[0]);
+				post.setEntity(requestHttpEntity);
+				
+				HttpClient client=new DefaultHttpClient();
+				HttpResponse response=client.execute(post);
+				
+				HttpEntity httpEntity=response.getEntity();
+				InputStream is=httpEntity.getContent();
+				BufferedReader bfr=new BufferedReader(new InputStreamReader(is));
+				String line=null;
+				String res="";
+				while((line=bfr.readLine())!=null){
+					res+=line;
+				}
+				return res;
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+			
 			return null;
 		}
 
@@ -155,15 +175,11 @@ public class LoginActivity extends BaseActivity {
 		}
 
 		@Override
-		protected void onPostExecute(Integer result) {
+		protected void onPostExecute(String result) {
 			stopProgressDialog();
-//			if ("15012345678".equals(sUserName)&&"123456".equals(sPassword)) {
-				Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-				startActivity(intent);
-				finish();
-//			}else {
-//				Utilities.showToast("用户名或者密码错误", context);
-//			}
+			Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+			startActivity(intent);
+			finish();
 		}
 	}
 
@@ -189,5 +205,27 @@ public class LoginActivity extends BaseActivity {
 			mMainFrameTask.cancel(true);
 		}
 		super.onDestroy();
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.tv_lost_password:
+			Intent intent = new Intent(LoginActivity.this,
+					LostPasswordActivity.class);
+			startActivity(intent);
+			break;
+		case R.id.tv_login_by_message:
+			Intent intent2 = new Intent(LoginActivity.this,
+					RegisterActivity.class);
+			
+			startActivity(intent2);
+			break;
+		case R.id.iv_headBack:
+			onBackPressed();
+			break;
+		default:
+			break;
+		}
 	}
 }
