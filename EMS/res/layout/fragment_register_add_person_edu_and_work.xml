@@ -3,10 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <include
-        android:id="@+id/include_register"
-        layout="@layout/headview" />
-
     <ScrollView
         android:id="@+id/scrollView1"
         android:layout_width="match_parent"
@@ -93,7 +89,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:clickable="false"
+                    android:enabled="false"
                     android:background="@drawable/shape_input"
                     android:hint="入行时间" />
 
@@ -138,30 +134,19 @@
                 android:layout_below="@+id/rl_register_add_info_3"
                 android:background="@color/main_white" >
 
-                <TextView 
-                    android:id="@+id/tv_elevator_message"
+                <EditText 
+                    android:id="@+id/et_elevator_message"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-					android:text="电梯品牌"  
+					android:hint="电梯品牌"  
 					android:layout_marginLeft="20dp"
 					android:layout_marginTop="20dp"
+					
 					android:singleLine="true"
 					android:background="@drawable/shape_input"
 					android:textSize="18dp"          
                     />
             </RelativeLayout>
-
-            <Button
-                android:id="@+id/btn_add_id_card"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_below="@+id/rl_register_add_info_4"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="15dp"
-                android:background="@drawable/shape_button_visiable"
-                android:text="下一步"
-                android:textColor="@color/main_white"
-                android:textSize="17sp" />
         </RelativeLayout>
     </ScrollView>
 
