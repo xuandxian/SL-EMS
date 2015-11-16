@@ -8,7 +8,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.BitmapFactory.Options;
 import android.net.Uri;
-import android.provider.MediaStore;
   
 /** 
  * @author will. 
@@ -99,19 +98,10 @@ public class ImageCacheUtils {
   
         return result;  
     }  
-    /**
-     * 该方法在这里可能不合适，
-     * @param context
-     * @param photoName
-     * @return
-     */
-    public static Bitmap getBitmap(Context context,String photoName){
+    public static Bitmap getBitmap(String photoName){
     	BitmapFactory.Options op = new BitmapFactory.Options();
 		// 设置图片的大小
 		Bitmap bitMap = BitmapFactory.decodeFile(photoName);
-		//插入系统相册
-		MediaStore.Images.Media.insertImage(context.getContentResolver(), bitMap, "", "");  
-		
 		int width = bitMap.getWidth();
 		int height = bitMap.getHeight();
 		// 设置想要的大小
