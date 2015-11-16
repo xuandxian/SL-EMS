@@ -4,39 +4,21 @@
     android:layout_height="match_parent"
     android:background="@color/bg_main" >
 
-    <include
-        android:id="@+id/include_register"
-        layout="@layout/headview" />
-
     <TextView
         android:id="@+id/register_send_phone"
         style="@style/tv_info_secondary_style"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/include_register"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp"
-        android:text="专业资格证书图片上传" />
+        android:text="证书上传（其他证书的上传将有助于您个人的星级评定）" />
 
     <ImageView
-        android:id="@+id/id_work_certificate"
+        android:id="@+id/id_card_1"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/register_send_phone"
         android:background="@color/main_white"
-        android:src="@drawable/ic_launcher" />
-
-    <Button
-        android:id="@+id/btn_register_next_work"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_below="@+id/id_work_certificate"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="15dp"
-        android:background="@drawable/shape_button_visiable"
-        android:text="下一步"
-        android:textColor="@color/main_white"
-        android:textSize="17sp" />
-
+        android:src="@drawable/btn_camera_comment_rest" />
 </RelativeLayout>
