@@ -102,7 +102,7 @@ public class PersonalAccountListActivity extends Activity implements OnClickList
 			mPersonalAccountListView.setAdapter(adapter);
 			
 			mHasCount.setBackgroundResource(R.drawable.horizontal_line);
-			mNoCount.setBackgroundResource(R.drawable.bg_white);
+			mNoCount.setBackgroundResource(R.color.main_white);
 			mHasCount.setTextColor(Color.rgb(0, 163, 233));
 			mNoCount.setTextColor(getResources().getColor(R.color.main_secondary));
 			break;
@@ -113,7 +113,7 @@ public class PersonalAccountListActivity extends Activity implements OnClickList
 			adapter2=new PersonalAccountListAdapter(context, list2);
 			mPersonalAccountListView.setAdapter(adapter2);
 			
-			mHasCount.setBackgroundResource(R.drawable.bg_white);
+			mHasCount.setBackgroundResource(R.color.main_white);
 			mNoCount.setBackgroundResource(R.drawable.horizontal_line);
 			mHasCount.setTextColor(getResources().getColor(R.color.main_secondary));
 			mNoCount.setTextColor(Color.rgb(0, 163, 233));

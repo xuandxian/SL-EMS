@@ -77,13 +77,13 @@ public class NearByFragment extends Fragment implements OnClickListener {
 		case R.id.tv_nearby_map:
 			switchContent(mNearByList, mNearByMap);
 			mNearByMapTextView.setBackgroundResource(R.drawable.horizontal_line);
-			mNearByListTextView.setBackgroundResource(R.drawable.bg_white);
+			mNearByListTextView.setBackgroundResource(R.color.main_white);
 			mNearByMapTextView.setTextColor(Color.rgb(0, 163, 233));
 			mNearByListTextView.setTextColor(getResources().getColor(R.color.main_secondary));
 			break;
 		case R.id.tv_nearby_list:
 			switchContent(mNearByMap, mNearByList);
-			mNearByMapTextView.setBackgroundResource(R.drawable.bg_white);
+			mNearByMapTextView.setBackgroundResource(R.color.main_white);
 			mNearByListTextView.setBackgroundResource(R.drawable.horizontal_line);
 			mNearByMapTextView.setTextColor(getResources().getColor(R.color.main_secondary));
 			mNearByListTextView.setTextColor(Color.rgb(0, 163, 233));

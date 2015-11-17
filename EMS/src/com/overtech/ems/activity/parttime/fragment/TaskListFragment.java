@@ -77,13 +77,13 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 		case R.id.tv_tasklist_none:
 			switchContent(mTaskDonet,mTaskNone);
 			mNone.setBackgroundResource(R.drawable.horizontal_line);
-			mDonet.setBackgroundResource(R.drawable.bg_white);
+			mDonet.setBackgroundResource(R.color.main_white);
 			mNone.setTextColor(Color.rgb(0, 163, 233));
 			mDonet.setTextColor(getResources().getColor(R.color.main_secondary));
 			break;
 		case R.id.tv_tasklist_donet:
 			switchContent(mTaskNone,mTaskDonet);
-			mNone.setBackgroundResource(R.drawable.bg_white);
+			mNone.setBackgroundResource(R.color.main_white);
 			mDonet.setBackgroundResource(R.drawable.horizontal_line);
 			mNone.setTextColor(getResources().getColor(R.color.main_secondary));
 			mDonet.setTextColor(Color.rgb(0, 163, 233));
