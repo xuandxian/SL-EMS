@@ -12,8 +12,10 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,6 +26,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -33,6 +36,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
@@ -60,7 +64,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	/**
 	 * 模拟地址
 	 * */
-	private String path="http://192.168.1.110:8080/EMSServlet/servlet/LoginAction";
+	private String path="http://192.168.1.103/relevator/basicinfo/user/login.action";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -137,35 +141,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 
 		@Override
 		protected String doInBackground(String... params) {
-			NameValuePair pair1=new BasicNameValuePair("phone", params[1]);
-			NameValuePair pair2=new BasicNameValuePair("password",params[2]);
-			List<NameValuePair> pairList=new ArrayList<NameValuePair>();
-			pairList.add(pair1);
-			pairList.add(pair2);
-			try {
-				HttpEntity requestHttpEntity = new UrlEncodedFormEntity(
-				        pairList);
-				HttpPost post=new HttpPost(params[0]);
-				post.setEntity(requestHttpEntity);
-				
-				HttpClient client=new DefaultHttpClient();
-				HttpResponse response=client.execute(post);
-				
-				HttpEntity httpEntity=response.getEntity();
-				InputStream is=httpEntity.getContent();
-				BufferedReader bfr=new BufferedReader(new InputStreamReader(is));
-				String line=null;
-				String res="";
-				while((line=bfr.readLine())!=null){
-					res+=line;
-				}
-				return res;
-				
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
 			return null;
 		}
 
@@ -177,6 +152,14 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		@Override
 		protected void onPostExecute(String result) {
 			stopProgressDialog();
+			Utilities.showToast(result, mainFrame);
+			try {
+				JSONObject json=new JSONObject(result);
+				
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 			startActivity(intent);
 			finish();
