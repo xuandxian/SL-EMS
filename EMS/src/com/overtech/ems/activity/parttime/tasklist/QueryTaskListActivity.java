@@ -10,6 +10,7 @@ import com.overtech.ems.widget.CustomProgressDialog;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -26,7 +27,7 @@ public class QueryTaskListActivity extends Activity implements OnClickListener {
 	private Context context;
 	private TextView mHeadContent;
 	private TextView mHeadResult;
-	private ImageView mHeadBack;
+	private ImageView mHeadBack,mCallPhone;
 	private String result;
 	private ListView mTaskListData;
 	private TaskListDetailsAdapter adapter;
@@ -46,16 +47,19 @@ public class QueryTaskListActivity extends Activity implements OnClickListener {
 	private void initEvent() {
 		mHeadResult.setOnClickListener(this);
 		mHeadBack.setOnClickListener(this);
+		mCallPhone.setOnClickListener(this);
 	}
 
 	private void init() {
 		context = QueryTaskListActivity.this;
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
 		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
+		mCallPhone = (ImageView) findViewById(R.id.iv_call);
 		mHeadResult=(TextView) findViewById(R.id.tv_headTitleRight);
 		mTaskDetailsTitle=(TextView)findViewById(R.id.tv_task_detail_title);
 		mHeadContent.setText("维保清单");
 		mHeadBack.setVisibility(View.VISIBLE);
+		mCallPhone.setVisibility(View.VISIBLE);
 		mHeadResult.setText("完成");
 		mHeadResult.setVisibility(View.VISIBLE);
 		mTaskListData = (ListView) findViewById(R.id.lv_task_details);
@@ -179,6 +183,12 @@ public class QueryTaskListActivity extends Activity implements OnClickListener {
 		case R.id.tv_headTitleRight:
 			Intent intent =new Intent(QueryTaskListActivity.this,QuestionResponseActivity.class);
 			startActivity(intent);
+			break;
+		case R.id.iv_call:
+			String phoneNo="15021565127";
+
+			Intent intent2 =new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+phoneNo));
+			startActivity(intent2);
 			break;
 		default:
 			break;
