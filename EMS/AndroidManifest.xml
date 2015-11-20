@@ -87,7 +87,7 @@
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAnnouncementActivity"/>
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAnnouncementDetailActivity"/>
         <activity android:name="com.overtech.ems.activity.parttime.common.ShowCommunityLocationActivity"/>
-
+		<activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAboutAppActivity"/>
     </application>
 
 </manifest>

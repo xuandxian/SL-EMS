@@ -1,21 +1,10 @@
 package com.overtech.ems.activity.parttime;
 
-import com.baidu.mapapi.SDKInitializer;
-import com.overtech.ems.R;
-import com.overtech.ems.activity.parttime.fragment.GrabTaskFragment;
-import com.overtech.ems.activity.parttime.fragment.NearByFragment;
-import com.overtech.ems.activity.parttime.fragment.PersonalZoneFragment;
-import com.overtech.ems.activity.parttime.fragment.PersonalZoneFragment2;
-import com.overtech.ems.activity.parttime.fragment.TaskListFragment;
-import com.overtech.ems.activity.parttime.tasklist.ScanCodeActivity;
-import com.overtech.ems.widget.dialogeffects.Effectstype;
-import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -25,6 +14,15 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.baidu.mapapi.SDKInitializer;
+import com.overtech.ems.R;
+import com.overtech.ems.activity.parttime.fragment.GrabTaskFragment;
+import com.overtech.ems.activity.parttime.fragment.NearByFragment;
+import com.overtech.ems.activity.parttime.fragment.PersonalZoneFragment;
+import com.overtech.ems.activity.parttime.fragment.TaskListFragment;
+import com.overtech.ems.widget.dialogeffects.Effectstype;
+import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
 
 /**
  * @author Tony

@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.overtech.ems.R;
+import com.overtech.ems.activity.parttime.personal.PersonalAboutAppActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalAccountListActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalAnnouncementActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalBoundsActivity;
@@ -31,6 +32,7 @@ public class PersonalZoneFragment extends Fragment implements OnClickListener ,O
 	private RelativeLayout mCompanyNotice;
 	private RelativeLayout mCancleList;
 	private RelativeLayout mHelpDoc;
+	private RelativeLayout mApp;
 	private TextView mHeadContent;
 	private Activity mActivity;
 	private CustomScrollView mScrollView;
@@ -71,7 +73,8 @@ public class PersonalZoneFragment extends Fragment implements OnClickListener ,O
 				.findViewById(R.id.rl_help_doc);
 		mHeadContent=(TextView) view
 				.findViewById(R.id.tv_headTitle);
-		
+		mApp= (RelativeLayout) view
+				.findViewById(R.id.rl_about_app);
 		mHeadContent.setText("我的");
 	}
 
@@ -83,6 +86,7 @@ public class PersonalZoneFragment extends Fragment implements OnClickListener ,O
 		mCompanyNotice.setOnClickListener(this);
 		mCancleList.setOnClickListener(this);
 		mHelpDoc.setOnClickListener(this);
+		mApp.setOnClickListener(this);
 	}
 
 	@Override
@@ -113,6 +117,10 @@ public class PersonalZoneFragment extends Fragment implements OnClickListener ,O
 			break;
 		case R.id.rl_help_doc:
 			intent.setClass(mActivity, PersonalHelpDocActivity.class);
+			startActivity(intent);
+			break;
+		case R.id.rl_about_app:
+			intent.setClass(mActivity, PersonalAboutAppActivity.class);
 			startActivity(intent);
 			break;
 		}
