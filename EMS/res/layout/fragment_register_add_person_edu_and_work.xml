@@ -134,14 +134,13 @@
                 android:layout_below="@+id/rl_register_add_info_3"
                 android:background="@color/main_white" >
 
-                <EditText 
-                    android:id="@+id/et_elevator_message"
-                    android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/tv_elevator_message"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-					android:hint="电梯品牌"  
+					android:text="电梯品牌"  
 					android:layout_marginLeft="20dp"
 					android:layout_marginTop="20dp"
-					
 					android:singleLine="true"
 					android:background="@drawable/shape_input"
 					android:textSize="18dp"          
