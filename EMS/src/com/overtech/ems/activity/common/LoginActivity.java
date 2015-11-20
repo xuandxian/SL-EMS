@@ -153,13 +153,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		protected void onPostExecute(String result) {
 			stopProgressDialog();
 			Utilities.showToast(result, mainFrame);
-			try {
-				JSONObject json=new JSONObject(result);
-				
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
 			Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 			startActivity(intent);
 			finish();

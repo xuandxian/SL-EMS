@@ -100,9 +100,7 @@ public class GrabTaskDoFilterActivity extends Activity implements
 			mTime.setBackgroundDrawable(null);
 			break;
 		case R.id.button2:
-			int[] image2 = { R.drawable.filter_time_one, R.drawable.filter_time_two,
-					R.drawable.filter_time_three2five, R.drawable.filter_time_five2seven,
-					R.drawable.filter_time_seven, R.drawable.filter_time_halfmonth, R.drawable.filter_time_month };
+			int[] image2 = { R.drawable.filter_time_fifteen_in, R.drawable.filter_time_fifteen_out };
 			if (adapter2 != null) {
 				adapter2.notifyDataSetChanged();
 			} else {
