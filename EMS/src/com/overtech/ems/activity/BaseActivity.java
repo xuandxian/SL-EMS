@@ -57,15 +57,6 @@ public class BaseActivity extends Activity {
 		}
 	}
 
-//	@Override
-//	public boolean dispatchTouchEvent(MotionEvent ev) {
-//		if (mNeedBackGesture) {
-//			return mGestureDetector.onTouchEvent(ev)
-//					|| super.dispatchTouchEvent(ev);
-//		}
-//		return super.dispatchTouchEvent(ev);
-//	}
-
 	/*
 	 * 设置是否进行手势监听
 	 */
