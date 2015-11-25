@@ -28,7 +28,7 @@
         android:layout_toLeftOf="@+id/tv_headTitleRight"
         android:layout_centerVertical="true"
         android:layout_marginRight="15dp"
-        android:src="@drawable/icon_common_more"
+        android:src="@drawable/icon_common_phone"
         android:visibility="gone"
         />
     <TextView

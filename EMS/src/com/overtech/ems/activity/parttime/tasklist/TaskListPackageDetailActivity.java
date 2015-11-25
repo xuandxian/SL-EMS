@@ -13,8 +13,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
-
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -26,6 +24,7 @@ import com.baidu.mapapi.utils.route.RouteParaOption.EBusStrategyType;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.TaskListPackageDetailAdapter;
+import com.overtech.ems.activity.parttime.common.ElevatorDetailActivity;
 import com.overtech.ems.entity.test.Data2;
 import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
@@ -43,7 +42,7 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 	private CustomProgressDialog progressDialog;
 	private LocationClient mLocClient;
 	private LatLng mLocation;
-	private TextView mDoNavicate;
+	private ImageView mDoMore;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +70,7 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
-				Intent intent = new Intent(context,
-						TaskListPackageTaskDetailActivity.class);
+				Intent intent = new Intent(context,ElevatorDetailActivity.class);
 				startActivity(intent);
 			}
 
@@ -119,7 +117,7 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 						}).show();
 			}
 		});
-		mDoNavicate.setOnClickListener(new OnClickListener() {
+		mDoMore.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -195,7 +193,8 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 		mDoBack = (ImageView) findViewById(R.id.iv_grab_headBack);
 		mTask = (ListView) findViewById(R.id.lv_tasklist);
 		mCancle = (Button) findViewById(R.id.bt_cancle_task);
-		mDoNavicate = (TextView) findViewById(R.id.tv_navicate);
-		mDoNavicate.setVisibility(View.VISIBLE);
+		mDoMore = (ImageView) findViewById(R.id.iv_navicate_right);
+		mDoMore.setBackgroundResource(R.drawable.icon_common_more);
+		mDoMore.setVisibility(View.VISIBLE);
 	}
 }

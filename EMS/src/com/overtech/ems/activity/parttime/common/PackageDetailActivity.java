@@ -97,7 +97,8 @@ public class PackageDetailActivity extends BaseActivity {
 		mGrabTaskBtn = (Button) findViewById(R.id.btn_grab_task_package);
 		mHeadTitle = (TextView) findViewById(R.id.tv_grab_package_headTitle);
 		mDoBack = (ImageView) findViewById(R.id.iv_grab_headBack);
-		mRightContent=(ImageView)findViewById(R.id.iv_map);
+		mRightContent=(ImageView)findViewById(R.id.iv_navicate_right);
+		mRightContent.setBackgroundResource(R.drawable.icon_map);
 		mRightContent.setVisibility(View.VISIBLE);
 	}
 	private void showDialog() {

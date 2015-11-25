@@ -29,25 +29,12 @@
         android:text="丰业广元公寓31—35号" />
 
     <ImageView
-        android:id="@+id/iv_map"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentRight="true"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
-        android:src="@drawable/icon_map" 
-        android:visibility="gone"/>
-
-    <TextView
-        android:id="@+id/tv_navicate"
-        style="@style/tv_list_white_style"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:paddingLeft="15dp"
-        android:paddingRight="15dp"
+        android:id="@+id/iv_navicate_right"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:visibility="gone"
-        android:text="导航" />
+        android:layout_marginRight="10dp"
+        android:contentDescription="@null"/>
 
 </RelativeLayout>
