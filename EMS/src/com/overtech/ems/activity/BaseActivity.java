@@ -69,7 +69,7 @@ public class BaseActivity extends Activity {
 		activity=this;
 		context = this;
 		fragmentManager=getFragmentManager();
-		sharePreferencesUtils=SharePreferencesUtils.getInstance();
+		//sharePreferencesUtils=SharePreferencesUtils.getInstance();
 		//okHttpClientManager=OkHttpClientManager.getInstance();
 		httpEngine=HttpEngine.getInstance();
 		httpEngine.initContext(context);
