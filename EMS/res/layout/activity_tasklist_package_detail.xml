@@ -4,7 +4,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <include layout="@layout/headview_grabtask" />
+    <include 
+        android:id="@+id/tasklist_title_package"
+        layout="@layout/headview_grabtask" />
 
     <ListView
         android:id="@+id/lv_tasklist"

@@ -5,11 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -29,6 +32,7 @@ import com.overtech.ems.entity.test.Data2;
 import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
+import com.overtech.ems.widget.popwindow.DimPopupWindow;
 
 public class TaskListPackageDetailActivity extends BaseActivity {
 	private ImageView mDoBack;
@@ -43,6 +47,11 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 	private LocationClient mLocClient;
 	private LatLng mLocation;
 	private ImageView mDoMore;
+	// 屏幕尺寸
+	private DisplayMetrics dm;
+	private int screenWidth;
+	private View mTitleView;
+	private DimPopupWindow popupWindow;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +60,7 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 		setContentView(R.layout.activity_tasklist_package_detail);
 		initView();
 		initData();
+		initScreenSize();
 		init();
 	}
 
@@ -58,6 +68,7 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 		mActivity = TaskListPackageDetailActivity.this;
 		dialogBuilder = NiftyDialogBuilder.getInstance(context);
 		progressDialog = CustomProgressDialog.createDialog(context);
+		popupWindow = new DimPopupWindow(activity);
 		adapter = new TaskListPackageDetailAdapter(context, list);
 		mTask.setAdapter(adapter);
 		mDoBack.setOnClickListener(new OnClickListener() {
@@ -70,7 +81,8 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
-				Intent intent = new Intent(context,ElevatorDetailActivity.class);
+				Intent intent = new Intent(context,
+						ElevatorDetailActivity.class);
 				startActivity(intent);
 			}
 
@@ -121,9 +133,25 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View v) {
-				initBaiduMapLocation();
+				View view = LayoutInflater.from(activity).inflate(
+						R.layout.layout_tasklist_pop, null);
+				// 弹出所有评论弹框初始化
+				LayoutParams lp_commentPopView = new LayoutParams(
+						screenWidth / 2, LayoutParams.WRAP_CONTENT);
+				view.setLayoutParams(lp_commentPopView);
+				popupWindow.setContentView(view);
+				popupWindow.showAsDropDown(mTitleView, 0, 0);
+				// initBaiduMapLocation();
 			}
 		});
+	}
+
+	private void initScreenSize() {
+		dm = new DisplayMetrics();
+		// 取得窗口属性
+		getWindowManager().getDefaultDisplay().getMetrics(dm);
+		// 窗口的宽度
+		screenWidth = dm.widthPixels;
 	}
 
 	protected void initBaiduMapLocation() {
@@ -196,5 +224,7 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 		mDoMore = (ImageView) findViewById(R.id.iv_navicate_right);
 		mDoMore.setBackgroundResource(R.drawable.icon_common_more);
 		mDoMore.setVisibility(View.VISIBLE);
+		mTitleView=(View)findViewById(R.id.tasklist_title_package);
+				
 	}
 }
