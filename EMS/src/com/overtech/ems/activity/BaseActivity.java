@@ -2,10 +2,18 @@ package com.overtech.ems.activity;
 
 import cn.smssdk.SMSSDK;
 
+import com.overtech.ems.R;
+import com.overtech.ems.http.HttpEngine;
+import com.overtech.ems.http.OkHttpClientManager;
 import com.overtech.ems.listener.BackGestureListener;
+import com.overtech.ems.utils.SharePreferencesUtils;
+import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.bitmap.ImageLoader;
-
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -34,7 +42,21 @@ public class BaseActivity extends Activity {
 	/** 图片加载 */
 	public ImageLoader imageLoader;
 
+	public Activity activity;
+
 	public Context context;
+    //
+	public FragmentManager fragmentManager;
+
+	public SharePreferencesUtils sharePreferencesUtils;
+
+	public OkHttpClientManager okHttpClientManager;
+
+	public HttpEngine httpEngine;
+
+	public CustomProgressDialog progressDialog;
+
+	private InputMethodManager imm;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,13 +64,26 @@ public class BaseActivity extends Activity {
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		initGestureDetector();
-//		setNeedBackGesture(true);// 设置需要手势监听
 		setNeedBackGesture(false);
-		context = this;
-		imageLoader = ImageLoader.getInstance();
 		SMSSDK.initSDK(this, "b731c30880f4", "1c3e262449b1c77498f37c78586b8cf1");
+		activity=this;
+		context = this;
+		fragmentManager=getFragmentManager();
+		sharePreferencesUtils=SharePreferencesUtils.getInstance();
+		//okHttpClientManager=OkHttpClientManager.getInstance();
+		httpEngine=HttpEngine.getInstance();
+		httpEngine.initContext(context);
+		imageLoader = ImageLoader.getInstance();
 		imageLoader.initContext(context);
+		progressDialog=CustomProgressDialog.createDialog(context);
+		progressDialog.setMessage(context.getString(R.string.loading_public_default));
 	}
+
+	//public Response sendRequestWithDialog(){
+	//	Request request=httpEngine.createRequest("", "");
+	//  Response response=httpEngine.createRequestCall(request).execute();
+	//	return response;
+	//}
 
 	private void initGestureDetector() {
 		if (mGestureDetector == null) {
@@ -67,8 +102,8 @@ public class BaseActivity extends Activity {
 	/*
 	 * 返回
 	 */
-	public void doBack(View view) {
-		onBackPressed();
+	public void onBackPressed(){
+		super.onBackPressed();
 	}
 
 	@Override
@@ -99,13 +134,14 @@ public class BaseActivity extends Activity {
 		}
 	};
 
-//	@Override
-//	public boolean onTouchEvent(MotionEvent event) {
-//		InputMethodManager im = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//		if (im.isActive()) {
-//			im.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT,
-//					InputMethodManager.HIDE_NOT_ALWAYS);
-//		}
-//		return super.onTouchEvent(event);
-//	}
+	/** 隐藏键盘 **/
+	public void hideSoftInput() {
+		if (imm == null) {
+			imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+		}
+		if (imm != null) {
+			imm.hideSoftInputFromWindow(getWindow().getDecorView()
+					.getWindowToken(), 0);
+		}
+	}
 }
