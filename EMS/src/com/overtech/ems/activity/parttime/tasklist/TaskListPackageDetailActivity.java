@@ -174,15 +174,15 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 
 	private void initData() {
 		list = new ArrayList<Data2>();
-		Data2 data1 = new Data2("31号楼1号电梯(全包)", "上海三菱", "80032984590",
+		Data2 data1 = new Data2("31号楼1号电梯(月保)", "上海三菱", "80032984590",
 				"20层/20站");
-		Data2 data2 = new Data2("31号楼2号电梯(半包)", "上海三菱", "80032984591",
+		Data2 data2 = new Data2("31号楼2号电梯(季保)", "上海三菱", "80032984591",
 				"20层/20站");
-		Data2 data3 = new Data2("31号楼2号电梯(半包)", "上海三菱", "80032984592",
+		Data2 data3 = new Data2("31号楼2号电梯(半年保)", "上海三菱", "80032984592",
 				"20层/20站");
-		Data2 data4 = new Data2("31号楼3号电梯(半包)", "上海三菱", "80032984593",
+		Data2 data4 = new Data2("31号楼3号电梯(月保)", "上海三菱", "80032984593",
 				"20层/20站");
-		Data2 data5 = new Data2("31号楼3号电梯(清包)", "上海三菱", "80032984594",
+		Data2 data5 = new Data2("31号楼3号电梯(年保)", "上海三菱", "80032984594",
 				"20层/20站");
 		list.add(data1);
 		list.add(data2);

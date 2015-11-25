@@ -1,27 +1,8 @@
 package com.overtech.ems.activity.common;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.IOException;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
@@ -36,14 +17,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.EditTextWithDelete;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
 /**
  * @author Tony
@@ -59,19 +42,27 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	private Button mLogin;
 	private TextView mRegister;
 	private ToggleButton mChangePasswordState;
-	private MainFrameTask mMainFrameTask = null;
 	private CustomProgressDialog progressDialog = null;
 	/**
 	 * 模拟地址
-	 * */
-	private String path="http://192.168.1.103/relevator/basicinfo/user/login.action";
+	 * */ 
+	private String url="http://192.168.1.103/relevator/basicinfo/user/login.action";
+	
+	public final MediaType JSON=MediaType.parse("application/json;charset=utf-8");
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		setNeedBackGesture(false);// 设置需要手势监听
-		findViewById();
-		init();
+		initView();
+		initData();
+		
+	}
+
+	private void initData() {
+		mHeadContent.setText("登 录");
+		mHeadBack.setVisibility(View.VISIBLE);
+		
 		mLogin.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -81,9 +72,11 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 				if (TextUtils.isEmpty(sUserName)
 						|| TextUtils.isEmpty(sPassword)) {
 					Utilities.showToast("输入不能为空", context);
+					Log.e("========", "hahahahhahahah");
 				} else {
-					mMainFrameTask = new MainFrameTask(context);
-					mMainFrameTask.execute(path,sUserName,sPassword);
+					Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+					startActivity(intent);
+					finish();
 				}
 			}
 		});
@@ -110,7 +103,66 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 				});
 	}
 
-	private void findViewById() {
+	protected String post(String url,String json) {
+		OkHttpClient client=new OkHttpClient();
+		
+//		RequestBody body=RequestBody.create(JSON, json);
+//		
+//		Request request = new Request.Builder()
+//							.url(url)
+//							.post(body)
+//							.build();
+//		try {
+//			Response response = client.newCall(request).execute();
+//			if(response.isSuccessful()){
+//				return response.body().toString();
+//			}
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		return null;
+//		
+		//post提交键值对
+//		RequestBody formBody=new FormEncodingBuilder()
+//								.add("userPhone", sUserName)
+//								.add("userPassWord",sPassword)
+//								.build();
+//		Request request=new Request.Builder()
+//							.url(url)
+//							.post(formBody)
+//							.build();
+//		Response response=null;
+//		
+//		try {
+//			response=client.newCall(request).execute();
+//			return response.body().string();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		return null;
+	}
+
+	protected String get(String url) {
+		OkHttpClient client=new OkHttpClient();
+		Request request= new Request.Builder()
+							.url(url)
+							.build();
+		Response response=null;
+		
+		try {
+			response=client.newCall(request).execute();
+			return response.body().toString();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+		
+	}
+
+	private void initView() {
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
 		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
 		mUserName = (EditTextWithDelete) findViewById(R.id.et_login_username);
@@ -119,45 +171,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		mRegister = (TextView) findViewById(R.id.tv_login_by_message);
 		mLogin = (Button) findViewById(R.id.btn_login);
 		mChangePasswordState = (ToggleButton) findViewById(R.id.tb_change_password);
-	}
-
-	private void init() {
-		mHeadContent.setText("登 录");
-		mHeadBack.setVisibility(View.VISIBLE);
-	}
-
-	public class MainFrameTask extends AsyncTask<String, Integer, String> {
-		private Context mainFrame = null;
-
-		public MainFrameTask(Context mainFrame) {
-			this.mainFrame = mainFrame;
-		}
-
-		@Override
-		protected void onCancelled() {
-			stopProgressDialog();
-			super.onCancelled();
-		}
-
-		@Override
-		protected String doInBackground(String... params) {
-			return null;
-		}
-
-		@Override
-		protected void onPreExecute() {
-			startProgressDialog();
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			stopProgressDialog();
-			Utilities.showToast(result, mainFrame);
-			
-			Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-			startActivity(intent);
-			finish();
-		}
 	}
 
 	private void startProgressDialog() {
@@ -178,9 +191,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	@Override
 	protected void onDestroy() {
 		stopProgressDialog();
-		if (mMainFrameTask != null && !mMainFrameTask.isCancelled()) {
-			mMainFrameTask.cancel(true);
-		}
+		
 		super.onDestroy();
 	}
 
