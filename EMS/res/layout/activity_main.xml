@@ -2,13 +2,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_main" >
+    android:background="@color/bg_main_black" >
 
 
     <LinearLayout
         android:id="@+id/tab_parttime"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="55dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:baselineAligned="false"
@@ -22,18 +22,13 @@
 
             <ImageView
                 android:id="@+id/iv_grab_task"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp"
-                android:background="@drawable/shopping_home_tab_take_out_selected" />
+                style="@style/tab_image_style"
+                android:background="@drawable/shopping_home_tab_take_out_selected_red" />
 
             <TextView
                 android:id="@+id/tv_grab_taskn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/tab_text_style"
                 android:layout_below="@+id/iv_grab_task"
-                android:layout_centerHorizontal="true"
                 android:text="抢单" />
         </RelativeLayout>
 
@@ -45,18 +40,13 @@
 
             <ImageView
                 android:id="@+id/iv_nearby"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp"
+                style="@style/tab_image_style"
                 android:background="@drawable/shopping_home_tab_found" />
 
             <TextView
                 android:id="@+id/tv_nearby"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/tab_text_style"
                 android:layout_below="@+id/iv_nearby"
-                android:layout_centerHorizontal="true"
                 android:text="附近" />
         </RelativeLayout>
 
@@ -68,18 +58,13 @@
 
             <ImageView
                 android:id="@+id/iv_task_list"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp"
+                style="@style/tab_image_style"
                 android:background="@drawable/shopping_home_tab_order" />
 
             <TextView
                 android:id="@+id/tv_task_list"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/tab_text_style"
                 android:layout_below="@+id/iv_task_list"
-                android:layout_centerHorizontal="true"
                 android:text="任务单" />
         </RelativeLayout>
 
@@ -91,18 +76,13 @@
 
             <ImageView
                 android:id="@+id/iv_personal_zone"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="5dp"
+                style="@style/tab_image_style"
                 android:background="@drawable/shopping_home_tab_personal" />
 
             <TextView
                 android:id="@+id/tv_personal_zone"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/tab_text_style"
                 android:layout_below="@+id/iv_personal_zone"
-                android:layout_centerHorizontal="true"
                 android:text="我的" />
         </RelativeLayout>
     </LinearLayout>

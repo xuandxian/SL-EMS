@@ -23,6 +23,7 @@
     <color name="main_click">#ffeeeeee</color>
     <!-- 用于点击色 -->
     <color name="bg_main">#ffe9ecf1</color>
+    <color name="bg_main_black">#515151</color>
     <!-- 用于大背景色 -->
     <color name="frame_gray">#ffcecece</color>
     <color name="main_line">#ffdcdcdc</color>
@@ -68,6 +69,8 @@
 
     <color name="line_blue_color">#7FBDED</color>
     <color name="bg_title">#009BEE</color>
+    <color name="bg_title_red">#FA435E</color>
+    <color name="bg_title_red_2">#EE3B3B</color>
     <!-- nifity dialog -->
     <color name="divider_color">#11000000</color>
     <color name="dialog_bg">#ffe74c3c</color>

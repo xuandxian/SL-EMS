@@ -16,10 +16,9 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
-
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
-import com.overtech.ems.activity.parttime.MainActivity;
+import com.overtech.ems.activity.parttime.MainActivity2;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.EditTextWithDelete;
@@ -74,7 +73,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 					Utilities.showToast("输入不能为空", context);
 					Log.e("========", "hahahahhahahah");
 				} else {
-					Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+					Intent intent = new Intent(LoginActivity.this, MainActivity2.class);
 					startActivity(intent);
 					finish();
 				}

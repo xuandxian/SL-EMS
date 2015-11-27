@@ -1,0 +1,73 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--tab上方的显示区域-->
+    <FrameLayout
+        android:id="@+id/mHomeContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/mHomeRadioGroup">
+
+    </FrameLayout>
+
+    <!--底下的四个tab-->
+    <RadioGroup
+        android:id="@+id/mHomeRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/bg_main_black"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/mHomeHomeRb"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:checked="true"
+            android:drawableTop="@drawable/selector_tab_one"
+            android:gravity="center"
+            android:text="抢单"
+            android:textSize="@dimen/text_size_hint"
+            android:textColor="@drawable/selector_tab_text_color" />
+
+        <RadioButton
+            android:id="@+id/mHomeFindRb"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/selector_tab_two"
+            android:gravity="center"
+            android:text="附近"
+            android:textSize="@dimen/text_size_hint"
+            android:textColor="@drawable/selector_tab_text_color" />
+
+        <RadioButton
+            android:id="@+id/mHomeSearchRb"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/selector_tab_three"
+            android:gravity="center"
+            android:text="任务单"
+            android:textSize="@dimen/text_size_hint"
+            android:textColor="@drawable/selector_tab_text_color" />
+
+        <RadioButton
+            android:id="@+id/mHomeProfileRb"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:button="@null"
+            android:drawableTop="@drawable/selector_tab_four"
+            android:gravity="center"
+            android:text="我的"
+            android:textSize="@dimen/text_size_hint"
+            android:textColor="@drawable/selector_tab_text_color" />
+    </RadioGroup>
+</RelativeLayout>

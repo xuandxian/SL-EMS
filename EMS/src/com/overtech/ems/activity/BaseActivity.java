@@ -2,6 +2,7 @@ package com.overtech.ems.activity;
 
 import cn.smssdk.SMSSDK;
 
+import com.baidu.mapapi.SDKInitializer;
 import com.overtech.ems.R;
 import com.overtech.ems.http.HttpEngine;
 import com.overtech.ems.http.OkHttpClientManager;
@@ -66,6 +67,7 @@ public class BaseActivity extends Activity {
 		initGestureDetector();
 		setNeedBackGesture(false);
 		SMSSDK.initSDK(this, "b731c30880f4", "1c3e262449b1c77498f37c78586b8cf1");
+		SDKInitializer.initialize(getApplicationContext());
 		activity=this;
 		context = this;
 		fragmentManager=getFragmentManager();
@@ -79,11 +81,6 @@ public class BaseActivity extends Activity {
 		progressDialog.setMessage(context.getString(R.string.loading_public_default));
 	}
 
-	//public Response sendRequestWithDialog(){
-	//	Request request=httpEngine.createRequest("", "");
-	//  Response response=httpEngine.createRequestCall(request).execute();
-	//	return response;
-	//}
 
 	private void initGestureDetector() {
 		if (mGestureDetector == null) {
