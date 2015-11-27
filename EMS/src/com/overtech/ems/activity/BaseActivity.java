@@ -10,6 +10,7 @@ import com.overtech.ems.listener.BackGestureListener;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.bitmap.ImageLoader;
+import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
@@ -56,6 +57,8 @@ public class BaseActivity extends Activity {
 	public HttpEngine httpEngine;
 
 	public CustomProgressDialog progressDialog;
+	
+	public NiftyDialogBuilder dialogBuilder;
 
 	private InputMethodManager imm;
 
@@ -71,6 +74,7 @@ public class BaseActivity extends Activity {
 		activity=this;
 		context = this;
 		fragmentManager=getFragmentManager();
+		dialogBuilder = NiftyDialogBuilder.getInstance(this);
 		//sharePreferencesUtils=SharePreferencesUtils.getInstance();
 		//okHttpClientManager=OkHttpClientManager.getInstance();
 		httpEngine=HttpEngine.getInstance();

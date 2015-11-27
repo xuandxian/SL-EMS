@@ -11,11 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
-
 import com.overtech.ems.R;
-import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.activity.parttime.tasklist.ScanCodeActivity;
 import com.overtech.ems.activity.parttime.tasklist.TaskListDonetFragment;
 import com.overtech.ems.activity.parttime.tasklist.TaskListNoneFragment;
