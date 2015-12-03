@@ -3,17 +3,20 @@ package com.overtech.ems.activity.parttime.tasklist;
 import java.util.ArrayList;
 
 import com.overtech.ems.R;
+import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.TaskListDetailsAdapter;
 import com.overtech.ems.entity.test.Data3;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.CustomProgressDialog;
-import android.app.Activity;
+import com.overtech.ems.widget.dialogeffects.Effectstype;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -21,18 +24,18 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class QueryTaskListActivity extends Activity implements OnClickListener {
+public class QueryTaskListActivity extends BaseActivity implements OnClickListener {
 	private MainFrameTask mMainFrameTask = null;
 	private CustomProgressDialog progressDialog = null;
 	private Context context;
 	private TextView mHeadContent;
-	private TextView mHeadResult;
 	private ImageView mHeadBack,mCallPhone;
 	private String result;
-	private ListView mTaskListData;
+	private ListView mListviewTasklist;
 	private TaskListDetailsAdapter adapter;
 	private ArrayList<Data3> list;
 	private TextView mTaskDetailsTitle;
+	private View mFooterView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +48,6 @@ public class QueryTaskListActivity extends Activity implements OnClickListener {
 	}
 
 	private void initEvent() {
-		mHeadResult.setOnClickListener(this);
 		mHeadBack.setOnClickListener(this);
 		mCallPhone.setOnClickListener(this);
 	}
@@ -54,15 +56,14 @@ public class QueryTaskListActivity extends Activity implements OnClickListener {
 		context = QueryTaskListActivity.this;
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
 		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
-		mCallPhone = (ImageView) findViewById(R.id.iv_call);
-		mHeadResult=(TextView) findViewById(R.id.tv_headTitleRight);
+		mCallPhone = (ImageView) findViewById(R.id.iv_headTitleRight);
 		mTaskDetailsTitle=(TextView)findViewById(R.id.tv_task_detail_title);
 		mHeadContent.setText("维保清单");
 		mHeadBack.setVisibility(View.VISIBLE);
 		mCallPhone.setVisibility(View.VISIBLE);
-		mHeadResult.setText("完成");
-		mHeadResult.setVisibility(View.VISIBLE);
-		mTaskListData = (ListView) findViewById(R.id.lv_task_details);
+		mListviewTasklist = (ListView) findViewById(R.id.lv_task_details);
+		mFooterView=LayoutInflater.from(context).inflate(R.layout.listview_footer_done, null);
+		mListviewTasklist.addFooterView(mFooterView);
 	}
 
 	private void getExtraAndSetData() {
@@ -146,7 +147,7 @@ public class QueryTaskListActivity extends Activity implements OnClickListener {
 			list.add(data14);
 			list.add(data15);
 			adapter = new TaskListDetailsAdapter(context, list);
-			mTaskListData.setAdapter(adapter);
+			mListviewTasklist.setAdapter(adapter);
 		}
 	}
 
@@ -184,14 +185,39 @@ public class QueryTaskListActivity extends Activity implements OnClickListener {
 			Intent intent =new Intent(QueryTaskListActivity.this,QuestionResponseActivity.class);
 			startActivity(intent);
 			break;
-		case R.id.iv_call:
-			String phoneNo="15021565127";
-
-			Intent intent2 =new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+phoneNo));
-			startActivity(intent2);
+		case R.id.iv_headTitleRight:
+			showDailog();
 			break;
 		default:
 			break;
 		}
+	}
+	private void showDailog(){
+		Effectstype effect = Effectstype.Slidetop;
+		dialogBuilder
+				.withTitle("温馨提示")
+				.withTitleColor("#FFFFFF")
+				.withDividerColor("#11000000")
+				.withMessage("您是否要拨打技术支持电话？")
+				.withMessageColor("#FFFFFFFF")
+				.withDialogColor("#FF009BEE")
+				.withIcon(getResources().getDrawable(R.drawable.icon_dialog))
+				.isCancelableOnTouchOutside(true).withDuration(700)
+				.withEffect(effect).withButtonDrawable(R.color.bg_title)
+				.withButton1Text("是").withButton1Color("#FFFFFFFF")
+				.withButton2Text("否").withButton2Color("#FFFFFFFF")
+				.setButton1Click(new View.OnClickListener() {	
+					@Override
+					public void onClick(View v) {
+						String phoneNo="15021565127";
+						Intent intent2 =new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+phoneNo));
+						startActivity(intent2);
+					}
+				}).setButton2Click(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						dialogBuilder.dismiss();
+					}
+				}).show();
 	}
 }

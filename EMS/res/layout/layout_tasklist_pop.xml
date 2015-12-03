@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/title_function_bg"
-     >
+    android:background="@drawable/title_function_bg" >
 
     <LinearLayout
         android:id="@+id/ll_pop_1"
@@ -45,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:src="@drawable/icon_common_phone2" />
+            android:src="@drawable/icon_common_phone_green" />
 
         <TextView
             style="@style/tv_list_secondary_style"
