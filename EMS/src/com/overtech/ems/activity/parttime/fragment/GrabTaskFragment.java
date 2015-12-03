@@ -172,8 +172,7 @@ public class GrabTaskFragment extends Fragment implements IXListViewListener {
 			@Override
 			public void create(SwipeMenu menu) {
 				SwipeMenuItem openItem = new SwipeMenuItem(mActivity);
-				openItem.setBackground(new ColorDrawable(Color.rgb(0x00, 0xff,
-						0x00)));
+				openItem.setBackground(new ColorDrawable(Color.rgb(0xFF, 0x3A,0x30)));
 				openItem.setWidth(dp2px(90));
 				openItem.setTitle("抢");
 				openItem.setTitleSize(18);

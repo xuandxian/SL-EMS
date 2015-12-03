@@ -69,8 +69,7 @@
 
     <color name="line_blue_color">#7FBDED</color>
     <color name="bg_title">#009BEE</color>
-    <color name="bg_title_red">#FA435E</color>
-    <color name="bg_title_red_2">#EE3B3B</color>
+    <color name="bg_title_red">#FF3A30</color>
     <!-- nifity dialog -->
     <color name="divider_color">#11000000</color>
     <color name="dialog_bg">#ffe74c3c</color>
