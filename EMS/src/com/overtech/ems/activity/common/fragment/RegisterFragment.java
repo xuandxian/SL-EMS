@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-
 import com.overtech.ems.R;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
@@ -29,7 +28,6 @@ public class RegisterFragment extends Fragment {
 	
 	@Override
 	public void onAttach(Activity activity) {
-		// TODO Auto-generated method stub
 		super.onAttach(activity);
 		mContext=activity;
 	}
@@ -44,7 +42,7 @@ public class RegisterFragment extends Fragment {
 
 			@Override
 			public void onClick(View arg0) {
-				mValicateCodeImage.setImageBitmap(instance.createBitmap());
+				mValicateCodeImage.setImageBitmap(instance.getBitmap());
 			}
 		});
 		
@@ -53,8 +51,7 @@ public class RegisterFragment extends Fragment {
 	public boolean isCorrect(){
 		String phoneNo = mRegisterPhone.getText().toString().trim();
 		String valicateCode = mValicateCode.getText().toString().trim();
-		boolean isCorrectCode = instance.getCode().equalsIgnoreCase(
-				valicateCode);
+		boolean isCorrectCode = instance.getCode().equalsIgnoreCase(valicateCode);
 		if (TextUtils.isEmpty(phoneNo)
 				|| TextUtils.isEmpty(valicateCode)) {
 			Utilities.showToast("输入不能为空", mContext);
@@ -76,7 +73,7 @@ public class RegisterFragment extends Fragment {
 	}
 	private void init() {
 		instance = ValicateCode.getInstance();
-		mValicateCodeImage.setImageBitmap(instance.createBitmap());
+		mValicateCodeImage.setImageBitmap(instance.getBitmap());
 	}
 	private void findViewById(View v) {
 		mValicateCodeImage = (ImageView) v.findViewById(R.id.iv_register_valicate_code);

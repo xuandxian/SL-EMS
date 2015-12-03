@@ -2,6 +2,7 @@ package com.overtech.ems.activity.parttime;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -13,6 +14,7 @@ import com.overtech.ems.activity.parttime.fragment.GrabTaskFragment;
 import com.overtech.ems.activity.parttime.fragment.NearByFragment;
 import com.overtech.ems.activity.parttime.fragment.TaskListFragment;
 import com.overtech.ems.activity.parttime.fragment.PersonalZoneFragment;
+import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 
 import android.widget.RadioButton;
@@ -49,6 +51,11 @@ public class MainActivity extends BaseActivity {
 	protected void findViewById() {
 		mHomeRadioGroup = (RadioGroup) findViewById(R.id.mHomeRadioGroup);
 		mHomeHomeRb = (RadioButton) findViewById(R.id.mHomeHomeRb);
+//		Drawable[] drawable=mHomeHomeRb.getCompoundDrawables();
+//		if (null!=drawable[1]) {
+//			Utilities.showToast("111", context);
+//			drawable[1].setBounds(0,5,0,5);
+//		}
 		mHomeFindRb = (RadioButton) findViewById(R.id.mHomeFindRb);
 		mHomeSearchRb = (RadioButton) findViewById(R.id.mHomeSearchRb);
 		mHomeProfileRb = (RadioButton) findViewById(R.id.mHomeProfileRb);
