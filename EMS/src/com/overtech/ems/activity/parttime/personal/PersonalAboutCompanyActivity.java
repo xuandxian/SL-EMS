@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 
-public class PersonalAnnouncementDetailActivity extends BaseActivity {
+public class PersonalAboutCompanyActivity extends BaseActivity {
 	private TextView mHeadContent;
 	private ImageView mDoBack;
 	private WebView mWebView;
@@ -23,13 +23,12 @@ public class PersonalAnnouncementDetailActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_personal_announcement_detail);
+		setContentView(R.layout.activity_personal_aboutcompany);
 		initView();
 		init();
 	}
-
 	private void init() {
-		mHeadContent.setText("详情");
+		mHeadContent.setText("公司主页");
 		mDoBack.setVisibility(View.VISIBLE);
 		mWebView.setWebChromeClient(new WebChromeClient(){
 			
@@ -60,7 +59,6 @@ public class PersonalAnnouncementDetailActivity extends BaseActivity {
 			}
 		});
 	}
-
 	private void initView() {
 		mHeadContent=(TextView) findViewById(R.id.tv_headTitle);
 		mDoBack=(ImageView) findViewById(R.id.iv_headBack);

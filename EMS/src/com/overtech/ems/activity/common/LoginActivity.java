@@ -1,6 +1,8 @@
 package com.overtech.ems.activity.common;
 
 import java.io.IOException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -61,7 +63,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	private void initData() {
 		mHeadContent.setText("登 录");
 		mHeadBack.setVisibility(View.VISIBLE);
-		
 		mLogin.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -73,6 +74,11 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 					Utilities.showToast("输入不能为空", context);
 					Log.e("========", "hahahahhahahah");
 				} else {
+					if(!Utilities.isMobileNO(sUserName)){
+						Utilities.showToast("手机号码不匹配",LoginActivity.this);
+						return;
+					}
+					
 					Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 					startActivity(intent);
 					finish();

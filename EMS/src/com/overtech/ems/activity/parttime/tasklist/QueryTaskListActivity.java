@@ -2,12 +2,6 @@ package com.overtech.ems.activity.parttime.tasklist;
 
 import java.util.ArrayList;
 
-import com.overtech.ems.R;
-import com.overtech.ems.activity.adapter.TaskListDetailsAdapter;
-import com.overtech.ems.entity.test.Data3;
-import com.overtech.ems.utils.Utilities;
-import com.overtech.ems.widget.CustomProgressDialog;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -21,7 +15,15 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class QueryTaskListActivity extends Activity implements OnClickListener {
+import com.overtech.ems.R;
+import com.overtech.ems.activity.BaseActivity;
+import com.overtech.ems.activity.adapter.TaskListDetailsAdapter;
+import com.overtech.ems.entity.test.Data3;
+import com.overtech.ems.utils.Utilities;
+import com.overtech.ems.widget.CustomProgressDialog;
+import com.overtech.ems.widget.dialogeffects.Effectstype;
+
+public class QueryTaskListActivity extends BaseActivity implements OnClickListener {
 	private MainFrameTask mMainFrameTask = null;
 	private CustomProgressDialog progressDialog = null;
 	private Context context;
@@ -33,7 +35,11 @@ public class QueryTaskListActivity extends Activity implements OnClickListener {
 	private TaskListDetailsAdapter adapter;
 	private ArrayList<Data3> list;
 	private TextView mTaskDetailsTitle;
-
+	/**
+	 * 默认的没有维保的电梯
+	 */
+	private boolean isAchieve=false;
+	private boolean isAllAchieve=false;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -181,17 +187,51 @@ public class QueryTaskListActivity extends Activity implements OnClickListener {
 			finish();
 			break;
 		case R.id.tv_headTitleRight:
-			Intent intent =new Intent(QueryTaskListActivity.this,QuestionResponseActivity.class);
-			startActivity(intent);
+			//将对应的电梯的完成状态更新到服务器
+			showDialog();
+			
 			break;
 		case R.id.iv_call:
 			String phoneNo="15021565127";
-
 			Intent intent2 =new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+phoneNo));
 			startActivity(intent2);
 			break;
 		default:
 			break;
 		}
+	}
+
+	private void showDialog() {
+		Effectstype effect = Effectstype.Shake;
+		dialogBuilder
+				.withTitle("温馨提示")
+				.withTitleColor("#FFFFFF")
+				.withDividerColor("#11000000")
+				.withMessage("您的工作是否已经完成?")
+				.withMessageColor("#FFFFFFFF")
+				.withDialogColor("#FF009BEE")
+				.withIcon(getResources().getDrawable(R.drawable.icon_dialog))
+				.isCancelableOnTouchOutside(true).withDuration(700)
+				.withEffect(effect).withButtonDrawable(R.color.bg_title)
+				.withButton1Text("确定").withButton1Color("#FFFFFFFF")
+				.withButton2Text("取消").withButton2Color("#FFFFFFFF")
+				.setButton1Click(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						//请求服务器
+						if(isAllAchieve){
+							Utilities.showToast("恭喜，你的工作全部完成", context);
+							Intent intent =new Intent(QueryTaskListActivity.this,QuestionResponseActivity.class);
+							startActivity(intent);
+						}else{
+							Utilities.showToast("恭喜你，该电梯已完成，请继续剩下的维保工作", context);
+						}
+					}
+				}).setButton2Click(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						dialogBuilder.dismiss();
+					}
+				}).show();
 	}
 }
