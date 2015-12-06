@@ -173,6 +173,7 @@
                 android:id="@+id/btn_exit"
                 style="@style/btn_title_white_style"
                 android:background="@drawable/shape_button_delete"
+                android:layout_marginTop="15dp"
                 android:text="退 出" />
         </LinearLayout>
     </ScrollView>

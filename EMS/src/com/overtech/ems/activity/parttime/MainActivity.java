@@ -36,7 +36,6 @@ public class MainActivity extends BaseActivity {
 	private Fragment mTaskListFragment;
 	private Fragment mPersonalZoneFragment;
 	private Fragment mNearByFragment;
-	private FragmentTransaction transaction;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -62,45 +61,39 @@ public class MainActivity extends BaseActivity {
 	}
 
 	private void setDefaultView() {
-		transaction = fragmentManager.beginTransaction();
+		FragmentTransaction transaction = fragmentManager.beginTransaction();
 		mGrabTaskFragment = new GrabTaskFragment();
 		transaction.replace(R.id.mHomeContent, mGrabTaskFragment);
 		transaction.commit();
 	}
 
 	private void initEvents() {
-		mHomeRadioGroup
-				.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+		mHomeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 					@Override
 					public void onCheckedChanged(RadioGroup group, int checkedId) {
-						FragmentTransaction transaction = fragmentManager
-								.beginTransaction();
+						FragmentTransaction transaction = fragmentManager.beginTransaction();
 						switch (checkedId) {
 						case R.id.mHomeHomeRb:
 							mGrabTaskFragment = new GrabTaskFragment();
-							transaction.replace(R.id.mHomeContent,
-									mGrabTaskFragment);
+							transaction.replace(R.id.mHomeContent, mGrabTaskFragment);
 							transaction.commit();
 							break;
 						case R.id.mHomeFindRb:
 							mNearByFragment = new NearByFragment();
 							transaction = fragmentManager.beginTransaction();
-							transaction.replace(R.id.mHomeContent,
-									mNearByFragment);
+							transaction.replace(R.id.mHomeContent, mNearByFragment);
 							transaction.commit();
 							break;
 						case R.id.mHomeSearchRb:
 							mTaskListFragment = new TaskListFragment();
 							transaction = fragmentManager.beginTransaction();
-							transaction.replace(R.id.mHomeContent,
-									mTaskListFragment);
+							transaction.replace(R.id.mHomeContent, mTaskListFragment);
 							transaction.commit();
 							break;
 						case R.id.mHomeProfileRb:
 							mPersonalZoneFragment = new PersonalZoneFragment();
 							transaction = fragmentManager.beginTransaction();
-							transaction.replace(R.id.mHomeContent,
-									mPersonalZoneFragment);
+							transaction.replace(R.id.mHomeContent, mPersonalZoneFragment);
 							transaction.commit();
 							break;
 						}
@@ -113,19 +106,12 @@ public class MainActivity extends BaseActivity {
 		if (keyCode == KeyEvent.KEYCODE_BACK
 				&& event.getAction() == KeyEvent.ACTION_DOWN) {
 			Effectstype effect = Effectstype.Shake;
-			dialogBuilder
-					.withTitle("温馨提示")
-					.withTitleColor("#FFFFFF")
-					.withDividerColor("#11000000")
-					.withMessage("您是否要退出?")
-					.withMessageColor("#FFFFFFFF")
-					.withDialogColor("#FF009BEE")
+			dialogBuilder.withTitle("温馨提示").withTitleColor("#FFFFFF").withDividerColor("#11000000")
+					.withMessage("您是否要退出?").withMessageColor("#FFFFFFFF").withDialogColor("#FF009BEE")
 					.withIcon(getResources().getDrawable(R.drawable.icon_dialog))
-					.isCancelableOnTouchOutside(true).withDuration(700)
-					.withEffect(effect).withButtonDrawable(R.color.bg_title)
-					.withButton1Text("确定").withButton1Color("#FFFFFFFF")
-					.withButton2Text("取消").withButton2Color("#FFFFFFFF")
-					.setButton1Click(new View.OnClickListener() {
+					.isCancelableOnTouchOutside(true).withDuration(700).withEffect(effect)
+                    .withButtonDrawable(R.color.bg_title).withButton1Text("确定").withButton1Color("#FFFFFFFF")
+					.withButton2Text("取消").withButton2Color("#FFFFFFFF").setButton1Click(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
 							finish();
