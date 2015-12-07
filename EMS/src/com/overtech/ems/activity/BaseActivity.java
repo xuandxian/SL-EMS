@@ -47,7 +47,7 @@ public class BaseActivity extends Activity {
 	public Activity activity;
 
 	public Context context;
-    //
+
 	public FragmentManager fragmentManager;
 
 	public SharePreferencesUtils sharePreferencesUtils;
