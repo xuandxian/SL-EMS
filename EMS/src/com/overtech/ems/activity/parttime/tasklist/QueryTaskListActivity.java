@@ -60,7 +60,7 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 		context = QueryTaskListActivity.this;
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
 		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
-		mCallPhone = (ImageView) findViewById(R.id.iv_call);
+		mCallPhone = (ImageView) findViewById(R.id.iv_headTitleRight);
 		mHeadResult=(TextView) findViewById(R.id.tv_headTitleRight);
 		mTaskDetailsTitle=(TextView)findViewById(R.id.tv_task_detail_title);
 		mHeadContent.setText("维保清单");
@@ -191,7 +191,7 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 			showDialog();
 			
 			break;
-		case R.id.iv_call:
+		case R.id.iv_headTitleRight:
 			String phoneNo="15021565127";
 			Intent intent2 =new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+phoneNo));
 			startActivity(intent2);
