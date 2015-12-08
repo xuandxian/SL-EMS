@@ -177,7 +177,7 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment {
 			public void onDismiss(DialogInterface dialog) {
 				int info = dealTime();
 				if (info != -1) {
-					mWorkTime.setText("您的相关工作年限是" + info + "年");
+					mWorkTime.setText(info + "年");
 				} else {
 					mWorkTime.setText("工作年限");
 					showDialog();

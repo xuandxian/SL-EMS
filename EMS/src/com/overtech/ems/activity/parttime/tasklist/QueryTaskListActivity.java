@@ -1,6 +1,7 @@
 package com.overtech.ems.activity.parttime.tasklist;
 
 import java.util.ArrayList;
+import java.util.zip.Inflater;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,9 +9,11 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -28,10 +31,11 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 	private CustomProgressDialog progressDialog = null;
 	private Context context;
 	private TextView mHeadContent;
-	private TextView mHeadResult;
 	private ImageView mHeadBack,mCallPhone;
 	private String result;
 	private ListView mTaskListData;
+	private View mListFooterView;
+	private Button mDone;
 	private TaskListDetailsAdapter adapter;
 	private ArrayList<Data3> list;
 	private TextView mTaskDetailsTitle;
@@ -51,24 +55,25 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 	}
 
 	private void initEvent() {
-		mHeadResult.setOnClickListener(this);
 		mHeadBack.setOnClickListener(this);
 		mCallPhone.setOnClickListener(this);
+		mDone.setOnClickListener(this);
 	}
 
 	private void init() {
 		context = QueryTaskListActivity.this;
+		mListFooterView=LayoutInflater.from(context).inflate(R.layout.listview_footer_done, null);
+		mDone=(Button) mListFooterView.findViewById(R.id.btn_login);
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
 		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
 		mCallPhone = (ImageView) findViewById(R.id.iv_headTitleRight);
-		mHeadResult=(TextView) findViewById(R.id.tv_headTitleRight);
 		mTaskDetailsTitle=(TextView)findViewById(R.id.tv_task_detail_title);
 		mHeadContent.setText("维保清单");
 		mHeadBack.setVisibility(View.VISIBLE);
 		mCallPhone.setVisibility(View.VISIBLE);
-		mHeadResult.setText("完成");
-		mHeadResult.setVisibility(View.VISIBLE);
 		mTaskListData = (ListView) findViewById(R.id.lv_task_details);
+		
+		mTaskListData.addFooterView(mListFooterView);
 	}
 
 	private void getExtraAndSetData() {
@@ -186,7 +191,7 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 		case R.id.iv_headBack:
 			finish();
 			break;
-		case R.id.tv_headTitleRight:
+		case R.id.btn_login:
 			//将对应的电梯的完成状态更新到服务器
 			showDialog();
 			

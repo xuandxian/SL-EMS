@@ -82,7 +82,10 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
 				Intent intent = new Intent(context,
-						ElevatorDetailActivity.class);
+						QueryTaskListActivity.class);
+				Bundle options=new Bundle();
+				options.putString("result", "json信息");
+				intent.putExtras(options);
 				startActivity(intent);
 			}
 

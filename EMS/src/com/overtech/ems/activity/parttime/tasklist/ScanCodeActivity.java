@@ -2,6 +2,7 @@ package com.overtech.ems.activity.parttime.tasklist;
 
 import java.io.IOException;
 import java.util.Vector;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -21,9 +22,11 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.overtech.ems.R;
+import com.overtech.ems.activity.parttime.common.ElevatorDetailActivity;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.zxing.camera.CameraManager;
 import com.overtech.ems.widget.zxing.decoding.CaptureActivityHandler;
@@ -126,7 +129,7 @@ public class ScanCodeActivity extends Activity implements Callback {
 			Utilities.showToast("扫描失败", mContext);
 		} else {
 			Intent intent = new Intent(ScanCodeActivity.this,
-					QueryTaskListActivity.class);
+					ElevatorDetailActivity.class);
 			Bundle bundle = new Bundle();
 			bundle.putString("result", resultString);
 			bundle.putParcelable("bitmap", barcode);
