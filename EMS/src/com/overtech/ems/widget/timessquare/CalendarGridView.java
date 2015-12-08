@@ -1,6 +1,8 @@
 // Copyright 2012 Square, Inc.
 package com.overtech.ems.widget.timessquare;
 
+import com.overtech.ems.R;
+
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Canvas;
@@ -101,11 +103,10 @@ public class CalendarGridView extends ViewGroup {
 
   @Override
   protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-    Logr.d("Grid.onMeasure w=%s h=%s", MeasureSpec.toString(widthMeasureSpec),
-        MeasureSpec.toString(heightMeasureSpec));
+    //Logr.d("Grid.onMeasure w=%s h=%s", MeasureSpec.toString(widthMeasureSpec), MeasureSpec.toString(heightMeasureSpec));
     int widthMeasureSize = MeasureSpec.getSize(widthMeasureSpec);
     if (oldWidthMeasureSize == widthMeasureSize) {
-      Logr.d("SKIP Grid.onMeasure");
+      //Logr.d("SKIP Grid.onMeasure");
       setMeasuredDimension(getMeasuredWidth(), getMeasuredHeight());
       return;
     }
@@ -130,7 +131,7 @@ public class CalendarGridView extends ViewGroup {
     }
     final int measuredWidth = widthMeasureSize + 2; // Fudge factor to make the borders show up.
     setMeasuredDimension(measuredWidth, totalHeight);
-    Logr.d("Grid.onMeasure %d ms", System.currentTimeMillis() - start);
+   // Logr.d("Grid.onMeasure %d ms", System.currentTimeMillis() - start);
   }
 
   @Override
@@ -143,7 +144,7 @@ public class CalendarGridView extends ViewGroup {
       child.layout(left, top, right, top + rowHeight);
       top += rowHeight;
     }
-    Logr.d("Grid.onLayout %d ms", System.currentTimeMillis() - start);
+   // Logr.d("Grid.onLayout %d ms", System.currentTimeMillis() - start);
   }
 
   public void setNumRows(int numRows) {
