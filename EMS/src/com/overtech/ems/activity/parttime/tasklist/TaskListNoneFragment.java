@@ -205,16 +205,14 @@ public class TaskListNoneFragment extends Fragment {
 			@Override
 			public void create(SwipeMenu menu) {
 				SwipeMenuItem navicateItem = new SwipeMenuItem(mActivity);
-				navicateItem.setBackground(new ColorDrawable(Color.rgb(0x00,
-						0xff, 0x00)));
+				navicateItem.setBackground(new ColorDrawable(Color.rgb(0xFF,0x9D, 0x00)));
 				navicateItem.setWidth(dp2px(90));
 				navicateItem.setTitle("导航");
 				navicateItem.setTitleSize(18);
 				navicateItem.setTitleColor(Color.WHITE);
 				menu.addMenuItem(navicateItem);
 				SwipeMenuItem deleteItem = new SwipeMenuItem(mActivity);
-				deleteItem.setBackground(new ColorDrawable(Color.rgb(0xff,
-						0x00, 0x00)));
+				deleteItem.setBackground(new ColorDrawable(Color.rgb(0xFF,0x3A, 0x30)));
 				deleteItem.setWidth(dp2px(90));
 				deleteItem.setTitle("退单");
 				deleteItem.setTitleSize(18);

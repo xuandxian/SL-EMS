@@ -1,4 +1,4 @@
-package com.overtech.ems.entity.parttime.common;
+package com.overtech.ems.entity.common;
 
 import com.overtech.ems.config.SystemConfig;
 

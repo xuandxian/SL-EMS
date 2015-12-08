@@ -60,11 +60,6 @@
         <activity android:name="com.overtech.ems.activity.common.ResetPasswordActivity" />
         <activity android:name="com.overtech.ems.activity.common.ResetPasswordSuccessActivity" />
         <activity android:name="com.overtech.ems.activity.common.RegisterActivity" />
-        <activity android:name="com.overtech.ems.activity.common.RegisterAddPersonInfoActivity" />
-        <activity android:name="com.overtech.ems.activity.common.RegisterAddPersonEduAndWorkActivity" />
-        <activity android:name="com.overtech.ems.activity.common.RegisterAddIdCardActivity" />
-        <activity android:name="com.overtech.ems.activity.common.RegisterAddWorkCertificateActivity" />
-        <activity android:name="com.overtech.ems.activity.common.RegisterAddOtherCertificateActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalDeatilsActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.grabtask.GrabTaskDoFilterActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.ScanCodeActivity" />
@@ -80,7 +75,6 @@
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.QuestionResponseActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.EvaluationActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.TaskListPackageDetailActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.tasklist.TaskListPackageTaskDetailActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.nearby.TaskPackageListActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalCancleListActivity"/>
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalHelpDocActivity"/>

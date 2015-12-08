@@ -1,4 +1,4 @@
-package com.overtech.ems.entity.parttime.common;
+package com.overtech.ems.entity.common;
 
 /**
  * Constant of common project's name.

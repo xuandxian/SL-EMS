@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="15dp"
+    android:paddingTop="15dp" >
+
+    <Button
+        android:id="@+id/btn_login"
+        style="@style/btn_title_white_style"
+        android:background="@drawable/shape_button_visiable"
+        android:text="完 成" />
+
+</RelativeLayout>

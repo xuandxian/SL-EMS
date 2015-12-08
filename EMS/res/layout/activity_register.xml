@@ -2,27 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" 
     android:background="@color/bg_main"
-    >
+    android:orientation="vertical" >
 
     <include
         android:id="@+id/include_register"
         layout="@layout/headview" />
-	<FrameLayout 
-	    android:id="@+id/fl_register_container"
-	    android:layout_width="match_parent"
-	    android:layout_height="0dp"
-	    android:layout_weight="1"
-	    ></FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/fl_register_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" >
+    </FrameLayout>
+
     <Button
         android:id="@+id/btn_next_fragment"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_marginBottom="10dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="25dp"
-        android:layout_marginBottom="10dp"
         android:background="@drawable/btn_action_common_rest"
         android:textColor="@color/main_white"
         android:textSize="17sp" />

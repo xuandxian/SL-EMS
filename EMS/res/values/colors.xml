@@ -69,8 +69,8 @@
 
     <color name="line_blue_color">#7FBDED</color>
     <color name="bg_title">#009BEE</color>
-    <color name="bg_title_red">#FA435E</color>
-    <color name="bg_title_red_2">#EE3B3B</color>
+    <color name="bg_title_red">#FF3A30</color>
+    <color name="bg_titile_black">#4D4D4D</color>
     <!-- nifity dialog -->
     <color name="divider_color">#11000000</color>
     <color name="dialog_bg">#ffe74c3c</color>
@@ -80,6 +80,20 @@
     <color name="result_view">#b0000000</color>
     <color name="viewfinder_mask">#60000000</color>
     <color name="possible_result_points">#c0ffff00</color>
+
+
+
+    <color name="calendar_active_month_bg">#fff5f7f9</color>
+    <color name="calendar_bg">#ffffffff</color>
+    <color name="calendar_divider">#ffbababa</color>
+    <color name="calendar_inactive_month_bg">#ffd7d9db</color>
+    <color name="calendar_selected_day_bg">#ff379bff</color>
+    <color name="calendar_highlighted_day_bg">#ccffcc</color>
+    <color name="calendar_selected_range_bg">#ff96caff</color>
+    <color name="calendar_text_active">#ff778088</color>
+    <color name="calendar_text_selected">#ffffffff</color>
+    <color name="calendar_text_unselectable">#7f778088</color>
+    <color name="calendar_text_highlighted">#ff778088</color>
     
     
     
