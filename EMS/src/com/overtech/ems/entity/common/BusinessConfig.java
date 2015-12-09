@@ -5,23 +5,109 @@ package com.overtech.ems.entity.common;
  * 
  * @author Tony
  *
+ * @date 2015-12-09
  */
 public class BusinessConfig {
 	
 	/**
-	 * 登录
+	 * 1.登录
 	 */
-	public static final String LOGIN = "appUserAction!appLogin.sat";
+	public static final String URL_LOGIN = "/login.action";
 	/**
-	 * 注册
+	 * 2.注册
 	 */
-	public static final String REGISTER = "appUserAction!appRegistUser.sat";
+	public static final String URL_REGISTER = "/register.action";
 	/**
-	 * 重置密码
+	 * 3.抢单列表
 	 */
-	public static final String RESET_PASSWORD = "appUserAction!updateAppPasswordByLoginNameOrPhoneNo.sat";
-	
-	
-	
-	
+	public static final String URL_GRABTASK = "/grabtask.action";
+	/**
+	 * 4.关键字搜索
+	 */
+	public static final String URL_DO_SEARCH = "/doSearch.action";
+	/**
+	 * 5.筛选
+	 */
+    public static final String URL_DO_FILTER = "/doFilter.action";
+	/**
+	 * 6.抢单
+	 */
+    public static final String URL_DO_GRABTASK = "/doGrabTask.action";
+	/**
+	 * 7.附近
+	 */
+	public static final String URL_NEARBY = "/nearby.action";
+	/**
+	 * 8.小区任务包
+	 */
+	public static final String URL_COMMUNITY_PACKAGE_LIST = "/communityPackageList.action";
+	/**
+	 * 9.忘记密码（验证手机号／短信验证码）
+	 */
+	public static final String URL_LOST_PASSWORD = "/lostPassword.action";
+	/**
+	 * 10.忘记密码（更新密码）
+	 */
+	public static final String URL_UPDATE_PASSWORD = "/updatePassword.action";
+	/**
+	 * 11.任务单(未完成)
+	 */
+	public static final String URL_TASK_LIST_NONE = "/taskListNone.action";
+	/**
+	 * 12.任务包详情
+	 */
+	public static final String URL_TASK_PACKAGE_DETAIL ="/taskPackageDetail.action";
+	/**
+	 * 13.电梯详情
+	 */
+	public static final String URL_ELEVATOR_DETAIL = "/elevatorDetail.action";
+	/**
+	 * 14.任务单（退单）
+	 */
+	public static final String URL_CHARGE_BACK_TASK = "/chargeBackTask.action";
+	/**
+	 * 15.任务单（已完成）
+	 */
+	public static final String URL_TASK_LIST_DONE = "/taskListDone.action";
+	/**
+	 * 16.任务单（开始）--->指向最后一个界面
+	 */
+	public static final String URL_TASK_START = "/taskStart.action";
+	/**
+	 * 17.维保清单完成
+	 */
+	public static final String URL_MAINTENCE_LIST_COMPLETE = "/maintenceListComplete.action";
+	/**
+	 * 18.问题反馈
+	 */
+	public static final String URL_PROBLEMS_FEEDBACK = "/feedBack.action";
+	/**
+	 * 19.互相评价
+	 */
+	public static final String URL_EVALUATION_EACH_OTHER = "/evaluationEachOther.action";
+	/**
+	 * 20.账户信息
+	 */
+	public static final String URL_PERSONAL_ACCOUNT = "/personalAccount.action";
+	/**
+	 * 21.更换手机号（验证密码）
+	 */
+	public static final String URL_CHANGE_PHONENO_PASSWORD = "/changePhoneNoPassword.action";
+	/**
+	 * 22.更换手机号（手机号码／短信验证码）
+	 */
+	public static final String URL_CHANGE_PHONENO_UPDATE = "/changePhoneNoUpdate.action";
+	/**
+	 * 23.我的账单（已结算／未结算）
+	 */
+    public static final String URL_PERSONAL_BILL = "/personalBill.action";
+	/**
+	 * 24.奖励记录
+	 */
+	public static final String URL_PERSONAL_BONUS_LIST = "/personalBonusList.action";
+	/**
+	 * 25.退单纪录
+	 */
+	public static final String URL_PERSONAL_CHARGEBACK_LIST = "/personalChargeBackList.action";
+
 }
