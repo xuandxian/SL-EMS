@@ -17,16 +17,16 @@ gen/
 build/
 
 # IDEA
-EMS/*.iml
+*.iml
 .idea/.name
 .idea/encodings.xml
 .idea/inspectionProfiles/Project_Default.xml
 .idea/inspectionProfiles/profiles_settings.xml
-EMS/.idea/misc.xml
+.idea/misc.xml
 .idea/modules.xml
 .idea/scopes/scope_settings.xml
-EMS/.idea/vcs.xml
-EMS/.idea/workspace.xml
+.idea/vcs.xml
+.idea/workspace.xml
 .idea/libraries
 
 # Local configuration file (sdk path, etc)
