@@ -122,6 +122,15 @@ public class BaseActivity extends Activity {
 		unregisterReceiver(receiver);
 	}
 
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if (progressDialog != null) {
+			progressDialog.dismiss();
+			progressDialog = null;
+		}
+	}
+
 	BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {

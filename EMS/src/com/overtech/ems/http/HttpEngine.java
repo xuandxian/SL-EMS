@@ -88,18 +88,10 @@ public class HttpEngine {
 		if (TextUtils.isEmpty(jsonData)) {
 			return null;
 		}
-		//http 缓存需要jdk1.7支持，在此不使用缓存
 		Request request;
 		RequestBody body = RequestBody.create(JSON, jsonData);
 		Request.Builder builder = new Request.Builder().cacheControl(CacheControl.FORCE_NETWORK).url(url).post(body);
 		request = builder.build();
 		return request;
-	}
-
-	public Call createRequestCall(Request request) {
-		if (null == mOkHttpClient || null == request) {
-			return null;
-		}
-		return mOkHttpClient.newCall(request);
 	}
 }
