@@ -1,37 +1,15 @@
 package com.overtech.ems.http;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Handler;
 import android.os.Looper;
-import android.widget.ImageView;
 import com.google.gson.Gson;
-import com.google.gson.internal.$Gson$Types;
 import com.squareup.okhttp.Call;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.FormEncodingBuilder;
-import com.squareup.okhttp.Headers;
 import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.MultipartBuilder;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
 import com.squareup.okhttp.CacheControl;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
-import java.net.FileNameMap;
-import java.net.URLConnection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import android.text.TextUtils;
 
 public class HttpEngine {
