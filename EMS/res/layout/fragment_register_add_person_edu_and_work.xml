@@ -89,7 +89,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:enabled="false"
+                    android:focusable="false"
                     android:background="@drawable/shape_input"
                     android:hint="入行时间" />
 
@@ -122,7 +122,6 @@
                     android:layout_marginRight="20dp"
                     android:background="@drawable/shape_input"
                     android:textSize="@dimen/text_size_title"
-                    android:textColor="@color/btn_press_color"
                     android:text="工作年限" />
             </RelativeLayout>
 
