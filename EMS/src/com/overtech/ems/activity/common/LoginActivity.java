@@ -17,15 +17,12 @@ import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.entity.common.ServicesConfig;
-import com.overtech.ems.entity.parttime.User;
+import com.overtech.ems.entity.parttime.Employee;
 import com.overtech.ems.utils.Utilities;
-import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.EditTextWithDelete;
 import com.google.gson.Gson;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import java.io.IOException;
@@ -95,7 +92,8 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                     if (!Utilities.isMobileNO(sUserName)) {
                         Utilities.showToast("手机号码不匹配", context);
                     } else {
-                    	User user=new User(sUserName, sPassword);
+                    	progressDialog.show();
+                    	Employee user=new Employee(sUserName, sPassword);
                         Gson gson=new Gson();
                         String person=gson.toJson(user);
                         Request request= httpEngine.createRequest(ServicesConfig.LOGIN, person);
@@ -103,17 +101,17 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                         call.enqueue(new Callback() {
                             @Override
                             public void onFailure(Request request, IOException e) {
-
+                            	progressDialog.dismiss();
                             }
 
                             @Override
                             public void onResponse(Response response) throws IOException {
-
+                            	 progressDialog.dismiss();
+                            	 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                 startActivity(intent);
+                                 finish();
                             }
                         });
-                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                        startActivity(intent);
-                        finish();
                     }
                 }
             }
