@@ -94,4 +94,11 @@ public class HttpEngine {
 		request = builder.build();
 		return request;
 	}
+
+	public Call createRequestCall(Request request){
+		if (null==mOkHttpClient || null==request){
+			return null;
+		}
+		return mOkHttpClient.newCall(request);
+	}
 }

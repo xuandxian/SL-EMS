@@ -21,7 +21,14 @@ import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.EditTextWithDelete;
 import com.google.gson.Gson;
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
+
+import java.io.IOException;
 
 
 /**
@@ -90,7 +97,19 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                     } else {
                         Gson gson=new Gson();
                         String person=gson.toJson();
-                        httpEngine.createRequest(ServicesConfig.LOGIN,person);
+                        Request request= httpEngine.createRequest(ServicesConfig.LOGIN, person);
+                        Call call=httpEngine.createRequestCall(request);
+                        call.enqueue(new Callback() {
+                            @Override
+                            public void onFailure(Request request, IOException e) {
+
+                            }
+
+                            @Override
+                            public void onResponse(Response response) throws IOException {
+
+                            }
+                        });
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();

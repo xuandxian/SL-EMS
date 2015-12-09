@@ -76,7 +76,6 @@ public class BaseActivity extends Activity {
 		fragmentManager=getFragmentManager();
 		dialogBuilder = NiftyDialogBuilder.getInstance(this);
 		//sharePreferencesUtils=SharePreferencesUtils.getInstance();
-		//okHttpClientManager=OkHttpClientManager.getInstance();
 		httpEngine=HttpEngine.getInstance();
 		httpEngine.initContext(context);
 		imageLoader = ImageLoader.getInstance();
