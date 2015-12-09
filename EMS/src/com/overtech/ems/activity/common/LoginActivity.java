@@ -17,6 +17,7 @@ import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.entity.common.ServicesConfig;
+import com.overtech.ems.entity.parttime.User;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.EditTextWithDelete;
@@ -27,7 +28,6 @@ import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-
 import java.io.IOException;
 
 
@@ -95,8 +95,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                     if (!Utilities.isMobileNO(sUserName)) {
                         Utilities.showToast("手机号码不匹配", context);
                     } else {
+                    	User user=new User(sUserName, sPassword);
                         Gson gson=new Gson();
-                        String person=gson.toJson();
+                        String person=gson.toJson(user);
                         Request request= httpEngine.createRequest(ServicesConfig.LOGIN, person);
                         Call call=httpEngine.createRequestCall(request);
                         call.enqueue(new Callback() {
