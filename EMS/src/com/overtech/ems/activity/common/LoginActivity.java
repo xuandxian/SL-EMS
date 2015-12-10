@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -107,6 +108,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                             @Override
                             public void onResponse(Response response) throws IOException {
                             	 progressDialog.dismiss();
+                            	 
+//                            	 Utilities.showToast(response.toString(),activity);//使用activity，会报异常，原因未知
+                            	 Log.e("============", response.body().string());
                             	 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                  startActivity(intent);
                                  finish();
