@@ -90,10 +90,8 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                 if (TextUtils.isEmpty(sUserName) || TextUtils.isEmpty(sPassword)) {
                     Utilities.showToast("输入不能为空", context);
                 } else {
-                    if (!Utilities.isMobileNO(sUserName)) {
-                        Utilities.showToast("手机号码不匹配", context);
-                    } else {
-                    	progressDialog.show();
+                	    progressDialog.setMessage("正在登录");
+                        progressDialog.show();
                     	Employee user=new Employee(sUserName, sPassword);
                         Gson gson=new Gson();
                         String person=gson.toJson(user);
@@ -116,7 +114,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                         });
                     }
                 }
-            }
         });
     }
 
