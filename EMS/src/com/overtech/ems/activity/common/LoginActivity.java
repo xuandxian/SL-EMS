@@ -108,8 +108,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                             @Override
                             public void onResponse(Response response) throws IOException {
                             	 progressDialog.dismiss();
-                            	 
-//                            	 Utilities.showToast(response.toString(),activity);//使用activity，会报异常，原因未知
                             	 Log.e("============", response.body().string());
                             	 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                  startActivity(intent);

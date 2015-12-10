@@ -8,6 +8,7 @@ import com.overtech.ems.http.HttpEngine;
 import com.overtech.ems.http.OkHttpClientManager;
 import com.overtech.ems.listener.BackGestureListener;
 import com.overtech.ems.utils.SharePreferencesUtils;
+import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.bitmap.ImageLoader;
 import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
@@ -57,7 +58,7 @@ public class BaseActivity extends Activity {
 	public HttpEngine httpEngine;
 
 	public CustomProgressDialog progressDialog;
-	
+
 	public NiftyDialogBuilder dialogBuilder;
 
 	private InputMethodManager imm;
@@ -71,19 +72,18 @@ public class BaseActivity extends Activity {
 		setNeedBackGesture(false);
 		SMSSDK.initSDK(this, "b731c30880f4", "1c3e262449b1c77498f37c78586b8cf1");
 		SDKInitializer.initialize(getApplicationContext());
-		activity=this;
+		activity = this;
 		context = this;
-		fragmentManager=getFragmentManager();
+		fragmentManager = getFragmentManager();
 		dialogBuilder = NiftyDialogBuilder.getInstance(this);
-		//sharePreferencesUtils=SharePreferencesUtils.getInstance();
-		httpEngine=HttpEngine.getInstance();
+		// sharePreferencesUtils=SharePreferencesUtils.getInstance();
+		httpEngine = HttpEngine.getInstance();
 		httpEngine.initContext(context);
 		imageLoader = ImageLoader.getInstance();
 		imageLoader.initContext(context);
-		progressDialog=CustomProgressDialog.createDialog(context);
+		progressDialog = CustomProgressDialog.createDialog(context);
 		progressDialog.setMessage(context.getString(R.string.loading_public_default));
 	}
-
 
 	private void initGestureDetector() {
 		if (mGestureDetector == null) {
@@ -102,7 +102,7 @@ public class BaseActivity extends Activity {
 	/*
 	 * 返回
 	 */
-	public void onBackPressed(){
+	public void onBackPressed() {
 		super.onBackPressed();
 	}
 
@@ -133,11 +133,13 @@ public class BaseActivity extends Activity {
 	BroadcastReceiver receiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			// 处理各种情况
 			String action = intent.getAction();
-			if (ACTION_NETWORK_CHANGE.equals(action)) { // 网络发生变化
-				// 处理网络问题
-			} else if (ACTION_NEW_VERSION.equals(action)) {// 检测到新版本
+			if (ACTION_NETWORK_CHANGE.equals(action)) {
+				boolean isNetworkConnected=Utilities.isNetworkConnected(context);
+				if (!isNetworkConnected) {
+					Utilities.showToast("无网络连接，请检查网络！！", context);
+				}
+			} else if (ACTION_NEW_VERSION.equals(action)) {
 
 			}
 		}
@@ -149,8 +151,7 @@ public class BaseActivity extends Activity {
 			imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 		}
 		if (imm != null) {
-			imm.hideSoftInputFromWindow(getWindow().getDecorView()
-					.getWindowToken(), 0);
+			imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
 		}
 	}
 }
