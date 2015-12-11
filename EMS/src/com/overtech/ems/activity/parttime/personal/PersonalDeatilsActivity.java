@@ -60,42 +60,16 @@ public class PersonalDeatilsActivity extends Activity implements
 			this.finish();
 			break;
 		case R.id.rl_change_phoneNo:
-//			Intent intent = new Intent(PersonalDeatilsActivity.this,
-//					PersonalChangePhoneNoActivity.class);
-			Intent intent = new Intent(PersonalDeatilsActivity.this,
-					ChangePhoneNoVCActivity.class);
+			Intent intent = new Intent(PersonalDeatilsActivity.this,ChangePhoneNoVCActivity.class);
 			String phone=mPhone.getText().toString();
 			intent.putExtra("phone", phone);
 			startActivity(intent);
 			break;
 		case R.id.btn_exit:
-			showExitDialog();
+			Intent intent2 = new Intent(PersonalDeatilsActivity.this,LoginActivity.class);
+			startActivity(intent2);
+			finish();
 			break;
 		}
-	}
-
-	private void showExitDialog() {
-		effect = Effectstype.SlideBottom;
-		dialogBuilder.withTitle("温馨提示").withTitleColor("#FFFFFF")
-				.withDividerColor("#11000000").withMessage("您是否要退出?")
-				.withMessageColor("#FFFFFFFF").withDialogColor("#FF009BEE")
-				.withIcon(getResources().getDrawable(R.drawable.icon_dialog))
-				.isCancelableOnTouchOutside(true).withDuration(700)
-				.withEffect(effect).withButton1Text("确定").withButton2Text("取消")
-				.setButton1Click(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						Intent intent = new Intent(
-								PersonalDeatilsActivity.this,
-								LoginActivity.class);
-						startActivity(intent);
-						finish();
-					}
-				}).setButton2Click(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						dialogBuilder.dismiss();
-					}
-				}).show();
 	}
 }

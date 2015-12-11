@@ -95,22 +95,14 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				effect = Effectstype.Slideright;
-				dialogBuilder
-						.withTitle("温馨提示")
-						.withTitleColor("#FFFFFF")
-						.withDividerColor("#11000000")
-						.withMessage("您是否要退掉此单？")
-						.withMessageColor("#FF333333")
-						.withDialogColor("#FFFFFFFF")
-						.withIcon(
-								getResources().getDrawable(
-										R.drawable.icon_dialog))
-						.isCancelableOnTouchOutside(true).withDuration(700)
-						.withEffect(effect)
-						.withButtonDrawable(R.color.main_white)
-						.withButton1Text("否").withButton1Color("#FF333333")
-						.withButton2Text("是").withButton2Color("#FF333333")
-						.setButton1Click(new View.OnClickListener() {
+				dialogBuilder.withTitle("温馨提示").withTitleColor(R.color.main_primary)
+				.withDividerColor("#11000000").withMessage("您是否要退掉此单？")
+				.withMessageColor(R.color.main_primary).withDialogColor("#FFFFFFFF")
+				.isCancelableOnTouchOutside(true).withDuration(700)
+				.withEffect(effect).withButtonDrawable(R.color.main_white)
+				.withButton1Text("否").withButton1Color(R.color.main_primary)
+				.withButton2Text("是").withButton2Color(R.color.main_primary)
+				.setButton1Click(new View.OnClickListener() {
 							@Override
 							public void onClick(View v) {
 								dialogBuilder.dismiss();

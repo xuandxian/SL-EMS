@@ -208,19 +208,14 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 
 	private void showDialog() {
 		Effectstype effect = Effectstype.Shake;
-		dialogBuilder
-				.withTitle("温馨提示")
-				.withTitleColor("#FFFFFF")
-				.withDividerColor("#11000000")
-				.withMessage("您的工作是否已经完成?")
-				.withMessageColor("#FFFFFFFF")
-				.withDialogColor("#FF009BEE")
-				.withIcon(getResources().getDrawable(R.drawable.icon_dialog))
-				.isCancelableOnTouchOutside(true).withDuration(700)
-				.withEffect(effect).withButtonDrawable(R.color.bg_title)
-				.withButton1Text("确定").withButton1Color("#FFFFFFFF")
-				.withButton2Text("取消").withButton2Color("#FFFFFFFF")
-				.setButton1Click(new View.OnClickListener() {
+		dialogBuilder.withTitle("温馨提示").withTitleColor(R.color.main_primary)
+		.withDividerColor(R.color.divider_color).withMessage("请确认该电梯维保清单已完成？")
+		.withMessageColor(R.color.main_primary).withDialogColor("#FFFFFFFF")
+		.isCancelableOnTouchOutside(true).withDuration(700)
+		.withEffect(effect).withButtonDrawable(R.color.main_white)
+		.withButton1Text("确认").withButton1Color(R.color.main_primary)
+		.withButton2Text("取消").withButton2Color(R.color.main_primary)
+		.setButton1Click(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						//请求服务器
