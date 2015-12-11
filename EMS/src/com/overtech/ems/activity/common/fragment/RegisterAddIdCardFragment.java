@@ -1,6 +1,7 @@
 package com.overtech.ems.activity.common.fragment;
 
 import java.io.File;
+import java.io.IOException;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -26,6 +27,15 @@ import com.overtech.ems.R;
 import com.overtech.ems.utils.ImageCacheUtils;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.popwindow.DimPopupWindow;
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.Headers;
+import com.squareup.okhttp.MediaType;
+import com.squareup.okhttp.MultipartBuilder;
+import com.squareup.okhttp.OkHttpClient;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
 
 public class RegisterAddIdCardFragment extends Fragment implements OnClickListener {
 	private Context mContext;
@@ -132,6 +142,29 @@ public class RegisterAddIdCardFragment extends Fragment implements OnClickListen
 		int columIndex=cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
 		if(cursor.moveToNext()){
 			String path=cursor.getString(columIndex);
+			OkHttpClient mOkHttpClient=new OkHttpClient();
+			File file=new File(path);
+			Log.e("====文件的大小====", file.length()+"");
+			RequestBody fileBody=RequestBody.create(MediaType.parse("image/jpeg"), file);
+			RequestBody requestBody=new MultipartBuilder()
+			.type(MultipartBuilder.FORM)
+			.addPart(Headers.of("Content-Disposition","form-data;name=\"mFile\";filename=\"beautiful.jpg\""),fileBody)
+			.build();
+			Request request=new Request.Builder().url("http://192.168.1.112/slems/api/system/employee/login.action").post(requestBody).build();
+			Call call=mOkHttpClient.newCall(request);
+			call.enqueue(new Callback() {
+				
+				@Override
+				public void onResponse(Response arg0) throws IOException {
+					// TODO Auto-generated method stub
+					System.out.println("+++++++++++++++++++++++");
+				}
+				
+				@Override
+				public void onFailure(Request arg0, IOException arg1) {
+					System.out.println("--------------------------");
+				}
+			});
 			Log.e("==我是图片的路径==", path);
 		}
 	}
