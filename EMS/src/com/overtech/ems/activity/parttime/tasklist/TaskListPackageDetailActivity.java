@@ -96,7 +96,7 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 			public void onClick(View v) {
 				effect = Effectstype.Slideright;
 				dialogBuilder.withTitle("温馨提示").withTitleColor(R.color.main_primary)
-				.withDividerColor(R.color.divider_color).withMessage("您是否要退掉此单？")
+				.withDividerColor("#11000000").withMessage("您是否要退掉此单？")
 				.withMessageColor(R.color.main_primary).withDialogColor("#FFFFFFFF")
 				.isCancelableOnTouchOutside(true).withDuration(700)
 				.withEffect(effect).withButtonDrawable(R.color.main_white)
