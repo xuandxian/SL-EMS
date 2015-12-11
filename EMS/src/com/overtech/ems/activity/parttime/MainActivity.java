@@ -63,35 +63,44 @@ public class MainActivity extends BaseActivity {
 		mHomeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 					@Override
 					public void onCheckedChanged(RadioGroup group, int checkedId) {
-						FragmentTransaction transaction = fragmentManager.beginTransaction();
 						switch (checkedId) {
 						case R.id.mHomeHomeRb:
 							mGrabTaskFragment = new GrabTaskFragment();
-							transaction.replace(R.id.mHomeContent, mGrabTaskFragment);
-							transaction.commit();
+							switchFragment(mGrabTaskFragment);
 							break;
 						case R.id.mHomeFindRb:
 							mNearByFragment = new NearByFragment();
-							transaction = fragmentManager.beginTransaction();
-							transaction.replace(R.id.mHomeContent, mNearByFragment);
-							transaction.commit();
+							switchFragment(mNearByFragment);
 							break;
 						case R.id.mHomeSearchRb:
 							mTaskListFragment = new TaskListFragment();
-							transaction = fragmentManager.beginTransaction();
-							transaction.replace(R.id.mHomeContent, mTaskListFragment);
-							transaction.commit();
+							switchFragment(mTaskListFragment);
 							break;
 						case R.id.mHomeProfileRb:
 							mPersonalZoneFragment = new PersonalZoneFragment();
-							transaction = fragmentManager.beginTransaction();
-							transaction.replace(R.id.mHomeContent, mPersonalZoneFragment);
-							transaction.commit();
+							switchFragment(mPersonalZoneFragment);
 							break;
 						}
 					}
 				});
 	}
+	
+	public void switchFragment(Fragment mFragment) {
+	    if (mFragment == null){
+	    	return;
+	    }
+	    if (fragmentManager == null){
+			fragmentManager=getFragmentManager();
+	    }
+	    FragmentTransaction transaction = fragmentManager.beginTransaction();
+	    if (!mFragment.isAdded()) {
+	        transaction.replace(R.id.mHomeContent, mFragment);
+	        transaction.addToBackStack(null);
+	        transaction.commit();
+	      } else {
+	        transaction.show(mFragment);
+	      }
+	  }
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {

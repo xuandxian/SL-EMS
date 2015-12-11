@@ -106,6 +106,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                             @Override
                             public void onFailure(Request request, IOException e) {
                             	progressDialog.dismiss();
+                            	Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                startActivity(intent);
+                                finish();
                             }
 
                             @Override
