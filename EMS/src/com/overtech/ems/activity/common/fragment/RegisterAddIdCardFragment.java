@@ -1,9 +1,13 @@
 package com.overtech.ems.activity.common.fragment;
 
+import java.io.File;
+
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
@@ -19,7 +23,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.overtech.ems.R;
-import com.overtech.ems.activity.common.RegisterActivity;
 import com.overtech.ems.utils.ImageCacheUtils;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.popwindow.DimPopupWindow;
@@ -33,7 +36,8 @@ public class RegisterAddIdCardFragment extends Fragment implements OnClickListen
 	private Button mCamera;
 	private Button mPhoto;
 	private Button mCancle;
-	
+	private Button mStartUpload1;
+	private Button mStartUpload2;
 	/** 
      * 打开本地相册的requestcode. 
      */  
@@ -69,10 +73,14 @@ public class RegisterAddIdCardFragment extends Fragment implements OnClickListen
 	private void init() {
 		mIdCardFront.setOnClickListener(this);
 		mIdCardOpposite.setOnClickListener(this);
+		mStartUpload1.setOnClickListener(this);
+		mStartUpload2.setOnClickListener(this);
 	}
 	private void findViewById(View v) {
 		mIdCardFront=(ImageView)v. findViewById(R.id.iv_idcard_front);
 		mIdCardOpposite=(ImageView) v.findViewById(R.id.iv_idcard_opposite);
+		mStartUpload1=(Button)v.findViewById(R.id.bt_front_start);
+		mStartUpload2=(Button)v.findViewById(R.id.bt_opposite_start);
 	}
 	/**
 	 * 记录身份证点击的状态
@@ -103,8 +111,28 @@ public class RegisterAddIdCardFragment extends Fragment implements OnClickListen
 			Utilities.showToast("你点击了取消", mContext);
 			mPopupWindow.dismiss();
 			break;
+		case R.id.bt_front_start:
+//			Utilities.showToast("开始上传1", mContext);
+			upLoading();
+			break;
+		case R.id.bt_opposite_start:
+			Utilities.showToast("开始上传2", mContext);
+			break;
 		default:
 			break;
+		}
+	}
+	/**
+	 * 上传图片
+	 */
+	private void upLoading(){
+		ContentResolver resolver=mContext.getContentResolver();
+		String[] proj={MediaStore.Images.Media.DATA};
+		Cursor cursor=resolver.query(frontUri, proj, null, null, null);
+		int columIndex=cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+		if(cursor.moveToNext()){
+			String path=cursor.getString(columIndex);
+			Log.e("==我是图片的路径==", path);
 		}
 	}
 	private void openCamera() {
@@ -141,10 +169,19 @@ public class RegisterAddIdCardFragment extends Fragment implements OnClickListen
                 	mIdCardFront.setImageBitmap(bm);  
                 	//记录打开相册获取的图片的uri，赋给
                 	frontUri=data.getData();
+                	mStartUpload1.setVisibility(View.VISIBLE);
                 }else if(currentState==1){
                 	mIdCardOpposite.setImageBitmap(bm);
                 	oppositeUri=data.getData();
+                	mStartUpload2.setVisibility(View.VISIBLE);
                 }
+                
+            }else{
+            	if(currentState==0){
+            		mStartUpload1.setVisibility(View.GONE);
+            	}else if(currentState==1){
+            		mStartUpload2.setVisibility(View.GONE);
+            	}
             }
 			break;
 		case PHOTO_CAPTURE:
@@ -158,6 +195,9 @@ public class RegisterAddIdCardFragment extends Fragment implements OnClickListen
 	            	mIdCardOpposite.setImageBitmap(pic);
 	            	oppositeUri=data.getData();
 	            }
+				mStartUpload2.setVisibility(View.VISIBLE);
+			}else{
+				mStartUpload2.setVisibility(View.GONE);
 			}
 			break;
 

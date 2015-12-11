@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_main" >
+
     <TextView
         android:id="@+id/register_send_idcard1"
         style="@style/tv_info_secondary_style"
@@ -11,28 +12,58 @@
         android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp"
         android:text="手持身份证照片（正面）" />
-	<ImageView 
-	    android:id="@+id/iv_idcard_front"
-	    android:layout_below="@id/register_send_idcard1"
-	    android:layout_width="match_parent"
-	    android:layout_height="200dp"
-	    android:src="@drawable/btn_camera_comment_rest"
-	    />
+
+    <RelativeLayout
+        android:id="@+id/rl_iv_idcard_front"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/register_send_idcard1" >
+
+        <ImageView
+            android:id="@+id/iv_idcard_front"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:src="@drawable/btn_camera_comment_rest" />
+
+        <Button
+            android:id="@+id/bt_front_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/shape_button_visiable"
+            android:text="开始上传"
+            android:visibility="gone" />
+    </RelativeLayout>
+
     <TextView
         android:id="@+id/register_send_idcard2"
         style="@style/tv_info_secondary_style"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/iv_idcard_front"
+        android:layout_below="@+id/rl_iv_idcard_front"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp"
         android:text="手持身份证照片（反面）" />
-	<ImageView 
-	    android:id="@+id/iv_idcard_opposite"
-	    android:layout_below="@id/register_send_idcard2"
-	    android:layout_width="match_parent"
-	    android:layout_height="200dp" 
-	    android:src="@drawable/btn_camera_comment_rest"
-	    />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/register_send_idcard2" >
+
+        <ImageView
+            android:id="@+id/iv_idcard_opposite"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:src="@drawable/btn_camera_comment_rest" />
+
+        <Button
+            android:id="@+id/bt_opposite_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/shape_button_visiable"
+            android:text="开始上传"
+            android:visibility="gone" />
+    </RelativeLayout>
 
 </RelativeLayout>

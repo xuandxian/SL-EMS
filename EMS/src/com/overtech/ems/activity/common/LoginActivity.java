@@ -94,8 +94,11 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
                         Utilities.showToast("手机号码不匹配", context);
                     } else {
                     	progressDialog.show();
-                    	Employee user=new Employee(sUserName, sPassword);
+                    	Employee user=new Employee();
+                    	user.setAge(sUserName);
+                    	user.setPassword(sPassword);
                         Gson gson=new Gson();
+                        
                         String person=gson.toJson(user);
                         Request request= httpEngine.createRequest(ServicesConfig.LOGIN, person);
                         Call call=httpEngine.createRequestCall(request);
