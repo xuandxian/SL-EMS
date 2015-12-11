@@ -28,120 +28,113 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import java.io.IOException;
 
-
 /**
  * @author Tony
  * @description 登录界面
  * @date 2015-10-05
  */
 public class LoginActivity extends BaseActivity implements OnClickListener {
-    private EditTextWithDelete mUserName, mPassword;
-    private String sUserName, sPassword;
-    private TextView mHeadContent;
-    private ImageView mHeadBack;
-    private TextView mLostPassword;
-    private Button mLogin;
-    private TextView mRegister;
-    private ToggleButton mChangePasswordState;
+	private EditTextWithDelete mUserName, mPassword;
+	private String sUserName, sPassword;
+	private TextView mHeadContent;
+	private ImageView mHeadBack;
+	private TextView mLostPassword;
+	private Button mLogin;
+	private TextView mRegister;
+	private ToggleButton mChangePasswordState;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        initView();
-        initData();
-    }
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_login);
+		initView();
+		initData();
+	}
 
-    private void initView() {
-        mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
-        mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
-        mUserName = (EditTextWithDelete) findViewById(R.id.et_login_username);
-        mPassword = (EditTextWithDelete) findViewById(R.id.et_login_password);
-        mLostPassword = (TextView) findViewById(R.id.tv_lost_password);
-        mRegister = (TextView) findViewById(R.id.tv_login_by_message);
-        mLogin = (Button) findViewById(R.id.btn_login);
-        mChangePasswordState = (ToggleButton) findViewById(R.id.tb_change_password);
-    }
+	private void initView() {
+		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
+		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
+		mUserName = (EditTextWithDelete) findViewById(R.id.et_login_username);
+		mPassword = (EditTextWithDelete) findViewById(R.id.et_login_password);
+		mLostPassword = (TextView) findViewById(R.id.tv_lost_password);
+		mRegister = (TextView) findViewById(R.id.tv_login_by_message);
+		mLogin = (Button) findViewById(R.id.btn_login);
+		mChangePasswordState = (ToggleButton) findViewById(R.id.tb_change_password);
+	}
 
-    private void initData() {
-        mHeadContent.setText("登 录");
-        mHeadBack.setVisibility(View.VISIBLE);
-        mLostPassword.setOnClickListener(this);
-        mRegister.setOnClickListener(this);
-        mHeadBack.setOnClickListener(this);
-        mChangePasswordState.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+	private void initData() {
+		mHeadContent.setText("登 录");
+		mHeadBack.setVisibility(View.VISIBLE);
+		mLostPassword.setOnClickListener(this);
+		mRegister.setOnClickListener(this);
+		mHeadBack.setOnClickListener(this);
+		mChangePasswordState.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
+						if (isChecked) {
+							// 设置密码为可见的
+							mPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+						} else {
+							mPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+						}
+					}
+				});
+		mLogin.setOnClickListener(new OnClickListener() {
 
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    // 设置密码为可见的
-                    mPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
-                } else {
-                    mPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                }
-            }
-        });
-        mLogin.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View arg0) {
+				sUserName = mUserName.getText().toString().trim();
+				sPassword = mPassword.getText().toString().trim();
+				if (TextUtils.isEmpty(sUserName) || TextUtils.isEmpty(sPassword)) {
+					Utilities.showToast("输入不能为空", context);
+				} else {
+					progressDialog.show();
+					Employee user = new Employee();
+					user.setAge(sUserName);
+					user.setPassword(sPassword);
+					Gson gson = new Gson();
+					String person = gson.toJson(user);
+					Request request = httpEngine.createRequest(ServicesConfig.LOGIN, person);
+					Call call = httpEngine.createRequestCall(request);
+					call.enqueue(new Callback() {
+						@Override
+						public void onFailure(Request request, IOException e) {
+							progressDialog.dismiss();
+							Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+							startActivity(intent);
+							finish();
+						}
 
-            @Override
-            public void onClick(View arg0) {
-                sUserName = mUserName.getText().toString().trim();
-                sPassword = mPassword.getText().toString().trim();
-                if (TextUtils.isEmpty(sUserName) || TextUtils.isEmpty(sPassword)) {
-                    Utilities.showToast("输入不能为空", context);
-                } else {
-                    if (!Utilities.isMobileNO(sUserName)) {
-                        Utilities.showToast("手机号码不匹配", context);
-                    } else {
-                    	progressDialog.show();
-                    	Employee user=new Employee();
-                    	user.setAge(sUserName);
-                    	user.setPassword(sPassword);
-                        Gson gson=new Gson();
-                        
-                        String person=gson.toJson(user);
-                        Request request= httpEngine.createRequest(ServicesConfig.LOGIN, person);
-                        Call call=httpEngine.createRequestCall(request);
-                        call.enqueue(new Callback() {
-                            @Override
-                            public void onFailure(Request request, IOException e) {
-                            	progressDialog.dismiss();
-                            	Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                startActivity(intent);
-                                finish();
-                            }
+						@Override
+						public void onResponse(Response response)throws IOException {
+							progressDialog.dismiss();
+							Log.e("============", response.body().string());
+							Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+							startActivity(intent);
+							finish();
+						}
+					});
+				}
+			}
+		});
+	}
 
-                            @Override
-                            public void onResponse(Response response) throws IOException {
-                            	 progressDialog.dismiss();
-                            	 Log.e("============", response.body().string());
-                            	 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                                 startActivity(intent);
-                                 finish();
-                            }
-                        });
-                    }
-                }
-            }
-        });
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.tv_lost_password:
-                Intent intent = new Intent(LoginActivity.this, LostPasswordActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.tv_login_by_message:
-                Intent intent2 = new Intent(LoginActivity.this, RegisterActivity.class);
-                startActivity(intent2);
-                break;
-            case R.id.iv_headBack:
-                onBackPressed();
-                break;
-            default:
-                break;
-        }
-    }
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.tv_lost_password:
+			Intent intent = new Intent(LoginActivity.this,LostPasswordActivity.class);
+			startActivity(intent);
+			break;
+		case R.id.tv_login_by_message:
+			Intent intent2 = new Intent(LoginActivity.this,RegisterActivity.class);
+			startActivity(intent2);
+			break;
+		case R.id.iv_headBack:
+			onBackPressed();
+			break;
+		default:
+			break;
+		}
+	}
 }
