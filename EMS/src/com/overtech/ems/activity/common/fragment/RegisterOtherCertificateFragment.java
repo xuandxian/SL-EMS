@@ -1,16 +1,17 @@
 package com.overtech.ems.activity.common.fragment;
 
-import com.overtech.ems.R;
-import com.overtech.ems.activity.common.RegisterActivity;
-import com.overtech.ems.utils.ImageCacheUtils;
-import com.overtech.ems.utils.Utilities;
-import com.overtech.ems.widget.popwindow.DimPopupWindow;
+import java.io.File;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences.Editor;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -19,11 +20,16 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
+
+import com.overtech.ems.R;
+import com.overtech.ems.utils.ImageCacheUtils;
+import com.overtech.ems.utils.SharePreferencesUtils;
+import com.overtech.ems.utils.Utilities;
+import com.overtech.ems.widget.popwindow.DimPopupWindow;
 
 public class RegisterOtherCertificateFragment extends Fragment implements OnClickListener {
 	private View view;
@@ -33,7 +39,9 @@ public class RegisterOtherCertificateFragment extends Fragment implements OnClic
 	private Button mCamera;
 	private Button mPhoto;
 	private Button mCancle;
-	
+	private SharePreferencesUtils sp;
+	private Editor editor;
+	private final String OTHERCERTIFICATE="othercertificate";
 	public static final int OPEN_PHOTO_REQUESTCODE =  0x1;  
     private static final int PHOTO_CAPTURE = 0x2;
     private Uri otherCertificateUri = null;
@@ -50,6 +58,8 @@ public class RegisterOtherCertificateFragment extends Fragment implements OnClic
 		view=inflater.inflate(R.layout.fragment_register_add_other_certificate, null);
 		mOtherCertificate=(ImageView) view.findViewById(R.id.id_card_1);
 		mOtherCertificate.setOnClickListener(this);
+		sp=SharePreferencesUtils.getInstance();
+		editor=sp.edit();
 		return view;
 	}
 	@Override
@@ -71,15 +81,29 @@ public class RegisterOtherCertificateFragment extends Fragment implements OnClic
 			break;
 		}
 	}
+	/**
+	 * 打开相册
+	 */
 	private void openPhoto() {
 		Intent intent = new Intent(Intent.ACTION_PICK, null);  
         intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,  
                 "image/*");  
         startActivityForResult(intent, OPEN_PHOTO_REQUESTCODE);
 	}
+	private File outFile;
+	private Uri cameraUri;
+	/**
+	 * 打开相机
+	 */
 	private void openCamera() {
 		Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-//		intent.putExtra(MediaStore.EXTRA_OUTPUT, frontUri); // 这样就将文件的存储方式和uri指定到了Camera应用中
+		File dir=mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+		if(!dir.exists()){
+			dir.mkdirs();
+		}
+		outFile=new File(dir,"otherCertificate"+".jpg");
+		cameraUri=Uri.fromFile(outFile);
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraUri); // 这样就将文件的存储方式和uri指定到了Camera应用中
 		startActivityForResult(intent, PHOTO_CAPTURE);
 	}
 	private void showPopupWindow() {
@@ -117,14 +141,41 @@ public class RegisterOtherCertificateFragment extends Fragment implements OnClic
                         mContext, data.getData(), target, false);  
                 mOtherCertificate.setImageBitmap(bm);
                 otherCertificateUri=data.getData();
+                String path=getPhotoPath(otherCertificateUri);
+                editor.putString(OTHERCERTIFICATE, path);
             }
+			editor.commit();
 			break;
 		case PHOTO_CAPTURE:
+			if(resultCode==Activity.RESULT_CANCELED){
+				
+			}
 			if(resultCode == Activity.RESULT_OK){
-				Bitmap pic = ImageCacheUtils.getResizedBitmap(null, null,   
-	                    mContext, data.getData(), target, false);
+				BitmapFactory.Options op = new BitmapFactory.Options();
+				Bitmap bmp=BitmapFactory.decodeFile(outFile.getAbsolutePath());
+				int width = bmp.getWidth();
+				int height = bmp.getHeight();
+				// 设置想要的大小
+				int newWidth = 480;
+				int newHeight = 640;
+				// 计算缩放比例
+				float scaleWidth = ((float) newWidth) / width;
+				float scaleHeight = ((float) newHeight) / height;
+				// 取得想要缩放的matrix参数
+				Matrix matrix = new Matrix();
+				matrix.postScale(scaleWidth, scaleHeight);
+				// 得到新的图片
+				bmp = Bitmap.createBitmap(bmp, 0, 0, width, height,
+						matrix, true);
+				// canvas.drawBitmap(bitMap, 0, 0, paint)
+				// 防止内存溢出
+				op.inSampleSize = 4; // 这个数字越大,图片大小越小.
+				Bitmap pic = null;
+				pic = BitmapFactory.decodeFile(outFile.getAbsolutePath(), op);
 				mOtherCertificate.setImageBitmap(pic);
-				otherCertificateUri=data.getData();
+				otherCertificateUri=cameraUri;
+				editor.putString(OTHERCERTIFICATE, outFile.getAbsolutePath());
+				editor.commit();
 			}
 			break;
 
@@ -132,6 +183,16 @@ public class RegisterOtherCertificateFragment extends Fragment implements OnClic
 			break;
 		}
 		super.onActivityResult(requestCode, resultCode, data);
+	}
+	private String getPhotoPath(Uri imageUri){
+		ContentResolver resolver=mContext.getContentResolver();
+		String[] proj={MediaStore.Images.Media.DATA};
+		Cursor cursor=resolver.query(imageUri, proj, null, null, null);
+		int columIndex=cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+		if(cursor.moveToNext()){
+			return cursor.getString(columIndex);
+		}
+		return null;
 	}
 	public boolean isAllNotNull(){
 		

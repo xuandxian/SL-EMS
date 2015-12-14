@@ -31,6 +31,11 @@ public class SharePreferencesUtils {
         }
         return sharedPrefUtils;
     }
-
+    public SharedPreferences.Editor edit(){
+    	if(editor==null){
+    		throw new RuntimeException("SharedPreferences对象异常");
+    	}
+    	return editor;
+    }
 
 }

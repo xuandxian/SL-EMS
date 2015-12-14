@@ -1,15 +1,18 @@
 package com.overtech.ems.activity.common.fragment;
 
 import java.io.File;
-import java.io.IOException;
+import java.net.URI;
 
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -25,17 +28,9 @@ import android.widget.ImageView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.utils.ImageCacheUtils;
+import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.popwindow.DimPopupWindow;
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.Headers;
-import com.squareup.okhttp.MediaType;
-import com.squareup.okhttp.MultipartBuilder;
-import com.squareup.okhttp.OkHttpClient;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.RequestBody;
-import com.squareup.okhttp.Response;
 
 public class RegisterAddIdCardFragment extends Fragment implements OnClickListener {
 	private Context mContext;
@@ -46,8 +41,7 @@ public class RegisterAddIdCardFragment extends Fragment implements OnClickListen
 	private Button mCamera;
 	private Button mPhoto;
 	private Button mCancle;
-	private Button mStartUpload1;
-	private Button mStartUpload2;
+	
 	/** 
      * 打开本地相册的requestcode. 
      */  
@@ -66,6 +60,11 @@ public class RegisterAddIdCardFragment extends Fragment implements OnClickListen
      * 图片的target大小. 
      */
     private static final int target = 400;  
+    
+    private SharePreferencesUtils sp;
+    private Editor editor;
+    private final String IDCardFront="frontIdcard";
+    private final String IDCardOpposite="oppositeIdCard";
     @Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
@@ -78,19 +77,18 @@ public class RegisterAddIdCardFragment extends Fragment implements OnClickListen
 		view=inflater.inflate(R.layout.fragment_register_add_id_card, null);
 		findViewById(view);
 		init();
+		sp=SharePreferencesUtils.getInstance();
+		editor=sp.edit();
 		return view;
 	}
 	private void init() {
 		mIdCardFront.setOnClickListener(this);
 		mIdCardOpposite.setOnClickListener(this);
-		mStartUpload1.setOnClickListener(this);
-		mStartUpload2.setOnClickListener(this);
+		
 	}
 	private void findViewById(View v) {
 		mIdCardFront=(ImageView)v. findViewById(R.id.iv_idcard_front);
 		mIdCardOpposite=(ImageView) v.findViewById(R.id.iv_idcard_opposite);
-		mStartUpload1=(Button)v.findViewById(R.id.bt_front_start);
-		mStartUpload2=(Button)v.findViewById(R.id.bt_opposite_start);
 	}
 	/**
 	 * 记录身份证点击的状态
@@ -121,56 +119,44 @@ public class RegisterAddIdCardFragment extends Fragment implements OnClickListen
 			Utilities.showToast("你点击了取消", mContext);
 			mPopupWindow.dismiss();
 			break;
-		case R.id.bt_front_start:
-//			Utilities.showToast("开始上传1", mContext);
-			upLoading();
-			break;
-		case R.id.bt_opposite_start:
-			Utilities.showToast("开始上传2", mContext);
-			break;
+		
+		
 		default:
 			break;
 		}
 	}
 	/**
-	 * 上传图片
+	 * 获取拍照后的图片的路径
 	 */
-	private void upLoading(){
+	private String getPhotoPath(Uri imageUri){
 		ContentResolver resolver=mContext.getContentResolver();
 		String[] proj={MediaStore.Images.Media.DATA};
-		Cursor cursor=resolver.query(frontUri, proj, null, null, null);
+		Cursor cursor=resolver.query(imageUri, proj, null, null, null);
 		int columIndex=cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
 		if(cursor.moveToNext()){
-			String path=cursor.getString(columIndex);
-			OkHttpClient mOkHttpClient=new OkHttpClient();
-			File file=new File(path);
-			Log.e("====文件的大小====", file.length()+"");
-			RequestBody fileBody=RequestBody.create(MediaType.parse("image/jpeg"), file);
-			RequestBody requestBody=new MultipartBuilder()
-			.type(MultipartBuilder.FORM)
-			.addPart(Headers.of("Content-Disposition","form-data;name=\"mFile\";filename=\"beautiful.jpg\""),fileBody)
-			.build();
-			Request request=new Request.Builder().url("http://192.168.1.112/slems/api/system/employee/login.action").post(requestBody).build();
-			Call call=mOkHttpClient.newCall(request);
-			call.enqueue(new Callback() {
-				
-				@Override
-				public void onResponse(Response arg0) throws IOException {
-					// TODO Auto-generated method stub
-					System.out.println("+++++++++++++++++++++++");
-				}
-				
-				@Override
-				public void onFailure(Request arg0, IOException arg1) {
-					System.out.println("--------------------------");
-				}
-			});
-			Log.e("==我是图片的路径==", path);
+			return cursor.getString(columIndex);
 		}
+		return null;
 	}
+	private File outFile;
+	private Uri cameraUri;
+	/**
+	 * 打开照相机
+	 */
 	private void openCamera() {
 		Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-//		intent.putExtra(MediaStore.EXTRA_OUTPUT, frontUri); // 这样就将文件的存储方式和uri指定到了Camera应用中
+		File dir=mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+		if(!dir.exists()){
+			dir.mkdirs();
+		}
+		if(currentState==0){
+			outFile=new File(dir,"frontIdcard"+".jpg");
+		}else if(currentState==1){
+			outFile=new File(dir,"oppositeIdcard"+".jpg");
+		}
+		
+		cameraUri=Uri.fromFile(outFile);
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraUri); // 这样就将文件的存储方式和uri指定到了Camera应用中
 		startActivityForResult(intent, PHOTO_CAPTURE);
 	}
 
@@ -202,35 +188,59 @@ public class RegisterAddIdCardFragment extends Fragment implements OnClickListen
                 	mIdCardFront.setImageBitmap(bm);  
                 	//记录打开相册获取的图片的uri，赋给
                 	frontUri=data.getData();
-                	mStartUpload1.setVisibility(View.VISIBLE);
+                	String path=getPhotoPath(frontUri);
+                	editor.putString(IDCardFront, path);
                 }else if(currentState==1){
                 	mIdCardOpposite.setImageBitmap(bm);
                 	oppositeUri=data.getData();
-                	mStartUpload2.setVisibility(View.VISIBLE);
+                	String path=getPhotoPath(oppositeUri);
+                	editor.putString(IDCardOpposite, path);
                 }
+                editor.commit();
                 
-            }else{
-            	if(currentState==0){
-            		mStartUpload1.setVisibility(View.GONE);
-            	}else if(currentState==1){
-            		mStartUpload2.setVisibility(View.GONE);
-            	}
             }
 			break;
 		case PHOTO_CAPTURE:
+			if(resultCode==Activity.RESULT_CANCELED){
+				//调用相机后，如果没有拍照就返回了，就把相应位置的uri置为null,原因：调用相机拍照后生成的照片我指定有位置，所以不能用那个uri来确定当前图片的uri;
+				//调用相机没有拍照返回后，清空
+				
+			}
 			if(resultCode == Activity.RESULT_OK){
-				Bitmap pic = ImageCacheUtils.getResizedBitmap(null, null,   
-	                    mContext, data.getData(), target, false);
+				
+				Log.e("==这里是用来判断intent值===", data.toString());
+				
+				BitmapFactory.Options op = new BitmapFactory.Options();
+				Bitmap bmp=BitmapFactory.decodeFile(outFile.getAbsolutePath());
+				int width = bmp.getWidth();
+				int height = bmp.getHeight();
+				// 设置想要的大小
+				int newWidth = 480;
+				int newHeight = 640;
+				// 计算缩放比例
+				float scaleWidth = ((float) newWidth) / width;
+				float scaleHeight = ((float) newHeight) / height;
+				// 取得想要缩放的matrix参数
+				Matrix matrix = new Matrix();
+				matrix.postScale(scaleWidth, scaleHeight);
+				// 得到新的图片
+				bmp = Bitmap.createBitmap(bmp, 0, 0, width, height,
+						matrix, true);
+				// canvas.drawBitmap(bitMap, 0, 0, paint)
+				// 防止内存溢出
+				op.inSampleSize = 4; // 这个数字越大,图片大小越小.
+				Bitmap pic = null;
+				pic = BitmapFactory.decodeFile(outFile.getAbsolutePath(), op);
 				if(currentState==0){
-					frontUri=data.getData();
+					frontUri=cameraUri;
 	            	mIdCardFront.setImageBitmap(pic);  
+	            	editor.putString(IDCardFront, outFile.getAbsolutePath());
 	            }else if(currentState==1){
 	            	mIdCardOpposite.setImageBitmap(pic);
-	            	oppositeUri=data.getData();
+	            	oppositeUri=cameraUri;
+	            	editor.putString(IDCardOpposite, outFile.getAbsolutePath());
 	            }
-				mStartUpload2.setVisibility(View.VISIBLE);
-			}else{
-				mStartUpload2.setVisibility(View.GONE);
+				editor.commit();
 			}
 			break;
 
