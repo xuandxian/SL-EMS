@@ -2,6 +2,7 @@ package com.overtech.ems.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.config.SystemConfig;
@@ -21,8 +22,9 @@ public class SharePreferencesUtils {
     private Map<String, SoftReference<String>> prefCache = new HashMap<String, SoftReference<String>>();
 
     private SharePreferencesUtils(){
-        sharedPreferences = MyApplication.getInstance().getSharedPreferences(SystemConfig.PREFERENCES_NAME, Context.MODE_PRIVATE);
+        sharedPreferences = MyApplication.getInstance().getSharePreference();
         editor = sharedPreferences.edit();
+        Log.e("SharePreferences构造函数", "SharePreferences构造函数");
     }
 
     public synchronized static SharePreferencesUtils getInstance(){
