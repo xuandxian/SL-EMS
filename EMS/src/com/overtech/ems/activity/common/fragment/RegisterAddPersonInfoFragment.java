@@ -1,5 +1,7 @@
 package com.overtech.ems.activity.common.fragment;
 
+import java.util.HashMap;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
@@ -66,6 +68,15 @@ public class RegisterAddPersonInfoFragment extends Fragment {
 			Utilities.showToast("您还有信息没有输入，请检查后再试!", mContext);
 			return false;
 		}
+	}
+	public HashMap getPersonInfo(){
+		HashMap<String,String> map=new HashMap<String, String>();
+		map.put("nameContent", nameContent);
+		map.put("idNumContent", idNumContent);
+		map.put("workNumContent", workNumContent);
+		map.put("cityContent", cityContent);
+		map.put("zoneContent", zoneContent);
+		return map;
 	}
 	
 	private void findViewById(View v) {

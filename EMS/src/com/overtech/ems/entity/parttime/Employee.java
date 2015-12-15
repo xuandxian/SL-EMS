@@ -1,53 +1,78 @@
 package com.overtech.ems.entity.parttime;
 
-public class Employee {
-	private String id;
-	private String userName;
+import java.io.Serializable;
+
+public class Employee implements Serializable{
+	/**
+	 * 姓名
+	 */
+	private String name;
+	/**
+	 * 性别
+	 */
 	private int gender;
+	/**
+	 * 电话号码
+	 */
 	private String phoneNo;
+	/**
+	 * 用户id
+	 */
 	private String loginId;
+	/**
+	 * 用户密码
+	 */
 	private String password;
+	/**
+	 * 身份证号码
+	 */
 	private String idcardNo;
-	private String birthDate;
-	private String age;
-	private String city;
-	private String zone;
-	private String eduLevel;
-	private String workUnit;
-	private String entryTime;
-	private String workYears;
-	private String elevatorBrand;
-	private String uPhoto;
-	private String idcardFront;
-	private String idcardBack;
-	private String otherPhoto;
+	/**
+	 * 上岗证编号
+	 */
 	private String workNo;
-	private String workOverDate;
-	private String registerTime;
-	private String employeeType;
-	private String employeeRate;
-	private String score;
-	private String entryDate;
-	private boolean isWork;
-	private String department;
-	private String post;
-	private String registerSite;
-	private String emergencyContact;
-	private String emergencyContactTel;
-	private String email;
-	private boolean isStop;
-	private String remark;
-	public String getId() {
-		return id;
+	
+	/**
+	 * 出生年月
+	 */
+	private String birthDate;
+	/**
+	 * 年龄
+	 */
+	private String age;
+	/**
+	 * 城市
+	 */
+	private String city;
+	/**
+	 * 区域
+	 */
+	private String zone;
+	/**
+	 * 学历
+	 */
+	private String eduLevel;
+	/**
+	 * 目前单位
+	 */
+	private String workUnit;
+	/**
+	 * 入行时间
+	 */
+	private String entryTime;
+	/**
+	 * 工作年限
+	 */
+	private String workYears;
+	/**
+	 * 电梯品牌
+	 */
+	private String elevatorBrand;
+	public String getName() {
+		return name;
 	}
-	public void setId(String id) {
-		this.id = id;
-	}
-	public String getUserName() {
-		return userName;
-	}
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setName(String name) {
+		this.name = name;
 	}
 	public int getGender() {
 		return gender;
@@ -78,6 +103,12 @@ public class Employee {
 	}
 	public void setIdcardNo(String idcardNo) {
 		this.idcardNo = idcardNo;
+	}
+	public String getWorkNo() {
+		return workNo;
+	}
+	public void setWorkNo(String workNo) {
+		this.workNo = workNo;
 	}
 	public String getBirthDate() {
 		return birthDate;
@@ -133,124 +164,5 @@ public class Employee {
 	public void setElevatorBrand(String elevatorBrand) {
 		this.elevatorBrand = elevatorBrand;
 	}
-	public String getuPhoto() {
-		return uPhoto;
-	}
-	public void setuPhoto(String uPhoto) {
-		this.uPhoto = uPhoto;
-	}
-	public String getIdcardFront() {
-		return idcardFront;
-	}
-	public void setIdcardFront(String idcardFront) {
-		this.idcardFront = idcardFront;
-	}
-	public String getIdcardBack() {
-		return idcardBack;
-	}
-	public void setIdcardBack(String idcardBack) {
-		this.idcardBack = idcardBack;
-	}
-	public String getOtherPhoto() {
-		return otherPhoto;
-	}
-	public void setOtherPhoto(String otherPhoto) {
-		this.otherPhoto = otherPhoto;
-	}
-	public String getWorkNo() {
-		return workNo;
-	}
-	public void setWorkNo(String workNo) {
-		this.workNo = workNo;
-	}
-	public String getWorkOverDate() {
-		return workOverDate;
-	}
-	public void setWorkOverDate(String workOverDate) {
-		this.workOverDate = workOverDate;
-	}
-	public String getRegisterTime() {
-		return registerTime;
-	}
-	public void setRegisterTime(String registerTime) {
-		this.registerTime = registerTime;
-	}
-	public String getEmployeeType() {
-		return employeeType;
-	}
-	public void setEmployeeType(String employeeType) {
-		this.employeeType = employeeType;
-	}
-	public String getEmployeeRate() {
-		return employeeRate;
-	}
-	public void setEmployeeRate(String employeeRate) {
-		this.employeeRate = employeeRate;
-	}
-	public String getScore() {
-		return score;
-	}
-	public void setScore(String score) {
-		this.score = score;
-	}
-	public String getEntryDate() {
-		return entryDate;
-	}
-	public void setEntryDate(String entryDate) {
-		this.entryDate = entryDate;
-	}
-	public boolean isWork() {
-		return isWork;
-	}
-	public void setWork(boolean isWork) {
-		this.isWork = isWork;
-	}
-	public String getDepartment() {
-		return department;
-	}
-	public void setDepartment(String department) {
-		this.department = department;
-	}
-	public String getPost() {
-		return post;
-	}
-	public void setPost(String post) {
-		this.post = post;
-	}
-	public String getRegisterSite() {
-		return registerSite;
-	}
-	public void setRegisterSite(String registerSite) {
-		this.registerSite = registerSite;
-	}
-	public String getEmergencyContact() {
-		return emergencyContact;
-	}
-	public void setEmergencyContact(String emergencyContact) {
-		this.emergencyContact = emergencyContact;
-	}
-	public String getEmergencyContactTel() {
-		return emergencyContactTel;
-	}
-	public void setEmergencyContactTel(String emergencyContactTel) {
-		this.emergencyContactTel = emergencyContactTel;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	public boolean isStop() {
-		return isStop;
-	}
-	public void setStop(boolean isStop) {
-		this.isStop = isStop;
-	}
-	public String getRemark() {
-		return remark;
-	}
-	public void setRemark(String remark) {
-		this.remark = remark;
-	}
+	
 }

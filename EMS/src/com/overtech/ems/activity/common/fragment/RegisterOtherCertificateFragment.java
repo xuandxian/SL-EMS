@@ -7,6 +7,7 @@ import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -26,6 +27,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.overtech.ems.R;
+import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.utils.ImageCacheUtils;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.Utilities;
@@ -39,7 +41,7 @@ public class RegisterOtherCertificateFragment extends Fragment implements OnClic
 	private Button mCamera;
 	private Button mPhoto;
 	private Button mCancle;
-	private SharePreferencesUtils sp;
+	private SharedPreferences sp;
 	private Editor editor;
 	private final String OTHERCERTIFICATE="othercertificate";
 	public static final int OPEN_PHOTO_REQUESTCODE =  0x1;  
@@ -58,7 +60,7 @@ public class RegisterOtherCertificateFragment extends Fragment implements OnClic
 		view=inflater.inflate(R.layout.fragment_register_add_other_certificate, null);
 		mOtherCertificate=(ImageView) view.findViewById(R.id.id_card_1);
 		mOtherCertificate.setOnClickListener(this);
-		sp=SharePreferencesUtils.getInstance();
+		sp=MyApplication.getInstance().getSharePreference();
 		editor=sp.edit();
 		return view;
 	}

@@ -126,6 +126,15 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment {
 			return false;
 		}
 	}
+	public HashMap getEduWorkInfo(){
+		HashMap<String,String> eduworkInfo=new HashMap<String,String>();
+		eduworkInfo.put("eduContent", eduContent);
+		eduworkInfo.put("currWorkContent", currWorkContent);
+		eduworkInfo.put("enterWorkTime",enterWorkTimeContent);
+		eduworkInfo.put("workTime", mWorkTime.getText().toString());
+		eduworkInfo.put("elevatorContent",elevatorContent);
+		return eduworkInfo;
+	}
 
 	private void init() {
 		mElevator.setOnClickListener(new OnClickListener() {

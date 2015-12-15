@@ -70,7 +70,7 @@ public class ResetPasswordActivity extends BaseActivity {
 						if (TextUtils.equals(sPasswordNew, sPasswordConfirm)) {
 							String username = "1";//此处暂时设置未“1”，应该提取sharepreference
 							Employee user = new Employee();
-							user.setUserName(username);
+							user.setName(username);
 							user.setPassword(sPasswordNew);
 							Gson gson = new Gson();
 							String person = gson.toJson(user);

@@ -8,6 +8,7 @@ import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -27,6 +28,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.overtech.ems.R;
+import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.utils.ImageCacheUtils;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.Utilities;
@@ -61,7 +63,7 @@ public class RegisterAddIdCardFragment extends Fragment implements OnClickListen
      */
     private static final int target = 400;  
     
-    private SharePreferencesUtils sp;
+    private SharedPreferences sp;
     private Editor editor;
     private final String IDCardFront="frontIdcard";
     private final String IDCardOpposite="oppositeIdCard";
@@ -77,7 +79,7 @@ public class RegisterAddIdCardFragment extends Fragment implements OnClickListen
 		view=inflater.inflate(R.layout.fragment_register_add_id_card, null);
 		findViewById(view);
 		init();
-		sp=SharePreferencesUtils.getInstance();
+		sp=MyApplication.getInstance().getSharePreference();
 		editor=sp.edit();
 		return view;
 	}
@@ -207,9 +209,6 @@ public class RegisterAddIdCardFragment extends Fragment implements OnClickListen
 				
 			}
 			if(resultCode == Activity.RESULT_OK){
-				
-				Log.e("==这里是用来判断intent值===", data.toString());
-				
 				BitmapFactory.Options op = new BitmapFactory.Options();
 				Bitmap bmp=BitmapFactory.decodeFile(outFile.getAbsolutePath());
 				int width = bmp.getWidth();

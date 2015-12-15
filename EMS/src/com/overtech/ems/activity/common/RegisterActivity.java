@@ -1,11 +1,16 @@
 package com.overtech.ems.activity.common;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,15 +20,22 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
+import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.common.fragment.RegisterAddIdCardFragment;
 import com.overtech.ems.activity.common.fragment.RegisterAddPersonEduAndWorkFragment;
 import com.overtech.ems.activity.common.fragment.RegisterAddPersonInfoFragment;
 import com.overtech.ems.activity.common.fragment.RegisterAddWorkCertificateFragment;
 import com.overtech.ems.activity.common.fragment.RegisterFragment;
 import com.overtech.ems.activity.common.fragment.RegisterOtherCertificateFragment;
-import com.overtech.ems.utils.Utilities;
+import com.overtech.ems.config.SystemConfig;
+import com.overtech.ems.entity.common.BusinessConfig;
+import com.overtech.ems.entity.parttime.Employee;
+import com.overtech.ems.http.OkHttpClientManager;
+import com.overtech.ems.http.OkHttpClientManager.Param;
+import com.squareup.okhttp.Response;
 
 public class RegisterActivity extends BaseActivity implements OnClickListener {
 	private Context mContext;
@@ -42,10 +54,28 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	private RegisterOtherCertificateFragment mOtherCertificateFragment;
 	private final String TAG = "Fragment";
 
+	private SharedPreferences sp;
+	/**
+	 * 身份证正面路径
+	 */
+	 private final String IDCardFront="frontIdcard";
+	 /**
+	  * 身份证反面路径
+	  */
+	 private final String IDCardOpposite="oppositeIdCard";
+	 /**
+	  * 工作证反面路径
+	  */
+	 private final String WORKCERTIFICATE = "workcertificate";
+	 /**
+	  * 其他证书路径(可选)
+	  */
+	 private final String OTHERCERTIFICATE="othercertificate";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_register);
+		sp=MyApplication.getSharePreference();
 		findViewById();
 		init(savedInstanceState);
 
@@ -275,8 +305,9 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 										public void onClick(
 												DialogInterface dialog,
 												int which) {
-											Utilities.showToast("开始提交",
-													mContext);
+											String personJson=getAllMessage();
+											startUpLoading(personJson);
+											
 										}
 									})
 							.setNegativeButton("取消",
@@ -297,4 +328,64 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 			break;
 		}
 	}
+	/**
+	 * 上传用户信息
+	 */
+	protected void startUpLoading(String json) {
+		//
+		final File[] files=new File[4];
+		files[0]=new File(sp.getString(IDCardFront, null));
+		files[1]=new File(sp.getString(IDCardOpposite, null));
+		files[2]=new File(sp.getString(WORKCERTIFICATE, null));
+		files[3]=new File(sp.getString(OTHERCERTIFICATE, null));
+		final String[] fileKeys=new String[4];
+		fileKeys[0]="frontIdCard";
+		fileKeys[1]="oppositeIdCard";
+		fileKeys[2]="workCertificate";
+		fileKeys[3]="otherCertificate";
+		final Param[] params=new Param[1];
+		params[0]=new Param("personInfo", json);
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				Response response;
+				try {
+					response = OkHttpClientManager.post(SystemConfig.IP+BusinessConfig.URL_REGISTER, files, fileKeys, params);
+					System.out.println("+++++++返回的东西+++++++++++"+response.body().string());
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}).start();
+	}
+
+	/**
+	 * 获取用户的注册信息
+	 */
+	
+	protected String getAllMessage() {
+		Employee employee=new Employee();
+		//获取个人信息页面的信息
+		HashMap<String,String> personInfo=mPersonInfoFragment.getPersonInfo();
+		employee.setName(personInfo.get("nameContent"));
+		employee.setIdcardNo(personInfo.get("idNumContent"));
+		employee.setWorkNo(personInfo.get("workNumContent"));
+		employee.setCity(personInfo.get("cityContent"));
+		employee.setZone(personInfo.get("zoneContent"));
+		//获取个人学历工作信息
+		HashMap<String,String> eduworkInfo=mPersonEduWorkFragment.getEduWorkInfo();
+		employee.setEduLevel(eduworkInfo.get("eduContent"));
+		employee.setWorkUnit(eduworkInfo.get("currWorkContent"));
+		employee.setEntryTime(eduworkInfo.get("enterWorkTime"));
+		employee.setWorkYears(eduworkInfo.get("workTime"));
+		employee.setElevatorBrand(eduworkInfo.get("elevatorContent"));
+		Gson gson=new Gson();
+		String employeeJson=gson.toJson(employee);
+		Log.e("++++++测试实体类的json+++++++", employeeJson);
+		return employeeJson;
+	}
+
+	
 }

@@ -7,6 +7,7 @@ import android.app.Fragment;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -26,8 +27,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import com.overtech.ems.R;
+import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.utils.ImageCacheUtils;
-import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.popwindow.DimPopupWindow;
 
@@ -47,7 +48,7 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements OnCl
      */
     private static final int target = 400;  
     private Uri certificateUri=null;
-    private SharePreferencesUtils sp;
+    private SharedPreferences sp;
     private Editor editor;
     private final String WORKCERTIFICATE = "workcertificate";
     @Override
@@ -62,7 +63,7 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements OnCl
 		view=inflater.inflate(R.layout.fragment_register_add_work_certificate, null);
 		mWorkCertificate=(ImageView) view.findViewById(R.id.id_work_certificate);
 		mWorkCertificate.setOnClickListener(this);
-		sp=SharePreferencesUtils.getInstance();
+		sp=MyApplication.getInstance().getSharePreference();
 		editor=sp.edit();
 		return view;
 	}

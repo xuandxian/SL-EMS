@@ -90,7 +90,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 				} else {
 					progressDialog.show();
 					Employee user = new Employee();
-					user.setUserName(sUserName);
+					user.setName(sUserName);
 					user.setPassword(sPassword);
 					Gson gson = new Gson();
 					String person = gson.toJson(user);
