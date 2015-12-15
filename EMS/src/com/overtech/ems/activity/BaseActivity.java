@@ -1,20 +1,5 @@
 package com.overtech.ems.activity;
 
-import cn.smssdk.SMSSDK;
-
-import com.baidu.mapapi.SDKInitializer;
-import com.overtech.ems.R;
-import com.overtech.ems.http.HttpEngine;
-import com.overtech.ems.http.OkHttpClientManager;
-import com.overtech.ems.listener.BackGestureListener;
-import com.overtech.ems.utils.SharePreferencesUtils;
-import com.overtech.ems.utils.Utilities;
-import com.overtech.ems.widget.CustomProgressDialog;
-import com.overtech.ems.widget.bitmap.ImageLoader;
-import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
@@ -24,10 +9,19 @@ import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.GestureDetector;
-import android.view.MotionEvent;
-import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
+import cn.smssdk.SMSSDK;
+
+import com.baidu.mapapi.SDKInitializer;
+import com.overtech.ems.R;
+import com.overtech.ems.http.HttpEngine;
+import com.overtech.ems.http.OkHttpClientManager;
+import com.overtech.ems.listener.BackGestureListener;
+import com.overtech.ems.utils.Utilities;
+import com.overtech.ems.widget.CustomProgressDialog;
+import com.overtech.ems.widget.bitmap.ImageLoader;
+import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
 
 /**
  * @author Tony
@@ -50,8 +44,6 @@ public class BaseActivity extends Activity {
 	public Context context;
 
 	public FragmentManager fragmentManager;
-
-	public SharePreferencesUtils sharePreferencesUtils;
 
 	public OkHttpClientManager okHttpClientManager;
 

@@ -29,7 +29,6 @@ import android.widget.ImageView;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.utils.ImageCacheUtils;
-import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.popwindow.DimPopupWindow;
 
@@ -60,7 +59,7 @@ public class RegisterOtherCertificateFragment extends Fragment implements OnClic
 		view=inflater.inflate(R.layout.fragment_register_add_other_certificate, null);
 		mOtherCertificate=(ImageView) view.findViewById(R.id.id_card_1);
 		mOtherCertificate.setOnClickListener(this);
-		sp=MyApplication.getInstance().getSharePreference();
+		sp=((MyApplication)getActivity().getApplication()).getSharePreference();
 		editor=sp.edit();
 		return view;
 	}
@@ -71,9 +70,11 @@ public class RegisterOtherCertificateFragment extends Fragment implements OnClic
 			showPopupWindow();
 			break;
 		case R.id.item_popupwindows_camera:
+			mPopupWindow.dismiss();
 			openCamera();
 			break;
 		case R.id.item_popupwindows_Photo:
+			mPopupWindow.dismiss();
 			openPhoto();
 			break;
 		case R.id.item_popupwindows_cancel:

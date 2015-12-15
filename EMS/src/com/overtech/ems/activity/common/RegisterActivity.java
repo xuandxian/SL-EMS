@@ -32,9 +32,12 @@ import com.overtech.ems.activity.common.fragment.RegisterFragment;
 import com.overtech.ems.activity.common.fragment.RegisterOtherCertificateFragment;
 import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.common.BusinessConfig;
+import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.Employee;
 import com.overtech.ems.http.OkHttpClientManager;
 import com.overtech.ems.http.OkHttpClientManager.Param;
+import com.overtech.ems.utils.Utilities;
+import com.overtech.ems.widget.CustomProgressDialog;
 import com.squareup.okhttp.Response;
 
 public class RegisterActivity extends BaseActivity implements OnClickListener {
@@ -71,11 +74,13 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	  * 其他证书路径(可选)
 	  */
 	 private final String OTHERCERTIFICATE="othercertificate";
+	 
+	 private CustomProgressDialog progressDialog;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_register);
-		sp=MyApplication.getSharePreference();
+		sp=((MyApplication)getApplication()).getSharePreference();
 		findViewById();
 		init(savedInstanceState);
 
@@ -307,7 +312,9 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 												int which) {
 											String personJson=getAllMessage();
 											startUpLoading(personJson);
-											
+											progressDialog=CustomProgressDialog.createDialog(mContext);
+											progressDialog.setMessage("正在上传您的注册信息，请等待长传成功");
+											progressDialog.show();
 										}
 									})
 							.setNegativeButton("取消",
@@ -351,8 +358,18 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 			public void run() {
 				Response response;
 				try {
-					response = OkHttpClientManager.post(SystemConfig.IP+BusinessConfig.URL_REGISTER, files, fileKeys, params);
+					response = OkHttpClientManager.post(ServicesConfig.REGISTER, files, fileKeys, params);
 					System.out.println("+++++++返回的东西+++++++++++"+response.body().string());
+					if(response.isSuccessful()){
+						runOnUiThread(new Runnable() {
+							
+							@Override
+							public void run() {
+								progressDialog.dismiss();
+								Utilities.showToast("恭喜您，上传成功", mContext);
+							}
+						});
+					}
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

@@ -63,7 +63,7 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements OnCl
 		view=inflater.inflate(R.layout.fragment_register_add_work_certificate, null);
 		mWorkCertificate=(ImageView) view.findViewById(R.id.id_work_certificate);
 		mWorkCertificate.setOnClickListener(this);
-		sp=MyApplication.getInstance().getSharePreference();
+		sp=((MyApplication)getActivity().getApplication()).getSharePreference();
 		editor=sp.edit();
 		return view;
 	}
@@ -90,9 +90,11 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements OnCl
 			showPopupWindow();
 			break;
 		case R.id.item_popupwindows_camera:
+			mPopupWindow.dismiss();
 			openCamera();
 			break;
 		case R.id.item_popupwindows_Photo:
+			mPopupWindow.dismiss();
 			openPhoto();
 			break;
 		case R.id.item_popupwindows_cancel:

@@ -1,7 +1,6 @@
 package com.overtech.ems.activity.common.fragment;
 
 import java.io.File;
-import java.net.URI;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -30,7 +29,6 @@ import android.widget.ImageView;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.utils.ImageCacheUtils;
-import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.popwindow.DimPopupWindow;
 
@@ -79,7 +77,7 @@ public class RegisterAddIdCardFragment extends Fragment implements OnClickListen
 		view=inflater.inflate(R.layout.fragment_register_add_id_card, null);
 		findViewById(view);
 		init();
-		sp=MyApplication.getInstance().getSharePreference();
+		sp=((MyApplication)getActivity().getApplication()).getSharePreference();
 		editor=sp.edit();
 		return view;
 	}
