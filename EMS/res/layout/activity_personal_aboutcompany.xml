@@ -2,21 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
-    <include 
-        layout="@layout/headview"
-        />
-    <ProgressBar 
-        style="?android:attr/progressBarStyleHorizontal"
+    android:orientation="vertical">
+
+    <include layout="@layout/headview" />
+
+    <ProgressBar
         android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
-        android:layout_height="5dp"
-        />
-    <WebView 
+        android:layout_height="15dp" />
+
+    <WebView
         android:id="@+id/wv_announcement"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        
-        />
+        android:layout_height="match_parent" />
 
 </LinearLayout>
