@@ -1,16 +1,18 @@
 package com.overtech.ems.activity.parttime.personal;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.webkit.WebChromeClient;
+import android.webkit.DownloadListener;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.R;
+import com.overtech.ems.widget.webview.ProgressWebView;
 
 public class PersonalAboutCompanyActivity extends BaseActivity {
 	private TextView mHeadContent;
@@ -24,49 +26,34 @@ public class PersonalAboutCompanyActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_personal_aboutcompany);
 		initView();
-		init();
+		initData();
 	}
 
 	private void initView() {
-		mHeadContent=(TextView) findViewById(R.id.tv_headTitle);
-		mDoBack=(ImageView) findViewById(R.id.iv_headBack);
-		mWebView=(WebView) findViewById(R.id.wv_announcement);
-		mProgressBar=(ProgressBar) findViewById(R.id.progressBar);
-		mSetting=mWebView.getSettings();
+		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
+		mDoBack = (ImageView) findViewById(R.id.iv_headBack);
+		mWebView = (ProgressWebView) findViewById(R.id.webview_company);
 	}
 
-	private void init() {
-		mHeadContent.setText("公司主页");
+	private void initData() {
+		mHeadContent.setText("公司信息");
 		mDoBack.setVisibility(View.VISIBLE);
-		mWebView.setWebChromeClient(new WebChromeClient() {
+		mDoBack.setOnClickListener(new View.OnClickListener() {
 
 			@Override
-			public void onProgressChanged(WebView view, int newProgress) {
-				// TODO Auto-generated method stub
-				super.onProgressChanged(view, newProgress);
-				if (newProgress == 100) {
-					mProgressBar.setVisibility(View.GONE);
-				} else {
-					if (View.VISIBLE == mProgressBar.getVisibility()) {
-						mProgressBar.setVisibility(View.VISIBLE);
-					}
-					mProgressBar.setProgress(newProgress);
-				}
+			public void onClick(View v) {
+				finish();
 			}
-
 		});
-		mWebView.loadUrl("http://www.relevator.cc");
-		mSetting.setUseWideViewPort(true);
-		mSetting.setBuiltInZoomControls(true);
-		mSetting.setSupportZoom(true);
-		mSetting.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
-		mSetting.setAppCacheEnabled(true);
-		mWebView.setWebViewClient(new WebViewClient(){
+		String url="http://www.relevator.cc";
+		mWebView.getSettings().setJavaScriptEnabled(true);
+		mWebView.setDownloadListener(new DownloadListener() {
 			@Override
-			public boolean shouldOverrideUrlLoading(WebView view, String url) {
-				view.loadUrl(url);
-				return true;
+			public void onDownloadStart(String url, String userAgent, String contentDisposition, String mimetype, long contentLength) {
+				if (url != null && url.startsWith("http://"))
+					startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
 			}
 		});
+		mWebView.loadUrl(url);
 	}
 }
