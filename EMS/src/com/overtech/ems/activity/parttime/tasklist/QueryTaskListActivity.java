@@ -116,7 +116,7 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 
 		@Override
 		protected void onPreExecute() {
-			startProgressDialog();
+			startProgressDialog("正在查询...");
 		}
 
 		@Override
@@ -158,21 +158,6 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 			list.add(data15);
 			adapter = new TaskListDetailsAdapter(context, list);
 			mTaskListData.setAdapter(adapter);
-		}
-	}
-
-	private void startProgressDialog() {
-		if (progressDialog == null) {
-			progressDialog = CustomProgressDialog.createDialog(this);
-			progressDialog.setMessage("正在查询中...");
-		}
-		progressDialog.show();
-	}
-
-	private void stopProgressDialog() {
-		if (progressDialog != null) {
-			progressDialog.dismiss();
-			progressDialog = null;
 		}
 	}
 

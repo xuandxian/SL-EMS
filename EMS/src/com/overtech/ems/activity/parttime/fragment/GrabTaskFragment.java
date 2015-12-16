@@ -9,6 +9,7 @@ import com.overtech.ems.activity.adapter.GrabTaskAdapter;
 import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
 import com.overtech.ems.activity.parttime.grabtask.GrabTaskDoFilterActivity;
 import com.overtech.ems.entity.test.Data5;
+import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
@@ -133,17 +134,17 @@ public class GrabTaskFragment extends Fragment implements IXListViewListener {
 		mHandler = new Handler();
 		mSwipeListView.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
-					@Override
-					public void onMenuItemClick(int position, SwipeMenu menu,
-							int index) {
-						showDialog();
-					}
-				});
+			@Override
+			public void onMenuItemClick(int position, SwipeMenu menu,
+										int index) {
+				showDialog();
+			}
+		});
 		mSwipeListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
+									int position, long id) {
 				Data5 data = (Data5) parent.getItemAtPosition(position);
 				Intent intent = new Intent(mActivity,
 						PackageDetailActivity.class);
@@ -180,38 +181,8 @@ public class GrabTaskFragment extends Fragment implements IXListViewListener {
 		};
 	}
 
-	private void showDialog() {
-		effect = Effectstype.Slideright;
-		dialogBuilder.withTitle("温馨提示").withTitleColor(R.color.main_primary)
-		.withDividerColor("#11000000").withMessage("您是否要接此单？")
-		.withMessageColor(R.color.main_primary).withDialogColor("#FFFFFFFF")
-		.isCancelableOnTouchOutside(true).withDuration(700)
-		.withEffect(effect).withButtonDrawable(R.color.main_white)
-		.withButton1Text("否").withButton1Color(R.color.main_primary)
-		.withButton2Text("是").withButton2Color(R.color.main_primary)
-		.setButton1Click(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						dialogBuilder.dismiss();
-					}
-				}).setButton2Click(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						dialogBuilder.dismiss();
-						progressDialog.setMessage("正在抢单...");
-						progressDialog.show();
-						new Handler().postDelayed(new Runnable() {
-
-							@Override
-							public void run() {
-								progressDialog.dismiss();
-							}
-						}, 3000);
-					}
-				}).show();
-	}
-
 	public void onRefresh() {
+		Utilities.showToast("下拉刷新",mActivity);
 		mHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -224,6 +195,7 @@ public class GrabTaskFragment extends Fragment implements IXListViewListener {
 	}
 
 	public void onLoadMore() {
+		Utilities.showToast("上拉加载",mActivity);
 		mHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -236,6 +208,37 @@ public class GrabTaskFragment extends Fragment implements IXListViewListener {
 		mSwipeListView.setRefreshTime(RefreshTime.getRefreshTime(mActivity));
 		mSwipeListView.stopRefresh();
 		mSwipeListView.stopLoadMore();
+	}
+
+	private void showDialog() {
+		effect = Effectstype.Slideright;
+		dialogBuilder.withTitle("温馨提示").withTitleColor(R.color.main_primary)
+				.withDividerColor("#11000000").withMessage("您是否要接此单？")
+				.withMessageColor(R.color.main_primary).withDialogColor("#FFFFFFFF")
+				.isCancelableOnTouchOutside(true).withDuration(700)
+				.withEffect(effect).withButtonDrawable(R.color.main_white)
+				.withButton1Text("否").withButton1Color(R.color.main_primary)
+				.withButton2Text("是").withButton2Color(R.color.main_primary)
+				.setButton1Click(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						dialogBuilder.dismiss();
+					}
+				}).setButton2Click(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				dialogBuilder.dismiss();
+				progressDialog.setMessage("正在抢单...");
+				progressDialog.show();
+				new Handler().postDelayed(new Runnable() {
+
+					@Override
+					public void run() {
+						progressDialog.dismiss();
+					}
+				}, 3000);
+			}
+		}).show();
 	}
 
 	private int dp2px(int dp) {

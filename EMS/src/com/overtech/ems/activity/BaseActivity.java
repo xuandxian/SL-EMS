@@ -8,9 +8,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.Message;
 import android.view.GestureDetector;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
+
+import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 
 import com.baidu.mapapi.SDKInitializer;
@@ -62,7 +65,7 @@ public class BaseActivity extends Activity {
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		initGestureDetector();
 		setNeedBackGesture(false);
-		SMSSDK.initSDK(this, "b731c30880f4", "1c3e262449b1c77498f37c78586b8cf1");
+		initSMS();
 		SDKInitializer.initialize(getApplicationContext());
 		activity = this;
 		context = this;
@@ -91,6 +94,10 @@ public class BaseActivity extends Activity {
 		this.mNeedBackGesture = mNeedBackGesture;
 	}
 
+	public void initSMS(){
+		SMSSDK.initSDK(this, "b731c30880f4", "1c3e262449b1c77498f37c78586b8cf1");
+	}
+
 	/*
 	 * 返回
 	 */
@@ -116,6 +123,21 @@ public class BaseActivity extends Activity {
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
+		if (progressDialog != null) {
+			progressDialog.dismiss();
+			progressDialog = null;
+		}
+	}
+
+	public void startProgressDialog(String content) {
+		if (progressDialog == null) {
+			progressDialog = CustomProgressDialog.createDialog(this);
+			progressDialog.setMessage(content);
+		}
+		progressDialog.show();
+	}
+
+	public void stopProgressDialog() {
 		if (progressDialog != null) {
 			progressDialog.dismiss();
 			progressDialog = null;

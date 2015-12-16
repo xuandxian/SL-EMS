@@ -30,7 +30,6 @@ public class LostPasswordActivity extends BaseActivity {
 	private Button mLostPassword;
 	private TimeButton mGetValicateCode;
 	private EventHandler eh;
-	private CustomProgressDialog progressDialog = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,9 +45,8 @@ public class LostPasswordActivity extends BaseActivity {
 				if (TextUtils.isEmpty(mSMSCode)) {
 					Utilities.showToast("输入不能为空", context);
 				}else {
-					SMSSDK.submitVerificationCode("86", mPhoneNo,
-							mSMSCode);
-					startProgressDialog();
+					SMSSDK.submitVerificationCode("86", mPhoneNo, mSMSCode);
+					startProgressDialog("正在验证...");
 				}
 			}
 		});
@@ -58,8 +56,7 @@ public class LostPasswordActivity extends BaseActivity {
 			public void onClick(View arg0) {
 				mPhoneNo=mPhoneNoEditText.getText().toString().trim();
 				if (Utilities.isMobileNO(mPhoneNo)) {
-					mGetValicateCode.setTextAfter("秒后重新获取").setTextBefore("点击获取验证码")
-					.setLenght(60 * 1000);
+					mGetValicateCode.setTextAfter("秒后重新获取").setTextBefore("点击获取验证码").setLenght(60 * 1000);
 					SMSSDK.getVerificationCode("86", mPhoneNo);
 				}else {
 					Utilities.showToast("请输入正确的手机号", context);
@@ -79,19 +76,9 @@ public class LostPasswordActivity extends BaseActivity {
 	private void init() {
 		mHeadContent.setText("密码重置");
 		mHeadBack.setVisibility(View.VISIBLE);
-		eh= new EventHandler() {
-			@Override
-			public void afterEvent(int event, int result, Object data) {
 
-				Message msg = new Message();
-				msg.arg1 = event;
-				msg.arg2 = result;
-				msg.obj = data;
-				handler.sendMessage(msg);
-			}
-		};
-		SMSSDK.registerEventHandler(eh);
 	}
+
 	Handler handler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -100,17 +87,16 @@ public class LostPasswordActivity extends BaseActivity {
 			int result = msg.arg2;
 			Object data = msg.obj;
 			if (result == SMSSDK.RESULT_COMPLETE) {
-                if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
-                	stopProgressDialog();
-                	Intent intent=new Intent(LostPasswordActivity.this, ResetPasswordActivity.class);
-    				startActivity(intent);
-                }else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE){
+                 if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE){
                 	Utilities.showToast("验证码已发送", context);
-                }
+                 }else if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
+					stopProgressDialog();
+					Intent intent=new Intent(LostPasswordActivity.this, ResetPasswordActivity.class);
+					startActivity(intent);
+				 }
 			} else {
 				((Throwable) data).printStackTrace();
-				int resId = getStringRes(LostPasswordActivity.this,
-						"smssdk_network_error");
+				int resId = getStringRes(LostPasswordActivity.this, "smssdk_network_error");
 				if (resId > 0) {
 					Utilities.showToast("错误码："+resId, context);
 				}else {
@@ -119,21 +105,7 @@ public class LostPasswordActivity extends BaseActivity {
 			}
 		}
 	};
-	private void startProgressDialog() {
-		if (progressDialog == null) {
-			progressDialog = CustomProgressDialog.createDialog(this);
-			progressDialog.setMessage("正在验证...");
-		}
-		progressDialog.show();
-	}
 
-	private void stopProgressDialog() {
-		if (progressDialog != null) {
-			progressDialog.dismiss();
-			progressDialog = null;
-		}
-	}
-	
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
