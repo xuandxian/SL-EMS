@@ -46,6 +46,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	private ImageView mHeadBack;
 	private FrameLayout mContainer;
 	private Button mNext;
+	private Bundle mBundle;
 	private FragmentManager manager;
 
 	private Fragment mCurrentFragment;
@@ -94,12 +95,15 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	}
 
 	/**
-	 * 为依赖于自身的fragment提供可以操作的对象
+	 * 对依赖于自身的fragment提供可以传值的媒介
 	 * 
 	 * @return
 	 */
-	public Button getButton() {
-		return mNext;
+	public Bundle getBundle() {
+		return mBundle;
+	}
+	public void setBundle(Bundle bundle){
+		mBundle=bundle;
 	}
 
 	private void init(Bundle savedInstanceState) {

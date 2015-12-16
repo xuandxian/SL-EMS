@@ -12,7 +12,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import cn.smssdk.SMSSDK;
+
 import com.overtech.ems.R;
+import com.overtech.ems.activity.common.RegisterActivity;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
 import com.overtech.ems.widget.ValicateCode;
@@ -48,6 +51,8 @@ public class RegisterFragment extends Fragment {
 		
 		return view;
 	}
+	
+	
 	public boolean isCorrect(){
 		String phoneNo = mRegisterPhone.getText().toString().trim();
 		String valicateCode = mValicateCode.getText().toString().trim();
@@ -60,6 +65,10 @@ public class RegisterFragment extends Fragment {
 			if (Utilities.isMobileNO(phoneNo)) {
 				if (isCorrectCode) {
 					// 网络部分逻辑应该添加在此处，目前直接跳轉到下一個界面
+					Bundle bundle=new Bundle();
+					bundle.putString("phone", phoneNo);
+					((RegisterActivity)this.getActivity()).setBundle(bundle);
+					SMSSDK.getVerificationCode("86", phoneNo);
 					return true;
 				} else {
 					Utilities.showToast("验证码输入错误", mContext);
