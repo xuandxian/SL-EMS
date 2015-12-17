@@ -80,11 +80,11 @@ public class RegisterAddPersonInfoFragment extends Fragment {
 				handler.sendMessage(msg);
 			}
 		};
-		SMSSDK.registerEventHandler(eh);
+		SMSSDK.registerEventHandler(eh);//注册短信回调
 		findViewById(view);
-		bundle=((RegisterActivity)this.getActivity()).getBundle();
+		bundle=((RegisterActivity)this.getActivity()).getBundle();//获得activity公共的临时存储对象
 		mRegisterPhone.setText("验证码已发送到手机" + (CharSequence) bundle.get("phone"));
-		mGetValicateCode.performClick();
+		mGetValicateCode.performClick();//启动时默认执行一次点击事件
 		return view;
 	}
 	Handler handler = new Handler() {
@@ -220,7 +220,7 @@ public class RegisterAddPersonInfoFragment extends Fragment {
 
 			@Override
 			public void afterTextChanged(Editable s) {
-				isCorrect = false;
+				isCorrect = false;//当用户输入验证码将结果置为false，重新验证
 			}
 		});
 	}
