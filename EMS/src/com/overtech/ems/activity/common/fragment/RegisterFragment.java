@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import cn.smssdk.SMSSDK;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.common.RegisterActivity;
@@ -68,7 +67,7 @@ public class RegisterFragment extends Fragment {
 					Bundle bundle=new Bundle();
 					bundle.putString("phone", phoneNo);
 					((RegisterActivity)this.getActivity()).setBundle(bundle);
-					SMSSDK.getVerificationCode("86", phoneNo);
+					
 					return true;
 				} else {
 					Utilities.showToast("验证码输入错误", mContext);
