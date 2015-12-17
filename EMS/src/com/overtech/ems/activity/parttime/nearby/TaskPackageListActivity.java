@@ -107,7 +107,7 @@ public class TaskPackageListActivity extends Activity {
 		mHeadContent.setText(mCommunity);
 		mHeadBack.setVisibility(View.VISIBLE);
 		mTaskPackageList.setMenuCreator(creator);
-		adapter = new GrabTaskAdapter(list, context);
+//		adapter = new GrabTaskAdapter(list, context);
 		mTaskPackageList.setAdapter(adapter);
 		mTaskPackageList
 				.setOnMenuItemClickListener(new OnMenuItemClickListener() {

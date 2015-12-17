@@ -12,15 +12,15 @@ public class BusinessConfig {
 	/**
 	 * 1.登录
 	 */
-	public static final String URL_LOGIN = "/login.action";
+	public static final String URL_LOGIN = "/employee/login.action";
 	/**
 	 * 2.注册
 	 */
-	public static final String URL_REGISTER = "/register.action";
+	public static final String URL_REGISTER = "/employee/register.action";
 	/**
 	 * 3.抢单列表
 	 */
-	public static final String URL_GRABTASK = "/grabtask.action";
+	public static final String URL_GRABTASK = "/task/grabtask.action";
 	/**
 	 * 4.关键字搜索
 	 */

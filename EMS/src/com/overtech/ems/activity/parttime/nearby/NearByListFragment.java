@@ -79,8 +79,8 @@ public class NearByListFragment extends Fragment implements IXListViewListener {
 			}
 		};
 		mNearBySwipeListView.setMenuCreator(creator);
-		GrabTaskAdapter mAdapter = new GrabTaskAdapter(list,mActivity);
-		mNearBySwipeListView.setAdapter(mAdapter);
+//		GrabTaskAdapter mAdapter = new GrabTaskAdapter(list,mActivity);
+//		mNearBySwipeListView.setAdapter(mAdapter);
 		mNearBySwipeListView.setPullRefreshEnable(true);
 		mNearBySwipeListView.setPullLoadEnable(true);
 		mNearBySwipeListView.setXListViewListener(this);

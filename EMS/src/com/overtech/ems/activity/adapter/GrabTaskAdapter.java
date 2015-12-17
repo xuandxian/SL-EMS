@@ -1,29 +1,31 @@
 package com.overtech.ems.activity.adapter;
 
 import java.util.List;
+
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.overtech.ems.R;
-import com.overtech.ems.entity.test.Data5;
+import com.overtech.ems.entity.parttime.GrabTaskBean.TaskPackage;
 
 public class GrabTaskAdapter extends BaseAdapter {
 
-	private List<Data5> list;
+	private List<TaskPackage> list;
 	private Context context;
 
-	public List<Data5> getData() {
+	public List<TaskPackage> getData() {
 		return list;
 	}
 
-	public void setData(List<Data5> data) {
+	public void setData(List<TaskPackage> data) {
 		this.list = data;
 	}
 
-	public GrabTaskAdapter(List<Data5> list, Context context) {
+	public GrabTaskAdapter(List<TaskPackage> list, Context context) {
 		super();
 		this.list = list;
 		this.context = context;
@@ -57,18 +59,18 @@ public class GrabTaskAdapter extends BaseAdapter {
 			new ViewHolder(convertView);
 		}
 		ViewHolder holder = (ViewHolder) convertView.getTag();
-		Data5 data=list.get(position);
-		holder.tv_name.setText(data.getName());
-		holder.elevtorNum.setText(data.getElevtorNum());
-		holder.addressName.setText(data.getAddress());
-		holder.distance.setText(data.getDistance());
-		holder.date.setText(data.getDate());
-		if(data.getImageStatusUrl().equals("0")){
+		TaskPackage data=list.get(position);
+		holder.tv_name.setText(data.projectName);
+		holder.elevtorNum.setText(data.elevatorAmounts+"");
+		holder.addressName.setText(data.maintenanceAddress);
+		holder.distance.setText(data.latitude);//当前还没有获取手机的实时经纬度，暂用经度表示
+		holder.date.setText(data.maintenanceDate);//时间尚未刷新
+		if(data.isFinish==0){
 			holder.iv_icon.setImageResource(R.drawable.icon_task_none);
-		}else if(data.getImageStatusUrl().equals("1")){
+		}else if(data.isFinish==1){
 			holder.iv_icon.setImageResource(R.drawable.icon_task_done);
 		}
-		if(data.getHot().equals("1")){
+		if(data.topState==1){
 			holder.hot.setVisibility(View.VISIBLE);
 		}else{
 			holder.hot.setVisibility(View.GONE);

@@ -1,14 +1,21 @@
 package com.overtech.ems.activity.parttime.fragment;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+
+import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.adapter.GrabTaskAdapter;
 import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
 import com.overtech.ems.activity.parttime.grabtask.GrabTaskDoFilterActivity;
+import com.overtech.ems.entity.common.ServicesConfig;
+import com.overtech.ems.entity.parttime.GrabTaskBean;
+import com.overtech.ems.entity.parttime.GrabTaskBean.TaskPackage;
 import com.overtech.ems.entity.test.Data5;
+import com.overtech.ems.http.OkHttpClientManager;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
@@ -20,13 +27,17 @@ import com.overtech.ems.widget.swiperefreshlistview.pulltorefresh.RefreshTime;
 import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenu;
 import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuCreator;
 import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuItem;
+import com.squareup.okhttp.Response;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,10 +58,20 @@ public class GrabTaskFragment extends Fragment implements IXListViewListener {
 	private Effectstype effect;
 	private CustomProgressDialog progressDialog;
 	private GrabTaskAdapter mAdapter;
-	private ArrayList<Data5> list;
+	private ArrayList<TaskPackage> list;
 	private Handler mHandler;
 	private TextView mHeadTitle;
-
+	private OkHttpClientManager httpManager;
+	private Handler handler=new Handler(){
+		public void handleMessage(android.os.Message msg) {
+			String json=(String) msg.obj;
+			Gson gson=new Gson();
+			GrabTaskBean grabTaskBean=gson.fromJson(json, GrabTaskBean.class);
+			list=(ArrayList<TaskPackage>) grabTaskBean.model;
+			mAdapter = new GrabTaskAdapter(list, mActivity);
+			mSwipeListView.setAdapter(mAdapter);
+		};
+	};
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -67,16 +88,17 @@ public class GrabTaskFragment extends Fragment implements IXListViewListener {
 		init();
 		return view;
 	}
-
+	
 	private void findViewById(View view) {
+		httpManager=OkHttpClientManager.getInstance();
 		mSwipeListView = (PullToRefreshSwipeMenuListView) view
 				.findViewById(R.id.sl_qiandan_listview);
 		mHeadTitle=(TextView)view.findViewById(R.id.tv_headTitle);
 	}
 
 	private void getData() {
-		list = new ArrayList<Data5>();
-		Data5 data0 = new Data5("0", "徐家汇景园0", "5", "1", "徐汇区广元西路", "13.5km",
+//		list = new ArrayList<Data5>();
+		/*Data5 data0 = new Data5("0", "徐家汇景园0", "5", "1", "徐汇区广元西路", "13.5km",
 				"2015/10/10");
 		Data5 data1 = new Data5("1", "徐家汇景园1", "5", "1", "徐汇区广元西路", "13.5km",
 				"2015/10/10");
@@ -114,7 +136,22 @@ public class GrabTaskFragment extends Fragment implements IXListViewListener {
 		list.add(data9);
 		list.add(data10);
 		list.add(data11);
-		list.add(data12);
+		list.add(data12);*/
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				try {
+					Response response=httpManager.post(ServicesConfig.GRABTASK, null);
+					Message msg=new Message();
+					msg.obj=response.body().string();
+					handler.sendMessage(msg);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}).start();
 	}
 
 	private void init() {
@@ -123,8 +160,7 @@ public class GrabTaskFragment extends Fragment implements IXListViewListener {
 		mHeadTitle.setText("抢单");
 		initListView();
 		mSwipeListView.setMenuCreator(creator);
-		mAdapter = new GrabTaskAdapter(list, mActivity);
-		mSwipeListView.setAdapter(mAdapter);
+		
 		mSwipeListView.setPullRefreshEnable(true);
 		mSwipeListView.setPullLoadEnable(true);
 		mSwipeListView.setXListViewListener(this);
