@@ -5,7 +5,10 @@ import java.util.HashMap;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -24,8 +27,11 @@ import cn.smssdk.SMSSDK;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.common.RegisterActivity;
+import com.overtech.ems.activity.common.ResetPasswordActivity;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
+
+import static cn.smssdk.framework.utils.R.getStringRes;
 
 public class RegisterAddPersonInfoFragment extends Fragment {
 	private View view;
@@ -45,6 +51,8 @@ public class RegisterAddPersonInfoFragment extends Fragment {
 	private String cityContent=null;
 	private String zoneContent=null;
 	private Bundle bundle;
+	private EventHandler eh;
+	private boolean isCorrect=false;
 	@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
@@ -56,23 +64,48 @@ public class RegisterAddPersonInfoFragment extends Fragment {
 			Bundle savedInstanceState) {
 		
 		view=inflater.inflate(R.layout.fragment_register_add_person_info, null);
-		SMSSDK.registerEventHandler(new EventHandler(){
+		eh= new EventHandler() {
 			@Override
 			public void afterEvent(int event, int result, Object data) {
-				// TODO Auto-generated method stub
-				super.afterEvent(event, result, data);
-				if(result==SMSSDK.EVENT_GET_VERIFICATION_CODE){
-					Utilities.showToast("验证码已发送", mContext);
-				}else if(result==SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE){
-					isCorrect=true;
-				}
+
+				Message msg = new Message();
+				msg.arg1 = event;
+				msg.arg2 = result;
+				msg.obj = data;
+				handler.sendMessage(msg);
 			}
-		});
+		};
+		SMSSDK.registerEventHandler(eh);
 		findViewById(view);
 		bundle=((RegisterActivity)this.getActivity()).getBundle();
-		mRegisterPhone.setText("验证码已发送到手机"+(CharSequence) bundle.get("phone"));
+		mRegisterPhone.setText("验证码已发送到手机" + (CharSequence) bundle.get("phone"));
 		return view;
 	}
+	Handler handler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+			int event = msg.arg1;
+			int result = msg.arg2;
+			Object data = msg.obj;
+			if (result == SMSSDK.RESULT_COMPLETE) {
+				if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE){
+					Utilities.showToast("验证码已发送", mContext);
+				}else if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
+					isCorrect=true;
+					Utilities.showToast("验证码已验证", mContext);
+				}
+			} else {
+				((Throwable) data).printStackTrace();
+				int resId = getStringRes(mContext, "smssdk_network_error");
+				if (resId > 0) {
+					Utilities.showToast("错误码："+resId, mContext);
+				}else {
+					//stopProgressDialog();
+				}
+			}
+		}
+	};
 	@Override
 	public void onHiddenChanged(boolean hidden) {
 		// TODO Auto-generated method stub
@@ -84,27 +117,28 @@ public class RegisterAddPersonInfoFragment extends Fragment {
 			mRegisterPhone.setText("验证码已发送到手机"+(CharSequence) bundle.get("phone"));
 		}
 	}
-	private boolean isCorrect=false;
 	/**
 	 * 对所有输入的信息进行检查
 	 * @return
 	 */
+
 	public boolean isAllNotNull(){
 		codeContent=mValicateCode.getText().toString().trim();
 		nameContent=mName.getText().toString().trim();
 		idNumContent=mIdNum.getText().toString().trim();
 		workNumContent=mWorkNum.getText().toString().trim();
-		
 		SMSSDK.submitVerificationCode("86", (String) bundle.get("phone"), codeContent);
-		if(!isCorrect){
-			Utilities.showToast("验证码不正确", mContext);
-			return false;
-		}
-		if(!TextUtils.isEmpty(codeContent)&&!TextUtils.isEmpty(nameContent)&&!TextUtils.isEmpty(idNumContent)&&!TextUtils.isEmpty(workNumContent)&&!cityContent.equals("城市选择")&&!zoneContent.equals("区域选择")){
-			return true;
+		if (isCorrect){
+			if(!TextUtils.isEmpty(codeContent)&&!TextUtils.isEmpty(nameContent)&&!TextUtils.isEmpty(idNumContent)&&!TextUtils.isEmpty(workNumContent)&&!cityContent.equals("城市选择")&&!zoneContent.equals("区域选择")){
+				return true;
+			}else{
+				Utilities.showToast("您还有信息没有输入，请检查后再试!", mContext);
+				return false;
+			}
 		}else{
-			Utilities.showToast("您还有信息没有输入，请检查后再试!", mContext);
+			Utilities.showToast("短信验证码错误", mContext);
 			return false;
+
 		}
 	}
 	public HashMap getPersonInfo(){
@@ -153,23 +187,23 @@ public class RegisterAddPersonInfoFragment extends Fragment {
 			}
 		});
 		mValicateCode.addTextChangedListener(new TextWatcher() {
-			
+
 			@Override
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
+										  int after) {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 			@Override
 			public void afterTextChanged(Editable s) {
-				isCorrect=false;
+				isCorrect = false;
 			}
 		});
 	}
