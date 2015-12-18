@@ -4,16 +4,18 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.adapter.GrabTaskAdapter;
 import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
 import com.overtech.ems.activity.parttime.grabtask.GrabTaskDoFilterActivity;
 import com.overtech.ems.entity.common.ServicesConfig;
-import com.overtech.ems.entity.parttime.GrabTaskBean;
-import com.overtech.ems.entity.parttime.GrabTaskBean.TaskPackage;
+import com.overtech.ems.entity.parttime.TaskPackage;
+import com.overtech.ems.entity.parttime.TaskPackageBean;
 import com.overtech.ems.entity.test.Data5;
 import com.overtech.ems.http.OkHttpClientManager;
 import com.overtech.ems.utils.Utilities;
@@ -66,8 +68,9 @@ public class GrabTaskFragment extends Fragment implements IXListViewListener {
 		public void handleMessage(android.os.Message msg) {
 			String json=(String) msg.obj;
 			Gson gson=new Gson();
-			GrabTaskBean grabTaskBean=gson.fromJson(json, GrabTaskBean.class);
-			list=(ArrayList<TaskPackage>) grabTaskBean.model;
+			
+			TaskPackageBean tasks=gson.fromJson(json, TaskPackageBean.class);
+			list=(ArrayList<TaskPackage>) tasks.getModel();
 			mAdapter = new GrabTaskAdapter(list, mActivity);
 			mSwipeListView.setAdapter(mAdapter);
 		};
@@ -97,46 +100,7 @@ public class GrabTaskFragment extends Fragment implements IXListViewListener {
 	}
 
 	private void getData() {
-//		list = new ArrayList<Data5>();
-		/*Data5 data0 = new Data5("0", "徐家汇景园0", "5", "1", "徐汇区广元西路", "13.5km",
-				"2015/10/10");
-		Data5 data1 = new Data5("1", "徐家汇景园1", "5", "1", "徐汇区广元西路", "13.5km",
-				"2015/10/10");
-		Data5 data2 = new Data5("0", "徐家汇景园2", "5", "0", "徐汇区广元西路", "13.5km",
-				"2015/10/10");
-		Data5 data3 = new Data5("1", "虹桥小区0", "5", "0", "徐汇区广元西路", "13.5km",
-				"2015/10/10");
-		Data5 data4 = new Data5("0", "虹桥小区1", "5", "1", "徐汇区广元西路", "13.5km",
-				"2015/10/10");
-		Data5 data5 = new Data5("0", "虹桥小区2", "5", "1", "徐汇区广元西路", "13.5km",
-				"2015/10/10");
-		Data5 data6 = new Data5("0", "虹桥小区3", "5", "0", "徐汇区广元西路", "13.5km",
-				"2015/10/10");
-		Data5 data7 = new Data5("1", "丰业广元公寓0", "5", "0", "徐汇区广元西路", "13.5km",
-				"2015/10/10");
-		Data5 data8 = new Data5("0", "丰业广元公寓1", "5", "0", "徐汇区广元西路", "13.5km",
-				"2015/10/10");
-		Data5 data9 = new Data5("0", "丰业广元公寓2", "5", "0", "徐汇区广元西路", "13.5km",
-				"2015/10/10");
-		Data5 data10 = new Data5("1", "丰业广元公寓3", "5", "1", "徐汇区广元西路", "13.5km",
-				"2015/10/10");
-		Data5 data11 = new Data5("0", "乐山公寓0", "5", "0", "徐汇区广元西路", "13.5km",
-				"2015/10/10");
-		Data5 data12 = new Data5("0", "乐山公寓1", "5", "1", "徐汇区广元西路", "13.5km",
-				"2015/10/10");
-		list.add(data0);
-		list.add(data1);
-		list.add(data2);
-		list.add(data3);
-		list.add(data4);
-		list.add(data5);
-		list.add(data6);
-		list.add(data7);
-		list.add(data8);
-		list.add(data9);
-		list.add(data10);
-		list.add(data11);
-		list.add(data12);*/
+
 		new Thread(new Runnable() {
 			
 			@Override
@@ -181,11 +145,11 @@ public class GrabTaskFragment extends Fragment implements IXListViewListener {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 									int position, long id) {
-				Data5 data = (Data5) parent.getItemAtPosition(position);
+				TaskPackage data = (TaskPackage) parent.getItemAtPosition(position);
 				Intent intent = new Intent(mActivity,
 						PackageDetailActivity.class);
 				Bundle bundle = new Bundle();
-				bundle.putString("CommunityName", data.getName());
+				bundle.putString("CommunityName", data.getProjectName());
 				intent.putExtras(bundle);
 				startActivity(intent);
 			}
