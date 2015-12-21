@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 import com.google.gson.Gson;
 import com.squareup.okhttp.Call;
+import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.MediaType;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
@@ -81,11 +82,41 @@ public class HttpEngine {
 		Request request = new Request.Builder().url(url).build();
 		return request;
 	}
+	/**
+	 * create request
+	 * @param url      传入完整的url链接
+	 * @param params   参数
+	 * @return
+	 */
+	public Request createRequest(String url, Param[] params) {
+		if (params == null) {
+			params = new Param[0];
+		}
+		FormEncodingBuilder builder = new FormEncodingBuilder();
+		for (Param param : params) {
+			builder.add(param.key, param.value);
+		}
+		RequestBody requestBody = builder.build();
+		return new Request.Builder().url(url).post(requestBody).build();
+	}
 
 	public Call createRequestCall(Request request){
 		if (null==mOkHttpClient || null==request){
 			return null;
 		}
 		return mOkHttpClient.newCall(request);
+	}
+	
+	public static class Param {
+		public Param() {
+		}
+
+		public Param(String key, String value) {
+			this.key = key;
+			this.value = value;
+		}
+
+		String key;
+		String value;
 	}
 }

@@ -172,7 +172,6 @@ public class GrabTaskDoFilterActivity extends BaseActivity implements OnClickLis
                             break;
                     }
                 }
-                Utilities.showToast("区域："+mZone,context);
                 for (int i = 0; i < list2.size(); i++) {
                     int temp2=Integer.valueOf(list2.get(i).toString());
                     switch (temp2) {
@@ -184,7 +183,6 @@ public class GrabTaskDoFilterActivity extends BaseActivity implements OnClickLis
                             break;
                     }
                 }
-                Utilities.showToast("时间："+mTime,context);
                 Intent intent=new Intent();
                 intent.putExtra("mZone", mZone);
                 intent.putExtra("mTime", mTime);
