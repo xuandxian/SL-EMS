@@ -1,7 +1,11 @@
 package com.overtech.ems.activity.parttime.grabtask;
 
+<<<<<<< HEAD
 import android.app.Activity;
 import android.content.Intent;
+=======
+import android.app.Fragment;
+>>>>>>> origin/master
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,12 +16,14 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.GridViewAdapter;
 import com.overtech.ems.activity.parttime.fragment.GrabTaskFragment;
+<<<<<<< HEAD
 import com.overtech.ems.http.OkHttpClientManager.Param;
+=======
+>>>>>>> origin/master
 import com.overtech.ems.utils.Utilities;
 
 import java.util.ArrayList;
@@ -38,6 +44,7 @@ public class GrabTaskDoFilterActivity extends BaseActivity implements OnClickLis
     private GridViewAdapter adapter2;
     private Button mZone;
     private Button mTime;
+    private GrabTaskFragment fragment;
     int[] image = {R.drawable.filter_zone_baoshan, R.drawable.filter_zone_changning, R.drawable.filter_zone_chongming, R.drawable.filter_zone_fengxian, R.drawable.filter_zone_hongkou, R.drawable.filter_zone_huangpu, R.drawable.filter_zone_jiading, R.drawable.filter_zone_jingan, R.drawable.filter_zone_jinshan, R.drawable.filter_zone_minghang, R.drawable.filter_zone_putuo, R.drawable.filter_zone_qingpu, R.drawable.filter_zone_qingpu, R.drawable.filter_zone_xuhui, R.drawable.filter_zone_yangpu, R.drawable.filter_zone_zhabei};
     int[] image2 = {R.drawable.filter_time_fifteen_in, R.drawable.filter_time_fifteen_out};
 
@@ -70,6 +77,7 @@ public class GrabTaskDoFilterActivity extends BaseActivity implements OnClickLis
     private void init() {
         mHeadContent.setText("筛 选");
         mHeadContentRight.setText("确定");
+        fragment=new GrabTaskFragment();
         mHeadBack.setVisibility(View.VISIBLE);
         adapter = new GridViewAdapter(image, context);
         adapter2 = new GridViewAdapter(image2, context);
@@ -172,7 +180,7 @@ public class GrabTaskDoFilterActivity extends BaseActivity implements OnClickLis
                             break;
                     }
                 }
-                Utilities.showToast("区域："+mZone,context);
+                Utilities.showToast("区域：" + mZone, context);
                 for (int i = 0; i < list2.size(); i++) {
                     int temp2=Integer.valueOf(list2.get(i).toString());
                     switch (temp2) {
@@ -184,11 +192,16 @@ public class GrabTaskDoFilterActivity extends BaseActivity implements OnClickLis
                             break;
                     }
                 }
+<<<<<<< HEAD
                 Utilities.showToast("时间："+mTime,context);
                 Intent intent=new Intent();
                 intent.putExtra("mZone", mZone);
                 intent.putExtra("mTime", mTime);
                 setResult(Activity.RESULT_OK, intent);
+=======
+                Utilities.showToast("时间：" + mTime, context);
+                fragment.reflushData(mZone,mTime);
+>>>>>>> origin/master
                 finish();
                 break;
             case R.id.iv_headBack:
