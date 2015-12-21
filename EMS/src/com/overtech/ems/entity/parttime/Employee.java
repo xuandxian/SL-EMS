@@ -18,7 +18,7 @@ public class Employee implements Serializable{
 	/**
 	 * 用户id
 	 */
-	private String loginId;
+	private String loginName;
 	/**
 	 * 用户密码
 	 */
@@ -86,11 +86,11 @@ public class Employee implements Serializable{
 	public void setPhoneNo(String phoneNo) {
 		this.phoneNo = phoneNo;
 	}
-	public String getLoginId() {
-		return loginId;
+	public String getLoginName() {
+		return loginName;
 	}
-	public void setLoginId(String loginId) {
-		this.loginId = loginId;
+	public void setLoginName(String loginId) {
+		this.loginName = loginId;
 	}
 	public String getPassword() {
 		return password;

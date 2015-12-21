@@ -116,13 +116,13 @@ public class MainActivity extends BaseActivity {
 			.setButton1Click(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							finish();
-							System.exit(0);
+							dialogBuilder.dismiss();
 						}
 					}).setButton2Click(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							dialogBuilder.dismiss();
+							finish();
+							System.exit(0);
 						}
 					}).show();
 			return true;

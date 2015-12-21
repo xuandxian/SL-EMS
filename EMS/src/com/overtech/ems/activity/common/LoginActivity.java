@@ -19,6 +19,7 @@ import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.Employee;
+import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
 import com.google.gson.Gson;
@@ -88,30 +89,34 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 				if (TextUtils.isEmpty(sUserName) || TextUtils.isEmpty(sPassword)) {
 					Utilities.showToast("输入不能为空", context);
 				} else {
-					progressDialog.show();
-					Employee user = new Employee();
-					user.setName(sUserName);
-					user.setPassword(sPassword);
+					startProgressDialog("正在登录...");
+					Employee employee = new Employee();
+					employee.setLoginName(sUserName);
+					employee.setPassword(sPassword);
 					Gson gson = new Gson();
-					String person = gson.toJson(user);
+					String person = gson.toJson(employee);
 					Request request = httpEngine.createRequest(ServicesConfig.LOGIN, person);
 					Call call = httpEngine.createRequestCall(request);
 					call.enqueue(new Callback() {
 						@Override
 						public void onFailure(Request request, IOException e) {
-							progressDialog.dismiss();
-							Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-							startActivity(intent);
-							finish();
+							stopProgressDialog();
+							Log.e("Login","onFailure");
+//							Utilities.showToast("登录失败",context);
 						}
-
 						@Override
 						public void onResponse(Response response)throws IOException {
-							progressDialog.dismiss();
-							Log.e("============", response.body().string());
-							Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-							startActivity(intent);
-							finish();
+							String result=response.body().string();
+							if (TextUtils.equals("true",result)){
+								stopProgressDialog();
+								Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+								startActivity(intent);
+								finish();
+							}else {
+								stopProgressDialog();
+								Log.e("Login", "onFailure2");
+//								Utilities.showToast("登录失败",context);
+							}
 						}
 					});
 				}
