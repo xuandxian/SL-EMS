@@ -4,11 +4,28 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
+import android.app.Activity;
+import android.app.Fragment;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.adapter.GrabTaskAdapter;
 import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
@@ -16,8 +33,8 @@ import com.overtech.ems.activity.parttime.grabtask.GrabTaskDoFilterActivity;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.TaskPackage;
 import com.overtech.ems.entity.parttime.TaskPackageBean;
-import com.overtech.ems.entity.test.Data5;
 import com.overtech.ems.http.OkHttpClientManager;
+import com.overtech.ems.http.OkHttpClientManager.Param;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
@@ -30,25 +47,6 @@ import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenu;
 import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuCreator;
 import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuItem;
 import com.squareup.okhttp.Response;
-
-import android.app.Activity;
-import android.app.Fragment;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.os.AsyncTask;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.util.TypedValue;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 public class GrabTaskFragment extends Fragment implements IXListViewListener {
 
@@ -64,17 +62,18 @@ public class GrabTaskFragment extends Fragment implements IXListViewListener {
 	private Handler mHandler;
 	private TextView mHeadTitle;
 	private OkHttpClientManager httpManager;
-	private Handler handler=new Handler(){
+	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
-			String json=(String) msg.obj;
-			Gson gson=new Gson();
+			String json = (String) msg.obj;
+			Gson gson = new Gson();
 			
-			TaskPackageBean tasks=gson.fromJson(json, TaskPackageBean.class);
-			list=(ArrayList<TaskPackage>) tasks.getModel();
+			TaskPackageBean tasks = gson.fromJson(json, TaskPackageBean.class);
+			list = (ArrayList<TaskPackage>) tasks.getModel();
 			mAdapter = new GrabTaskAdapter(list, mActivity);
 			mSwipeListView.setAdapter(mAdapter);
 		};
 	};
+
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -87,28 +86,29 @@ public class GrabTaskFragment extends Fragment implements IXListViewListener {
 		View view = inflater.inflate(R.layout.fragment_grab_task, container,
 				false);
 		findViewById(view);
-		getData();
+		initData(ServicesConfig.GRABTASK,null);
 		init();
 		return view;
 	}
-	
+
 	private void findViewById(View view) {
-		httpManager=OkHttpClientManager.getInstance();
+		httpManager = OkHttpClientManager.getInstance();
 		mSwipeListView = (PullToRefreshSwipeMenuListView) view
 				.findViewById(R.id.sl_qiandan_listview);
-		mHeadTitle=(TextView)view.findViewById(R.id.tv_headTitle);
+		mHeadTitle = (TextView) view.findViewById(R.id.tv_headTitle);
 	}
 
-	private void getData() {
+	public void initData(final String url,final Param... params) {
 
 		new Thread(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				try {
-					Response response=httpManager.post(ServicesConfig.GRABTASK, null);
-					Message msg=new Message();
-					msg.obj=response.body().string();
+					Response response = httpManager.post(
+							url, params);
+					Message msg = new Message();
+					msg.obj = response.body().string();
 					handler.sendMessage(msg);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -124,28 +124,32 @@ public class GrabTaskFragment extends Fragment implements IXListViewListener {
 		mHeadTitle.setText("抢单");
 		initListView();
 		mSwipeListView.setMenuCreator(creator);
-		
+
 		mSwipeListView.setPullRefreshEnable(true);
 		mSwipeListView.setPullLoadEnable(true);
 		mSwipeListView.setXListViewListener(this);
-		View mHeadView=LayoutInflater.from(mActivity).inflate(R.layout.listview_header_filter, null);
+		View mHeadView = LayoutInflater.from(mActivity).inflate(
+				R.layout.listview_header_filter, null);
 		mSwipeListView.addHeaderView(mHeadView);
-		mPartTimeDoFifter=(ImageView) mHeadView.findViewById(R.id.iv_parttime_do_fifter);
+		mPartTimeDoFifter = (ImageView) mHeadView
+				.findViewById(R.id.iv_parttime_do_fifter);
 		mHandler = new Handler();
-		mSwipeListView.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+		mSwipeListView
+				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
-			@Override
-			public void onMenuItemClick(int position, SwipeMenu menu,
-										int index) {
-				showDialog();
-			}
-		});
+					@Override
+					public void onMenuItemClick(int position, SwipeMenu menu,
+							int index) {
+						showDialog();
+					}
+				});
 		mSwipeListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
-									int position, long id) {
-				TaskPackage data = (TaskPackage) parent.getItemAtPosition(position);
+					int position, long id) {
+				TaskPackage data = (TaskPackage) parent
+						.getItemAtPosition(position);
 				Intent intent = new Intent(mActivity,
 						PackageDetailActivity.class);
 				Bundle bundle = new Bundle();
@@ -160,10 +164,31 @@ public class GrabTaskFragment extends Fragment implements IXListViewListener {
 			public void onClick(View arg0) {
 				Intent intent = new Intent(mActivity,
 						GrabTaskDoFilterActivity.class);
-				startActivity(intent);
 
+				startActivityForResult(intent, 0x1);
 			}
 		});
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		Log.e("==============", requestCode+"===="+resultCode+"到底有没有执行到这");
+		if (requestCode == 0x1 && resultCode == Activity.RESULT_OK) {
+			Log.e("=====筛选信息====", data.getStringExtra("mTime"));
+			String mZone = data.getStringExtra("mZone");
+			String mTime = data.getStringExtra("mTime");
+			Param zoneParam = new Param("mFilterZone", mZone);
+			Param timeParam = new Param("mFilterTime", mTime);
+			if(list!=null){
+				list.clear();
+			}
+			if(mAdapter!=null){
+				mAdapter.notifyDataSetChanged();
+			}
+			initData(ServicesConfig.DO_FILTER,zoneParam, timeParam);
+		}
 	}
 
 	private void initListView() {
@@ -171,7 +196,8 @@ public class GrabTaskFragment extends Fragment implements IXListViewListener {
 			@Override
 			public void create(SwipeMenu menu) {
 				SwipeMenuItem openItem = new SwipeMenuItem(mActivity);
-				openItem.setBackground(new ColorDrawable(Color.rgb(0xFF, 0x3A,0x30)));
+				openItem.setBackground(new ColorDrawable(Color.rgb(0xFF, 0x3A,
+						0x30)));
 				openItem.setWidth(dp2px(90));
 				openItem.setTitle("抢");
 				openItem.setTitleSize(18);
@@ -182,7 +208,7 @@ public class GrabTaskFragment extends Fragment implements IXListViewListener {
 	}
 
 	public void onRefresh() {
-		Utilities.showToast("下拉刷新",mActivity);
+		Utilities.showToast("下拉刷新", mActivity);
 		mHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -195,7 +221,7 @@ public class GrabTaskFragment extends Fragment implements IXListViewListener {
 	}
 
 	public void onLoadMore() {
-		Utilities.showToast("上拉加载",mActivity);
+		Utilities.showToast("上拉加载", mActivity);
 		mHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
@@ -214,31 +240,32 @@ public class GrabTaskFragment extends Fragment implements IXListViewListener {
 		effect = Effectstype.Slideright;
 		dialogBuilder.withTitle("温馨提示").withTitleColor(R.color.main_primary)
 				.withDividerColor("#11000000").withMessage("您是否要接此单？")
-				.withMessageColor(R.color.main_primary).withDialogColor("#FFFFFFFF")
-				.isCancelableOnTouchOutside(true).withDuration(700)
-				.withEffect(effect).withButtonDrawable(R.color.main_white)
-				.withButton1Text("否").withButton1Color(R.color.main_primary)
-				.withButton2Text("是").withButton2Color(R.color.main_primary)
+				.withMessageColor(R.color.main_primary)
+				.withDialogColor("#FFFFFFFF").isCancelableOnTouchOutside(true)
+				.withDuration(700).withEffect(effect)
+				.withButtonDrawable(R.color.main_white).withButton1Text("否")
+				.withButton1Color(R.color.main_primary).withButton2Text("是")
+				.withButton2Color(R.color.main_primary)
 				.setButton1Click(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						dialogBuilder.dismiss();
 					}
 				}).setButton2Click(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				dialogBuilder.dismiss();
-				progressDialog.setMessage("正在抢单...");
-				progressDialog.show();
-				new Handler().postDelayed(new Runnable() {
-
 					@Override
-					public void run() {
-						progressDialog.dismiss();
+					public void onClick(View v) {
+						dialogBuilder.dismiss();
+						progressDialog.setMessage("正在抢单...");
+						progressDialog.show();
+						new Handler().postDelayed(new Runnable() {
+
+							@Override
+							public void run() {
+								progressDialog.dismiss();
+							}
+						}, 3000);
 					}
-				}, 3000);
-			}
-		}).show();
+				}).show();
 	}
 
 	private int dp2px(int dp) {

@@ -1,5 +1,7 @@
 package com.overtech.ems.activity.parttime.grabtask;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,6 +16,8 @@ import android.widget.TextView;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.GridViewAdapter;
+import com.overtech.ems.activity.parttime.fragment.GrabTaskFragment;
+import com.overtech.ems.http.OkHttpClientManager.Param;
 import com.overtech.ems.utils.Utilities;
 
 import java.util.ArrayList;
@@ -26,7 +30,6 @@ import java.util.ArrayList;
  *         抢单条件筛选
  */
 public class GrabTaskDoFilterActivity extends BaseActivity implements OnClickListener {
-
     private ImageView mHeadBack;
     private TextView mHeadContent;
     private TextView mHeadContentRight;
@@ -182,7 +185,11 @@ public class GrabTaskDoFilterActivity extends BaseActivity implements OnClickLis
                     }
                 }
                 Utilities.showToast("时间："+mTime,context);
-
+                Intent intent=new Intent();
+                intent.putExtra("mZone", mZone);
+                intent.putExtra("mTime", mTime);
+                setResult(Activity.RESULT_OK, intent);
+                finish();
                 break;
             case R.id.iv_headBack:
                 finish();

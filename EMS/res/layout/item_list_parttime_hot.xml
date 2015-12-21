@@ -30,6 +30,7 @@
             android:text="徐家汇景园" />
 
         <TextView
+            android:maxLength="8"
             android:id="@+id/textView1"
             style="@style/tv_info_secondary_style"
             android:layout_alignParentBottom="true"

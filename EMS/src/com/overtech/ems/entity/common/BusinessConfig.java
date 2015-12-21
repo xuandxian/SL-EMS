@@ -28,7 +28,7 @@ public class BusinessConfig {
 	/**
 	 * 5.筛选
 	 */
-    public static final String URL_DO_FILTER = "/doFilter.action";
+    public static final String URL_DO_FILTER = "/task/filtrateGrabtask.action";
 	/**
 	 * 6.抢单
 	 */
