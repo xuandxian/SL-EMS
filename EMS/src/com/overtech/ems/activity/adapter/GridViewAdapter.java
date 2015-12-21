@@ -14,17 +14,20 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GridViewAdapter extends BaseAdapter {
 
 	private int[] image;
-	private boolean isChice[];
+	private boolean isChoice[];
 	private Context context;
 
 	public GridViewAdapter(int[] im, Context context) {
 		this.image = im;
-		isChice = new boolean[im.length];
+		isChoice = new boolean[im.length];
 		for (int i = 0; i < im.length; i++) {
-			isChice[i] = false;
+			isChoice[i] = false;
 		}
 		this.context = context;
 	}
@@ -45,37 +48,28 @@ public class GridViewAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public View getView(int arg0, View v, ViewGroup arg2) {
-		View view = v;
-		GetView getView = null;
-		if (view == null) {
-			view = LayoutInflater.from(context).inflate(
-					R.layout.item_gridview_filter, null);
-			getView = new GetView();
-			getView.imageView = (ImageView) view.findViewById(R.id.image_item);
-			view.setTag(getView);
+	public View getView(int position, View convertView, ViewGroup parent) {
+		ViewHolder holder = null;
+		if (convertView == null) {
+			convertView = LayoutInflater.from(context).inflate(R.layout.item_gridview_filter, null);
+			holder = new ViewHolder();
+			holder.imageView = (ImageView) convertView.findViewById(R.id.image_item);
+			convertView.setTag(holder);
 		} else {
-			getView = (GetView) view.getTag();
+			holder = (ViewHolder) convertView.getTag();
 		}
-		getView.imageView.setImageDrawable(getView(arg0));
-
-		return view;
-	}
-
-	static class GetView {
-		ImageView imageView;
+		holder.imageView.setImageDrawable(getView(position));
+		return convertView;
 	}
 
 	@SuppressWarnings("deprecation")
-	private LayerDrawable getView(int post) {
+	private LayerDrawable getView(int position) {
 
-		Bitmap bitmap = ((BitmapDrawable) context.getResources().getDrawable(
-				image[post])).getBitmap();
+		Bitmap bitmap = ((BitmapDrawable) context.getResources().getDrawable(image[position])).getBitmap();
 		Bitmap bitmap2 = null;
 		LayerDrawable la = null;
-		if (isChice[post] == true) {
-			bitmap2 = BitmapFactory.decodeResource(context.getResources(),
-					R.drawable.icon_map_lable);
+		if (isChoice[position] == true) {
+			bitmap2 = BitmapFactory.decodeResource(context.getResources(), R.drawable.icon_map_lable);
 		}
 		if (bitmap2 != null) {
 			Drawable[] array = new Drawable[2];
@@ -93,9 +87,20 @@ public class GridViewAdapter extends BaseAdapter {
 		return la; // 返回叠加后的图
 	}
 
-	public void chiceState(int post) {
-		isChice[post] = isChice[post] == true ? false : true;
+	public void choiceStatus(int position) {
+		isChoice[position] = isChoice[position] == true ? false : true;
 		this.notifyDataSetChanged();
 	}
-
+	public ArrayList getTypePositon(int[] im){
+		ArrayList list=new ArrayList();
+		for (int i = 0; i < im.length; i++){
+			if (isChoice[i]==true){
+				list.add(i);
+			}
+		}
+		return list;
+	}
+	static class ViewHolder {
+		ImageView imageView;
+	}
 }
