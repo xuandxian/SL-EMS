@@ -72,6 +72,15 @@ public class HttpEngine {
 		request = builder.build();
 		return request;
 	}
+	/**
+	 * create request
+	 * @param url      传入完整的url链接
+	 * @return
+	 */
+	public Request createRequest(String url) {
+		Request request = new Request.Builder().url(url).build();
+		return request;
+	}
 
 	public Call createRequestCall(Request request){
 		if (null==mOkHttpClient || null==request){

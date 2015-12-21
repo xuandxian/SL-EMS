@@ -6,7 +6,7 @@ import com.overtech.ems.BuildConfig;
 /**
  * Created by Tony1213 on 15/12/8.
  */
-final class Logr {
+public class Logr {
     public static void d(String message) {
         if (BuildConfig.DEBUG) {
             Log.d("EMS", message);
