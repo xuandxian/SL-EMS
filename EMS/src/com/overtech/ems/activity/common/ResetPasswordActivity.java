@@ -17,6 +17,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -46,12 +47,12 @@ public class ResetPasswordActivity extends BaseActivity {
 	}
 
 	private void findViewById() {
-		context=ResetPasswordActivity.this;
+		context = ResetPasswordActivity.this;
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
 		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
 		mResetPassword = (Button) findViewById(R.id.btn_reset_password);
-		mPasswordNew=(EditTextWithDelete)findViewById(R.id.et_reset_password_new);
-		mPasswordConfirm=(EditTextWithDelete)findViewById(R.id.et_reset_password_confirm);
+		mPasswordNew = (EditTextWithDelete) findViewById(R.id.et_reset_password_new);
+		mPasswordConfirm = (EditTextWithDelete) findViewById(R.id.et_reset_password_confirm);
 	}
 
 	private void init() {
@@ -68,27 +69,31 @@ public class ResetPasswordActivity extends BaseActivity {
 				} else {
 					if (sPasswordNew.length() >= 6 && sPasswordNew.length() <= 18) {
 						if (TextUtils.equals(sPasswordNew, sPasswordConfirm)) {
-							String username = "1";//此处暂时设置未“1”，应该提取sharepreference
-							Employee user = new Employee();
-							user.setName(username);
-							user.setPassword(sPasswordNew);
+							startProgressDialog("正在更新...");
+							String phoneNo = "15021565127";// 此处暂时设置未“15021565127”，应该提取sharepreference
+							Employee employee = new Employee();
+							employee.setPhoneNo(phoneNo);
+							employee.setPassword(sPasswordNew);
 							Gson gson = new Gson();
-							String person = gson.toJson(user);
-							Request request = httpEngine.createRequest(ServicesConfig.LOST_PASSWORD, person);
+							String person = gson.toJson(employee);
+							Request request = httpEngine.createRequest(ServicesConfig.UPDATE_PASSWORD, person);
 							Call call = httpEngine.createRequestCall(request);
 							call.enqueue(new Callback() {
 								@Override
-								public void onFailure(Request request, IOException e) {
-									Utilities.showToast("重置密码失败",context);
+								public void onFailure(Request request,IOException e) {
+									stopProgressDialog();
+									Log.e("ResetPasswordActivity", "重置密码失败1");
 								}
 
 								@Override
-								public void onResponse(Response response) throws IOException {
+								public void onResponse(Response response)throws IOException {
+									stopProgressDialog();
 									String result = response.body().string();
 									if (TextUtils.equals(result, "true")) {
-										Intent intent = new Intent(ResetPasswordActivity.this,
-												ResetPasswordSuccessActivity.class);
+										Intent intent = new Intent(ResetPasswordActivity.this,ResetPasswordSuccessActivity.class);
 										startActivity(intent);
+									} else {
+										Log.e("ResetPasswordActivity","重置密码失败2");
 									}
 								}
 							});
@@ -102,7 +107,7 @@ public class ResetPasswordActivity extends BaseActivity {
 			}
 		});
 		mHeadBack.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				finish();

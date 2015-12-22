@@ -48,7 +48,7 @@ public class BusinessConfig {
 	/**
 	 * 10.忘记密码（更新密码）
 	 */
-	public static final String URL_UPDATE_PASSWORD = "/updatePassword.action";
+	public static final String URL_UPDATE_PASSWORD = "/employee/updatePassword.action";
 	/**
 	 * 11.任务单(未完成)
 	 */

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -23,6 +22,11 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.mapapi.model.LatLng;
 import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
@@ -55,21 +59,25 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 	private SwipeMenuCreator creator;
 	private Activity mActivity;
 	private ImageView mPartTimeDoFifter;
-	private NiftyDialogBuilder dialogBuilder;
 	private Effectstype effect;
-	private CustomProgressDialog progressDialog;
 	private GrabTaskAdapter mAdapter;
 	private ArrayList<TaskPackage> list;
 	private Handler mHandler;
 	private TextView mHeadTitle;
-//	private OkHttpClientManager httpManager;
+	private LocationClient mLocationClient;
+	
+	private LatLng myLocation;//我的位置
+	
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			String json = (String) msg.obj;
 			Gson gson = new Gson();
 			TaskPackageBean tasks = gson.fromJson(json, TaskPackageBean.class);
 			list = (ArrayList<TaskPackage>) tasks.getModel();
-			mAdapter = new GrabTaskAdapter(list, mActivity);
+			if (null==myLocation) {
+				getCurrentLocation();
+			}
+			mAdapter = new GrabTaskAdapter(list,myLocation,mActivity);
 			mSwipeListView.setAdapter(mAdapter);
 		};
 	};
@@ -84,18 +92,33 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_grab_task, container,false);
 		findViewById(view);
+		getCurrentLocation();
 		initData(ServicesConfig.GRABTASK,null);
 		init();
 		return view;
 	}
 
+
 	private void findViewById(View view) {
 		mSwipeListView = (PullToRefreshSwipeMenuListView) view.findViewById(R.id.sl_qiandan_listview);
 		mHeadTitle = (TextView) view.findViewById(R.id.tv_headTitle);
 	}
+	
+	private void getCurrentLocation() {
+		// 实例化定位服务，LocationClient类必须在主线程中声明
+		mLocationClient = new LocationClient(getActivity());
+		mLocationClient.registerLocationListener(new BDLocationListenerImpl());// 注册定位监听接口
+		LocationClientOption option = new LocationClientOption();
+		option.setOpenGps(true); // 打开GPRS
+		option.setAddrType("all");// 返回的定位结果包含地址信息
+		option.setCoorType("bd09ll");// 返回的定位结果是百度经纬度,默认值gcj02
+		option.setScanSpan(5000); // 设置发起定位请求的间隔时间为5000ms
+		mLocationClient.setLocOption(option); // 设置定位参数
+		mLocationClient.start();
+	}
+	
 
-	public void initData(final String url,final Param... params) {
-		 startProgressDialog("正在加载...");
+	public void initData(String url,Param... params) {
          Request request=httpEngine.createRequest(url, params);
          Call call=httpEngine.createRequestCall(request);
          call.enqueue(new Callback() {
@@ -217,6 +240,20 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 		mSwipeListView.setRefreshTime(RefreshTime.getRefreshTime(mActivity));
 		mSwipeListView.stopRefresh();
 		mSwipeListView.stopLoadMore();
+	}
+	
+	public class BDLocationListenerImpl implements BDLocationListener {
+
+		@Override
+		public void onReceiveLocation(BDLocation location) {
+			if (location == null) {
+				return;
+			}
+			double mLatitude = location.getLatitude();
+			double mLongitude = location.getLongitude();
+			Log.e("经纬度", "经纬度：" + "(" + mLongitude + "," + mLatitude + ")");
+			myLocation = new LatLng(location.getLatitude(),location.getLongitude());
+		}
 	}
 
 	private void showDialog() {

@@ -4,38 +4,24 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
-import org.apache.http.util.LangUtils;
-
 import android.content.Context;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
-import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.overtech.ems.R;
 import com.overtech.ems.entity.parttime.TaskPackage;
+import com.overtech.ems.utils.Utilities;
 
 public class GrabTaskAdapter extends BaseAdapter {
 
 	private List<TaskPackage> list;
 	private Context context;
 	private SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
-	private double lat;
-	private double lng;
+	private LatLng mLocation;
 
 	public List<TaskPackage> getData() {
 		return list;
@@ -44,18 +30,14 @@ public class GrabTaskAdapter extends BaseAdapter {
 	public void setData(List<TaskPackage> data) {
 		this.list = data;
 	}
-
-	public GrabTaskAdapter(List<TaskPackage> list, Context context) {
+	
+	public GrabTaskAdapter(List<TaskPackage> list,LatLng myLocation, Context context) {
 		super();
 		this.list = list;
 		this.context = context;
-		getCurrentLocation();
+		this.mLocation=myLocation;
 	}
 
-	public GrabTaskAdapter(Context context) {
-		super();
-		this.context = context;
-	}
 
 	@Override
 	public int getCount() {
@@ -75,8 +57,7 @@ public class GrabTaskAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
-			convertView = View.inflate(context,
-					R.layout.item_list_parttime_hot, null);
+			convertView = View.inflate(context,R.layout.item_list_parttime_hot, null);
 			new ViewHolder(convertView);
 		}
 		ViewHolder holder = (ViewHolder) convertView.getTag();
@@ -84,18 +65,10 @@ public class GrabTaskAdapter extends BaseAdapter {
 		holder.tv_name.setText(data.getProjectName());
 		holder.elevtorNum.setText(data.getElevatorAmounts() + "");
 		holder.addressName.setText(data.getMaintenanceAddress());
-
-		Log.e("当前经纬度", lat + "---------" + lng);
-		LatLng latlng1 = new LatLng(Double.parseDouble(data.getLatitude()),
-				Double.parseDouble(data.getLongitude()));
-		Log.e("后台的经纬度", Double.parseDouble(data.getLatitude())
-				+ "-------------" + Double.parseDouble(data.getLongitude()));
-		LatLng latlng2 = new LatLng(lat, lng);
-		
+		LatLng latlng = new LatLng(Double.valueOf(data.getLatitude()),Double.valueOf(data.getLongitude()));
 		NumberFormat numberFormat=NumberFormat.getNumberInstance();//保留两位小数
 		numberFormat.setMaximumFractionDigits(2);
-		holder.distance.setText(numberFormat.format(DistanceUtil.getDistance(latlng1, latlng2)/1000.0)
-				+ "千米");// 当前还没有获取手机的实时经纬度，暂用经度表示
+		holder.distance.setText(numberFormat.format(DistanceUtil.getDistance(mLocation, latlng)/1000.0)+ "km");
 		holder.date.setText(format.format(new Date(data.getMaintenanceDate())));// 时间尚未刷新
 		if (data.getIsFinish() == 0) {
 			holder.iv_icon.setImageResource(R.drawable.icon_task_none);
@@ -130,62 +103,4 @@ public class GrabTaskAdapter extends BaseAdapter {
 			view.setTag(this);
 		}
 	}
-
-	public void getCurrentLocation() {
-
-		LocationManager locationManager = (LocationManager) context
-				.getSystemService(Context.LOCATION_SERVICE);
-		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-			Location location = locationManager
-					.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-			if (location != null) {
-				lat = location.getLatitude();
-				lng = location.getLongitude();
-			}
-		} else {
-			
-			locationManager
-					.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-							1000, 0, locationListener);
-			Location location = locationManager
-					.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-			if (location != null) {
-				lat = location.getLatitude(); // 经度
-				lng = location.getLongitude(); // 纬度
-			}
-		}
-	}
-	LocationListener locationListener = new LocationListener() {
-
-		// Provider的状态在可用、暂时不可用和无服务三个状态直接切换时触发此函数
-		@Override
-		public void onStatusChanged(String provider, int status,
-				Bundle extras) {
-
-		}
-
-		// Provider被enable时触发此函数，比如GPS被打开
-		@Override
-		public void onProviderEnabled(String provider) {
-
-		}
-
-		// Provider被disable时触发此函数，比如GPS被关闭
-		@Override
-		public void onProviderDisabled(String provider) {
-
-		}
-
-		// 当坐标改变时触发此函数，如果Provider传进相同的坐标，它就不会被触发
-		@Override
-		public void onLocationChanged(Location location) {
-			if (location != null) {
-				Log.e("Map",
-						"Location changed : Lat: "
-								+ location.getLatitude() + " Lng: "
-								+ location.getLongitude());
-			}
-		}
-	};
-
 }
