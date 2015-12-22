@@ -24,8 +24,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.model.LatLng;
 import com.google.gson.Gson;
 import com.overtech.ems.R;
@@ -64,9 +62,6 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 	private ArrayList<TaskPackage> list;
 	private Handler mHandler;
 	private TextView mHeadTitle;
-	private LocationClient mLocationClient;
-	
-	private LatLng myLocation;//我的位置
 	
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -75,7 +70,7 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 			TaskPackageBean tasks = gson.fromJson(json, TaskPackageBean.class);
 			list = (ArrayList<TaskPackage>) tasks.getModel();
 			if (null==myLocation) {
-				getCurrentLocation();
+				Utilities.showToast("定位失败", context);
 			}
 			mAdapter = new GrabTaskAdapter(list,myLocation,mActivity);
 			mSwipeListView.setAdapter(mAdapter);
@@ -92,8 +87,7 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_grab_task, container,false);
 		findViewById(view);
-		getCurrentLocation();
-		initData(ServicesConfig.GRABTASK,null);
+		initData(ServicesConfig.GRABTASK);
 		init();
 		return view;
 	}
@@ -104,20 +98,6 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 		mHeadTitle = (TextView) view.findViewById(R.id.tv_headTitle);
 	}
 	
-	private void getCurrentLocation() {
-		// 实例化定位服务，LocationClient类必须在主线程中声明
-		mLocationClient = new LocationClient(getActivity());
-		mLocationClient.registerLocationListener(new BDLocationListenerImpl());// 注册定位监听接口
-		LocationClientOption option = new LocationClientOption();
-		option.setOpenGps(true); // 打开GPRS
-		option.setAddrType("all");// 返回的定位结果包含地址信息
-		option.setCoorType("bd09ll");// 返回的定位结果是百度经纬度,默认值gcj02
-		option.setScanSpan(5000); // 设置发起定位请求的间隔时间为5000ms
-		mLocationClient.setLocOption(option); // 设置定位参数
-		mLocationClient.start();
-	}
-	
-
 	public void initData(String url,Param... params) {
          Request request=httpEngine.createRequest(url, params);
          Call call=httpEngine.createRequestCall(request);
@@ -286,6 +266,14 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 						}, 3000);
 					}
 				}).show();
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if (mLocationClient.isStarted()) {
+			mLocationClient.stop();
+		}
 	}
 
 	private int dp2px(int dp) {

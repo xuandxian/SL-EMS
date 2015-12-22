@@ -5,6 +5,7 @@ package com.overtech.ems.entity.parttime;
  * 任务包
  */
 public class TaskPackage {
+	private String id;
 	private int elevatorAmounts;    //电梯数量
 	private int isFinish;			//抢单人数
 	private String latitude;           //纬度
@@ -13,18 +14,26 @@ public class TaskPackage {
 	private long maintenanceDate;    //维保日期
     private String projectName;        //项目名称
     private int topState;			//是否置顶
-	public TaskPackage(String projectName, int elevatorAmounts,
-			String maintenanceAddress, String longitude, String latitude,
-			long maintenanceDate, int isFinish, int topState) {
+	 
+	public TaskPackage(String id, int elevatorAmounts, int isFinish,
+			String latitude, String longitude, String maintenanceAddress,
+			long maintenanceDate, String projectName, int topState) {
 		super();
-		this.projectName = projectName;
+		this.id = id;
 		this.elevatorAmounts = elevatorAmounts;
-		this.maintenanceAddress = maintenanceAddress;
-		this.longitude = longitude;
-		this.latitude = latitude;
-		this.maintenanceDate = maintenanceDate;
 		this.isFinish = isFinish;
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.maintenanceAddress = maintenanceAddress;
+		this.maintenanceDate = maintenanceDate;
+		this.projectName = projectName;
 		this.topState = topState;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
 	}
 	public String getProjectName() {
 		return projectName;
@@ -74,6 +83,4 @@ public class TaskPackage {
 	public void setTopState(int topState) {
 		this.topState = topState;
 	}
-	
-
 }
