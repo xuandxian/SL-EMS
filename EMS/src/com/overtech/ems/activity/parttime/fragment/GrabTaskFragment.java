@@ -39,6 +39,7 @@ import com.overtech.ems.entity.parttime.TaskPackageBean;
 import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.CustomProgressDialog;
+import com.overtech.ems.widget.EditTextWithDelete;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
 import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView;
@@ -59,6 +60,7 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 	private SwipeMenuCreator creator;
 	private Activity mActivity;
 	private ImageView mPartTimeDoFifter;
+	private  EditTextWithDelete mKeyWordSearch;
 	private Effectstype effect;
 	private GrabTaskAdapter mAdapter;
 	private ArrayList<TaskPackage> list;
@@ -133,7 +135,7 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 	}
 	
 	public void initData(String url,Param... params) {
-		 startProgressDialog("正在查询");
+		 startProgressDialog("正在查询...");
          Request request=httpEngine.createRequest(url, params);
          Call call=httpEngine.createRequestCall(request);
          call.enqueue(new Callback() {
@@ -166,6 +168,7 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 		View mHeadView = LayoutInflater.from(mActivity).inflate(R.layout.listview_header_filter, null);
 		mSwipeListView.addHeaderView(mHeadView);
 		mPartTimeDoFifter = (ImageView) mHeadView.findViewById(R.id.iv_parttime_do_fifter);
+		mKeyWordSearch = (EditTextWithDelete)mHeadView.findViewById(R.id.et_do_parttime_search);
 		mHandler = new Handler();
 		mSwipeListView.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
@@ -177,9 +180,9 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 		mSwipeListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				TaskPackage data = (TaskPackage) parent.getItemAtPosition(position);
-				Intent intent = new Intent(mActivity,PackageDetailActivity.class);
+				Intent intent = new Intent(mActivity, PackageDetailActivity.class);
 				Bundle bundle = new Bundle();
 				bundle.putString("CommunityName", data.getProjectName());
 				intent.putExtras(bundle);
@@ -190,8 +193,14 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 
 			@Override
 			public void onClick(View arg0) {
-				Intent intent = new Intent(mActivity,GrabTaskDoFilterActivity.class);
+				Intent intent = new Intent(mActivity, GrabTaskDoFilterActivity.class);
 				startActivityForResult(intent, 0x1);
+			}
+		});
+		mKeyWordSearch.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Utilities.showToast("nidianjilewo",context);
 			}
 		});
 	}

@@ -67,6 +67,8 @@ public class NearByMapFragment extends BaseFragment{
 			if (null==myLocation) {
 				Utilities.showToast("null==myLocation", context);
 				return;
+			}else {
+				Utilities.showToast("null!=myLocation", context);
 			}
 		};
 	};
@@ -103,16 +105,14 @@ public class NearByMapFragment extends BaseFragment{
 			@Override
 			public void onResponse(Response response) throws IOException {
 				stopProgressDialog();
-				Log.e("NearByMapFragment:onResponse", response.body().string());
-//				Message msg = new Message();
-//				msg.obj = response.body().string();
-//				handler.sendMessage(msg);
+				Message msg = new Message();
+				msg.obj = response.body().string();
+				handler.sendMessage(msg);
 			}
 			
 			@Override
 			public void onFailure(Request request, IOException e) {
 				stopProgressDialog();
-				Log.e("NearByMapFragment", "onFailure");
 			}
 		});
 	}
