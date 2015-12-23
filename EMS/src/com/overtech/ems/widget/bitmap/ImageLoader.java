@@ -22,9 +22,7 @@ public class ImageLoader {
 	}
 
 	public void initContext(Context context) {
-		if (null==context){
-			this.context=context;
-		}
+		this.context=context;
 	}
 
 	public static synchronized ImageLoader getInstance() {

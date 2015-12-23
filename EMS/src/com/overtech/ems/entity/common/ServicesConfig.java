@@ -99,6 +99,11 @@ public class ServicesConfig {
 	public static final String EVALUATION_EACH_OTHER = SystemConfig.IP
 			+ BusinessConfig.URL_EVALUATION_EACH_OTHER;
 	/**
+	 * 20.我的
+	 */
+	public static final String PERSONAL_AVATOR = SystemConfig.IP
+			+ BusinessConfig.URL_PERSONAL_AVATOR;
+	/**
 	 * 20.账户信息
 	 */
 	public static final String PERSONAL_ACCOUNT = SystemConfig.IP

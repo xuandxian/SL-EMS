@@ -86,27 +86,31 @@ public class BusinessConfig {
 	 */
 	public static final String URL_EVALUATION_EACH_OTHER = "/evaluationEachOther.action";
 	/**
-	 * 20.账户信息
+	 * 20.我的
+	 */
+	public static final String URL_PERSONAL_AVATOR="/employee/personalAvator.action";
+	/**
+	 * 21.账户信息
 	 */
 	public static final String URL_PERSONAL_ACCOUNT = "/personalAccount.action";
 	/**
-	 * 21.更换手机号（验证密码）
+	 * 22.更换手机号（验证密码）
 	 */
 	public static final String URL_CHANGE_PHONENO_PASSWORD = "/changePhoneNoPassword.action";
 	/**
-	 * 22.更换手机号（手机号码／短信验证码）
+	 * 23.更换手机号（手机号码／短信验证码）
 	 */
 	public static final String URL_CHANGE_PHONENO_UPDATE = "/changePhoneNoUpdate.action";
 	/**
-	 * 23.我的账单（已结算／未结算）
+	 * 24.我的账单（已结算／未结算）
 	 */
     public static final String URL_PERSONAL_BILL = "/personalBill.action";
 	/**
-	 * 24.奖励记录
+	 * 25.奖励记录
 	 */
 	public static final String URL_PERSONAL_BONUS_LIST = "/personalBonusList.action";
 	/**
-	 * 25.退单纪录
+	 * 26.退单纪录
 	 */
 	public static final String URL_PERSONAL_CHARGEBACK_LIST = "/personalChargeBackList.action";
 

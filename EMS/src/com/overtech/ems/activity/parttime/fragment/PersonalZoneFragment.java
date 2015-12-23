@@ -1,9 +1,16 @@
 package com.overtech.ems.activity.parttime.fragment;
 
+import java.io.IOException;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,6 +22,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.overtech.ems.R;
+import com.overtech.ems.activity.BaseFragment;
+import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.parttime.personal.PersonalAboutAppActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalAccountListActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalAnnouncementActivity;
@@ -22,9 +31,16 @@ import com.overtech.ems.activity.parttime.personal.PersonalBoundsActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalCancleListActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalDeatilsActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalHelpDocActivity;
+import com.overtech.ems.entity.common.ServicesConfig;
+import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.widget.CustomScrollView;
+import com.overtech.ems.widget.bitmap.ImageLoader;
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
-public class PersonalZoneFragment extends Fragment implements OnClickListener ,OnTouchListener {
+public class PersonalZoneFragment extends BaseFragment implements OnClickListener ,OnTouchListener {
 	private View view;
 	private RelativeLayout mPersonalDetail;
 	private RelativeLayout mPersonalAccountList;
@@ -34,10 +50,36 @@ public class PersonalZoneFragment extends Fragment implements OnClickListener ,O
 	private RelativeLayout mHelpDoc;
 	private RelativeLayout mApp;
 	private TextView mHeadContent;
+	private TextView mName;
+	private TextView mPhone;
 	private Activity mActivity;
 	private CustomScrollView mScrollView;
 	private ImageView mBackgroundImageView;
-	
+	private ImageView mAvator;
+	private SharedPreferences sp;
+	private Handler handler=new Handler(){
+		public void handleMessage(Message msg) {
+			String info=(String) msg.obj;
+			try {
+				JSONObject json=new JSONObject(info);
+				JSONObject model=(JSONObject) json.get("model");
+				String url=model.getString("avatorUrl");
+				String name=model.getString("name");
+				System.out.println("图片地址======"+url);
+				System.out.println("个人用户名===="+name);
+				imageLoader.displayImage(url, mAvator);
+				mName.setText(name);
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+			
+			
+			
+		};
+	};
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -49,14 +91,43 @@ public class PersonalZoneFragment extends Fragment implements OnClickListener ,O
 
 		view = inflater.inflate(R.layout.fragment_personal_zone, container,
 				false);
+		
 		initViews();
 		initEvents();
+		startProgressDialog("请稍后...");
+		onLoading();
 		return view;
 	}
 
+	private void onLoading() {
+		String mPhoneNo=sp.getString("mPhoneNo", null);
+		Param param=new Param("mPhoneNo",mPhoneNo);
+		Request request=httpEngine.createRequest(ServicesConfig.PERSONAL_AVATOR, param);
+		Call call=httpEngine.createRequestCall(request);
+		call.enqueue(new Callback() {
+			
+			@Override
+			public void onResponse(Response arg0) throws IOException {
+				Message msg=new Message();
+				msg.obj=arg0.body().string();
+				handler.sendMessage(msg);
+			}
+			
+			@Override
+			public void onFailure(Request arg0, IOException arg1) {
+				
+			}
+		});
+	}
 	private void initViews() {
+		sp=((MyApplication)getActivity().getApplication()).getSharePreference();
+		
+		imageLoader.initContext(mActivity);
+		
 		mBackgroundImageView = (ImageView) view
 				.findViewById(R.id.personal_background_image);
+		mAvator=(ImageView)view
+				.findViewById(R.id.imageView1);
 		mScrollView=(CustomScrollView) view
 				.findViewById(R.id.personal_scrollView);
 		mPersonalDetail = (RelativeLayout) view
@@ -73,9 +144,14 @@ public class PersonalZoneFragment extends Fragment implements OnClickListener ,O
 				.findViewById(R.id.rl_help_doc);
 		mHeadContent=(TextView) view
 				.findViewById(R.id.tv_headTitle);
+		mName=(TextView)view
+				.findViewById(R.id.textView1);
+		mPhone=(TextView)view
+				.findViewById(R.id.textViewPhone);
 		mApp= (RelativeLayout) view
 				.findViewById(R.id.rl_about_app);
 		mHeadContent.setText("我的");
+		mPhone.setText(sp.getString("mPhoneNo", null));//设置登陆时的个人手机号
 	}
 
 	private void initEvents() {

@@ -1,6 +1,7 @@
 package com.overtech.ems.activity.common;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
+import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.Employee;
@@ -43,6 +45,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	private Button mLogin;
 	private TextView mRegister;
 	private ToggleButton mChangePasswordState;
+	private SharedPreferences sp;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +56,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void initView() {
+		sp=((MyApplication)getApplication()).getSharePreference();
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
 		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
 		mUserName = (EditTextWithDelete) findViewById(R.id.et_login_username);
@@ -90,6 +94,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 					Utilities.showToast("输入不能为空", context);
 				} else {
 					startProgressDialog("正在登录...");
+					sp.edit().putString("mPhoneNo", sUserName).commit();//将登陆的用户名保存
 					Employee employee = new Employee();
 					employee.setLoginName(sUserName);
 					employee.setPassword(sPassword);
@@ -107,6 +112,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 						@Override
 						public void onResponse(Response response)throws IOException {
 							String result=response.body().string();
+							Log.e("LoginInfo", result);
 							if (TextUtils.equals("true",result)){
 								stopProgressDialog();
 								Intent intent = new Intent(LoginActivity.this,MainActivity.class);

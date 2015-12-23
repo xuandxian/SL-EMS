@@ -88,7 +88,7 @@ public class HttpEngine {
 	 * @param params   参数
 	 * @return
 	 */
-	public Request createRequest(String url, Param[] params) {
+	public Request createRequest(String url, Param... params) {
 		if (params == null) {
 			params = new Param[0];
 		}

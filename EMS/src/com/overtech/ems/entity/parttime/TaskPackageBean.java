@@ -8,17 +8,18 @@ import java.util.List;
  */
 public class TaskPackageBean {
 	private List<TaskPackage> model;
-	private String success;
+	private boolean success;
+	public boolean isSuccess() {
+		return success;
+	}
+	public void setSuccess(boolean success) {
+		this.success = success;
+	}
 	public List<TaskPackage> getModel() {
 		return model;
 	}
 	public void setModel(List<TaskPackage> model) {
 		this.model = model;
 	}
-	public String getSuccess() {
-		return success;
-	}
-	public void setSuccess(String success) {
-		this.success = success;
-	}
+	
 }
