@@ -1,13 +1,9 @@
 package com.overtech.ems.activity.parttime.nearby;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.BaiduMap.OnMarkerClickListener;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.MapStatusUpdate;
@@ -17,13 +13,23 @@ import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MarkerOptions.MarkerAnimateType;
 import com.baidu.mapapi.model.LatLng;
+import com.google.gson.Gson;
 import com.overtech.ems.R;
-import com.overtech.ems.entity.test.Data;
-import android.app.Activity;
-import android.app.Fragment;
-import android.content.Intent;
+import com.overtech.ems.activity.BaseFragment;
+import com.overtech.ems.activity.adapter.GrabTaskAdapter;
+import com.overtech.ems.entity.common.ServicesConfig;
+import com.overtech.ems.entity.parttime.TaskPackage;
+import com.overtech.ems.entity.parttime.TaskPackageBean;
+import com.overtech.ems.http.HttpEngine.Param;
+import com.overtech.ems.utils.Utilities;
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -32,97 +38,86 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-public class NearByMapFragment extends Fragment {
+public class NearByMapFragment extends BaseFragment{
 
-	ArrayList<Data> dataList = new ArrayList<Data>();
-	private HashMap<String, Data> mHashMap = new HashMap<String, Data>();
+	ArrayList<TaskPackageBean> dataList = new ArrayList<TaskPackageBean>();
+	private HashMap<String, TaskPackage> mHashMap = new HashMap<String, TaskPackage>();
 	private MapView mMapView = null;
 	private BaiduMap mBaiduMap = null;
-	private LocationClient mLocationClient;
 	private BitmapDescriptor bitmap;
 	private MarkerOptions mOverlayOptions;
 	private Marker mMarker;
 	private View view;
-	private Data data;
-	private Activity mActivity;
-
+	private TaskPackage data;
+	private ArrayList<TaskPackage> list;
+	
+//	private Handler handler = new Handler() {
+//		public void handleMessage(android.os.Message msg) {
+//			String json = (String) msg.obj;
+//			Gson gson = new Gson();
+//			TaskPackageBean tasks = gson.fromJson(json, TaskPackageBean.class);
+//			list = (ArrayList<TaskPackage>) tasks.getModel();
+//			if (null==myLocation) {
+//				Utilities.showToast("null==myLocation", context);
+//				return;
+//			}
+//		};
+//	};
+	
 	@Override
-	public void onAttach(Activity activity) {
-		super.onAttach(activity);
-		mActivity = activity;
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		Param latitude=new Param("latitude", getmLatitude());
+		Param longitude=new Param("longitude", getmLongitude());
+		getDataList(ServicesConfig.NEARBY,latitude,longitude);
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_nearby_map, container,
-				false);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.fragment_nearby_map, container,false);
 		initBaiduMapView(view);
-		getDataList();
-		addOverLay(dataList);
-		setMarkerClick();
+//		setMarkerClick();
 		return view;
 	}
 
 	private void initBaiduMapView(View view) {
 		mMapView = (MapView) view.findViewById(R.id.bmapView);
 		mBaiduMap = mMapView.getMap();
-		// 实例化定位服务，LocationClient类必须在主线程中声明
-		mLocationClient = new LocationClient(getActivity());
-		mLocationClient.registerLocationListener(new BDLocationListenerImpl());// 注册定位监听接口
-		LocationClientOption option = new LocationClientOption();
-		option.setOpenGps(true); // 打开GPRS
-		option.setAddrType("all");// 返回的定位结果包含地址信息
-		option.setCoorType("bd09ll");// 返回的定位结果是百度经纬度,默认值gcj02
-		option.setScanSpan(5000); // 设置发起定位请求的间隔时间为5000ms
-		mLocationClient.setLocOption(option); // 设置定位参数
-		mLocationClient.start();
 		mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(17.0f));// 缩放到16
 	}
 
+	private void getDataList(String url,Param... params) {
+		startProgressDialog("正在查询...");
+		Request request=httpEngine.createRequest(url, params);
+        Call call=httpEngine.createRequestCall(request);
+        call.enqueue(new Callback() {
+			
+			@Override
+			public void onResponse(Response response) throws IOException {
+				stopProgressDialog();
+				Log.e("NearByMapFragment:onResponse", response.body().string());
+//				Message msg = new Message();
+//				msg.obj = response.body().string();
+//				handler.sendMessage(msg);
+			}
+			
+			@Override
+			public void onFailure(Request request, IOException e) {
+				stopProgressDialog();
+				Log.e("NearByMapFragment", "onFailure");
+			}
+		});
+	}
+	
 	private void setBaiduMapMarker(LatLng point) {
-		BitmapDescriptor bitmap = BitmapDescriptorFactory
-				.fromResource(R.drawable.icon_location);
-		MarkerOptions option = new MarkerOptions().position(point).icon(bitmap)
-				.zIndex(0);
+		BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.icon_location);
+		MarkerOptions option = new MarkerOptions().position(point).icon(bitmap).zIndex(0);
 		option.animateType(MarkerAnimateType.grow);
 		mBaiduMap.addOverlay(option);
 	}
 
-	public class BDLocationListenerImpl implements BDLocationListener {
-
-		@Override
-		public void onReceiveLocation(BDLocation location) {
-			if (location == null) {
-				return;
-			}
-			double mLatitude = location.getLatitude();
-			double mLongitude = location.getLongitude();
-			Log.e("经纬度", "经纬度：" + "(" + mLongitude + "," + mLatitude + ")");
-			LatLng ll = new LatLng(location.getLatitude(),
-					location.getLongitude());
-			setBaiduMapMarker(ll);
-			MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
-			mBaiduMap.animateMapStatus(u);
-		}
-	}
-
-	private ArrayList<Data> getDataList() {
-		dataList = new ArrayList<Data>();
-		Data data1 = new Data("1", "虹枫大楼", "121.437466", "31.200715");
-		Data data2 = new Data("2", "虹交小区", "121.439693", "31.200386");
-		Data data3 = new Data("3", "明仕苑", "121.441279", "31.202749");
-		Data data4 = new Data("4", "乐山公寓", "121.439312", "31.203274");
-		Data data5 = new Data("5", "番禺大楼", "121.43429", "31.202101");
-		dataList.add(data1);
-		dataList.add(data2);
-		dataList.add(data3);
-		dataList.add(data4);
-		dataList.add(data5);
-		return dataList;
-	}
-
-	public void addOverLay(ArrayList<Data> dataList) {
+	public void addOverLay(ArrayList<TaskPackage> dataList) {
 		if (mMapView == null) {
 			mMapView = (MapView) view.findViewById(R.id.bmapView);
 		}
@@ -134,11 +129,10 @@ public class NearByMapFragment extends Fragment {
 		}
 		for (int i = 0; i < dataList.size(); i++) {
 			data = dataList.get(i);
-			String lat = data.latitude;
-			String lon = data.longitude;
+			String lat = data.getLatitude();
+			String lon = data.getLongitude();
 			if (!(TextUtils.isEmpty(lat) || TextUtils.isEmpty(lon))) {
-				LatLng ll = new LatLng(Double.parseDouble(lon),
-						Double.parseDouble(lat));
+				LatLng ll = new LatLng(Double.parseDouble(lon),Double.parseDouble(lat));
 				MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
 				mBaiduMap.animateMapStatus(u);
 				Button button = new Button(getActivity());
@@ -146,45 +140,39 @@ public class NearByMapFragment extends Fragment {
 				button.setGravity(Gravity.CENTER);
 				button.setPadding(5, 0, 5, 30);
 				button.setTextColor(Color.WHITE);
-				button.setText(data.name);
+				button.setText(data.getProjectName());
 				bitmap = BitmapDescriptorFactory.fromView(button);
-				mOverlayOptions = new MarkerOptions().position(ll).icon(bitmap)
-						.zIndex(11).draggable(false).period(10);
+				mOverlayOptions = new MarkerOptions().position(ll).icon(bitmap).zIndex(11).draggable(false).period(10);
 				mOverlayOptions.animateType(MarkerAnimateType.drop);
 				mMarker = (Marker) (mBaiduMap.addOverlay(mOverlayOptions));
-				mMarker.setZIndex(Integer.parseInt(data.id));
-				mHashMap.put(data.id, data);
+				mMarker.setZIndex(Integer.parseInt(data.getId()));
+				mHashMap.put(data.getId(), data);
 			}
 		}
 
 	}
 
-	private void setMarkerClick() {
-		mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener() {
-
-			@Override
-			public boolean onMarkerClick(final Marker marker) {
-				data = mHashMap.get(String.valueOf(marker.getZIndex()));
-				if (data == null) {
-					return false;
-				}
-				Intent intent = new Intent(mActivity,
-						TaskPackageListActivity.class);
-				Bundle bundle = new Bundle();
-				bundle.putString("name", data.getName());
-				intent.putExtras(bundle);
-				startActivity(intent);
-				return true;
-			}
-		});
-	}
+//	private void setMarkerClick() {
+//		mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener() {
+//
+//			@Override
+//			public boolean onMarkerClick(final Marker marker) {
+//				data = mHashMap.get(String.valueOf(marker.getZIndex()));
+//				if (data == null) {
+//					return false;
+//				}
+//				Intent intent = new Intent(mActivity,TaskPackageListActivity.class);
+//				Bundle bundle = new Bundle();
+//				bundle.putString("name", data.getName());
+//				intent.putExtras(bundle);
+//				startActivity(intent);
+//				return true;
+//			}
+//		});
+//	}
 
 	@Override
 	public void onDestroy() {
-		// 退出时销毁定位
-		if (mLocationClient.isStarted()) {
-			mLocationClient.stop();
-		}
 		// 关闭定位图层
 		if (mBaiduMap.isMyLocationEnabled()) {
 			mBaiduMap.setMyLocationEnabled(false);

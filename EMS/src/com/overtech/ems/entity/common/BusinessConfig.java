@@ -36,7 +36,7 @@ public class BusinessConfig {
 	/**
 	 * 7.附近
 	 */
-	public static final String URL_NEARBY = "/nearby.action";
+	public static final String URL_NEARBY = "/task/nearby.action";
 	/**
 	 * 8.小区任务包
 	 */

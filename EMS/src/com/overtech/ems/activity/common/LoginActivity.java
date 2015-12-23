@@ -106,6 +106,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 						@Override
 						public void onFailure(Request request, IOException e) {
 							stopProgressDialog();
+							Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+							startActivity(intent);
+							finish();
 							Log.e("Login","onFailure");
 //							Utilities.showToast("登录失败",context);
 						}
@@ -120,6 +123,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 								finish();
 							}else {
 								stopProgressDialog();
+								Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+								startActivity(intent);
+								finish();
 								Log.e("Login", "onFailure2");
 //								Utilities.showToast("登录失败",context);
 							}
