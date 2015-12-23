@@ -104,32 +104,32 @@ public class ServicesConfig {
 	public static final String PERSONAL_AVATOR = SystemConfig.IP
 			+ BusinessConfig.URL_PERSONAL_AVATOR;
 	/**
-	 * 20.账户信息
+	 * 21.账户信息
 	 */
 	public static final String PERSONAL_ACCOUNT = SystemConfig.IP
 			+ BusinessConfig.URL_PERSONAL_ACCOUNT;
 	/**
-	 * 21.更换手机号（验证密码）
+	 * 22.更换手机号（验证密码）
 	 */
 	public static final String CHANGE_PHONENO_PASSWORD = SystemConfig.IP
 			+ BusinessConfig.URL_CHANGE_PHONENO_PASSWORD;
 	/**
-	 * 22.更换手机号（手机号码／短信验证码）
+	 * 23.更换手机号（手机号码／短信验证码）
 	 */
 	public static final String CHANGE_PHONENO_UPDATE = SystemConfig.IP
 			+ BusinessConfig.URL_CHANGE_PHONENO_UPDATE;
 	/**
-	 * 23.我的账单（已结算／未结算）
+	 * 24.我的账单（已结算／未结算）
 	 */
 	public static final String PERSONAL_BILL = SystemConfig.IP
 			+ BusinessConfig.URL_PERSONAL_BILL;
 	/**
-	 * 24.奖励记录
+	 * 25.奖励记录
 	 */
 	public static final String PERSONAL_BONUS_LIST = SystemConfig.IP
 			+ BusinessConfig.URL_PERSONAL_BONUS_LIST;
 	/**
-	 * 25.退单纪录
+	 * 26.退单纪录
 	 */
 	public static final String PERSONAL_CHARGEBACK_LIST = SystemConfig.IP
 			+ BusinessConfig.URL_PERSONAL_CHARGEBACK_LIST;

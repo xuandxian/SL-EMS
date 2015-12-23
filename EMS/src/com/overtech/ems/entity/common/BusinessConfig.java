@@ -92,7 +92,7 @@ public class BusinessConfig {
 	/**
 	 * 21.账户信息
 	 */
-	public static final String URL_PERSONAL_ACCOUNT = "/personalAccount.action";
+	public static final String URL_PERSONAL_ACCOUNT = "/employee/personalAccount.action";
 	/**
 	 * 22.更换手机号（验证密码）
 	 */
