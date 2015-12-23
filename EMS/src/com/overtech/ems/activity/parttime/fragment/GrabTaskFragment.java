@@ -24,6 +24,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.model.LatLng;
 import com.google.gson.Gson;
 import com.overtech.ems.R;
@@ -63,6 +65,12 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 	private Handler mHandler;
 	private TextView mHeadTitle;
 	
+    public LatLng myLocation;
+	
+    public LocationClient mLocationClient=null;
+    
+    public BDLocationListener myListener=new MyLocationListener();
+	
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			String json = (String) msg.obj;
@@ -71,6 +79,7 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 			list = (ArrayList<TaskPackage>) tasks.getModel();
 			if (null==myLocation) {
 				Utilities.showToast("定位失败", context);
+				return;
 			}
 			mAdapter = new GrabTaskAdapter(list,myLocation,mActivity);
 			mSwipeListView.setAdapter(mAdapter);
@@ -86,19 +95,45 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_grab_task, container,false);
+		initBaiDuLocation();
 		findViewById(view);
-		initData(ServicesConfig.GRABTASK);
 		init();
 		return view;
 	}
 
+	private void initBaiDuLocation() {
+		mLocationClient = new LocationClient(activity.getApplicationContext());
+		mLocationClient.registerLocationListener(myListener);
+		LocationClientOption option = new LocationClientOption();
+		option.setOpenGps(true); // 打开GPRS
+		option.setAddrType("all");// 返回的定位结果包含地址信息
+		option.setCoorType("bd09ll");// 返回的定位结果是百度经纬度,默认值gcj02
+		option.setScanSpan(1000); // 设置发起定位请求的间隔时间为1000ms
+		mLocationClient.setLocOption(option); // 设置定位参数
+		mLocationClient.start();
+	}
 
 	private void findViewById(View view) {
 		mSwipeListView = (PullToRefreshSwipeMenuListView) view.findViewById(R.id.sl_qiandan_listview);
 		mHeadTitle = (TextView) view.findViewById(R.id.tv_headTitle);
 	}
+	public class MyLocationListener implements BDLocationListener{
+
+		@Override
+		public void onReceiveLocation(BDLocation location) {
+			if (null==location) {
+				Log.e("GrabTaskFragment", "定位失败");
+				return;
+			}
+			Log.e("GrabTaskFragment", "定位成功");
+			myLocation=new LatLng(location.getLatitude(), location.getLongitude());
+			Log.e("GrabTaskFragment", "location:"+"("+myLocation.latitude+","+myLocation.longitude+")");
+			initData(ServicesConfig.GRABTASK);
+		}
+	}
 	
 	public void initData(String url,Param... params) {
+		 startProgressDialog("正在查询");
          Request request=httpEngine.createRequest(url, params);
          Call call=httpEngine.createRequestCall(request);
          call.enqueue(new Callback() {
@@ -272,6 +307,7 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 	public void onDestroy() {
 		super.onDestroy();
 		if (mLocationClient.isStarted()) {
+			mLocationClient.unRegisterLocationListener(myListener);
 			mLocationClient.stop();
 		}
 	}

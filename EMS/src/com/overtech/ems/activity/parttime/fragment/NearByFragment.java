@@ -3,21 +3,13 @@ package com.overtech.ems.activity.parttime.fragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.overtech.ems.R;
 import com.overtech.ems.activity.parttime.nearby.NearByListFragment;
 import com.overtech.ems.activity.parttime.nearby.NearByMapFragment;
@@ -31,7 +23,6 @@ public class NearByFragment extends Fragment implements OnClickListener {
 	private FragmentTransaction transaction;
 	private Fragment mNearByMap;
 	private Fragment mNearByList;
-	private int one;
 	private TextView mHeadTitle;
 
 	@Override
