@@ -56,7 +56,7 @@ public class BusinessConfig {
 	/**
 	 * 12.任务包详情
 	 */
-	public static final String URL_TASK_PACKAGE_DETAIL ="/taskPackageDetail.action";
+	public static final String URL_TASK_PACKAGE_DETAIL ="/task/taskPackageDetail.action";
 	/**
 	 * 13.电梯详情
 	 */

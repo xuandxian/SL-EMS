@@ -2,6 +2,7 @@ package com.overtech.ems.activity.parttime.nearby;
 
 import java.util.ArrayList;
 import com.overtech.ems.R;
+import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.GrabTaskAdapter;
 import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
 import com.overtech.ems.entity.test.Data5;
@@ -13,7 +14,6 @@ import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListVi
 import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenu;
 import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuCreator;
 import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuItem;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -34,7 +34,7 @@ import android.widget.TextView;
  * @description 点击地图Marker（小区名称），显示该小区具体任务包
  * @date 2015-10-27
  */
-public class TaskPackageListActivity extends Activity {
+public class TaskPackageListActivity extends BaseActivity {
 	private TextView mHeadContent;
 	private ImageView mHeadBack;
 	private PullToRefreshSwipeMenuListView mTaskPackageList;
@@ -50,14 +50,13 @@ public class TaskPackageListActivity extends Activity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		Bundle bundle = this.getIntent().getExtras();
-		mCommunity = bundle.getString("name");
+		mCommunity = bundle.getString(" ");
 		setContentView(R.layout.activity_task_package_list);
 		findViewById();
-		getData(mCommunity);
-		initListView();
-		init();
+//		getData(mCommunity);
+//		initListView();
+//		init();
 	}
 
 	private void findViewById() {
@@ -101,9 +100,6 @@ public class TaskPackageListActivity extends Activity {
 	}
 
 	private void init() {
-		context = TaskPackageListActivity.this;
-		dialogBuilder = NiftyDialogBuilder.getInstance(context);
-		progressDialog = CustomProgressDialog.createDialog(context);
 		mHeadContent.setText(mCommunity);
 		mHeadBack.setVisibility(View.VISIBLE);
 		mTaskPackageList.setMenuCreator(creator);

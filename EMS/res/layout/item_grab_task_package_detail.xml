@@ -11,7 +11,16 @@
         android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp"
         android:singleLine="true"
-        android:text="31号楼1号电梯（全包）" />
+        android:text="31号楼1号电梯" />
+    <TextView
+        android:id="@+id/tv_grab_task_package_work_type"
+        style="@style/tv_list_primary_style"
+        android:layout_alignBaseline="@+id/tv_grab_task_package_name"
+        android:layout_alignBottom="@+id/tv_grab_task_package_name"
+        android:layout_toRightOf="@+id/tv_grab_task_package_name"
+        android:singleLine="true"
+        android:layout_marginLeft="3dp"
+        android:text="(半月保)" />
 
     <TextView
         android:id="@+id/tv_grab_task_package_productor"

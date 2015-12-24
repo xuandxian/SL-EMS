@@ -1,6 +1,8 @@
-package com.overtech.ems.entity.parttime;
+package com.overtech.ems.entity.bean;
 
 import java.util.List;
+
+import com.overtech.ems.entity.parttime.TaskPackage;
 /**
  * 
  * @author Will

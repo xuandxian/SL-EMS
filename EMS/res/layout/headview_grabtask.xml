@@ -14,7 +14,7 @@
         android:src="@drawable/icon_common_back" />
 
     <TextView
-        android:id="@+id/tv_grab_package_headTitle2"
+        android:id="@+id/tv_headTitle_taskno"
         style="@style/tv_hint_white_style"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
@@ -22,9 +22,9 @@
         android:text="WA021201510190001" />
 
     <TextView
-        android:id="@+id/tv_grab_package_headTitle"
+        android:id="@+id/tv_headTitle_community_name"
         style="@style/tv_title_white_style"
-        android:layout_above="@+id/tv_grab_package_headTitle2"
+        android:layout_above="@+id/tv_headTitle_taskno"
         android:layout_centerHorizontal="true"
         android:text="丰业广元公寓31—35号" />
 

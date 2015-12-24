@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -70,12 +71,12 @@ public class GrabTaskAdapter extends BaseAdapter {
 		numberFormat.setMaximumFractionDigits(2);
 		holder.distance.setText(numberFormat.format(DistanceUtil.getDistance(mLocation, latlng)/1000.0)+ "km");
 		holder.date.setText(format.format(new Date(data.getMaintenanceDate())));// 时间尚未刷新
-		if (data.getIsFinish() == 0) {
+		if (TextUtils.equals(data.getIsFinish(), "0")) {
 			holder.iv_icon.setImageResource(R.drawable.icon_task_none);
-		} else if (data.getIsFinish() == 1) {
+		} else if (TextUtils.equals(data.getIsFinish(), "1")) {
 			holder.iv_icon.setImageResource(R.drawable.icon_task_done);
 		}
-		if (data.getTopState() == 1) {
+		if (TextUtils.equals(data.getTopState(),"1")) {
 			holder.hot.setVisibility(View.VISIBLE);
 		} else {
 			holder.hot.setVisibility(View.GONE);

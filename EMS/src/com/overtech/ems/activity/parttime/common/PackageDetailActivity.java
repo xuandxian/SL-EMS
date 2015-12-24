@@ -1,10 +1,12 @@
 package com.overtech.ems.activity.parttime.common;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -13,58 +15,101 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.PackageDetailAdapter;
-import com.overtech.ems.entity.test.Data2;
-import com.overtech.ems.widget.CustomProgressDialog;
+import com.overtech.ems.entity.bean.TaskPackageDetailBean;
+import com.overtech.ems.entity.common.ServicesConfig;
+import com.overtech.ems.entity.parttime.TaskPackageDetail;
+import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
-import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
 public class PackageDetailActivity extends BaseActivity {
 	private ListView mPackageDetailListView;
 	private PackageDetailAdapter adapter;
-	private ArrayList<Data2> list;
+	private ArrayList<TaskPackageDetail> list;
 	private Button mGrabTaskBtn;
-	private NiftyDialogBuilder dialogBuilder;
 	private Effectstype effect;
-	private Context context;
 	private ImageView mDoBack;
-	private CustomProgressDialog progressDialog;
 	private String mCommunityName;
-	private TextView mHeadTitle;
+	private TextView mHeadTitleCommunity;
 	private ImageView mRightContent;
+	private String mTaskNo;
+	private TextView mHeadTitleTaskNo;
+	
+	private Handler handler = new Handler() {
+		public void handleMessage(android.os.Message msg) {
+			String json = (String) msg.obj;
+			Gson gson = new Gson();
+			TaskPackageDetailBean tasks = gson.fromJson(json, TaskPackageDetailBean.class);
+			list = (ArrayList<TaskPackageDetail>) tasks.getModel();
+			adapter = new PackageDetailAdapter(context, list);
+			mPackageDetailListView.setAdapter(adapter);
+		};
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_package_detail);
+		getExtrasData();
 		findViewById();
-		initData();
+		getDataByTaskNo(ServicesConfig.TASK_PACKAGE_DETAIL);
 		init();
 	}
 
-	private void init() {
-		context = PackageDetailActivity.this;
-		dialogBuilder = NiftyDialogBuilder.getInstance(context);
-		progressDialog = CustomProgressDialog.createDialog(context);
+	private void getExtrasData() {
 		Bundle bundle = getIntent().getExtras();
-        //TODO下一行会出现空指针，什么情况？
-		if (bundle==null) {
-			return;
-		}
-		mCommunityName = bundle.getString("CommunityName");
-		mHeadTitle.setText(mCommunityName);
-		adapter = new PackageDetailAdapter(context, list);
-		mPackageDetailListView.setAdapter(adapter);
-		mPackageDetailListView
-				.setOnItemClickListener(new OnItemClickListener() {
+		mCommunityName = bundle.getString("mCommunityName");
+		mTaskNo=bundle.getString("mTaskNo");
+	}
+	private void findViewById() {
+		mPackageDetailListView = (ListView) findViewById(R.id.grab_task_package_listview);
+		mGrabTaskBtn = (Button) findViewById(R.id.btn_grab_task_package);
+		mHeadTitleCommunity = (TextView) findViewById(R.id.tv_headTitle_community_name);
+		mHeadTitleTaskNo = (TextView) findViewById(R.id.tv_headTitle_taskno);
+		mDoBack = (ImageView) findViewById(R.id.iv_grab_headBack);
+		mRightContent=(ImageView)findViewById(R.id.iv_navicate_right);
+		mRightContent.setBackgroundResource(R.drawable.icon_map);
+		mRightContent.setVisibility(View.VISIBLE);
+	}
+	private void getDataByTaskNo(String url) {
+		startProgressDialog("正在查询...");
+		Param pTaskNo=new Param("mTaskNo",mTaskNo);
+		Request request=httpEngine.createRequest(url,pTaskNo);
+        Call call=httpEngine.createRequestCall(request);
+        call.enqueue(new Callback() {
+			
+			@Override
+			public void onResponse(Response response) throws IOException {
+				stopProgressDialog();
+				Message msg = new Message();
+				msg.obj = response.body().string();
+				handler.sendMessage(msg);
+			}
+			
+			@Override
+			public void onFailure(Request request, IOException e) {
+				stopProgressDialog();
+			}
+		});
+		
+	}
 
-					@Override
-					public void onItemClick(AdapterView<?> parent, View view,
-							int position, long id) {
-						Intent intent = new Intent(PackageDetailActivity.this,
-								ElevatorDetailActivity.class);
+	private void init() {
+		mHeadTitleCommunity.setText(mCommunityName);
+		mHeadTitleTaskNo.setText(mTaskNo);
+		mPackageDetailListView.setOnItemClickListener(new OnItemClickListener() {
+					
+			        @Override
+					public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+						Intent intent = new Intent(PackageDetailActivity.this,ElevatorDetailActivity.class);
 						startActivity(intent);
 					}
 				});
@@ -92,19 +137,10 @@ public class PackageDetailActivity extends BaseActivity {
 		});
 	}
 
-	private void findViewById() {
-		mPackageDetailListView = (ListView) findViewById(R.id.grab_task_package_listview);
-		mGrabTaskBtn = (Button) findViewById(R.id.btn_grab_task_package);
-		mHeadTitle = (TextView) findViewById(R.id.tv_grab_package_headTitle);
-		mDoBack = (ImageView) findViewById(R.id.iv_grab_headBack);
-		mRightContent=(ImageView)findViewById(R.id.iv_navicate_right);
-		mRightContent.setBackgroundResource(R.drawable.icon_map);
-		mRightContent.setVisibility(View.VISIBLE);
-	}
 	private void showDialog() {
 		effect = Effectstype.Slideright;
 		dialogBuilder.withTitle("温馨提示").withTitleColor(R.color.main_primary)
-		.withDividerColor(R.color.divider_color).withMessage("您是否要接此单？")
+		.withDividerColor("#11000000").withMessage("您是否要接此单？")
 		.withMessageColor(R.color.main_primary).withDialogColor("#FFFFFFFF")
 		.isCancelableOnTouchOutside(true).withDuration(700)
 		.withEffect(effect).withButtonDrawable(R.color.main_white)
@@ -132,23 +168,4 @@ public class PackageDetailActivity extends BaseActivity {
 				}).show();
 	}
 
-	private void initData() {
-		// 测试数据
-		Data2 data1 = new Data2("31号楼1号电梯（月保）", "上海三菱", "80032981234",
-				"20层/20站");
-		Data2 data2 = new Data2("31号楼2号电梯（季保）", "上海三菱", "80032981235",
-				"23层/20站");
-		Data2 data3 = new Data2("32号楼1号电梯（半年保）", "上海三菱", "80032981236",
-				"20层/20站");
-		Data2 data4 = new Data2("32号楼2号电梯（月保）", "上海三菱", "80032981237",
-				"25层/20站");
-		Data2 data5 = new Data2("33号楼2号电梯（半年保）", "上海三菱", "80032981238",
-				"25层/20站");
-		list = new ArrayList<Data2>();
-		list.add(0, data1);
-		list.add(1, data2);
-		list.add(2, data3);
-		list.add(3, data4);
-		list.add(4, data5);
-	}
 }

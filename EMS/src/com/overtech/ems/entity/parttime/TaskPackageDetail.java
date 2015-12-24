@@ -6,19 +6,42 @@ package com.overtech.ems.entity.parttime;
 public class TaskPackageDetail {
     private String elevatorName;       //电梯名称
     private String elevatorBrand;      //电梯品牌
+    private String workType;           //维保类型    
     private String elevatorNo;         //电梯编号
+    private String maintainPrice;      //维保价格
     private String elevatorFloor;      //电梯层站
-    private String partnerPhone;       //搭档电弧（主要用于我的任务单）
+    private String partnerPhone;       //搭档电话（主要用于我的任务单）
+    
+	public TaskPackageDetail(String elevatorName, String elevatorBrand,
+			String workType, String elevatorNo, String maintainPrice,
+			String elevatorFloor, String partnerPhone) {
+		super();
+		this.elevatorName = elevatorName;
+		this.elevatorBrand = elevatorBrand;
+		this.workType = workType;
+		this.elevatorNo = elevatorNo;
+		this.maintainPrice = maintainPrice;
+		this.elevatorFloor = elevatorFloor;
+		this.partnerPhone = partnerPhone;
+	}
 
-    public TaskPackageDetail(String elevatorName, String elevatorBrand, String elevatorNo, String elevatorFloor, String partnerPhone) {
-        this.elevatorName = elevatorName;
-        this.elevatorBrand = elevatorBrand;
-        this.elevatorNo = elevatorNo;
-        this.elevatorFloor = elevatorFloor;
-        this.partnerPhone = partnerPhone;
-    }
+	public String getMaintainPrice() {
+		return maintainPrice;
+	}
 
-    public String getElevatorName() {
+	public void setMaintainPrice(String maintainPrice) {
+		this.maintainPrice = maintainPrice;
+	}
+
+	public String getWorkType() {
+		return workType;
+	}
+
+	public void setWorkType(String workType) {
+		this.workType = workType;
+	}
+
+	public String getElevatorName() {
         return elevatorName;
     }
 

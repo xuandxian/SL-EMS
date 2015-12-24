@@ -2,9 +2,7 @@ package com.overtech.ems.activity.adapter;
 
 import java.util.ArrayList;
 import com.overtech.ems.R;
-import com.overtech.ems.activity.adapter.TaskListDetailsAdapter.ViewHolder;
-import com.overtech.ems.entity.test.Data2;
-import android.R.integer;
+import com.overtech.ems.entity.parttime.TaskPackageDetail;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +13,9 @@ import android.widget.TextView;
 public class PackageDetailAdapter extends BaseAdapter {
 
 	private Context context;
-	private ArrayList<Data2> list = new ArrayList<Data2>();
+	private ArrayList<TaskPackageDetail> list = new ArrayList<TaskPackageDetail>();
 
-	public PackageDetailAdapter(Context context, ArrayList<Data2> list) {
+	public PackageDetailAdapter(Context context, ArrayList<TaskPackageDetail> list) {
 		super();
 		this.context = context;
 		this.list = list;
@@ -41,13 +39,15 @@ public class PackageDetailAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder = null;
-		Data2 data = list.get(position);
+		TaskPackageDetail data = list.get(position);
 		if (convertView == null) {
 			holder = new ViewHolder();
 			convertView = LayoutInflater.from(context).inflate(
 					R.layout.item_grab_task_package_detail, null);
 			holder.mElevtorName = (TextView) convertView
 					.findViewById(R.id.tv_grab_task_package_name);
+			holder.mWorkType = (TextView) convertView
+					.findViewById(R.id.tv_grab_task_package_work_type);
 			holder.mElevtorProductor = (TextView) convertView
 					.findViewById(R.id.tv_grab_task_package_productor);
 			holder.mElevtorNo = (TextView) convertView
@@ -59,15 +59,17 @@ public class PackageDetailAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		holder.mElevtorName.setText(data.getElevtorName());
-		holder.mElevtorProductor.setText(data.getElevtorProductor());
-		holder.mElevtorNo.setText(data.getElevtorNo());
-		holder.mElevtorType.setText(data.getElevtorType());
+		holder.mElevtorName.setText(data.getElevatorName());
+		holder.mWorkType.setText("("+data.getWorkType()+")");
+		holder.mElevtorProductor.setText(data.getElevatorBrand());
+		holder.mElevtorNo.setText(data.getElevatorNo());
+		holder.mElevtorType.setText(data.getElevatorFloor());
 		return convertView;
 	}
 
 	class ViewHolder {
 		public TextView mElevtorName;
+		public TextView mWorkType;
 		public TextView mElevtorProductor;
 		public TextView mElevtorNo;
 		public TextView mElevtorType;
