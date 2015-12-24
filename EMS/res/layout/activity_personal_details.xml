@@ -42,7 +42,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/icon_personal_my" />
+                     />
             </RelativeLayout>
 
             <RelativeLayout
@@ -163,7 +163,9 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
-                    android:layout_marginRight="15dp" />
+                    android:layout_marginRight="15dp"
+                    android:isIndicator="true"
+                     />
 
                 <TextView
                     android:id="@+id/textView2"

@@ -12,6 +12,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.baidu.location.BDLocation;
+import com.baidu.location.BDLocationListener;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.parttime.tasklist.ScanCodeActivity;
 import com.overtech.ems.activity.parttime.tasklist.TaskListDonetFragment;
@@ -42,6 +45,7 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 		View view = inflater.inflate(R.layout.fragment_task_list, container,
 				false);
 		initView(view);
+		
 		setDefaultView();
 		return view;
 	}
@@ -65,8 +69,8 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 		transaction=manager.beginTransaction();
 		transaction.replace(R.id.fl_container, mTaskNone).commit();
 	}
-
-
+	
+	
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
