@@ -67,7 +67,7 @@ public class PersonalBoundsActivity extends Activity implements OnClickListener 
 		mHeadContent.setText("奖励记录");
 		context=PersonalBoundsActivity.this;
 		mDoBack.setOnClickListener(this);
-		adapter=new PersonalAccountListAdapter(context, list);
+//		adapter=new PersonalAccountListAdapter(context, list);
 		mPersonalAccountListView.setAdapter(adapter);
 	}
 	@Override

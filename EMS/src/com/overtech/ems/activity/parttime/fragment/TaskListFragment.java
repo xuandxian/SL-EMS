@@ -15,10 +15,14 @@ import android.widget.TextView;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
+import com.baidu.location.LocationClient;
+import com.baidu.location.LocationClientOption;
+import com.baidu.location.LocationClientOption.LocationMode;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.parttime.tasklist.ScanCodeActivity;
 import com.overtech.ems.activity.parttime.tasklist.TaskListDonetFragment;
 import com.overtech.ems.activity.parttime.tasklist.TaskListNoneFragment;
+import com.overtech.ems.utils.Utilities;
 
 public class TaskListFragment extends Fragment implements OnClickListener {
 
@@ -31,7 +35,7 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 	private FragmentTransaction transaction;
 	private Fragment mTaskNone;
 	private Fragment mTaskDonet;
-
+	
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -47,9 +51,11 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 		initView(view);
 		
 		setDefaultView();
+		
 		return view;
 	}
 
+	
 	private void initView(View view) {
 		mHead=(TextView) view.findViewById(R.id.tv_headTitle);
 		mHeadRightContent=(TextView) view.findViewById(R.id.tv_headTitleRight);		
@@ -69,7 +75,6 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 		transaction=manager.beginTransaction();
 		transaction.replace(R.id.fl_container, mTaskNone).commit();
 	}
-	
 	
 	@Override
 	public void onClick(View v) {
@@ -107,4 +112,5 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 			transaction.hide(from).show(to).commit();
 		}
 	}
+	
 }

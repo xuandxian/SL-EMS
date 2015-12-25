@@ -223,7 +223,7 @@ public class CustomScrollView extends ScrollView {
 			//当发生move事件时就中断事件，让CustomScrollView自身来消费事件
 			int disX=(int) Math.abs(ev.getX()-downX);
 			int disY=(int) Math.abs(ev.getY()-downY);
-			if(disX>1||disY>1){
+			if(disX>2||disY>2){
 				result=true;
 			}
 			break;
