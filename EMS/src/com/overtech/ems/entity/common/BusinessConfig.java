@@ -104,7 +104,7 @@ public class BusinessConfig {
 	/**
 	 * 24.我的账单（已结算／未结算）
 	 */
-    public static final String URL_PERSONAL_BILL = "/personalBill.action";
+    public static final String URL_PERSONAL_BILL = "/employee/personalBill.action";
 	/**
 	 * 25.奖励记录
 	 */

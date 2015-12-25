@@ -1,8 +1,9 @@
 package com.overtech.ems.activity.adapter;
 
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import com.overtech.ems.R;
-import com.overtech.ems.entity.test.Data2;
+import java.util.List;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,12 +12,15 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.overtech.ems.R;
+import com.overtech.ems.entity.parttime.Bill;
+
 public class PersonalAccountListAdapter extends BaseAdapter {
 	
 	private Context context;
-	private ArrayList<Data2> list = new ArrayList<Data2>();
+	private List<Bill> list ;
 	
-	public PersonalAccountListAdapter(Context context, ArrayList<Data2> list) {
+	public PersonalAccountListAdapter(Context context, List<Bill> list) {
 		super();
 		this.context = context;
 		this.list = list;
@@ -40,7 +44,7 @@ public class PersonalAccountListAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder = null;
-		Data2 data=list.get(position);
+		Bill data=list.get(position);
 		if (convertView == null) {
 			holder = new ViewHolder();
 			convertView = LayoutInflater.from(context).inflate(
@@ -58,10 +62,18 @@ public class PersonalAccountListAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		holder.mVillageName.setText(data.getElevtorName());
-		holder.mMaintenanceTime.setText(data.getElevtorProductor());
-		holder.mPersonalAccount.setText(data.getElevtorNo());
-		holder.mMaintenanceEndTime.setText(data.getElevtorType());
+		holder.mVillageName.setText(data.getProjectName());
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+		Date date=new Date(data.getMaintenanceDate());
+		Date date2=new Date(data.getClosingDate());
+		
+		holder.mMaintenanceTime.setText(sdf.format(date));
+		holder.mPersonalAccount.setText(data.getTotalPrice());
+		if(data.getClosingDate()==0){
+			holder.mMaintenanceEndTime.setText(null);
+		}else{
+			holder.mMaintenanceEndTime.setText(sdf.format(date2));
+		}
 		return convertView;
 	}
 

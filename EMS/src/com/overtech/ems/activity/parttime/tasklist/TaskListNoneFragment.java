@@ -1,6 +1,7 @@
 package com.overtech.ems.activity.parttime.tasklist;
 
 import java.util.ArrayList;
+
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
@@ -14,10 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.baidu.location.LocationClientOption.LocationMode;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.route.BaiduMapRoutePlan;
 import com.baidu.mapapi.utils.route.RouteParaOption;
@@ -45,7 +48,9 @@ public class TaskListNoneFragment extends Fragment {
 	private Effectstype effect;
 	private ArrayList<Data4> list;
 	private CustomProgressDialog progressDialog;
-
+	private LocationClient mLocationClient;
+	private double lat;
+	private double lng;
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -60,15 +65,40 @@ public class TaskListNoneFragment extends Fragment {
 		findViewById(view);
 		getData();
 		init();
+		initLocation();
 		return view;
 
+	}
+	private void initLocation() {
+		mLocationClient=new LocationClient(mActivity.getApplicationContext());
+		mLocationClient.registerLocationListener(new MyLocationListener());
+		LocationClientOption options=new LocationClientOption();
+		options.setLocationMode(LocationMode.Hight_Accuracy);
+		options.setOpenGps(true);
+		mLocationClient.setLocOption(options);
+		mLocationClient.start();
 	}
 
 	private void findViewById(View view) {
 		mSwipeListView = (PullToRefreshSwipeMenuListView) view
 				.findViewById(R.id.sl_task_list_listview);
 	}
+	public class MyLocationListener implements BDLocationListener{
 
+		
+
+		@Override
+		public void onReceiveLocation(BDLocation location) {
+			if(location==null){
+				Utilities.showToast("定位失败", mActivity);
+				return ;
+			}
+			 lat=location.getLatitude();
+			 lng=location.getLongitude();
+		}
+		
+	}
+	
 	private void getData() {
 		Data4 data = new Data4("南虹小区", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
 		Data4 data1 = new Data4("徐家汇景园", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
@@ -251,7 +281,7 @@ public class TaskListNoneFragment extends Fragment {
 			e.printStackTrace();
 		}
 	}
-
+	
 	private int dp2px(int dp) {
 		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
 				getResources().getDisplayMetrics());
