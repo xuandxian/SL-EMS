@@ -19,9 +19,6 @@ import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
-import com.overtech.ems.utils.Utilities;
-
-import android.R.integer;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;

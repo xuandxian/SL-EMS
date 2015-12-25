@@ -3,7 +3,6 @@ package com.overtech.ems.activity.parttime.nearby;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -13,11 +12,14 @@ import com.baidu.mapapi.map.BaiduMap.OnMapLongClickListener;
 import com.baidu.mapapi.map.BaiduMap.OnMarkerClickListener;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.CircleOptions;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
+import com.baidu.mapapi.map.OverlayOptions;
+import com.baidu.mapapi.map.Stroke;
 import com.baidu.mapapi.map.MarkerOptions.MarkerAnimateType;
 import com.baidu.mapapi.model.LatLng;
 import com.google.gson.Gson;
@@ -59,7 +61,7 @@ public class NearByMapFragment extends BaseFragment{
 	private View view;
 	private TaskPackage data;
 	public LocationClient mLocationClient=null;
-	private LatLng myLocation;
+	private LatLng myLocation,clickLocation;
 	public BDLocationListener myListener=new MyLocationListener();
 	
 	private Handler handler = new Handler() {
@@ -95,8 +97,12 @@ public class NearByMapFragment extends BaseFragment{
 		mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(17.0f));// 缩放到16
 	}
 
-	private void initData(String url,Param... params) {
-		startProgressDialog("正在定位...");
+	private void initData(String url,String flag,Param... params) {
+		if (TextUtils.equals(flag, "0")) {
+			startProgressDialog("正在定位...");
+		}else {
+			startProgressDialog("正在查询...");
+		}
 		Request request=httpEngine.createRequest(url, params);
         Call call=httpEngine.createRequestCall(request);
         call.enqueue(new Callback() {
@@ -126,10 +132,9 @@ public class NearByMapFragment extends BaseFragment{
 			}
 			Log.e("NearByMapFragment", "定位成功,location:"+"("+location.getLatitude()+","+location.getLongitude()+")");
 			myLocation=new LatLng(location.getLatitude(), location.getLongitude());
-			setMyLocationMarker(myLocation);
 			Param latitude = new Param("latitude", String.valueOf(location.getLatitude()));
 			Param longitude = new Param("longitude", String.valueOf(location.getLongitude()));
-			initData(ServicesConfig.NEARBY,latitude,longitude);
+			initData(ServicesConfig.NEARBY,"0",latitude,longitude);
 		}
 	}
 	
@@ -138,7 +143,7 @@ public class NearByMapFragment extends BaseFragment{
 		MarkerOptions option = new MarkerOptions().position(point).icon(bitmap).zIndex(0);
 		option.animateType(MarkerAnimateType.grow);
 		mBaiduMap.addOverlay(option);
-		MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(point);
+		MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(myLocation);
 		mBaiduMap.animateMapStatus(u);
 	}
 	
@@ -147,39 +152,58 @@ public class NearByMapFragment extends BaseFragment{
 			mMapView = (MapView) view.findViewById(R.id.bmapView);
 		}
 		mBaiduMap = mMapView.getMap();
-		for (int i = 0; i < dataList.size(); i++) {
-			data = dataList.get(i);
-			String lat = data.getLatitude();
-			String lon = data.getLongitude();
-			if (!(TextUtils.isEmpty(lat) || TextUtils.isEmpty(lon))) {
-				LatLng ll = new LatLng(Double.parseDouble(lat),Double.parseDouble(lon));
-				Button button = new Button(getActivity());
-				button.setBackgroundResource(R.drawable.map_popcontent);
-				button.setGravity(Gravity.CENTER);
-				button.setPadding(5, 0, 5, 30);
-				button.setTextColor(Color.WHITE);
-				button.setText(data.getProjectName());
-				bitmap = BitmapDescriptorFactory.fromView(button);
-				mOverlayOptions = new MarkerOptions().position(ll).icon(bitmap).zIndex(11).draggable(false).period(10);
-				mOverlayOptions.animateType(MarkerAnimateType.drop);
-				mMarker = (Marker) (mBaiduMap.addOverlay(mOverlayOptions));
-				mMarker.setTitle(data.getProjectName());
-				mHashMap.put(data.getTaskNo(), data);
-				mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener() {
-					
-					@Override
-					public boolean onMarkerClick(Marker arg0) {
-						Intent intent = new Intent(activity,PackageDetailActivity.class);
-						Bundle bundle = new Bundle();
-						bundle.putString("CommunityName", data.getProjectName());
-						bundle.putString("TaskNo", data.getTaskNo());
-						bundle.putString("Longitude", data.getLongitude());
-						bundle.putString("Latitude", data.getLatitude());
-						intent.putExtras(bundle);
-						startActivity(intent);
-						return true;
-					}
-				});
+		if (null != mBaiduMap) {
+			mBaiduMap.clear();
+		} else {
+			return;
+		}
+		setMyLocationMarker(myLocation);
+		if (dataList.size()==0) {
+			Utilities.showToast("无数据", context);
+		}else {
+			if (null!=clickLocation) {
+				OverlayOptions ooCircle = new CircleOptions()
+				.fillColor(0x6663B8FF).center(clickLocation)
+				.stroke(new Stroke(1, 0x330000ff))
+				.radius(10000);
+				mBaiduMap.addOverlay(ooCircle);
+				MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(clickLocation);
+				mBaiduMap.animateMapStatus(u);
+			}
+	        for (int i = 0; i < dataList.size(); i++) {
+				data = dataList.get(i);
+				String lat = data.getLatitude();
+				String lon = data.getLongitude();
+				if (!(TextUtils.isEmpty(lat) || TextUtils.isEmpty(lon))) {
+					LatLng ll = new LatLng(Double.parseDouble(lat),Double.parseDouble(lon));
+					Button button = new Button(getActivity());
+					button.setBackgroundResource(R.drawable.map_popcontent);
+					button.setGravity(Gravity.CENTER);
+					button.setPadding(5, 0, 5, 30);
+					button.setTextColor(Color.WHITE);
+					button.setText(data.getProjectName());
+					bitmap = BitmapDescriptorFactory.fromView(button);
+					mOverlayOptions = new MarkerOptions().position(ll).icon(bitmap).zIndex(11).draggable(false).period(10);
+					mOverlayOptions.animateType(MarkerAnimateType.drop);
+					mMarker = (Marker) (mBaiduMap.addOverlay(mOverlayOptions));
+					mMarker.setTitle(data.getProjectName());
+					mHashMap.put(data.getTaskNo(), data);
+					mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener() {
+						
+						@Override
+						public boolean onMarkerClick(Marker arg0) {
+							Intent intent = new Intent(activity,PackageDetailActivity.class);
+							Bundle bundle = new Bundle();
+							bundle.putString("CommunityName", data.getProjectName());
+							bundle.putString("TaskNo", data.getTaskNo());
+							bundle.putString("Longitude", data.getLongitude());
+							bundle.putString("Latitude", data.getLatitude());
+							intent.putExtras(bundle);
+							startActivity(intent);
+							return true;
+						}
+					});
+				}
 			}
 		}
 	}
@@ -189,7 +213,11 @@ public class NearByMapFragment extends BaseFragment{
 
 			@Override
 			public void onMapLongClick(LatLng point) {
-				Utilities.showToast("长按地图", context);
+				mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(12.0f));
+				clickLocation=point;
+				Param latitude = new Param("latitude", String.valueOf(point.latitude));
+				Param longitude = new Param("longitude", String.valueOf(point.longitude));
+				initData(ServicesConfig.NEARBY,"1",latitude,longitude);
 			}
 		});
 	}
