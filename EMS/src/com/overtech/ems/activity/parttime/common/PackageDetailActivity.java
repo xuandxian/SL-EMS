@@ -2,7 +2,6 @@ package com.overtech.ems.activity.parttime.common;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,7 +14,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
@@ -41,6 +39,8 @@ public class PackageDetailActivity extends BaseActivity {
 	private TextView mHeadTitleCommunity;
 	private ImageView mRightContent;
 	private String mTaskNo;
+	private String mLongitude; //经度
+	private String mLatitude;  //纬度
 	private TextView mHeadTitleTaskNo;
 	
 	private Handler handler = new Handler() {
@@ -66,9 +66,15 @@ public class PackageDetailActivity extends BaseActivity {
 
 	private void getExtrasData() {
 		Bundle bundle = getIntent().getExtras();
-		mCommunityName = bundle.getString("mCommunityName");
-		mTaskNo=bundle.getString("mTaskNo");
+		if (null==bundle) {
+			return;
+		}
+		mCommunityName = bundle.getString("CommunityName");
+		mTaskNo=bundle.getString("TaskNo");
+		mLongitude=bundle.getString("Longitude");
+		mLatitude=bundle.getString("Latitude");
 	}
+	
 	private void findViewById() {
 		mPackageDetailListView = (ListView) findViewById(R.id.grab_task_package_listview);
 		mGrabTaskBtn = (Button) findViewById(R.id.btn_grab_task_package);
@@ -81,8 +87,8 @@ public class PackageDetailActivity extends BaseActivity {
 	}
 	private void getDataByTaskNo(String url) {
 		startProgressDialog("正在查询...");
-		Param pTaskNo=new Param("mTaskNo",mTaskNo);
-		Request request=httpEngine.createRequest(url,pTaskNo);
+		Param param=new Param("mTaskNo",mTaskNo);
+		Request request=httpEngine.createRequest(url,param);
         Call call=httpEngine.createRequestCall(request);
         call.enqueue(new Callback() {
 			
@@ -132,6 +138,11 @@ public class PackageDetailActivity extends BaseActivity {
 			@Override
 			public void onClick(View arg0) {
 				Intent intent=new Intent(PackageDetailActivity.this, ShowCommunityLocationActivity.class);
+				Bundle bundle=new Bundle();
+				bundle.putString("CommunityName", mCommunityName);
+				bundle.putString("Longitude", mLongitude);
+				bundle.putString("Latitude",mLatitude);
+				intent.putExtras(bundle);
 				startActivity(intent);
 			}
 		});

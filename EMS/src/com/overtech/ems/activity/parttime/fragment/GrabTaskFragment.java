@@ -14,14 +14,20 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
+
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -33,6 +39,7 @@ import com.overtech.ems.activity.BaseFragment;
 import com.overtech.ems.activity.adapter.GrabTaskAdapter;
 import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
 import com.overtech.ems.activity.parttime.grabtask.GrabTaskDoFilterActivity;
+import com.overtech.ems.activity.parttime.grabtask.KeyWordSerachActivity;
 import com.overtech.ems.entity.bean.TaskPackageBean;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.TaskPackage;
@@ -184,8 +191,10 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 				TaskPackage data = (TaskPackage) parent.getItemAtPosition(position);
 				Intent intent = new Intent(mActivity, PackageDetailActivity.class);
 				Bundle bundle = new Bundle();
-				bundle.putString("mCommunityName", data.getProjectName());
-				bundle.putString("mTaskNo", data.getTaskNo());
+				bundle.putString("CommunityName", data.getProjectName());
+				bundle.putString("TaskNo", data.getTaskNo());
+				bundle.putString("Longitude", data.getLongitude());
+				bundle.putString("Latitude", data.getLatitude());
 				intent.putExtras(bundle);
 				startActivity(intent);
 			}
@@ -198,10 +207,16 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 				startActivityForResult(intent, 0x1);
 			}
 		});
-		mKeyWordSearch.setOnClickListener(new OnClickListener() {
+		mKeyWordSearch.setOnEditorActionListener(new OnEditorActionListener() {
+			
 			@Override
-			public void onClick(View v) {
-				Utilities.showToast("nidianjilewo",context);
+			public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
+				if (actionId==EditorInfo.IME_ACTION_DONE) {
+					String keyWord=view.getText().toString().trim();
+					Param param = new Param("mKeyWord", keyWord);
+					initData(ServicesConfig.GRABTASK, param);
+				}
+				return true;
 			}
 		});
 	}

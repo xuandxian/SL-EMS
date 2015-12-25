@@ -1,7 +1,6 @@
 package com.overtech.ems.activity.parttime.common;
 
 import com.overtech.ems.R;
-import com.overtech.ems.entity.test.Data;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -14,10 +13,10 @@ public class BaiduMapInfoWindow extends LinearLayout {
 	private Context mContext = null;
 	private View mView = null;
 	private TextView mCommunityName;
-	private Data mData;
+	private String mData;
 
 
-	public BaiduMapInfoWindow(Context context, Data data) {
+	public BaiduMapInfoWindow(Context context, String data) {
 		super(context);
 		mContext = context;
 		mData = data;
@@ -37,13 +36,11 @@ public class BaiduMapInfoWindow extends LinearLayout {
 	}
 
 	private void initView() {
-		mView = LayoutInflater.from(mContext).inflate(R.layout.map_info_window,
-				null);
-		LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT,
-				LayoutParams.WRAP_CONTENT);
+		mView = LayoutInflater.from(mContext).inflate(R.layout.map_info_window,null);
+		LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
 		this.addView(mView, params);
 		mCommunityName = (TextView) (mView).findViewById(R.id.tv_baidumap_infowindow);
-		mCommunityName.setText(mData.getName());
+		mCommunityName.setText(mData);
 	}
 
 	public void setBackgroundResource(int resid) {

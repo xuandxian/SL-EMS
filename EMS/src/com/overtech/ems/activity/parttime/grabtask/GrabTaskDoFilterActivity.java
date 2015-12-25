@@ -12,14 +12,9 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.GridViewAdapter;
-import com.overtech.ems.activity.parttime.fragment.GrabTaskFragment;
-import com.overtech.ems.http.OkHttpClientManager.Param;
-import com.overtech.ems.utils.Utilities;
-
 import java.util.ArrayList;
 
 /**

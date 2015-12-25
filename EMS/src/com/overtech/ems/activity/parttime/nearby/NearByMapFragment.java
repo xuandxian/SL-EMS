@@ -173,6 +173,8 @@ public class NearByMapFragment extends BaseFragment{
 						Bundle bundle = new Bundle();
 						bundle.putString("CommunityName", data.getProjectName());
 						bundle.putString("TaskNo", data.getTaskNo());
+						bundle.putString("Longitude", data.getLongitude());
+						bundle.putString("Latitude", data.getLatitude());
 						intent.putExtras(bundle);
 						startActivity(intent);
 						return true;
