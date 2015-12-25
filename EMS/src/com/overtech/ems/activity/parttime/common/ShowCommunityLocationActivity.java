@@ -164,8 +164,10 @@ public class ShowCommunityLocationActivity extends BaseActivity {
 			mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(14.0f));
 		}else if (distance<2000 && distance>=1000) {
 			mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(15.0f));
-		}else if (distance<1000 && distance>=200) {
+		}else if (distance<1000 && distance>=500) {
 			mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(16.0f));
+		}else if (distance<500 && distance>=200) {
+			mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(17.0f));
 		}else {
 			mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(19.0f));
 		}
