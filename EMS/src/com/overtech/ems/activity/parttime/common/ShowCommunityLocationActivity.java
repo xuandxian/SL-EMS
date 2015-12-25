@@ -143,7 +143,6 @@ public class ShowCommunityLocationActivity extends BaseActivity {
 			myLocation=new LatLng(location.getLatitude(), location.getLongitude());
 			setMyLocationMarker(myLocation);
 			double distance=DistanceUtil.getDistance(myLocation,communituLocation);
-			Utilities.showToast("distance:"+distance, context);
 			animateMapStatusByDistance(distance);
 		}
 	}
@@ -167,10 +166,8 @@ public class ShowCommunityLocationActivity extends BaseActivity {
 			mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(15.0f));
 		}else if (distance<1000 && distance>=200) {
 			mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(16.0f));
-		}else if(distance<200 && distance>=50){
-			mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(17.0f));
 		}else {
-			mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(18.0f));
+			mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(19.0f));
 		}
 	}
 
