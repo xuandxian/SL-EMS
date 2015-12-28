@@ -1,10 +1,12 @@
 package com.overtech.ems.entity.parttime;
 
+import java.io.Serializable;
+
 /**
  * Created by Tony1213 on 15/12/16.
  * 任务包
  */
-public class TaskPackage {
+public class TaskPackage implements Serializable {
 	private String taskNo;          //维保单号
 	private String projectName;        //项目名称
 	private String elevatorAmounts;    //电梯数量

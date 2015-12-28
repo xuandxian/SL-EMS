@@ -6,7 +6,7 @@ public class SystemConfig {
 
 //	public static final String IP="http://192.168.1.122/slems/api/system";
 	
-//	public static final String IP="http://192.168.1.112:8081/slems/api/system";
+//	public static final String IP="http://192.168.1.111:8081/slems/api/system";
 	
 	public static final String PREFERENCES_NAME = "Preferences_ems";
 }

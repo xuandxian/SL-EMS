@@ -91,9 +91,6 @@ public class ShowCommunityLocationActivity extends BaseActivity {
 		mHeadContent.setText("小区位置");
 		mHeadBack.setVisibility(View.VISIBLE);
 		setCommunityMarker(communituLocation);
-		BaiduMapInfoWindow infoWindow = new BaiduMapInfoWindow(context,mCommunityName);
-		mInfoWindow = new InfoWindow(infoWindow, communituLocation, -40);
-		mBaiduMap.showInfoWindow(mInfoWindow);
 		mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener() {
 
 			@Override
@@ -124,6 +121,9 @@ public class ShowCommunityLocationActivity extends BaseActivity {
 		MarkerOptions option = new MarkerOptions().position(ll).icon(bitmap).zIndex(0);
 		option.animateType(MarkerAnimateType.grow);
 		mBaiduMap.addOverlay(option);
+		BaiduMapInfoWindow infoWindow = new BaiduMapInfoWindow(context,mCommunityName);
+		mInfoWindow = new InfoWindow(infoWindow, communituLocation, -40);
+		mBaiduMap.showInfoWindow(mInfoWindow);
 		MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
 		mBaiduMap.animateMapStatus(u);
 	}
