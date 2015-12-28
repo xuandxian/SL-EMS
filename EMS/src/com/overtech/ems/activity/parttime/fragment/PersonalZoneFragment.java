@@ -134,6 +134,7 @@ public class PersonalZoneFragment extends BaseFragment implements
 		initViews();
 		initEvents();
 		startProgressDialog("请稍后...");
+		progressDialog.setCanceledOnTouchOutside(false);
 		onLoading();
 		return view;
 	}
@@ -205,32 +206,32 @@ public class PersonalZoneFragment extends BaseFragment implements
 
 		Intent intent = new Intent();
 		switch (v.getId()) {
-		case R.id.rl_personal_details:
+		case R.id.rl_personal_details://我的账户
 			intent.setClass(mActivity, PersonalDeatilsActivity.class);
 			startActivity(intent);
 			break;
-		case R.id.rl_personal_account_list:
+		case R.id.rl_personal_account_list://我的账单
 			intent.setClass(mActivity, PersonalAccountListActivity.class);
 			startActivity(intent);
 			break;
-		case R.id.rl_personal_bounds:
+		case R.id.rl_personal_bounds://奖励记录
 			intent.setClass(mActivity, PersonalBoundsActivity.class);
 			startActivity(intent);
 			break;
-		case R.id.rl_personal_notice:
+		case R.id.rl_personal_notice://公告
 			// Utilities.showToast("你点击了公告", mActivity);
 			intent.setClass(mActivity, PersonalAnnouncementActivity.class);
 			startActivity(intent);
 			break;
-		case R.id.rl_cancle_list:
+		case R.id.rl_cancle_list://退单记录
 			intent.setClass(mActivity, PersonalCancleListActivity.class);
 			startActivity(intent);
 			break;
-		case R.id.rl_help_doc:
+		case R.id.rl_help_doc://帮助文档
 			intent.setClass(mActivity, PersonalHelpDocActivity.class);
 			startActivity(intent);
 			break;
-		case R.id.rl_about_app:
+		case R.id.rl_about_app://关于app
 			intent.setClass(mActivity, PersonalAboutAppActivity.class);
 			startActivity(intent);
 			break;

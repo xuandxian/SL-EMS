@@ -108,7 +108,7 @@ public class BusinessConfig {
 	/**
 	 * 25.奖励记录
 	 */
-	public static final String URL_PERSONAL_BONUS_LIST = "/personalBonusList.action";
+	public static final String URL_PERSONAL_BONUS_LIST = "/employee/personalBonusList.action";
 	/**
 	 * 26.退单纪录
 	 */
