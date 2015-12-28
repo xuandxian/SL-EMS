@@ -80,13 +80,9 @@ public class TaskListNoneFragment extends Fragment {
 	}
 
 	private void findViewById(View view) {
-		mSwipeListView = (PullToRefreshSwipeMenuListView) view
-				.findViewById(R.id.sl_task_list_listview);
+		mSwipeListView = (PullToRefreshSwipeMenuListView) view.findViewById(R.id.sl_task_list_listview);
 	}
 	public class MyLocationListener implements BDLocationListener{
-
-		
-
 		@Override
 		public void onReceiveLocation(BDLocation location) {
 			if(location==null){

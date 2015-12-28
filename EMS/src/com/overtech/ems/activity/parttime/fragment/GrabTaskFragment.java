@@ -16,10 +16,8 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
@@ -27,7 +25,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
-
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -39,7 +36,6 @@ import com.overtech.ems.activity.BaseFragment;
 import com.overtech.ems.activity.adapter.GrabTaskAdapter;
 import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
 import com.overtech.ems.activity.parttime.grabtask.GrabTaskDoFilterActivity;
-import com.overtech.ems.activity.parttime.grabtask.KeyWordSerachActivity;
 import com.overtech.ems.entity.bean.TaskPackageBean;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.TaskPackage;
@@ -67,7 +63,7 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 	private SwipeMenuCreator creator;
 	private Activity mActivity;
 	private ImageView mPartTimeDoFifter;
-	private  EditTextWithDelete mKeyWordSearch;
+	private EditTextWithDelete mKeyWordSearch;
 	private Effectstype effect;
 	private GrabTaskAdapter mAdapter;
 	private ArrayList<TaskPackage> list;
@@ -315,13 +311,12 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 					@Override
 					public void onClick(View v) {
 						dialogBuilder.dismiss();
-						progressDialog.setMessage("正在抢单...");
-						progressDialog.show();
+						startProgressDialog("正在抢单...");
 						new Handler().postDelayed(new Runnable() {
 
 							@Override
 							public void run() {
-								progressDialog.dismiss();
+								stopProgressDialog();
 							}
 						}, 3000);
 					}

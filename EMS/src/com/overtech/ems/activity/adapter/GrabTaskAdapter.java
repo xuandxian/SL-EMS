@@ -15,7 +15,6 @@ import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.overtech.ems.R;
 import com.overtech.ems.entity.parttime.TaskPackage;
-import com.overtech.ems.utils.Utilities;
 
 public class GrabTaskAdapter extends BaseAdapter {
 

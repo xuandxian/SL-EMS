@@ -24,7 +24,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -139,13 +138,12 @@ public class NearByListFragment extends BaseFragment implements IXListViewListen
 					@Override
 					public void onClick(View v) {
 						dialogBuilder.dismiss();
-						progressDialog.setMessage("正在抢单...");
-						progressDialog.show();
+						startProgressDialog("正在抢单...");
 						new Handler().postDelayed(new Runnable() {
 
 							@Override
 							public void run() {
-								progressDialog.dismiss();
+								stopProgressDialog();
 							}
 						}, 3000);
 					}

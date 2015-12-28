@@ -42,6 +42,7 @@ public class PackageDetailActivity extends BaseActivity {
 	private String mLongitude; //经度
 	private String mLatitude;  //纬度
 	private TextView mHeadTitleTaskNo;
+	private int totalPrice;
 	
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
@@ -51,6 +52,10 @@ public class PackageDetailActivity extends BaseActivity {
 			list = (ArrayList<TaskPackageDetail>) tasks.getModel();
 			adapter = new PackageDetailAdapter(context, list);
 			mPackageDetailListView.setAdapter(adapter);
+			for (int i = 0; i < list.size(); i++) {
+				totalPrice+=Integer.valueOf(list.get(i).getMaintainPrice());
+			}
+			mGrabTaskBtn.setText("抢单(￥"+String.valueOf(totalPrice)+"元)");
 		};
 	};
 
