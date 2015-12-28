@@ -32,6 +32,12 @@ public class GrabTaskAdapter extends BaseAdapter {
 		this.list = data;
 	}
 	
+	public GrabTaskAdapter(List<TaskPackage> list, Context context) {
+		super();
+		this.list = list;
+		this.context = context;
+	}
+	
 	public GrabTaskAdapter(List<TaskPackage> list,LatLng myLocation, Context context) {
 		super();
 		this.list = list;

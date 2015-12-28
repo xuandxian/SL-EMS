@@ -4,12 +4,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
+import com.baidu.mapapi.model.LatLng;
 import com.overtech.ems.R;
+import com.overtech.ems.activity.BaseFragment;
+import com.overtech.ems.activity.adapter.GrabTaskAdapter;
 import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
-import com.overtech.ems.entity.test.Data5;
-import com.overtech.ems.widget.CustomProgressDialog;
+import com.overtech.ems.entity.parttime.TaskPackage;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
-import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
 import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView;
 import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView.IXListViewListener;
 import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView.OnMenuItemClickListener;
@@ -18,12 +19,12 @@ import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenu;
 import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuCreator;
 import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuItem;
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,16 +32,18 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class NearByListFragment extends Fragment implements IXListViewListener {
+@SuppressWarnings("unchecked")
+public class NearByListFragment extends BaseFragment implements IXListViewListener {
 
 	private PullToRefreshSwipeMenuListView mNearBySwipeListView;
 	private SwipeMenuCreator creator;
 	private Activity mActivity;
-	private NiftyDialogBuilder dialogBuilder;
 	private Effectstype effect;
-	private CustomProgressDialog progressDialog;
 	private Handler mHandler;
-	private ArrayList<Data5> list;
+	private ArrayList<TaskPackage> list=new ArrayList<TaskPackage>();
+	private LatLng myLocation;
+	private GrabTaskAdapter mAdapter;
+	
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -48,27 +51,29 @@ public class NearByListFragment extends Fragment implements IXListViewListener {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-
-		View view = inflater.inflate(R.layout.fragment_nearby_list, container,
-				false);
-		dialogBuilder = NiftyDialogBuilder.getInstance(mActivity);
-		progressDialog=CustomProgressDialog.createDialog(mActivity);
-		getData();
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.fragment_nearby_list, container,false);
+		getExtralData();
 		initListView(view);
 		return view;
 	}
+	
+	private void getExtralData() {
+		Bundle bundle=getArguments();
+		if (null==bundle) {
+			return;
+		}
+		list=(ArrayList<TaskPackage>) getArguments().getSerializable("taskPackage");
+		myLocation=new LatLng(bundle.getDouble("latitude"), bundle.getDouble("longitude"));
+	}
 
 	private void initListView(View view) {
-		mNearBySwipeListView = (PullToRefreshSwipeMenuListView) view
-				.findViewById(R.id.sl_nearby_listview);
+		mNearBySwipeListView = (PullToRefreshSwipeMenuListView) view.findViewById(R.id.sl_nearby_listview);
 		creator = new SwipeMenuCreator() {
 			@Override
 			public void create(SwipeMenu menu) {
 				SwipeMenuItem openItem = new SwipeMenuItem(mActivity);
-				openItem.setBackground(new ColorDrawable(Color.rgb(0x00, 0xff,
-						0x00)));
+				openItem.setBackground(new ColorDrawable(Color.rgb(0xFF, 0x3A,0x30)));
 				openItem.setWidth(dp2px(90));
 				openItem.setTitle("抢");
 				openItem.setTitleSize(18);
@@ -77,67 +82,45 @@ public class NearByListFragment extends Fragment implements IXListViewListener {
 			}
 		};
 		mNearBySwipeListView.setMenuCreator(creator);
-//		GrabTaskAdapter mAdapter = new GrabTaskAdapter(list,mActivity);
-//		mNearBySwipeListView.setAdapter(mAdapter);
+		mAdapter = new GrabTaskAdapter(list,myLocation,mActivity);
+		mNearBySwipeListView.setAdapter(mAdapter);
 		mNearBySwipeListView.setPullRefreshEnable(true);
 		mNearBySwipeListView.setPullLoadEnable(true);
 		mNearBySwipeListView.setXListViewListener(this);
 		mHandler = new Handler();
-		
-		
-		
-		mNearBySwipeListView
-				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+		mNearBySwipeListView.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
 					@Override
-					public void onMenuItemClick(int position, SwipeMenu menu,
-							int index) {
+					public void onMenuItemClick(int position, SwipeMenu menu,int index) {
 						showDialog();
 					}
 				});
 		mNearBySwipeListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				Data5 data=(Data5) parent.getItemAtPosition(position);
+			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+				TaskPackage data=(TaskPackage) parent.getItemAtPosition(position);
 				Intent intent=new Intent(mActivity, PackageDetailActivity.class);
 				Bundle bundle=new Bundle();
-				bundle.putString("CommunityName", data.getName());
+				bundle.putString("CommunityName", data.getProjectName());
+				bundle.putString("TaskNo", data.getTaskNo());
+				bundle.putString("Longitude", data.getLongitude());
+				bundle.putString("Latitude", data.getLatitude());
 				intent.putExtras(bundle);
 				startActivity(intent);
 			}
 		});
 	}
-	private void getData() {
-		list=new ArrayList<Data5>();
-		Data5 data0=new Data5("0", "徐家汇景园0", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data1=new Data5("0", "徐家汇景园1", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data2=new Data5("0", "徐家汇景园2", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data3=new Data5("0", "虹桥小区0", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data4=new Data5("0", "虹桥小区1", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data5=new Data5("0", "虹桥小区2", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data6=new Data5("0", "虹桥小区3", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data7=new Data5("0", "丰业广元公寓0", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data8=new Data5("0", "丰业广元公寓1", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data9=new Data5("0", "丰业广元公寓2", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data10=new Data5("0", "丰业广元公寓3", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data11=new Data5("0", "乐山公寓0", "5", "0", "徐汇区广元西路", "13.5km", "2015/10/10");
-		Data5 data12=new Data5("0", "乐山公寓1", "5", "1", "徐汇区广元西路", "13.5km", "2015/10/10");
-		list.add(data0);
-		list.add(data1);
-		list.add(data2);
-		list.add(data3);
-		list.add(data4);
-		list.add(data5);
-		list.add(data6);
-		list.add(data7);
-		list.add(data8);
-		list.add(data9);
-		list.add(data10);
-		list.add(data11);
-		list.add(data12);
-	}
+	
+//	public void reflushAdapter(ArrayList<TaskPackage> data){
+//		Log.e("NearByListFragment", "reflushAdapter");
+//		if (!list.isEmpty()) {
+//			list.clear();
+//		}
+//		list.addAll(data);
+//		mAdapter.notifyDataSetChanged();
+//	}
+	
 	private void showDialog() {
 		effect = Effectstype.Slideright;
 		dialogBuilder.withTitle("温馨提示").withTitleColor(R.color.main_primary)
@@ -172,8 +155,7 @@ public class NearByListFragment extends Fragment implements IXListViewListener {
 		mHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				SimpleDateFormat df = new SimpleDateFormat("MM-dd HH:mm",
-						Locale.getDefault());
+				SimpleDateFormat df = new SimpleDateFormat("MM-dd HH:mm",Locale.getDefault());
 				RefreshTime.setRefreshTime(mActivity, df.format(new Date()));
 				onLoad();
 			}
