@@ -50,7 +50,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case StatusCode.LOGIN_SUCCESS:
-				Utilities.showToast("登录成功", context);
 				mSharedPreferences.edit().putString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, sUserName).commit();// 将登陆的用户名保存
 				Intent intent = new Intent(LoginActivity.this,MainActivity.class);
 				startActivity(intent);

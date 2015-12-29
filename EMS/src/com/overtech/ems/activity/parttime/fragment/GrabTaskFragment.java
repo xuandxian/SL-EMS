@@ -137,8 +137,7 @@ public class GrabTaskFragment extends BaseFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_grab_task, container,
-				false);
+		View view = inflater.inflate(R.layout.fragment_grab_task, container,false);
 		initBaiDuLocation();
 		findViewById(view);
 		init();
@@ -209,24 +208,19 @@ public class GrabTaskFragment extends BaseFragment implements
 	}
 
 	private void init() {
-		dialogBuilder = NiftyDialogBuilder.getInstance(mActivity);
-		progressDialog = CustomProgressDialog.createDialog(mActivity);
 		mHeadTitle.setText("抢单");
 		initListView();
+		mSwipeListView.setRefreshTime(RefreshTime.getRefreshTime(mActivity));
 		mSwipeListView.setMenuCreator(creator);
 		mSwipeListView.setPullRefreshEnable(true);
 		mSwipeListView.setPullLoadEnable(true);
 		mSwipeListView.setXListViewListener(this);
-		View mHeadView = LayoutInflater.from(mActivity).inflate(
-				R.layout.listview_header_filter, null);
+		View mHeadView = LayoutInflater.from(mActivity).inflate(R.layout.listview_header_filter, null);
 		mSwipeListView.addHeaderView(mHeadView);
-		mPartTimeDoFifter = (ImageView) mHeadView
-				.findViewById(R.id.iv_parttime_do_fifter);
-		mKeyWordSearch = (EditTextWithDelete) mHeadView
-				.findViewById(R.id.et_do_parttime_search);
+		mPartTimeDoFifter = (ImageView) mHeadView.findViewById(R.id.iv_parttime_do_fifter);
+		mKeyWordSearch = (EditTextWithDelete) mHeadView.findViewById(R.id.et_do_parttime_search);
 		mHandler = new Handler();
-		mSwipeListView
-				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+		mSwipeListView.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
 					@Override
 					public void onMenuItemClick(int position, SwipeMenu menu,
@@ -237,12 +231,9 @@ public class GrabTaskFragment extends BaseFragment implements
 		mSwipeListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				TaskPackage data = (TaskPackage) parent
-						.getItemAtPosition(position);
-				Intent intent = new Intent(mActivity,
-						PackageDetailActivity.class);
+			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+				TaskPackage data = (TaskPackage) parent.getItemAtPosition(position);
+				Intent intent = new Intent(mActivity,PackageDetailActivity.class);
 				Bundle bundle = new Bundle();
 				bundle.putString("CommunityName", data.getProjectName());
 				bundle.putString("TaskNo", data.getTaskNo());
@@ -256,16 +247,14 @@ public class GrabTaskFragment extends BaseFragment implements
 
 			@Override
 			public void onClick(View arg0) {
-				Intent intent = new Intent(mActivity,
-						GrabTaskDoFilterActivity.class);
+				Intent intent = new Intent(mActivity,GrabTaskDoFilterActivity.class);
 				startActivityForResult(intent, 0x1);
 			}
 		});
 		mKeyWordSearch.setOnEditorActionListener(new OnEditorActionListener() {
 
 			@Override
-			public boolean onEditorAction(TextView view, int actionId,
-					KeyEvent event) {
+			public boolean onEditorAction(TextView view, int actionId,KeyEvent event) {
 				if (actionId == EditorInfo.IME_ACTION_DONE) {
 					String keyWord = view.getText().toString().trim();
 					Param param = new Param("mKeyWord", keyWord);
@@ -299,8 +288,7 @@ public class GrabTaskFragment extends BaseFragment implements
 			@Override
 			public void create(SwipeMenu menu) {
 				SwipeMenuItem openItem = new SwipeMenuItem(mActivity);
-				openItem.setBackground(new ColorDrawable(Color.rgb(0xFF, 0x3A,
-						0x30)));
+				openItem.setBackground(new ColorDrawable(Color.rgb(0xFF, 0x3A,0x30)));
 				openItem.setWidth(dp2px(90));
 				openItem.setTitle("抢");
 				openItem.setTitleSize(18);
@@ -315,8 +303,7 @@ public class GrabTaskFragment extends BaseFragment implements
 		mHandler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				SimpleDateFormat df = new SimpleDateFormat("MM-dd HH:mm",
-						Locale.getDefault());
+				SimpleDateFormat df = new SimpleDateFormat("MM-dd HH:mm",Locale.getDefault());
 				RefreshTime.setRefreshTime(mActivity, df.format(new Date()));
 				onLoad();
 			}

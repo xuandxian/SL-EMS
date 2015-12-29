@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -18,10 +19,14 @@ import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.PackageDetailAdapter;
+import com.overtech.ems.config.StatusCode;
+import com.overtech.ems.entity.bean.StatusCodeBean;
 import com.overtech.ems.entity.bean.TaskPackageDetailBean;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.TaskPackageDetail;
 import com.overtech.ems.http.HttpEngine.Param;
+import com.overtech.ems.utils.SharedPreferencesKeys;
+import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
@@ -46,17 +51,44 @@ public class PackageDetailActivity extends BaseActivity {
 
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
-			String json = (String) msg.obj;
 			Gson gson = new Gson();
-			TaskPackageDetailBean tasks = gson.fromJson(json,
-					TaskPackageDetailBean.class);
-			list = (ArrayList<TaskPackageDetail>) tasks.getModel();
-			adapter = new PackageDetailAdapter(context, list);
-			mPackageDetailListView.setAdapter(adapter);
-			for (int i = 0; i < list.size(); i++) {
-				totalPrice += Integer.valueOf(list.get(i).getMaintainPrice());
+			switch (msg.what) {
+			case StatusCode.PACKAGE_DETAILS_SUCCESS:
+				String json = (String) msg.obj;
+				TaskPackageDetailBean tasks = gson.fromJson(json,TaskPackageDetailBean.class);
+				list = (ArrayList<TaskPackageDetail>) tasks.getModel();
+				adapter = new PackageDetailAdapter(context, list);
+				mPackageDetailListView.setAdapter(adapter);
+				for (int i = 0; i < list.size(); i++) {
+					totalPrice += Integer.valueOf(list.get(i).getMaintainPrice());
+				}
+				mGrabTaskBtn.setText("抢单(￥" + String.valueOf(totalPrice) + "元)");
+				break;
+			case StatusCode.GRAG_RESPONSE_SUCCESS:
+				String status = (String) msg.obj;
+				StatusCodeBean bean = gson.fromJson(status,StatusCodeBean.class);
+				String content = bean.getModel();
+				if (TextUtils.equals(content, "0")) {
+					Utilities.showToast("请不要重复抢单", context);
+				} else if (TextUtils.equals(content, "1")) {
+					Utilities.showToast("抢单成功，等待第二个人抢", context);
+				} else if (TextUtils.equals(content, "2")) {
+					Utilities.showToast("抢单成功，请到任务中查看", context);
+				} else if (TextUtils.equals(content, "3")) {
+					Utilities.showToast("差一点就抢到了", context);
+				}
+				break;
+			case StatusCode.RESPONSE_NET_FAILED:
+				Utilities.showToast("网络异常", context);
+				mGrabTaskBtn.setText("抢单(￥" + String.valueOf(totalPrice) + "元)");
+				break;
+			case StatusCode.GRAG_RESPONSE_OTHER_FAILED:
+				Utilities.showToast("请求失败", context);
+				break;
+			default:
+				break;
 			}
-			mGrabTaskBtn.setText("抢单(￥" + String.valueOf(totalPrice) + "元)");
+			stopProgressDialog();
 		};
 	};
 
@@ -101,15 +133,21 @@ public class PackageDetailActivity extends BaseActivity {
 
 			@Override
 			public void onResponse(Response response) throws IOException {
-				stopProgressDialog();
 				Message msg = new Message();
-				msg.obj = response.body().string();
+				if (response.isSuccessful()) {
+					msg.what = StatusCode.PACKAGE_DETAILS_SUCCESS;
+					msg.obj = response.body().string();
+				} else {
+					msg.what = StatusCode.RESPONSE_NET_FAILED;
+				}
 				handler.sendMessage(msg);
 			}
 
 			@Override
 			public void onFailure(Request request, IOException e) {
-				stopProgressDialog();
+				Message msg = new Message();
+				msg.what = StatusCode.RESPONSE_NET_FAILED;
+				handler.sendMessage(msg);
 			}
 		});
 
@@ -179,13 +217,36 @@ public class PackageDetailActivity extends BaseActivity {
 					public void onClick(View v) {
 						dialogBuilder.dismiss();
 						startProgressDialog("正在抢单...");
-						new Handler().postDelayed(new Runnable() {
+						String mLoginName = mSharedPreferences.getString(
+								SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
+						Param paramPhone = new Param("loginName", mLoginName);
+						Param paramTaskNo = new Param("taskNo", mTaskNo);
+						Request request = httpEngine.createRequest(
+								ServicesConfig.Do_GRABTASK, paramPhone,
+								paramTaskNo);
+						Call call = httpEngine.createRequestCall(request);
+						call.enqueue(new Callback() {
 
 							@Override
-							public void run() {
-								stopProgressDialog();
+							public void onFailure(Request request, IOException e) {
+								Message msg = new Message();
+								msg.what = StatusCode.GRAG_RESPONSE_OTHER_FAILED;
+								handler.sendMessage(msg);
 							}
-						}, 3000);
+
+							@Override
+							public void onResponse(Response response)
+									throws IOException {
+								Message msg = new Message();
+								if (response.isSuccessful()) {
+									msg.what = StatusCode.GRAG_RESPONSE_SUCCESS;
+									msg.obj = response.body().string();
+								} else {
+									msg.what = StatusCode.RESPONSE_NET_FAILED;
+								}
+								handler.sendMessage(msg);
+							}
+						});
 					}
 				}).show();
 	}

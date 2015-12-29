@@ -16,6 +16,9 @@ public class StatusCode {
 	public static final int GRAG_RESPONSE_SUCCESS = 0x06;
 	public static final int GRAG_RESPONSE_OTHER_FAILED = 0x08;
 	
+	// 任务包详情
+	public static final int PACKAGE_DETAILS_SUCCESS = 0x09;
+	
 	
 	
 	
