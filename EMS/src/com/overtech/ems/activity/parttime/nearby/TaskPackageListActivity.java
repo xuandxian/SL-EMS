@@ -23,7 +23,6 @@ import android.os.Handler;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
@@ -32,6 +31,7 @@ import android.widget.TextView;
 /**
  * @author Tony
  * @description 点击地图Marker（小区名称），显示该小区具体任务包
+ * @deprecated 该功能暂时pending
  * @date 2015-10-27
  */
 public class TaskPackageListActivity extends BaseActivity {
@@ -54,9 +54,9 @@ public class TaskPackageListActivity extends BaseActivity {
 		mCommunity = bundle.getString(" ");
 		setContentView(R.layout.activity_task_package_list);
 		findViewById();
-//		getData(mCommunity);
-//		initListView();
-//		init();
+		getData(mCommunity);
+		initListView();
+		init();
 	}
 
 	private void findViewById() {
@@ -171,8 +171,7 @@ public class TaskPackageListActivity extends BaseActivity {
 					@Override
 					public void onClick(View v) {
 						dialogBuilder.dismiss();
-						progressDialog.setMessage("正在抢单...");
-						progressDialog.show();
+						startProgressDialog("正在抢单...");
 						new Handler().postDelayed(new Runnable() {
 
 							@Override

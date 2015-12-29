@@ -375,7 +375,7 @@ public class GrabTaskFragment extends BaseFragment implements
 						dialogBuilder.dismiss();
 						startProgressDialog("正在抢单...");
 						String mLoginName = mSharedPreferences.getString(
-								SharedPreferencesKeys.LOGIN_NAME, null);
+								SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
 						String mTaskNo = list.get(position).getTaskNo();
 						Param paramPhone = new Param("loginName", mLoginName);
 						Param paramTaskNo = new Param("taskNo", mTaskNo);

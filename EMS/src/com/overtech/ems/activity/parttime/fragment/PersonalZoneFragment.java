@@ -1,13 +1,10 @@
 package com.overtech.ems.activity.parttime.fragment;
 
 import java.io.IOException;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.os.Bundle;
@@ -25,7 +22,6 @@ import android.widget.TextView;
 import android.widget.ImageView.ScaleType;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
-import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.parttime.personal.PersonalAboutAppActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalAccountListActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalAnnouncementActivity;
@@ -45,8 +41,7 @@ import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-public class PersonalZoneFragment extends BaseFragment implements
-		OnClickListener, OnTouchListener {
+public class PersonalZoneFragment extends BaseFragment implements OnClickListener, OnTouchListener {
 
 	private final int STUB_ID = R.drawable.icon_personal_my;// 此处为了将ImageLoader里面的方法抽出来单独使用，而将里面的字段提出来
 	private final Config DEFAULT_CONFIG = Config.RGB_565;// 同上
@@ -74,16 +69,12 @@ public class PersonalZoneFragment extends BaseFragment implements
 				JSONObject model = (JSONObject) json.get("model");
 				String imageUrl = model.getString("avatorUrl");
 				String name = model.getString("name");
-				System.out.println("图片地址======" + imageUrl);
-				System.out.println("个人用户名====" + name);
 				if (imageUrl == null || "".equals(imageUrl)) {
 					mAvator.setScaleType(ScaleType.FIT_XY);
 					mAvator.setImageResource(STUB_ID);
 				} else {
 					//调用从网络中加载过来的图片
-					Picasso.with(context).load(imageUrl).placeholder(STUB_ID)
-							.error(STUB_ID).config(DEFAULT_CONFIG)
-							.transform(new Transformation() {
+					Picasso.with(context).load(imageUrl).placeholder(STUB_ID).error(STUB_ID).config(DEFAULT_CONFIG).transform(new Transformation() {
 								//圆角图片的实现
 								@Override
 								public Bitmap transform(Bitmap source) {
@@ -92,7 +83,6 @@ public class PersonalZoneFragment extends BaseFragment implements
 
 								@Override
 								public String key() {
-									// TODO Auto-generated method stub
 									return null;
 								}
 							}).into(mAvator);
@@ -101,7 +91,6 @@ public class PersonalZoneFragment extends BaseFragment implements
 				mName.setText(name);
 				stopProgressDialog();//图片加载完成后停止进度框
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
@@ -118,22 +107,18 @@ public class PersonalZoneFragment extends BaseFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		view = inflater.inflate(R.layout.fragment_personal_zone, container,
-				false);
-
+		view = inflater.inflate(R.layout.fragment_personal_zone, container,false);
 		initViews();
 		initEvents();
-		startProgressDialog("请稍后...");
-		progressDialog.setCanceledOnTouchOutside(false);
 		onLoading();
 		return view;
 	}
 
 	private void onLoading() {
-		String mPhoneNo = mSharedPreferences.getString(SharedPreferencesKeys.LOGIN_NAME, null);
-		Param param = new Param("mPhoneNo", mPhoneNo);
-		Request request = httpEngine.createRequest(
-				ServicesConfig.PERSONAL_AVATOR, param);
+		startProgressDialog("请稍后...");
+		String mLoginName = mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
+		Param param = new Param("loginName", mLoginName);
+		Request request = httpEngine.createRequest(ServicesConfig.PERSONAL_AVATOR, param);
 		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {
 
@@ -152,19 +137,13 @@ public class PersonalZoneFragment extends BaseFragment implements
 	}
 
 	private void initViews() {
-		mBackgroundImageView = (ImageView) view
-				.findViewById(R.id.personal_background_image);
+		mBackgroundImageView = (ImageView) view.findViewById(R.id.personal_background_image);
 		mAvator = (ImageView) view.findViewById(R.id.imageView1);
-		mScrollView = (CustomScrollView) view
-				.findViewById(R.id.personal_scrollView);
-		mPersonalDetail = (RelativeLayout) view
-				.findViewById(R.id.rl_personal_details);
-		mPersonalAccountList = (RelativeLayout) view
-				.findViewById(R.id.rl_personal_account_list);
-		mPersonalBounds = (RelativeLayout) view
-				.findViewById(R.id.rl_personal_bounds);
-		mCompanyNotice = (RelativeLayout) view
-				.findViewById(R.id.rl_personal_notice);
+		mScrollView = (CustomScrollView) view.findViewById(R.id.personal_scrollView);
+		mPersonalDetail = (RelativeLayout) view.findViewById(R.id.rl_personal_details);
+		mPersonalAccountList = (RelativeLayout) view.findViewById(R.id.rl_personal_account_list);
+		mPersonalBounds = (RelativeLayout) view.findViewById(R.id.rl_personal_bounds);
+		mCompanyNotice = (RelativeLayout) view.findViewById(R.id.rl_personal_notice);
 		mCancleList = (RelativeLayout) view.findViewById(R.id.rl_cancle_list);
 		mHelpDoc = (RelativeLayout) view.findViewById(R.id.rl_help_doc);
 		mHeadContent = (TextView) view.findViewById(R.id.tv_headTitle);

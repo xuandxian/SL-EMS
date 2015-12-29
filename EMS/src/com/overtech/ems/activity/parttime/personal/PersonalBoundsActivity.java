@@ -88,7 +88,7 @@ public class PersonalBoundsActivity extends BaseActivity implements OnClickListe
 	}
 	private void startLoading() {
 		startProgressDialog("正在玩命加载中...");
-		Param param=new Param("mPhoneNo", mSharedPreferences.getString(SharedPreferencesKeys.LOGIN_NAME, null));
+		Param param=new Param("mPhoneNo", mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null));
 		Request request=httpEngine.createRequest(ServicesConfig.PERSONAL_BONUS_LIST, param);
 		Call call=httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {

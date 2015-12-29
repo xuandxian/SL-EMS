@@ -7,6 +7,6 @@ package com.overtech.ems.utils;
 public class SharedPreferencesKeys {
 
 	// 登录
-	public static final String LOGIN_NAME = "loginName";
+	public static final String CURRENT_LOGIN_NAME = "loginName";
 	
 }
