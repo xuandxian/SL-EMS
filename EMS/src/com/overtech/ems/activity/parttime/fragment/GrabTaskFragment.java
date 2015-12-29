@@ -175,12 +175,14 @@ public class GrabTaskFragment extends BaseFragment implements
 					location.getLongitude());
 			Log.e("GrabTaskFragment", "location:" + "(" + myLocation.latitude
 					+ "," + myLocation.longitude + ")");
-			initData(ServicesConfig.GRABTASK);
+			initData(ServicesConfig.GRABTASK,"0");
 		}
 	}
 
-	public void initData(String url, Param... params) {
-		startProgressDialog("正在查询...");
+	public void initData(String url,String flag, Param... params) {
+		if (TextUtils.equals("0",flag)) {
+			startProgressDialog("正在查询...");
+		}
 		Request request = httpEngine.createRequest(url, params);
 		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {
@@ -258,7 +260,7 @@ public class GrabTaskFragment extends BaseFragment implements
 				if (actionId == EditorInfo.IME_ACTION_DONE) {
 					String keyWord = view.getText().toString().trim();
 					Param param = new Param("mKeyWord", keyWord);
-					initData(ServicesConfig.GRABTASK, param);
+					initData(ServicesConfig.GRABTASK, "0",param);
 				}
 				return true;
 			}
@@ -279,7 +281,7 @@ public class GrabTaskFragment extends BaseFragment implements
 			if (mAdapter != null) {
 				mAdapter.notifyDataSetChanged();
 			}
-			initData(ServicesConfig.DO_FILTER, zoneParam, timeParam);
+			initData(ServicesConfig.DO_FILTER, "0",zoneParam, timeParam);
 		}
 	}
 
@@ -306,6 +308,7 @@ public class GrabTaskFragment extends BaseFragment implements
 				SimpleDateFormat df = new SimpleDateFormat("MM-dd HH:mm",Locale.getDefault());
 				RefreshTime.setRefreshTime(mActivity, df.format(new Date()));
 				onLoad();
+				initData(ServicesConfig.GRABTASK, "1");
 			}
 		}, 2000);
 	}
