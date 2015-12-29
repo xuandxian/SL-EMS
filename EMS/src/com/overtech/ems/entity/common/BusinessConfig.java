@@ -20,7 +20,7 @@ public class BusinessConfig {
 	/**
 	 * 3.抢单列表
 	 */
-	public static final String URL_GRABTASK = "/task/grabtask.action";
+	public static final String URL_GRABTASK = "/task/grabTaskList.action";
 	/**
 	 * 4.关键字搜索
 	 */
