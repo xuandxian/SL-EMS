@@ -8,9 +8,6 @@ public class Bonus {
 	private String awardRemark;
 	private String awardSum;
 	private long awardTime;
-	private long maintenanceDate;
-	private String projectName;
-	private String taskNo;
 	public String getAwardRemark() {
 		return awardRemark;
 	}
@@ -28,24 +25,6 @@ public class Bonus {
 	}
 	public void setAwardTime(long awardTime) {
 		this.awardTime = awardTime;
-	}
-	public long getMaintenanceDate() {
-		return maintenanceDate;
-	}
-	public void setMaintenanceDate(long maintenanceDate) {
-		this.maintenanceDate = maintenanceDate;
-	}
-	public String getProjectName() {
-		return projectName;
-	}
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
-	}
-	public String getTaskNo() {
-		return taskNo;
-	}
-	public void setTaskNo(String taskNo) {
-		this.taskNo = taskNo;
 	}
 	
 }

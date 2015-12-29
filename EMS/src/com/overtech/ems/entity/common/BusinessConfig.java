@@ -112,6 +112,6 @@ public class BusinessConfig {
 	/**
 	 * 26.退单纪录
 	 */
-	public static final String URL_PERSONAL_CHARGEBACK_LIST = "/personalChargeBackList.action";
+	public static final String URL_PERSONAL_CHARGEBACK_LIST = "/employee/personalChargeBackList.action";
 
 }

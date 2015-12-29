@@ -38,7 +38,7 @@ public class PersonalBonusListAdapter extends BaseExpandableListAdapter {
 	@Override
 	public Object getGroup(int groupPosition) {
 		
-		return group.get(groupPosition).getProjectName();
+		return group.get(groupPosition).getAwardRemark();
 	}
 
 	@Override
@@ -72,18 +72,13 @@ public class PersonalBonusListAdapter extends BaseExpandableListAdapter {
 		if(convertView==null){
 			convertView=LayoutInflater.from(context).inflate(R.layout.item_expandablelistview_bonus, null);
 		}
-		TextView mProjectName=(TextView) convertView.findViewById(R.id.tv_project_name);
-		TextView mMaintenanceDate=(TextView) convertView.findViewById(R.id.tv_maintenance_date);
 		TextView mAwardSum=(TextView) convertView.findViewById(R.id.tv_bonus);
 		TextView mAwardDate=(TextView) convertView.findViewById(R.id.tv_bonus_date);
 		
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-		Date maintenanceDate=new Date(data.getMaintenanceDate());
 		Date awardDate=new Date(data.getAwardTime());
 		
-		mProjectName.setText(data.getProjectName());
-		mMaintenanceDate.setText(sdf.format(maintenanceDate));
-		mAwardSum.setText(data.getAwardSum());
+		mAwardSum.setText("奖励金额:"+data.getAwardSum());
 		mAwardDate.setText(sdf.format(awardDate));
 		
 		return convertView;
@@ -95,7 +90,7 @@ public class PersonalBonusListAdapter extends BaseExpandableListAdapter {
 		TextView tv=new TextView(context);
 		tv.setPadding(40, 10, 0, 10);
 		tv.setTextColor(context.getResources().getColor(R.color.main_secondary));
-		tv.setText(group.get(groupPosition).getAwardRemark());
+		tv.setText("奖励原因："+group.get(groupPosition).getAwardRemark());
 		return tv;
 	}
 

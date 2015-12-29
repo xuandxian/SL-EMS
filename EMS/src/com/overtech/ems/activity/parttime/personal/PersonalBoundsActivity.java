@@ -52,15 +52,17 @@ public class PersonalBoundsActivity extends BaseActivity implements OnClickListe
 				BonusBean bean=gson.fromJson(json, BonusBean.class);
 				adapter=new PersonalBonusListAdapter(bean.getModel(), context);
 				mPersonalAccountListView.setAdapter(adapter);
-				stopProgressDialog();//加载完成后dialog消失
+				
 				break;
 			case FAILED:
-				Utilities.showToast("链接异常，请检查网络链接...", context);
+				String exception=(String) msg.obj;
+				Utilities.showToast(exception, context);
 				break;
 
 			default:
 				break;
 			}
+			stopProgressDialog();//加载完成后dialog消失
 		};
 	};
 	@Override
@@ -100,8 +102,7 @@ public class PersonalBoundsActivity extends BaseActivity implements OnClickListe
 					msg.obj=response.body().string();
 				}else{
 					msg.what=FAILED;
-					msg.obj=response.body().string();
-					Log.e("response===failed===", "==response failed=");
+					msg.obj="数据异常";
 				}
 				handler.sendMessage(msg);
 			}
@@ -110,8 +111,8 @@ public class PersonalBoundsActivity extends BaseActivity implements OnClickListe
 			public void onFailure(Request request, IOException arg1) {
 				Message msg=new Message();
 				msg.what=FAILED;
+				msg.obj="网络异常";
 				handler.sendMessage(msg);
-				Log.e("request====", "request====failed==");
 			}
 		});
 	}
