@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Message;
@@ -55,6 +56,8 @@ public class BaseActivity extends Activity {
 	public CustomProgressDialog progressDialog;
 
 	public NiftyDialogBuilder dialogBuilder;
+	
+	public SharedPreferences mSharedPreferences;
 
 	private InputMethodManager imm;
 
@@ -78,6 +81,7 @@ public class BaseActivity extends Activity {
 		imageLoader.initContext(context);
 		progressDialog = CustomProgressDialog.createDialog(context);
 		progressDialog.setMessage(context.getString(R.string.loading_public_default));
+		mSharedPreferences=((MyApplication)getApplication()).getSharePreference();
 	}
 
 	private void initGestureDetector() {

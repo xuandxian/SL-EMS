@@ -9,16 +9,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.RectF;
 import android.graphics.Bitmap.Config;
-import android.graphics.PorterDuff.Mode;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -32,7 +23,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ImageView.ScaleType;
-
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
 import com.overtech.ems.activity.MyApplication;
@@ -48,8 +38,8 @@ import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.picasso.Picasso;
 import com.overtech.ems.picasso.Transformation;
 import com.overtech.ems.utils.ImageCacheUtils;
+import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.widget.CustomScrollView;
-import com.overtech.ems.widget.bitmap.ImageLoader;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
@@ -75,7 +65,7 @@ public class PersonalZoneFragment extends BaseFragment implements
 	private CustomScrollView mScrollView;
 	private ImageView mBackgroundImageView;
 	private ImageView mAvator;
-	private SharedPreferences sp;
+	
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			String info = (String) msg.obj;
@@ -140,7 +130,7 @@ public class PersonalZoneFragment extends BaseFragment implements
 	}
 
 	private void onLoading() {
-		String mPhoneNo = sp.getString("mPhoneNo", null);
+		String mPhoneNo = mSharedPreferences.getString(SharedPreferencesKeys.LOGIN_NAME, null);
 		Param param = new Param("mPhoneNo", mPhoneNo);
 		Request request = httpEngine.createRequest(
 				ServicesConfig.PERSONAL_AVATOR, param);
@@ -148,25 +138,20 @@ public class PersonalZoneFragment extends BaseFragment implements
 		call.enqueue(new Callback() {
 
 			@Override
-			public void onResponse(Response arg0) throws IOException {
+			public void onResponse(Response response) throws IOException {
 				Message msg = new Message();
-				msg.obj = arg0.body().string();
+				msg.obj = response.body().string();
 				handler.sendMessage(msg);
 			}
 
 			@Override
-			public void onFailure(Request arg0, IOException arg1) {
+			public void onFailure(Request request, IOException e) {
 
 			}
 		});
 	}
 
 	private void initViews() {
-		sp = ((MyApplication) getActivity().getApplication())
-				.getSharePreference();
-
-		imageLoader.initContext(mActivity);
-
 		mBackgroundImageView = (ImageView) view
 				.findViewById(R.id.personal_background_image);
 		mAvator = (ImageView) view.findViewById(R.id.imageView1);
@@ -187,7 +172,7 @@ public class PersonalZoneFragment extends BaseFragment implements
 		mPhone = (TextView) view.findViewById(R.id.textViewPhone);
 		mApp = (RelativeLayout) view.findViewById(R.id.rl_about_app);
 		mHeadContent.setText("我的");
-		mPhone.setText(sp.getString("mPhoneNo", null));// 设置登陆时的个人手机号
+		mPhone.setText(mSharedPreferences.getString("mPhoneNo", null));// 设置登陆时的个人手机号
 	}
 
 	private void initEvents() {

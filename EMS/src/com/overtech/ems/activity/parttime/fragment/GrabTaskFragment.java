@@ -12,6 +12,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.KeyEvent;
@@ -34,12 +35,15 @@ import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
 import com.overtech.ems.activity.adapter.GrabTaskAdapter;
+import com.overtech.ems.activity.common.LoginActivity;
+import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
 import com.overtech.ems.activity.parttime.grabtask.GrabTaskDoFilterActivity;
 import com.overtech.ems.entity.bean.TaskPackageBean;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.TaskPackage;
 import com.overtech.ems.http.HttpEngine.Param;
+import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.EditTextWithDelete;
@@ -75,19 +79,30 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
     public LocationClient mLocationClient=null;
     
     public BDLocationListener myListener=new MyLocationListener();
-	
+    private final int FAILED = 0;
+	private final int SUCCESS = 1;
 	private Handler handler = new Handler() {
-		public void handleMessage(android.os.Message msg) {
-			String json = (String) msg.obj;
-			Gson gson = new Gson();
-			TaskPackageBean tasks = gson.fromJson(json, TaskPackageBean.class);
-			list = (ArrayList<TaskPackage>) tasks.getModel();
-			if (null==myLocation) {
-				Utilities.showToast("定位失败", context);
-				return;
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case SUCCESS:
+				String json = (String) msg.obj;
+				Gson gson = new Gson();
+				TaskPackageBean tasks = gson.fromJson(json, TaskPackageBean.class);
+				list = (ArrayList<TaskPackage>) tasks.getModel();
+				if (null==myLocation) {
+					Utilities.showToast("定位失败", context);
+					return;
+				}
+				mAdapter = new GrabTaskAdapter(list,myLocation,mActivity);
+				mSwipeListView.setAdapter(mAdapter);
+				break;
+			case FAILED:
+				Utilities.showToast("请求失败", context);
+				break;
+			default:
+				break;
 			}
-			mAdapter = new GrabTaskAdapter(list,myLocation,mActivity);
-			mSwipeListView.setAdapter(mAdapter);
+			stopProgressDialog();
 		};
 	};
 
@@ -145,15 +160,20 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 			
 			@Override
 			public void onResponse(Response response) throws IOException {
-				stopProgressDialog();
 				Message msg = new Message();
-				msg.obj = response.body().string();
+				if (response.isSuccessful()) {
+					msg.what=SUCCESS;
+					msg.obj=response.body().string();
+				} else {
+					msg.what = FAILED;
+				}
 				handler.sendMessage(msg);
 			}
-			
 			@Override
 			public void onFailure(Request request, IOException e) {
-				stopProgressDialog();
+				Message msg = new Message();
+				msg.what = FAILED;
+				handler.sendMessage(msg);
 			}
 		});
 		
@@ -177,7 +197,7 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 
 					@Override
 					public void onMenuItemClick(int position, SwipeMenu menu,int index) {
-						showDialog();
+						showDialog(position);
 					}
 				});
 		mSwipeListView.setOnItemClickListener(new OnItemClickListener() {
@@ -292,7 +312,7 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 		}
 	}
 
-	private void showDialog() {
+	private void showDialog(final int position) {
 		effect = Effectstype.Slideright;
 		dialogBuilder.withTitle("温馨提示").withTitleColor(R.color.main_primary)
 				.withDividerColor("#11000000").withMessage("您是否要接此单？")
@@ -312,13 +332,32 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 					public void onClick(View v) {
 						dialogBuilder.dismiss();
 						startProgressDialog("正在抢单...");
-						new Handler().postDelayed(new Runnable() {
+//						new Handler().postDelayed(new Runnable() {
+//
+//							@Override
+//							public void run() {
+//								stopProgressDialog();
+//							}
+//						}, 3000);
+						
+						String mPhoneNo = mSharedPreferences.getString("mPhoneNo", null);
+						String mTaskNo=list.get(position).getTaskNo();
+						Param paramPhone = new Param("mPhoneNo", mPhoneNo);
+						Param paramTaskNo = new Param("mTaskNo", mTaskNo);
+						Request request = httpEngine.createRequest(ServicesConfig.Do_GRABTASK, paramPhone,paramTaskNo);
+						Call call = httpEngine.createRequestCall(request);
+						call.enqueue(new Callback() {
 
 							@Override
-							public void run() {
-								stopProgressDialog();
+							public void onFailure(Request request, IOException e) {
+								Log.e("GrabTaskFragment", "onFailure");
 							}
-						}, 3000);
+
+							@Override
+							public void onResponse(Response response) throws IOException {
+								Log.e("GrabTaskFragment", "onResponse");
+							}
+						});
 					}
 				}).show();
 	}

@@ -1,12 +1,12 @@
 package com.overtech.ems.activity.common;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -17,11 +17,10 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
-import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.Employee;
-import com.overtech.ems.utils.Logr;
+import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
 import com.google.gson.Gson;
@@ -45,7 +44,35 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	private Button mLogin;
 	private TextView mRegister;
 	private ToggleButton mChangePasswordState;
-	private SharedPreferences sp;
+	private final int FAILED = 0;
+	private final int SUCCESS = 1;
+	private final int RESPON_FAILED=2;
+	private final int NOT_EXIST=3;
+	private Handler handler = new Handler() {
+		public void handleMessage(android.os.Message msg) {
+			switch (msg.what) {
+			case SUCCESS:
+				Utilities.showToast("登录成功", context);
+				mSharedPreferences.edit().putString(SharedPreferencesKeys.LOGIN_NAME, sUserName).commit();// 将登陆的用户名保存
+				Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+				startActivity(intent);
+				finish();
+				break;
+			case FAILED:
+				Utilities.showToast("登录失败", context);
+				break;
+			case RESPON_FAILED:
+				Utilities.showToast("网络异常", context);
+				break;
+			case NOT_EXIST:
+				Utilities.showToast("用户不存在", context);
+				break;
+			default:
+				break;
+			}
+			stopProgressDialog();
+		};
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +83,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void initView() {
-		sp=((MyApplication)getApplication()).getSharePreference();
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
 		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
 		mUserName = (EditTextWithDelete) findViewById(R.id.et_login_username);
@@ -73,14 +99,19 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		mLostPassword.setOnClickListener(this);
 		mRegister.setOnClickListener(this);
 		mHeadBack.setOnClickListener(this);
-		mChangePasswordState.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		mChangePasswordState
+				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 					@Override
-					public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
+					public void onCheckedChanged(CompoundButton buttonView,
+							boolean isChecked) {
 						if (isChecked) {
-							// 设置密码为可见的
-							mPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+							mPassword
+									.setTransformationMethod(HideReturnsTransformationMethod
+											.getInstance());// 设置密码为可见的
 						} else {
-							mPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+							mPassword
+									.setTransformationMethod(PasswordTransformationMethod
+											.getInstance());
 						}
 					}
 				});
@@ -90,45 +121,42 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			public void onClick(View arg0) {
 				sUserName = mUserName.getText().toString().trim();
 				sPassword = mPassword.getText().toString().trim();
-				if (TextUtils.isEmpty(sUserName) || TextUtils.isEmpty(sPassword)) {
+				if (TextUtils.isEmpty(sUserName)
+						|| TextUtils.isEmpty(sPassword)) {
 					Utilities.showToast("输入不能为空", context);
 				} else {
 					startProgressDialog("正在登录...");
-					sp.edit().putString("mPhoneNo", sUserName).commit();//将登陆的用户名保存
 					Employee employee = new Employee();
 					employee.setLoginName(sUserName);
 					employee.setPassword(sPassword);
 					Gson gson = new Gson();
 					String person = gson.toJson(employee);
-					Request request = httpEngine.createRequest(ServicesConfig.LOGIN, person);
+					Request request = httpEngine.createRequest(
+							ServicesConfig.LOGIN, person);
 					Call call = httpEngine.createRequestCall(request);
 					call.enqueue(new Callback() {
 						@Override
 						public void onFailure(Request request, IOException e) {
-							stopProgressDialog();
-							Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-							startActivity(intent);
-							finish();
-							Log.e("Login","onFailure");
-//							Utilities.showToast("登录失败",context);
+							Message msg=new Message();
+							msg.what=RESPON_FAILED;
+							handler.sendMessage(msg);
 						}
+
 						@Override
-						public void onResponse(Response response)throws IOException {
-							String result=response.body().string();
-							Log.e("LoginInfo", result);
-							if (TextUtils.equals("true",result)){
-								stopProgressDialog();
-								Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-								startActivity(intent);
-								finish();
-							}else {
-								stopProgressDialog();
-								Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-								startActivity(intent);
-								finish();
-								Log.e("Login", "onFailure2");
-//								Utilities.showToast("登录失败",context);
+						public void onResponse(Response response)
+								throws IOException {
+							Message msg = new Message();
+							if (response.isSuccessful()) {
+								String result = response.body().string();
+								if (TextUtils.equals("true", result)) {
+									msg.what = SUCCESS;
+								} else {
+									msg.what = NOT_EXIST;
+								}
+							} else {
+								msg.what = RESPON_FAILED;
 							}
+							handler.sendMessage(msg);
 						}
 					});
 				}
@@ -140,11 +168,13 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.tv_lost_password:
-			Intent intent = new Intent(LoginActivity.this,LostPasswordActivity.class);
+			Intent intent = new Intent(LoginActivity.this,
+					LostPasswordActivity.class);
 			startActivity(intent);
 			break;
 		case R.id.tv_login_by_message:
-			Intent intent2 = new Intent(LoginActivity.this,RegisterActivity.class);
+			Intent intent2 = new Intent(LoginActivity.this,
+					RegisterActivity.class);
 			startActivity(intent2);
 			break;
 		case R.id.iv_headBack:
