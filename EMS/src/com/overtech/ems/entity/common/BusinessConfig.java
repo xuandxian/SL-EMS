@@ -32,7 +32,7 @@ public class BusinessConfig {
 	/**
 	 * 6.抢单
 	 */
-    public static final String URL_DO_GRABTASK = "/doGrabTask.action";
+    public static final String URL_DO_GRABTASK = "/task/grabTask.action";
 	/**
 	 * 7.附近
 	 */

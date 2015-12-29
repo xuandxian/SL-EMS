@@ -18,6 +18,7 @@ import android.widget.ToggleButton;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
+import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.Employee;
 import com.overtech.ems.utils.SharedPreferencesKeys;
@@ -44,27 +45,24 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	private Button mLogin;
 	private TextView mRegister;
 	private ToggleButton mChangePasswordState;
-	private final int FAILED = 0;
-	private final int SUCCESS = 1;
-	private final int RESPON_FAILED=2;
-	private final int NOT_EXIST=3;
+	
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
-			case SUCCESS:
+			case StatusCode.LOGIN_SUCCESS:
 				Utilities.showToast("登录成功", context);
 				mSharedPreferences.edit().putString(SharedPreferencesKeys.LOGIN_NAME, sUserName).commit();// 将登陆的用户名保存
 				Intent intent = new Intent(LoginActivity.this,MainActivity.class);
 				startActivity(intent);
 				finish();
 				break;
-			case FAILED:
+			case StatusCode.LOGIN_FAILED:
 				Utilities.showToast("登录失败", context);
 				break;
-			case RESPON_FAILED:
+			case StatusCode.RESPONSE_NET_FAILED:
 				Utilities.showToast("网络异常", context);
 				break;
-			case NOT_EXIST:
+			case StatusCode.LOGIN_NOT_EXIST:
 				Utilities.showToast("用户不存在", context);
 				break;
 			default:
@@ -138,7 +136,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 						@Override
 						public void onFailure(Request request, IOException e) {
 							Message msg=new Message();
-							msg.what=RESPON_FAILED;
+							msg.what=StatusCode.LOGIN_FAILED;
 							handler.sendMessage(msg);
 						}
 
@@ -149,12 +147,12 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 							if (response.isSuccessful()) {
 								String result = response.body().string();
 								if (TextUtils.equals("true", result)) {
-									msg.what = SUCCESS;
+									msg.what = StatusCode.LOGIN_SUCCESS;
 								} else {
-									msg.what = NOT_EXIST;
+									msg.what = StatusCode.LOGIN_NOT_EXIST;
 								}
 							} else {
-								msg.what = RESPON_FAILED;
+								msg.what = StatusCode.RESPONSE_NET_FAILED;
 							}
 							handler.sendMessage(msg);
 						}
