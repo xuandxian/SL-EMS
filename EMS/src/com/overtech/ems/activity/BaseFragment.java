@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import com.overtech.ems.R;
 import com.overtech.ems.http.HttpEngine;
@@ -33,6 +34,8 @@ public class BaseFragment extends Fragment {
 
     public NiftyDialogBuilder dialogBuilder;
     
+    public SharedPreferences mSharedPreferences;
+    
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +49,7 @@ public class BaseFragment extends Fragment {
         imageLoader.initContext(context);
         progressDialog = CustomProgressDialog.createDialog(context);
         progressDialog.setMessage(context.getString(R.string.loading_public_default));
+        mSharedPreferences = ((MyApplication) activity.getApplication()).getSharePreference();
     }
     
 	@Override

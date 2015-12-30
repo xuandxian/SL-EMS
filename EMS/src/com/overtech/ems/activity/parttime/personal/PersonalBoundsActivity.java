@@ -27,6 +27,7 @@ import com.overtech.ems.entity.bean.BonusBean;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.test.Data2;
 import com.overtech.ems.http.HttpEngine.Param;
+import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
@@ -39,7 +40,6 @@ public class PersonalBoundsActivity extends BaseActivity implements OnClickListe
 	private ExpandableListView mPersonalAccountListView;
 	private PersonalBonusListAdapter adapter;
 	private Context context;
-	private SharedPreferences sp;
 	private final int SUCCESS=1;
 	private final int FAILED=0;
 	private Handler handler=new Handler(){
@@ -77,7 +77,6 @@ public class PersonalBoundsActivity extends BaseActivity implements OnClickListe
 		mDoBack=(ImageView)findViewById(R.id.iv_headBack);
 		mHeadContent=(TextView)findViewById(R.id.tv_headTitle);
 		mPersonalAccountListView=(ExpandableListView)findViewById(R.id.lv_personal_account_list);
-		sp=((MyApplication)getApplication()).getSharePreference();
 	}
 	
 	private void initData() {
@@ -89,7 +88,7 @@ public class PersonalBoundsActivity extends BaseActivity implements OnClickListe
 	}
 	private void startLoading() {
 		startProgressDialog("正在玩命加载中...");
-		Param param=new Param("mPhoneNo", sp.getString("mPhoneNo", null));
+		Param param=new Param("mPhoneNo", mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null));
 		Request request=httpEngine.createRequest(ServicesConfig.PERSONAL_BONUS_LIST, param);
 		Call call=httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {

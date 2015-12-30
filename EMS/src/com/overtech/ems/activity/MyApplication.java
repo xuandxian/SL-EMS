@@ -15,8 +15,7 @@ public class MyApplication extends Application {
 		// TODO Auto-generated method stub
 		super.onCreate();
 		if (sp == null) {
-			sp = getSharedPreferences(SystemConfig.PREFERENCES_NAME,
-					Context.MODE_PRIVATE);
+			sp = getSharedPreferences(SystemConfig.PREFERENCES_NAME,Context.MODE_PRIVATE);
 		}
 	}
 
