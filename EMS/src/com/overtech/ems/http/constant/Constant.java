@@ -29,4 +29,12 @@ public class Constant {
 	 * 任务单号
 	 */
 	public static final String TASKNO="taskNo";
+	/**
+	 * 纬度
+	 */
+	public static final String LATITUDE="latitude";
+	/**
+	 * 经度
+	 */
+	public static final String LONGITUDE="longitude";
 }
