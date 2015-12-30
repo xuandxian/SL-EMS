@@ -19,7 +19,11 @@ public class StatusCode {
 	// 任务包详情
 	public static final int PACKAGE_DETAILS_SUCCESS = 0x09;
 	
-	
-	
+	// 忘记密码
+	public static final int GET_PHONENO_SUCCESS_EXIST = 0x10;
+	public static final int GET_PHONENO_SUCCESS_NONE = 0x11;
+	// 忘记密码
+	public static final int RESET_PASSWORD_SUCCESS = 0x12;
+	public static final int RESET_PASSWORD_FAILED = 0x13;
 	
 }

@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -16,18 +15,15 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
-
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -39,6 +35,7 @@ import com.overtech.ems.activity.BaseFragment;
 import com.overtech.ems.activity.adapter.GrabTaskAdapter;
 import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
 import com.overtech.ems.activity.parttime.grabtask.GrabTaskDoFilterActivity;
+import com.overtech.ems.activity.parttime.grabtask.KeyWordSerachActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.bean.StatusCodeBean;
 import com.overtech.ems.entity.bean.TaskPackageBean;
@@ -48,7 +45,6 @@ import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
-import com.overtech.ems.widget.EditTextWithDelete;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView;
 import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView.IXListViewListener;
@@ -62,14 +58,14 @@ import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-public class GrabTaskFragment extends BaseFragment implements
-		IXListViewListener {
+public class GrabTaskFragment extends BaseFragment implements IXListViewListener {
 
 	private PullToRefreshSwipeMenuListView mSwipeListView;
 	private SwipeMenuCreator creator;
 	private Activity mActivity;
-	private ImageView mPartTimeDoFifter;
-	private EditTextWithDelete mKeyWordSearch;
+	private LinearLayout mPartTimeDoFifter;
+	private TextView mKeyWordSearch;
+	private View mHeadView;
 	private Effectstype effect;
 	private GrabTaskAdapter mAdapter;
 	private ArrayList<TaskPackage> list;
@@ -219,10 +215,10 @@ public class GrabTaskFragment extends BaseFragment implements
 		mSwipeListView.setPullRefreshEnable(true);
 		mSwipeListView.setPullLoadEnable(true);
 		mSwipeListView.setXListViewListener(this);
-		View mHeadView = LayoutInflater.from(mActivity).inflate(R.layout.listview_header_filter, null);
+		mHeadView = LayoutInflater.from(mActivity).inflate(R.layout.listview_header_filter, null);
 		mSwipeListView.addHeaderView(mHeadView);
-		mPartTimeDoFifter = (ImageView) mHeadView.findViewById(R.id.iv_parttime_do_fifter);
-		mKeyWordSearch = (EditTextWithDelete) mHeadView.findViewById(R.id.et_do_parttime_search);
+		mPartTimeDoFifter = (LinearLayout) mHeadView.findViewById(R.id.ll_grab_task);
+		mKeyWordSearch = (TextView) mHeadView.findViewById(R.id.et_do_parttime_search);
 		mHandler = new Handler();
 		mSwipeListView.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
@@ -255,18 +251,27 @@ public class GrabTaskFragment extends BaseFragment implements
 				startActivityForResult(intent, 0x1);
 			}
 		});
-		mKeyWordSearch.setOnEditorActionListener(new OnEditorActionListener() {
-
+//		mKeyWordSearch.setOnEditorActionListener(new OnEditorActionListener() {
+//
+//			@Override
+//			public boolean onEditorAction(TextView view, int actionId,KeyEvent event) {
+//				if (actionId == EditorInfo.IME_ACTION_DONE) {
+//					String keyWord = view.getText().toString().trim();
+//					Param param = new Param(Constant.KEYWORD, keyWord);
+//					initData(ServicesConfig.GRABTASK, "0",param);
+//				}
+//				return true;
+//			}
+//		});
+		mKeyWordSearch.setOnClickListener(new OnClickListener() {
+			
 			@Override
-			public boolean onEditorAction(TextView view, int actionId,KeyEvent event) {
-				if (actionId == EditorInfo.IME_ACTION_DONE) {
-					String keyWord = view.getText().toString().trim();
-					Param param = new Param(Constant.KEYWORD, keyWord);
-					initData(ServicesConfig.GRABTASK, "0",param);
-				}
-				return true;
+			public void onClick(View arg0) {
+				Intent intent = new Intent(mActivity,KeyWordSerachActivity.class);
+				startActivity(intent);
 			}
 		});
+		
 	}
 
 	@Override

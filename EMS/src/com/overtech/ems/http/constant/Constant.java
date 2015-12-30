@@ -29,4 +29,8 @@ public class Constant {
 	 * 任务单号
 	 */
 	public static final String TASKNO="taskNo";
+	/**
+	 * 更新手机号
+	 */
+	public static final String PHONENO="phoneNo";
 }

@@ -8,7 +8,10 @@ package com.overtech.ems.entity.common;
  * @date 2015-12-09
  */
 public class BusinessConfig {
-	
+	/**
+	 * 0.RSA
+	 */
+	public static final String URL_RSA = "/employee/security.action";
 	/**
 	 * 1.登录
 	 */
@@ -44,7 +47,7 @@ public class BusinessConfig {
 	/**
 	 * 9.忘记密码（验证手机号／短信验证码）
 	 */
-	public static final String URL_LOST_PASSWORD = "/lostPassword.action";
+	public static final String URL_LOST_PASSWORD = "/employee/lostPassword.action";
 	/**
 	 * 10.忘记密码（更新密码）
 	 */
