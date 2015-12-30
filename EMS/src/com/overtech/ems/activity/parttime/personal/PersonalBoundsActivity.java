@@ -27,6 +27,7 @@ import com.overtech.ems.entity.bean.BonusBean;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.test.Data2;
 import com.overtech.ems.http.HttpEngine.Param;
+import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.squareup.okhttp.Call;
@@ -88,7 +89,7 @@ public class PersonalBoundsActivity extends BaseActivity implements OnClickListe
 	}
 	private void startLoading() {
 		startProgressDialog("正在玩命加载中...");
-		Param param=new Param("mPhoneNo", mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null));
+		Param param=new Param(Constant.LOGINNAME, mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null));
 		Request request=httpEngine.createRequest(ServicesConfig.PERSONAL_BONUS_LIST, param);
 		Call call=httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {

@@ -17,6 +17,8 @@ import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.http.HttpEngine.Param;
+import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
@@ -69,7 +71,7 @@ public class PersonalCancleListActivity extends BaseActivity {
 
 	private void startLoading() {
 		startProgressDialog("正在玩命加载中...");
-		Param param=new Param("mPhoneNo", sp.getString("mPhoneNo", null));
+		Param param=new Param(Constant.LOGINNAME, sp.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null));
 		Request request=httpEngine.createRequest(ServicesConfig.PERSONAL_CHARGEBACK_LIST, param);
 		Call call=httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {

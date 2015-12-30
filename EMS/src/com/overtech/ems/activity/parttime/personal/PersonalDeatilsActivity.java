@@ -32,9 +32,11 @@ import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.http.HttpEngine.Param;
+import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.picasso.Picasso;
 import com.overtech.ems.picasso.Transformation;
 import com.overtech.ems.utils.ImageCacheUtils;
+import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
 import com.squareup.okhttp.Call;
@@ -122,7 +124,7 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 
 	private void startLoading() {
 		startProgressDialog("加载个人信息中...");
-		Param param=new Param("mPhoneNo",sp.getString("mPhoneNo", null));
+		Param param=new Param(Constant.LOGINNAME,sp.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null));
 		Request request = httpEngine.createRequest(ServicesConfig.PERSONAL_ACCOUNT, param);
 		Call call=httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {

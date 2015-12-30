@@ -31,6 +31,7 @@ import com.overtech.ems.activity.parttime.personal.PersonalDeatilsActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalHelpDocActivity;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.http.HttpEngine.Param;
+import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.picasso.Picasso;
 import com.overtech.ems.picasso.Transformation;
 import com.overtech.ems.utils.ImageCacheUtils;
@@ -117,7 +118,7 @@ public class PersonalZoneFragment extends BaseFragment implements OnClickListene
 	private void onLoading() {
 		startProgressDialog("请稍后...");
 		String mLoginName = mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
-		Param param = new Param("loginName", mLoginName);
+		Param param = new Param(Constant.LOGINNAME, mLoginName);
 		Request request = httpEngine.createRequest(ServicesConfig.PERSONAL_AVATOR, param);
 		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {
@@ -151,7 +152,7 @@ public class PersonalZoneFragment extends BaseFragment implements OnClickListene
 		mPhone = (TextView) view.findViewById(R.id.textViewPhone);
 		mApp = (RelativeLayout) view.findViewById(R.id.rl_about_app);
 		mHeadContent.setText("我的");
-		mPhone.setText(mSharedPreferences.getString("mPhoneNo", null));// 设置登陆时的个人手机号
+		mPhone.setText(mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null));// 设置登陆时的个人手机号
 	}
 
 	private void initEvents() {

@@ -45,6 +45,7 @@ import com.overtech.ems.entity.bean.TaskPackageBean;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.TaskPackage;
 import com.overtech.ems.http.HttpEngine.Param;
+import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
@@ -260,7 +261,7 @@ public class GrabTaskFragment extends BaseFragment implements
 			public boolean onEditorAction(TextView view, int actionId,KeyEvent event) {
 				if (actionId == EditorInfo.IME_ACTION_DONE) {
 					String keyWord = view.getText().toString().trim();
-					Param param = new Param("mKeyWord", keyWord);
+					Param param = new Param(Constant.KEYWORD, keyWord);
 					initData(ServicesConfig.GRABTASK, "0",param);
 				}
 				return true;
@@ -274,8 +275,8 @@ public class GrabTaskFragment extends BaseFragment implements
 		if (requestCode == 0x1 && resultCode == Activity.RESULT_OK) {
 			String mZone = data.getStringExtra("mZone");
 			String mTime = data.getStringExtra("mTime");
-			Param zoneParam = new Param("mFilterZone", mZone);
-			Param timeParam = new Param("mFilterTime", mTime);
+			Param zoneParam = new Param(Constant.FILTERZONE, mZone);
+			Param timeParam = new Param(Constant.FILTERTIME, mTime);
 			if (list != null) {
 				list.clear();
 			}
@@ -368,8 +369,8 @@ public class GrabTaskFragment extends BaseFragment implements
 						String mLoginName = mSharedPreferences.getString(
 								SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
 						String mTaskNo = list.get(position).getTaskNo();
-						Param paramPhone = new Param("loginName", mLoginName);
-						Param paramTaskNo = new Param("taskNo", mTaskNo);
+						Param paramPhone = new Param(Constant.LOGINNAME, mLoginName);
+						Param paramTaskNo = new Param(Constant.TASKNO, mTaskNo);
 						Request request = httpEngine.createRequest(
 								ServicesConfig.Do_GRABTASK, paramPhone,
 								paramTaskNo);

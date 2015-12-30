@@ -25,6 +25,8 @@ import com.overtech.ems.entity.bean.BillBean;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.test.Data2;
 import com.overtech.ems.http.HttpEngine.Param;
+import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
@@ -80,8 +82,8 @@ public class PersonalAccountListActivity extends BaseActivity implements OnClick
 
 	private void startLoading(String billState) {
 		startProgressDialog("正在加载...");
-		Param phoneParam =new Param("mPhoneNo", sp.getString("mPhoneNo", null));
-		Param flagParam = new Param("closingState",billState);
+		Param phoneParam =new Param(Constant.LOGINNAME, sp.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null));
+		Param flagParam = new Param(Constant.CLOSINGSTATE,billState);
 		Request requst=httpEngine.createRequest(ServicesConfig.PERSONAL_BILL, phoneParam,flagParam);
 		Call call=httpEngine.createRequestCall(requst);
 		call.enqueue(new Callback() {
