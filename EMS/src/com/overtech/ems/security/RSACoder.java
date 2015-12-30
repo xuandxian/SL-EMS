@@ -23,16 +23,13 @@ public class RSACoder extends Coder{
             throws Exception {  
         // 对密钥解密  
         byte[] keyBytes = decryptBASE64(key);  
-  
         // 取得公钥  
         X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(keyBytes);  
         KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);  
         Key publicKey = keyFactory.generatePublic(x509KeySpec);  
-  
         // 对数据解密  
         Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());  
         cipher.init(Cipher.DECRYPT_MODE, publicKey);  
-  
         return cipher.doFinal(data);  
     }  
   
@@ -49,17 +46,13 @@ public class RSACoder extends Coder{
             throws Exception {  
         // 对公钥解密  
         byte[] keyBytes = decryptBASE64(key);  
-  
         // 取得公钥  
         X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(keyBytes);  
         KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);  
         Key publicKey = keyFactory.generatePublic(x509KeySpec);  
-  
         // 对数据加密  
         Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());  
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);  
-  
         return cipher.doFinal(data);  
     }  
-
 }

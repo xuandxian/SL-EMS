@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.provider.ContactsContract.Contacts.Data;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -30,6 +31,7 @@ import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * @author Tony
@@ -51,6 +53,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			switch (msg.what) {
 			case StatusCode.LOGIN_SUCCESS:
 				mSharedPreferences.edit().putString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, sUserName).commit();// 将登陆的用户名保存
+				mSharedPreferences.edit().putLong(SharedPreferencesKeys.CURRENT_DATE, new Date().getTime()).commit();
 				Intent intent = new Intent(LoginActivity.this,MainActivity.class);
 				startActivity(intent);
 				finish();
@@ -62,7 +65,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 				Utilities.showToast("网络异常", context);
 				break;
 			case StatusCode.LOGIN_NOT_EXIST:
-				Utilities.showToast("用户不存在", context);
+				Utilities.showToast("用户或者密码错误", context);
 				break;
 			default:
 				break;
