@@ -80,14 +80,15 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 		public void handleMessage(android.os.Message msg) {
 			String json = (String) msg.obj;
 			Gson gson = new Gson();
-			TaskPackageBean tasks = gson.fromJson(json, TaskPackageBean.class);
-			list = (ArrayList<TaskPackage>) tasks.getModel();
-			if (null==myLocation) {
-				Utilities.showToast("定位失败", context);
-				return;
-			}
-			mAdapter = new GrabTaskAdapter(list,myLocation,mActivity);
-			mSwipeListView.setAdapter(mAdapter);
+			Log.e("==又是哪里出问题了==", json);
+//			TaskPackageBean tasks = gson.fromJson(json, TaskPackageBean.class);
+//			list = (ArrayList<TaskPackage>) tasks.getModel();
+//			if (null==myLocation) {
+//				Utilities.showToast("定位失败", context);
+//				return;
+//			}
+//			mAdapter = new GrabTaskAdapter(list,myLocation,mActivity);
+//			mSwipeListView.setAdapter(mAdapter);
 		};
 	};
 
