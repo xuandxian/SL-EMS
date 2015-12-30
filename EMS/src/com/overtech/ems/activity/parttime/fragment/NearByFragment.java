@@ -32,6 +32,7 @@ import com.overtech.ems.entity.bean.TaskPackageBean;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.TaskPackage;
 import com.overtech.ems.http.HttpEngine.Param;
+import com.overtech.ems.http.constant.Constant;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
@@ -121,8 +122,8 @@ public class NearByFragment extends BaseFragment implements OnClickListener {
 	private void setExtralData(Fragment fragment){
 		Bundle bundle=new Bundle();
 		bundle.putSerializable("taskPackage", list);
-		bundle.putDouble("longitude", mLongitude);
-		bundle.putDouble("latitude", mLatitude);
+		bundle.putDouble(Constant.LONGITUDE, mLongitude);
+		bundle.putDouble(Constant.LATITUDE, mLatitude);
 		fragment.setArguments(bundle);
 	}
 	
@@ -138,8 +139,8 @@ public class NearByFragment extends BaseFragment implements OnClickListener {
 			mLatitude=location.getLatitude();
 			mLongitude=location.getLongitude();
 			myLocation = new LatLng(location.getLatitude(),location.getLongitude());
-			Param latitude = new Param("latitude", String.valueOf(location.getLatitude()));
-			Param longitude = new Param("longitude", String.valueOf(location.getLongitude()));
+			Param latitude = new Param(Constant.LATITUDE, String.valueOf(location.getLatitude()));
+			Param longitude = new Param(Constant.LONGITUDE, String.valueOf(location.getLongitude()));
 			getDataByLocation(ServicesConfig.NEARBY, "0", latitude, longitude);
 		}
 	}

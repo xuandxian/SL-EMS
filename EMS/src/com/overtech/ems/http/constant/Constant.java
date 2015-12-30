@@ -33,4 +33,12 @@ public class Constant {
 	 * 更新手机号
 	 */
 	public static final String PHONENO="phoneNo";
+	/**
+	 * 纬度
+	 */
+	public static final String LATITUDE="latitude";
+	/**
+	 * 经度
+	 */
+	public static final String LONGITUDE="longitude";
 }
