@@ -28,6 +28,7 @@ import android.widget.ImageView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.MyApplication;
+import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.ImageCacheUtils;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.popwindow.DimPopupWindow;
@@ -50,7 +51,6 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements OnCl
     private Uri certificateUri=null;
     private SharedPreferences sp;
     private Editor editor;
-    private final String WORKCERTIFICATE = "workcertificate";
     @Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
@@ -156,7 +156,7 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements OnCl
                 mWorkCertificate.setImageBitmap(bm);
                 certificateUri=data.getData();
                 String path =getPhotoPath(certificateUri);
-                editor.putString(WORKCERTIFICATE, path);
+                editor.putString(Constant.WORKCERTIFICATE, path);
                 editor.commit();
             }
 			break;
@@ -187,7 +187,7 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements OnCl
 				Bitmap pic = null;
 				pic = BitmapFactory.decodeFile(outFile.getAbsolutePath(), op);
 				mWorkCertificate.setImageBitmap(pic);
-				editor.putString(WORKCERTIFICATE, outFile.getAbsolutePath());
+				editor.putString(Constant.WORKCERTIFICATE, outFile.getAbsolutePath());
 				certificateUri = cameraUri;
 				editor.commit();
 			}

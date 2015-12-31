@@ -18,6 +18,10 @@ public class StatusCode {
 	public static final int KEYWORDS_SUCCESS = 0x09;
 	public static final int KEYWORDS_FAILED = 0x10;
 	
+	//注册
+	public static final int REGISTER_SUCCESS=0x11;
+	public static final int REGISTER_FAILED=0x12;
+	
 	// 任务包详情
 	public static final int PACKAGE_DETAILS_SUCCESS = 0x16;
 	
@@ -28,15 +32,12 @@ public class StatusCode {
 	public static final int RESET_PASSWORD_FAILED = 0x23;
 
 
-
-
-
-
-
+	
 	//OnActivityFroResult StatusCode
 
 	//抢单
 	public static final int RESULT_GRAB_DO_FILTER = 0x50;
 	public static final int RESULT_GRAB_DO_SEARCH = 0x51;
+
 	
 }

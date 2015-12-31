@@ -49,7 +49,7 @@
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="pRtgsRZyxmePt5lPifOnVSS4" />
+            android:value="1sV9qHZ0OE25za0zijQMLGRr" />
 
         <activity android:name="com.overtech.ems.activity.BaseActivity" />
         <activity
@@ -87,6 +87,7 @@
 		<activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAboutAppActivity"/>
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAboutCompanyActivity"/>
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAppDeveloperActivity"/>
+        <activity android:name="com.overtech.ems.activity.common.RegisterSuccessActivity"/>
     </application>
 
 </manifest>
