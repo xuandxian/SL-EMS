@@ -62,22 +62,6 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	private final String TAG = "Fragment";
 
 	private SharedPreferences sp;
-	/**
-	 * 身份证正面路径
-	 */
-	 private final String IDCardFront="frontIdcard";
-	 /**
-	  * 身份证反面路径
-	  */
-	 private final String IDCardOpposite="oppositeIdCard";
-	 /**
-	  * 工作证反面路径
-	  */
-	 private final String WORKCERTIFICATE = "workcertificate";
-	 /**
-	  * 其他证书路径(可选)
-	  */
-	 private final String OTHERCERTIFICATE="othercertificate";
 	 
 	 private Handler handler=new Handler(){
 		 public void handleMessage(android.os.Message msg) {
@@ -364,21 +348,21 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 		File[] files;
 		String[] fileKeys;
 		//其他证书可有可无需要对其进行判断
-		if(sp.getString(OTHERCERTIFICATE, null)==null){
+		if(sp.getString(Constant.OTHERCERTIFICATE, null)==null){
 			files=new File[3];
-			files[0]=new File(sp.getString(IDCardFront, null));
-			files[1]=new File(sp.getString(IDCardOpposite, null));
-			files[2]=new File(sp.getString(WORKCERTIFICATE, null));
+			files[0]=new File(sp.getString(Constant.IDCARDFRONT, null));
+			files[1]=new File(sp.getString(Constant.IDCARDOPPOSITE, null));
+			files[2]=new File(sp.getString(Constant.WORKCERTIFICATE, null));
 			fileKeys=new String[3];
 			fileKeys[0]="frontIdCard";
 			fileKeys[1]="oppositeIdCard";
 			fileKeys[2]="workCertificate";
 		}else{
 			files=new File[4];
-			files[0]=new File(sp.getString(IDCardFront, null));
-			files[1]=new File(sp.getString(IDCardOpposite, null));
-			files[2]=new File(sp.getString(WORKCERTIFICATE, null));
-			files[3]=new File(sp.getString(OTHERCERTIFICATE, null));
+			files[0]=new File(sp.getString(Constant.IDCARDFRONT, null));
+			files[1]=new File(sp.getString(Constant.IDCARDOPPOSITE, null));
+			files[2]=new File(sp.getString(Constant.WORKCERTIFICATE, null));
+			files[3]=new File(sp.getString(Constant.OTHERCERTIFICATE, null));
 			fileKeys=new String[4];
 			fileKeys[0]="frontIdCard";
 			fileKeys[1]="oppositeIdCard";

@@ -28,6 +28,7 @@ import android.widget.ImageView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.MyApplication;
+import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.ImageCacheUtils;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.popwindow.DimPopupWindow;
@@ -42,7 +43,6 @@ public class RegisterOtherCertificateFragment extends Fragment implements OnClic
 	private Button mCancle;
 	private SharedPreferences sp;
 	private Editor editor;
-	private final String OTHERCERTIFICATE="othercertificate";
 	public static final int OPEN_PHOTO_REQUESTCODE =  0x1;  
     private static final int PHOTO_CAPTURE = 0x2;
     private Uri otherCertificateUri = null;
@@ -145,7 +145,7 @@ public class RegisterOtherCertificateFragment extends Fragment implements OnClic
                 mOtherCertificate.setImageBitmap(bm);
                 otherCertificateUri=data.getData();
                 String path=getPhotoPath(otherCertificateUri);
-                editor.putString(OTHERCERTIFICATE, path);
+                editor.putString(Constant.OTHERCERTIFICATE, path);
             }
 			editor.commit();
 			break;
@@ -177,7 +177,7 @@ public class RegisterOtherCertificateFragment extends Fragment implements OnClic
 				pic = BitmapFactory.decodeFile(outFile.getAbsolutePath(), op);
 				mOtherCertificate.setImageBitmap(pic);
 				otherCertificateUri=cameraUri;
-				editor.putString(OTHERCERTIFICATE, outFile.getAbsolutePath());
+				editor.putString(Constant.OTHERCERTIFICATE, outFile.getAbsolutePath());
 				editor.commit();
 			}
 			break;

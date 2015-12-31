@@ -45,4 +45,20 @@ public class Constant {
 	 * 个人信息
 	 */
 	public static final String PERSONINFO="personInfo";
+	/**
+	 * 身份证照片正面
+	 */
+	public static final String IDCARDFRONT="frontIdcard";
+	/**
+	 * 身份证照片反面
+	 */
+	public static final String IDCARDOPPOSITE="oppositeIdCard";
+	/**
+	 * 工作证
+	 */
+	public static final String WORKCERTIFICATE="workcertificate";
+	/**
+	 * 其他证书
+	 */
+	public static final String OTHERCERTIFICATE="othercertificate";
 }

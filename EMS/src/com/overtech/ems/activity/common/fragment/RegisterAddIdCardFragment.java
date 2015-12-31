@@ -28,6 +28,7 @@ import android.widget.ImageView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.MyApplication;
+import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.ImageCacheUtils;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.popwindow.DimPopupWindow;
@@ -63,8 +64,6 @@ public class RegisterAddIdCardFragment extends Fragment implements OnClickListen
     
     private SharedPreferences sp;
     private Editor editor;
-    private final String IDCardFront="frontIdcard";
-    private final String IDCardOpposite="oppositeIdCard";
     @Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
@@ -189,12 +188,12 @@ public class RegisterAddIdCardFragment extends Fragment implements OnClickListen
                 	//记录打开相册获取的图片的uri，赋给
                 	frontUri=data.getData();
                 	String path=getPhotoPath(frontUri);
-                	editor.putString(IDCardFront, path);
+                	editor.putString(Constant.IDCARDFRONT, path);
                 }else if(currentState==1){
                 	mIdCardOpposite.setImageBitmap(bm);
                 	oppositeUri=data.getData();
                 	String path=getPhotoPath(oppositeUri);
-                	editor.putString(IDCardOpposite, path);
+                	editor.putString(Constant.IDCARDOPPOSITE, path);
                 }
                 editor.commit();
                 
@@ -231,11 +230,11 @@ public class RegisterAddIdCardFragment extends Fragment implements OnClickListen
 				if(currentState==0){
 					frontUri=cameraUri;
 	            	mIdCardFront.setImageBitmap(pic);  
-	            	editor.putString(IDCardFront, outFile.getAbsolutePath());
+	            	editor.putString(Constant.IDCARDFRONT, outFile.getAbsolutePath());
 	            }else if(currentState==1){
 	            	mIdCardOpposite.setImageBitmap(pic);
 	            	oppositeUri=cameraUri;
-	            	editor.putString(IDCardOpposite, outFile.getAbsolutePath());
+	            	editor.putString(Constant.IDCARDOPPOSITE, outFile.getAbsolutePath());
 	            }
 				editor.commit();
 			}
