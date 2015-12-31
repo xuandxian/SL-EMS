@@ -1,34 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:layout_height="wrap_content">
 
     <com.overtech.ems.widget.EditTextWithDelete
         android:id="@+id/et_do_parttime_search"
         android:layout_width="match_parent"
         android:layout_height="38dp"
         android:layout_centerVertical="true"
+        android:layout_margin="5dp"
+        android:layout_toLeftOf="@+id/tv_parttime_do_cancel"
         android:background="@drawable/shape_input"
         android:drawableLeft="@drawable/icon_search"
+        android:layout_alignParentTop="true"
         android:hint="小区名称、所属区域"
-        android:layout_margin="5dp"
+        android:imeOptions="actionDone"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:singleLine="true"
-        android:imeOptions="actionDone"
-        android:layout_toLeftOf="@+id/tv_parttime_do_cancel"
-        android:layout_toStartOf="@+id/tv_parttime_do_cancel" />
+        android:singleLine="true" />
 
     <TextView
         android:id="@+id/tv_parttime_do_cancel"
+        style="@style/tv_list_secondary_style"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="取消"
-        android:layout_marginRight="5dp"
-        android:textSize="@dimen/text_size_list"
-        android:layout_centerVertical="true"
+        android:layout_height="38dp"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:gravity="center"
+        android:layout_marginRight="5dp"
+        android:text="取消"
+        android:layout_alignBottom="@+id/et_do_parttime_search" />
+    <ListView
+        android:id="@+id/lv_search_history"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/et_do_parttime_search"/>
+
 
 </RelativeLayout>

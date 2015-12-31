@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.View;
+import android.widget.ListView;
 import android.widget.TextView;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
@@ -14,6 +16,7 @@ public class KeyWordSerachActivity extends BaseActivity {
 
 	private EditTextWithDelete et_do_parttime_search;
 	private TextView tv_parttime_do_cancel;
+	private ListView lv_search_history;
 	private String mKeyWord;
 
 	@Override
@@ -26,6 +29,7 @@ public class KeyWordSerachActivity extends BaseActivity {
 	private void findViewById(){
 		et_do_parttime_search=(EditTextWithDelete)findViewById(R.id.et_do_parttime_search);
 		tv_parttime_do_cancel=(TextView)findViewById(R.id.tv_parttime_do_cancel);
+		lv_search_history=(ListView)findViewById(R.id.lv_search_history);
 	}
 	private void init(){
 		et_do_parttime_search.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -39,6 +43,12 @@ public class KeyWordSerachActivity extends BaseActivity {
 					finish();
 				}
 				return true;
+			}
+		});
+		tv_parttime_do_cancel.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				finish();
 			}
 		});
 	}
