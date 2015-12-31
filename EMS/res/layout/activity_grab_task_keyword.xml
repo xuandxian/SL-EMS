@@ -29,6 +29,7 @@
         android:layout_marginRight="5dp"
         android:text="取消"
         android:layout_alignBottom="@+id/et_do_parttime_search" />
+    
     <ListView
         android:id="@+id/lv_search_history"
         android:layout_width="match_parent"
