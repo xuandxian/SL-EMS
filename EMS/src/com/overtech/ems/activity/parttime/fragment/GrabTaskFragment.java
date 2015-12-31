@@ -248,27 +248,16 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 			@Override
 			public void onClick(View arg0) {
 				Intent intent = new Intent(mActivity,GrabTaskDoFilterActivity.class);
-				startActivityForResult(intent, 0x1);
+				startActivityForResult(intent, StatusCode.RESULT_GRAB_DO_FILTER);
 			}
 		});
-//		mKeyWordSearch.setOnEditorActionListener(new OnEditorActionListener() {
-//
-//			@Override
-//			public boolean onEditorAction(TextView view, int actionId,KeyEvent event) {
-//				if (actionId == EditorInfo.IME_ACTION_DONE) {
-//					String keyWord = view.getText().toString().trim();
-//					Param param = new Param(Constant.KEYWORD, keyWord);
-//					initData(ServicesConfig.GRABTASK, "0",param);
-//				}
-//				return true;
-//			}
-//		});
+
 		mKeyWordSearch.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View arg0) {
 				Intent intent = new Intent(mActivity,KeyWordSerachActivity.class);
-				startActivity(intent);
+				startActivityForResult(intent, StatusCode.RESULT_GRAB_DO_SEARCH);
 			}
 		});
 		
@@ -277,7 +266,7 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == 0x1 && resultCode == Activity.RESULT_OK) {
+		if (requestCode == StatusCode.RESULT_GRAB_DO_FILTER && resultCode == Activity.RESULT_OK) {
 			String mZone = data.getStringExtra("mZone");
 			String mTime = data.getStringExtra("mTime");
 			Param zoneParam = new Param(Constant.FILTERZONE, mZone);
@@ -289,6 +278,16 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 				mAdapter.notifyDataSetChanged();
 			}
 			initData(ServicesConfig.DO_FILTER, "0",zoneParam, timeParam);
+		}else if (requestCode == StatusCode.RESULT_GRAB_DO_SEARCH && resultCode == Activity.RESULT_OK){
+			String keyWord = data.getStringExtra("mKeyWord");
+			Param keyWordParam = new Param(Constant.KEYWORD, keyWord);
+			if (list != null) {
+				list.clear();
+			}
+			if (mAdapter != null) {
+				mAdapter.notifyDataSetChanged();
+			}
+			initData(ServicesConfig.GRABTASK, "0",keyWordParam);
 		}
 	}
 

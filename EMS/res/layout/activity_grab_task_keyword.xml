@@ -16,11 +16,12 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:singleLine="true"
-        android:layout_toLeftOf="@+id/tv_parttime_do_fifter"
-        android:layout_toStartOf="@+id/tv_parttime_do_fifter" />
+        android:imeOptions="actionDone"
+        android:layout_toLeftOf="@+id/tv_parttime_do_cancel"
+        android:layout_toStartOf="@+id/tv_parttime_do_cancel" />
 
     <TextView
-        android:id="@+id/tv_parttime_do_fifter"
+        android:id="@+id/tv_parttime_do_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="取消"

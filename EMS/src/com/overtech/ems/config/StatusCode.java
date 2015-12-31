@@ -15,7 +15,7 @@ public class StatusCode {
 	public static final int GRAB_SUCCESS = 0x05;
 	public static final int GRAG_RESPONSE_SUCCESS = 0x06;
 	public static final int GRAG_RESPONSE_OTHER_FAILED = 0x08;
-	
+
 	// 任务包详情
 	public static final int PACKAGE_DETAILS_SUCCESS = 0x09;
 	
@@ -25,5 +25,17 @@ public class StatusCode {
 	// 忘记密码
 	public static final int RESET_PASSWORD_SUCCESS = 0x12;
 	public static final int RESET_PASSWORD_FAILED = 0x13;
+
+
+
+
+
+
+
+	//OnActivityFroResult StatusCode
+
+	//抢单
+	public static final int RESULT_GRAB_DO_FILTER = 0x50;
+	public static final int RESULT_GRAB_DO_SEARCH = 0x51;
 	
 }
