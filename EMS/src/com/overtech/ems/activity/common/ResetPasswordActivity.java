@@ -3,6 +3,7 @@ package com.overtech.ems.activity.common;
 import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
+import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.Employee;
 import com.overtech.ems.utils.Utilities;
@@ -11,20 +12,17 @@ import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import java.io.IOException;
 
 public class ResetPasswordActivity extends BaseActivity {
@@ -36,11 +34,33 @@ public class ResetPasswordActivity extends BaseActivity {
 	private String sPasswordNew;
 	private String sPasswordConfirm;
 	private Context context;
+	private String mPhoneNo;
+	
+	
+	private Handler handler = new Handler() {
+		public void handleMessage(android.os.Message msg) {
+			switch (msg.what) {
+			case StatusCode.RESET_PASSWORD_SUCCESS:
+				Intent intent = new Intent(ResetPasswordActivity.this,ResetPasswordSuccessActivity.class);
+				startActivity(intent);
+				finish();
+				break;
+			case StatusCode.RESET_PASSWORD_FAILED:
+				Utilities.showToast("重置密码失败", context);
+				break;
+			case StatusCode.RESPONSE_NET_FAILED:
+				Utilities.showToast("网络异常", context);
+				break;
+			default:
+				break;
+			}
+			stopProgressDialog();
+		};
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_reset_password);
 		findViewById();
 		init();
@@ -48,6 +68,7 @@ public class ResetPasswordActivity extends BaseActivity {
 
 	private void findViewById() {
 		context = ResetPasswordActivity.this;
+		mPhoneNo=getIntent().getStringExtra("mPhoneNo");
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
 		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
 		mResetPassword = (Button) findViewById(R.id.btn_reset_password);
@@ -70,9 +91,8 @@ public class ResetPasswordActivity extends BaseActivity {
 					if (sPasswordNew.length() >= 6 && sPasswordNew.length() <= 18) {
 						if (TextUtils.equals(sPasswordNew, sPasswordConfirm)) {
 							startProgressDialog("正在更新...");
-							String phoneNo = "15021565127";// 此处暂时设置未“15021565127”，应该提取sharepreference
 							Employee employee = new Employee();
-							employee.setPhoneNo(phoneNo);
+							employee.setPhoneNo(mPhoneNo);
 							employee.setPassword(sPasswordNew);
 							Gson gson = new Gson();
 							String person = gson.toJson(employee);
@@ -81,20 +101,25 @@ public class ResetPasswordActivity extends BaseActivity {
 							call.enqueue(new Callback() {
 								@Override
 								public void onFailure(Request request,IOException e) {
-									stopProgressDialog();
-									Log.e("ResetPasswordActivity", "重置密码失败1");
+									Message msg = new Message();
+									msg.what = StatusCode.RESPONSE_NET_FAILED;
+									handler.sendMessage(msg);
 								}
 
 								@Override
 								public void onResponse(Response response)throws IOException {
-									stopProgressDialog();
-									String result = response.body().string();
-									if (TextUtils.equals(result, "true")) {
-										Intent intent = new Intent(ResetPasswordActivity.this,ResetPasswordSuccessActivity.class);
-										startActivity(intent);
+									Message msg = new Message();
+									if (response.isSuccessful()) {
+										String result = response.body().string();
+										if (TextUtils.equals("true", result)) {
+											msg.what = StatusCode.RESET_PASSWORD_SUCCESS;
+										} else {
+											msg.what = StatusCode.RESET_PASSWORD_FAILED;
+										}
 									} else {
-										Log.e("ResetPasswordActivity","重置密码失败2");
+										msg.what = StatusCode.RESPONSE_NET_FAILED;
 									}
+									handler.sendMessage(msg);
 								}
 							});
 						} else {

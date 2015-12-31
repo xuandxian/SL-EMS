@@ -1,15 +1,21 @@
 package com.overtech.ems.activity.common;
 
+import java.io.IOException;
 import java.util.Date;
-
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
+import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.utils.SharedPreferencesKeys;
-import com.overtech.ems.utils.Utilities;
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.WindowManager;
 
 /**
@@ -27,6 +33,22 @@ public class SplashActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.splash);
+		
+		Request request = httpEngine.createRequest(ServicesConfig.RSA_INIT);
+		Call call = httpEngine.createRequestCall(request);
+		call.enqueue(new Callback() {
+			
+			@Override
+			public void onResponse(Response response) throws IOException {
+				Log.e("RSA:", response.body().string());
+			}
+			
+			@Override
+			public void onFailure(Request request, IOException exception) {
+				Log.e("SplashActivity", "onFailure");
+			}
+		});
+		
 		new Handler().postDelayed(new Runnable() {
 
 			@Override
