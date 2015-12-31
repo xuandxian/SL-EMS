@@ -37,4 +37,8 @@ public class Constant {
 	 * 经度
 	 */
 	public static final String LONGITUDE="longitude";
+	/**
+	 * 个人信息
+	 */
+	public static final String PERSONINFO="personInfo";
 }

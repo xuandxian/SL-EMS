@@ -123,7 +123,7 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 	}
 
 	private void startLoading() {
-		startProgressDialog("加载个人信息中...");
+		startProgressDialog("正在加载...");
 		Param param=new Param(Constant.LOGINNAME,sp.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null));
 		Request request = httpEngine.createRequest(ServicesConfig.PERSONAL_ACCOUNT, param);
 		Call call=httpEngine.createRequestCall(request);

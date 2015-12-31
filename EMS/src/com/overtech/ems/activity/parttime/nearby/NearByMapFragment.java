@@ -27,6 +27,7 @@ import com.overtech.ems.entity.bean.TaskPackageBean;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.TaskPackage;
 import com.overtech.ems.http.HttpEngine.Param;
+import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.Utilities;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
@@ -87,7 +88,7 @@ public class NearByMapFragment extends BaseFragment {
 			return;
 		}
 		ArrayList<TaskPackage> list=(ArrayList<TaskPackage>) bundle.getSerializable("taskPackage");
-		myLocation=new LatLng(bundle.getDouble("latitude"), bundle.getDouble("longitude"));
+		myLocation=new LatLng(bundle.getDouble(Constant.LATITUDE), bundle.getDouble(Constant.LONGITUDE));
 		addOverLay(list);
 		setMyLocationMarker(myLocation);
     }
@@ -204,8 +205,8 @@ public class NearByMapFragment extends BaseFragment {
 			public void onMapLongClick(LatLng point) {
 				mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(12.0f));
 				clickLocation = point;
-				Param latitude = new Param("latitude", String.valueOf(point.latitude));
-				Param longitude = new Param("longitude", String.valueOf(point.longitude));
+				Param latitude = new Param(Constant.LATITUDE, String.valueOf(point.latitude));
+				Param longitude = new Param(Constant.LOGINNAME, String.valueOf(point.longitude));
 				getDataByLatlng(ServicesConfig.NEARBY, "1", latitude, longitude);
 			}
 		});

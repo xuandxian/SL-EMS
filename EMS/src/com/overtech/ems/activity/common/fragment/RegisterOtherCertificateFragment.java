@@ -197,7 +197,7 @@ public class RegisterOtherCertificateFragment extends Fragment implements OnClic
 		}
 		return null;
 	}
-	public boolean isAllNotNull(){
+	/*public boolean isAllNotNull(){
 		
 		if(otherCertificateUri!=null){
 			return true;
@@ -206,5 +206,7 @@ public class RegisterOtherCertificateFragment extends Fragment implements OnClic
 			return false;
 		}
 	}
+	不需要这个，其他证书可有可无
+	*/
 	
 }

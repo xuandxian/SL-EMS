@@ -19,7 +19,14 @@ public class StatusCode {
 	// 任务包详情
 	public static final int PACKAGE_DETAILS_SUCCESS = 0x09;
 	
-	
+	/**
+	 * 注册上传成功
+	 */
+	public static final int REGISTER_SUCCESS=0x10;
+	/**
+	 * 注册失败
+	 */
+	public static final int REGISTER_FAILED=0x11;
 	
 	
 }

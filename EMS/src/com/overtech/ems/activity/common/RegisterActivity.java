@@ -12,6 +12,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,14 +32,15 @@ import com.overtech.ems.activity.common.fragment.RegisterAddPersonInfoFragment;
 import com.overtech.ems.activity.common.fragment.RegisterAddWorkCertificateFragment;
 import com.overtech.ems.activity.common.fragment.RegisterFragment;
 import com.overtech.ems.activity.common.fragment.RegisterOtherCertificateFragment;
-import com.overtech.ems.config.SystemConfig;
-import com.overtech.ems.entity.common.BusinessConfig;
+import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.Employee;
-import com.overtech.ems.http.OkHttpClientManager;
-import com.overtech.ems.http.OkHttpClientManager.Param;
+import com.overtech.ems.http.HttpEngine.Param;
+import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.Utilities;
-import com.overtech.ems.widget.CustomProgressDialog;
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 public class RegisterActivity extends BaseActivity implements OnClickListener {
@@ -76,7 +79,26 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	  */
 	 private final String OTHERCERTIFICATE="othercertificate";
 	 
-	 private CustomProgressDialog progressDialog;
+	 private Handler handler=new Handler(){
+		 public void handleMessage(android.os.Message msg) {
+			switch (msg.what) {
+			case StatusCode.REGISTER_SUCCESS:
+				Utilities.showToast((String)msg.obj, context);
+				stopProgressDialog();
+				finish();
+				break;
+			case StatusCode.REGISTER_FAILED:
+				Utilities.showToast((String)msg.obj, context);
+				stopProgressDialog();
+				break;
+
+			default:
+				break;
+			}
+			
+		 };
+	 };
+	 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -118,11 +140,11 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 			manager = getFragmentManager();
 			FragmentTransaction transaction = manager.beginTransaction();
 			if (mRegisterFragment == null) {
-				mCurrentFragment = mRegisterFragment = new RegisterFragment();
+				mCurrentFragment = mRegisterFragment = new RegisterFragment();//初始化默认界面
 			}
 			if (!mRegisterFragment.isAdded()) {
 				transaction.add(R.id.fl_register_container, mRegisterFragment,
-						"REGISTER").commit();
+						"REGISTER").commit();//将当前fragment添加进栈
 			} else {
 				transaction.show(mRegisterFragment).commit();
 			}
@@ -132,35 +154,35 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	@Override
 	public void onBackPressed() {
 
-		if (mCurrentFragment instanceof RegisterFragment) {
+		if (mCurrentFragment instanceof RegisterFragment) {//第一个注册页面
 			mCurrentFragment = null;
 			super.onBackPressed();
-		} else if (mCurrentFragment instanceof RegisterAddPersonInfoFragment) {
+		} else if (mCurrentFragment instanceof RegisterAddPersonInfoFragment) {//个人信息界面
 			FragmentTransaction transaction = manager.beginTransaction();
 			transaction.hide(mPersonInfoFragment).show(mRegisterFragment)
 					.commit();
 			mCurrentFragment = mRegisterFragment;
 			mHeadContent.setText("注册");
 			mNext.setText("获取短信验证码");
-		} else if (mCurrentFragment instanceof RegisterAddPersonEduAndWorkFragment) {
+		} else if (mCurrentFragment instanceof RegisterAddPersonEduAndWorkFragment) {//个人教育工作信息界面
 			FragmentTransaction transaction = manager.beginTransaction();
 			transaction.hide(mPersonEduWorkFragment).show(mPersonInfoFragment)
 					.commit();
 			mCurrentFragment = mPersonInfoFragment;
 			mHeadContent.setText("基本信息");
-		} else if (mCurrentFragment instanceof RegisterAddIdCardFragment) {
+		} else if (mCurrentFragment instanceof RegisterAddIdCardFragment) {//身份证界面
 			FragmentTransaction transaction = manager.beginTransaction();
 			transaction.hide(mIdCardFragment).show(mPersonEduWorkFragment)
 					.commit();
 			mCurrentFragment = mPersonEduWorkFragment;
 			mHeadContent.setText("学历/工作信息");
-		} else if (mCurrentFragment instanceof RegisterAddWorkCertificateFragment) {
+		} else if (mCurrentFragment instanceof RegisterAddWorkCertificateFragment) {//工作证
 			FragmentTransaction transaction = manager.beginTransaction();
 			transaction.hide(mWorkCertificateFragment).show(mIdCardFragment)
 					.commit();
 			mCurrentFragment = mIdCardFragment;
 			mHeadContent.setText("身份证确认");
-		} else if (mCurrentFragment instanceof RegisterOtherCertificateFragment) {
+		} else if (mCurrentFragment instanceof RegisterOtherCertificateFragment) {//其他证书
 			FragmentTransaction transaction = manager.beginTransaction();
 			transaction.hide(mOtherCertificateFragment)
 					.show(mWorkCertificateFragment).commit();
@@ -177,7 +199,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 			onBackPressed();
 			break;
 		case R.id.btn_next_fragment:
-			if (mCurrentFragment instanceof RegisterFragment) {
+			if (mCurrentFragment instanceof RegisterFragment) {//第一个注册界面
 
 				if (mRegisterFragment.isCorrect()) {
 					Log.e(TAG, "======RegisterAddPersonInfo=====");
@@ -203,7 +225,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 				} else {
 				}
 
-			} else if (mCurrentFragment instanceof RegisterAddPersonInfoFragment) {
+			} else if (mCurrentFragment instanceof RegisterAddPersonInfoFragment) {//个人信息
 
 				if (mPersonInfoFragment.isAllNotNull()) {
 					Log.e(TAG, "======RegisterAddPersonEduAndWork=====");
@@ -228,7 +250,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 					mHeadContent.setText("学历/工作信息");
 				}
 
-			} else if (mCurrentFragment instanceof RegisterAddPersonEduAndWorkFragment) {
+			} else if (mCurrentFragment instanceof RegisterAddPersonEduAndWorkFragment) {//教育工作经历
 
 				if (mPersonEduWorkFragment.isAllNotNull()) {
 					Log.e(TAG, "======RegisterAddIdCard=====");
@@ -252,7 +274,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 					mHeadContent.setText("身份证确认");
 				}
 
-			} else if (mCurrentFragment instanceof RegisterAddIdCardFragment) {
+			} else if (mCurrentFragment instanceof RegisterAddIdCardFragment) {//身份证照
 
 				if (mIdCardFragment.isAllNotNull()) {
 					Log.e(TAG, "======RegisterAddWorkCertificate=====");
@@ -277,7 +299,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 					mHeadContent.setText("上岗证确认");
 				}
 
-			} else if (mCurrentFragment instanceof RegisterAddWorkCertificateFragment) {
+			} else if (mCurrentFragment instanceof RegisterAddWorkCertificateFragment) {//工作证照
 
 				if (mWorkCertificateFragment.isAllNotNull()) {
 					Log.e(TAG, "======RegisterOtherCertificate=====");
@@ -301,40 +323,36 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 					mHeadContent.setText("其他证书");
 				}
 
-			} else if (mCurrentFragment instanceof RegisterOtherCertificateFragment) {
+			} else if (mCurrentFragment instanceof RegisterOtherCertificateFragment) {//其他证书
 
-				if (mOtherCertificateFragment.isAllNotNull()) {
-					new AlertDialog.Builder(mContext)
-							.setTitle("提醒")
-							.setMessage("确认提交以上信息")
-							.setPositiveButton("确认",
-									new DialogInterface.OnClickListener() {
+				new AlertDialog.Builder(mContext)
+						.setTitle("提醒")
+						.setMessage("确认提交以上信息")
+						.setPositiveButton("确认",
+								new DialogInterface.OnClickListener() {
 
-										@Override
-										public void onClick(
-												DialogInterface dialog,
-												int which) {
-											String personJson=getAllMessage();
-											startUpLoading(personJson);
-											progressDialog=CustomProgressDialog.createDialog(mContext);
-											progressDialog.setMessage("正在上传您的注册信息，请等待长传成功");
-											progressDialog.show();
-										}
-									})
-							.setNegativeButton("取消",
-									new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(
+											DialogInterface dialog,
+											int which) {
+										startProgressDialog("正在上传...");
+										String personJson=getAllMessage();
+										startUpLoading(personJson);
+									}
+								})
+						.setNegativeButton("取消",
+								new DialogInterface.OnClickListener() {
 
-										@Override
-										public void onClick(
-												DialogInterface dialog,
-												int which) {
-											dialog.dismiss();
-										}
-									}).show();
+									@Override
+									public void onClick(
+											DialogInterface dialog,
+											int which) {
+										dialog.dismiss();
+									}
+								}).show();
 
-				}
 			}
-			break;
+		break;
 		default:
 			break;
 		}
@@ -343,43 +361,63 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 	 * 上传用户信息
 	 */
 	protected void startUpLoading(String json) {
-		//
-		final File[] files=new File[4];
-		files[0]=new File(sp.getString(IDCardFront, null));
-		files[1]=new File(sp.getString(IDCardOpposite, null));
-		files[2]=new File(sp.getString(WORKCERTIFICATE, null));
-		files[3]=new File(sp.getString(OTHERCERTIFICATE, null));
-		final String[] fileKeys=new String[4];
-		fileKeys[0]="frontIdCard";
-		fileKeys[1]="oppositeIdCard";
-		fileKeys[2]="workCertificate";
-		fileKeys[3]="otherCertificate";
-		final Param[] params=new Param[1];
-		params[0]=new Param("personInfo", json);
-		new Thread(new Runnable() {
-			
-			@Override
-			public void run() {
-				Response response;
-				try {
-					response = OkHttpClientManager.post(ServicesConfig.REGISTER, files, fileKeys, params);
-					System.out.println("+++++++返回的东西+++++++++++"+response.body().string());
+		File[] files;
+		String[] fileKeys;
+		//其他证书可有可无需要对其进行判断
+		if(sp.getString(OTHERCERTIFICATE, null)==null){
+			files=new File[3];
+			files[0]=new File(sp.getString(IDCardFront, null));
+			files[1]=new File(sp.getString(IDCardOpposite, null));
+			files[2]=new File(sp.getString(WORKCERTIFICATE, null));
+			fileKeys=new String[3];
+			fileKeys[0]="frontIdCard";
+			fileKeys[1]="oppositeIdCard";
+			fileKeys[2]="workCertificate";
+		}else{
+			files=new File[4];
+			files[0]=new File(sp.getString(IDCardFront, null));
+			files[1]=new File(sp.getString(IDCardOpposite, null));
+			files[2]=new File(sp.getString(WORKCERTIFICATE, null));
+			files[3]=new File(sp.getString(OTHERCERTIFICATE, null));
+			fileKeys=new String[4];
+			fileKeys[0]="frontIdCard";
+			fileKeys[1]="oppositeIdCard";
+			fileKeys[2]="workCertificate";
+			fileKeys[3]="otherCertificate";
+		}
+		Param param=new Param(Constant.PERSONINFO, json);
+		try {
+			Request request=httpEngine.createRequest(ServicesConfig.REGISTER, files, fileKeys, param);
+			Call call=httpEngine.createRequestCall(request);
+			call.enqueue(new Callback() {
+				
+				@Override
+				public void onResponse(Response response) throws IOException {
+					Message msg=new Message();
 					if(response.isSuccessful()){
-						runOnUiThread(new Runnable() {
-							
-							@Override
-							public void run() {
-								progressDialog.dismiss();
-								Utilities.showToast("恭喜您，上传成功", mContext);
-							}
-						});
+						msg.what=StatusCode.REGISTER_SUCCESS;
+						msg.obj="恭喜你上传成功，请等待公司为你分配用户名和密码";
+					}else{
+						msg.what=StatusCode.REGISTER_FAILED;
+						msg.obj="不好意思出了点意外，请重新试试";
 					}
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					handler.sendMessage(msg);
+					
 				}
-			}
-		}).start();
+				
+				@Override
+				public void onFailure(Request arg0, IOException arg1) {
+					Message msg=new Message();
+					msg.what=StatusCode.REGISTER_FAILED;
+					msg.obj="网络异常，请重新上传";
+					handler.sendMessage(msg);
+				}
+			});
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 	/**

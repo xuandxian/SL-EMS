@@ -88,7 +88,7 @@ public class PersonalBoundsActivity extends BaseActivity implements OnClickListe
 		startLoading();
 	}
 	private void startLoading() {
-		startProgressDialog("正在玩命加载中...");
+		startProgressDialog("正在加载...");
 		Param param=new Param(Constant.LOGINNAME, mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null));
 		Request request=httpEngine.createRequest(ServicesConfig.PERSONAL_BONUS_LIST, param);
 		Call call=httpEngine.createRequestCall(request);
