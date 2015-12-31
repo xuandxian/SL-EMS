@@ -137,7 +137,7 @@ public class BaseActivity extends Activity {
 		if (progressDialog == null) {
 			progressDialog = CustomProgressDialog.createDialog(this);
 		}
-		progressDialog.setMessage(content);
+		progressDialog.setMessage(content);  
 		progressDialog.show();
 	}
 
