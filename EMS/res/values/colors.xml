@@ -32,6 +32,7 @@
     <!-- 蒙层色，50%纯黑 -->
     <color name="bg_travel_order_gray">#e9ecf1</color>
     <!-- 灰色 -->
+    <color name="bg_qq_blue">#03A6E1</color>
     <color name="calendar_cell_novalidate">#ffc8d2dc</color>
     <color name="calendar_text_inactive">#40778088</color>
     <color name="contents_text">#ff000000</color>

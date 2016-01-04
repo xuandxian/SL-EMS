@@ -21,7 +21,7 @@
 
     <TextView
         android:id="@+id/tv_parttime_do_cancel"
-        style="@style/tv_list_secondary_style"
+        style="@style/tv_list_qq_style"
         android:layout_width="wrap_content"
         android:layout_height="38dp"
         android:layout_alignBottom="@+id/et_do_parttime_search"
@@ -45,6 +45,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/tv_search_history" />
+
+    <GridView
+        android:id="@+id/gv_search_history"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tv_search_history"
+        android:visibility="gone" />
 
     <ListView
         android:id="@+id/lv_search_result"
