@@ -59,7 +59,7 @@ public class BusinessConfig {
 	/**
 	 * 12.任务单(未完成)
 	 */
-	public static final String URL_TASK_LIST_NONE = "/taskListNone.action";
+	public static final String URL_TASK_LIST_NONE = "/task/taskListNone.action";
 	/**
 	 * 13.任务包详情
 	 */

@@ -57,8 +57,8 @@ public class TaskListDonetFragment extends Fragment {
 		
 	}
 	private void initView() {
-		TaskListAdapter adapter=new TaskListAdapter(list,mActivity);
-		mDonet.setAdapter(adapter);
+//		TaskListAdapter adapter=new TaskListAdapter(list,mActivity);
+//		mDonet.setAdapter(adapter);
 	}
 
 	private void findViewById(View view) {

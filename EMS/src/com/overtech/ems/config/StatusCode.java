@@ -22,14 +22,35 @@ public class StatusCode {
 	public static final int REGISTER_SUCCESS=0x11;
 	public static final int REGISTER_FAILED=0x12;
 	
+
+
+	// 忘记密码
+	public static final int GET_PHONENO_SUCCESS_EXIST = 0x13;
+	public static final int GET_PHONENO_SUCCESS_NONE = 0x14;
+	// 忘记密码
+	public static final int RESET_PASSWORD_SUCCESS = 0x15;
+	public static final int RESET_PASSWORD_FAILED = 0x16;
+
+	/**
+	 * 任务单未完成加载成功
+	 */
+	public static final int TASKLIST_NONE_SUCCESS=0x17;
+	/**
+	 * 任务单未完成加载失败
+	 */
+	public static final int TASKLIST_NONE_FAILED=0x18;
+	/**
+	 * 任务单已完成加载成功
+	 */
+	public static final int TASKLIST_DONET_SUCCESS=0x19;
+	/**
+	 * 任务单已完成加载失败
+	 */
+	public static final int TASKLIST_DONET_FAILED=0x20;
+
+
 	// 任务包详情
-	public static final int PACKAGE_DETAILS_SUCCESS = 0x16;
-	
-	// 忘记密码，更新密码
-	public static final int GET_PHONENO_SUCCESS_EXIST = 0x20;
-	public static final int GET_PHONENO_SUCCESS_NONE = 0x21;
-	public static final int RESET_PASSWORD_SUCCESS = 0x22;
-	public static final int RESET_PASSWORD_FAILED = 0x23;
+	public static final int PACKAGE_DETAILS_SUCCESS = 0x21;
 
 
 	

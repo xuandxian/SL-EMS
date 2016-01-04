@@ -1,7 +1,15 @@
 package com.overtech.ems.activity.adapter;
 
+import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.utils.DistanceUtil;
 import com.overtech.ems.R;
+import com.overtech.ems.activity.MyApplication;
+import com.overtech.ems.entity.parttime.TaskPackage;
 import com.overtech.ems.entity.test.Data4;
 import android.content.Context;
 import android.view.View;
@@ -11,21 +19,25 @@ import android.widget.TextView;
 
 public class TaskListAdapter extends BaseAdapter {
 
-	private List<Data4> list;
+	private List<TaskPackage> list;
 	private Context context;
-
-	public List<Data4> getData() {
+	private SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+	private NumberFormat numFormat=NumberFormat.getInstance();
+	private double latitude;
+	private double longitude;
+	private LatLng mLatLng;
+	public List<TaskPackage> getData() {
 		return list;
 	}
 
-	public void setData(List<Data4> data) {
-		this.list = data;
-	}
-
-	public TaskListAdapter(List<Data4> list, Context context) {
+	
+	public TaskListAdapter(List<TaskPackage> list, Context context) {
 		super();
 		this.list = list;
 		this.context = context;
+		latitude=((MyApplication)context.getApplicationContext()).latitude;
+		longitude=((MyApplication)context.getApplicationContext()).longitude;
+		mLatLng=new LatLng(latitude, longitude);
 	}
 
 	public TaskListAdapter(Context context) {
@@ -50,34 +62,37 @@ public class TaskListAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		Data4 data=list.get(position);
+		TaskPackage data=list.get(position);
 		if (convertView == null) {
 			convertView = View.inflate(context,
 					R.layout.item_list_tasklist, null);
 			new ViewHolder(convertView);
 		}
 		ViewHolder holder = (ViewHolder) convertView.getTag();
-		holder.address.setText(data.getAddress());
-		holder.elevtorNum.setText(data.getElevtorNum());
-		holder.addressName.setText(data.getAddressName());
-		holder.distance.setText(data.getDistance());
-		holder.date.setText(data.getDate());
+		holder.taskPackageName.setText(data.getTaskPackageName());
+		holder.elevatorAmounts.setText(data.getElevatorAmounts());
+		holder.maintenanceAddress.setText(data.getMaintenanceAddress());
+		holder.maintenanceDate.setText(sdf.format(new Date(data.getMaintenanceDate())));
+		LatLng latlng=new LatLng(Double.parseDouble(data.getLatitude()), Double.parseDouble(data.getLongitude()));
+		numFormat.setMinimumFractionDigits(2);
+		
+		holder.distance.setText(numFormat.format(DistanceUtil.getDistance(mLatLng, latlng)/1000.0)+"千米");
 		return convertView;
 	}
 
 	class ViewHolder {
-		TextView address;
-		TextView elevtorNum;
-		TextView addressName;
+		TextView taskPackageName;
+		TextView elevatorAmounts;
+		TextView maintenanceAddress;
 		TextView distance;
-		TextView date;
+		TextView maintenanceDate;
 
 		public ViewHolder(View view) {
-			address = (TextView) view.findViewById(R.id.tv_name);
-			elevtorNum = (TextView) view.findViewById(R.id.tv_num);
-			addressName = (TextView) view.findViewById(R.id.tv_address);
+			taskPackageName = (TextView) view.findViewById(R.id.tv_name);
+			elevatorAmounts = (TextView) view.findViewById(R.id.tv_num);
+			maintenanceAddress = (TextView) view.findViewById(R.id.tv_address);
 			distance = (TextView) view.findViewById(R.id.tv_distance);
-			date = (TextView) view.findViewById(R.id.tv_date);
+			maintenanceDate = (TextView) view.findViewById(R.id.tv_date);
 			view.setTag(this);
 		}
 	}

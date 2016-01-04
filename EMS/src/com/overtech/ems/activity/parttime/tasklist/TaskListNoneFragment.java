@@ -1,14 +1,15 @@
 package com.overtech.ems.activity.parttime.tasklist;
 
-import java.util.ArrayList;
+import java.io.IOException;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,41 +17,62 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
-import com.baidu.location.LocationClientOption.LocationMode;
-import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.route.BaiduMapRoutePlan;
 import com.baidu.mapapi.utils.route.RouteParaOption;
 import com.baidu.mapapi.utils.route.RouteParaOption.EBusStrategyType;
+import com.google.gson.Gson;
 import com.overtech.ems.R;
+import com.overtech.ems.activity.BaseFragment;
+import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.adapter.TaskListAdapter;
-import com.overtech.ems.entity.test.Data4;
+import com.overtech.ems.config.StatusCode;
+import com.overtech.ems.entity.bean.TaskPackageBean;
+import com.overtech.ems.entity.common.ServicesConfig;
+import com.overtech.ems.http.HttpEngine.Param;
+import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
-import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
-import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
 import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView;
 import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView.OnMenuItemClickListener;
 import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenu;
 import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuCreator;
 import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuItem;
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
-public class TaskListNoneFragment extends Fragment {
+public class TaskListNoneFragment extends BaseFragment {
 	private PullToRefreshSwipeMenuListView mSwipeListView;
 	private SwipeMenuCreator creator;
 	private Activity mActivity;
-	private LocationClient mLocClient;
-	private LatLng mLocation;
-	private NiftyDialogBuilder dialogBuilder;
 	private Effectstype effect;
-	private ArrayList<Data4> list;
-	private CustomProgressDialog progressDialog;
 	private LocationClient mLocationClient;
-	private double lat;
-	private double lng;
+	private TaskListAdapter adapter;
+	private double latitude;
+	private double longitude;
+	private Handler handler=new Handler(){
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case StatusCode.TASKLIST_NONE_SUCCESS:
+				String json=(String) msg.obj;
+				Gson gson=new Gson();
+				TaskPackageBean bean=gson.fromJson(json, TaskPackageBean.class);
+				adapter=new TaskListAdapter(bean.getModel(), mActivity);
+				mSwipeListView.setAdapter(adapter);
+				break;
+			case StatusCode.TASKLIST_NONE_FAILED:
+				Utilities.showToast((String)msg.obj, mActivity);
+				break;
+
+			default:
+				break;
+			}
+			stopProgressDialog();
+		};
+	};
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -63,107 +85,22 @@ public class TaskListNoneFragment extends Fragment {
 		View view = inflater.inflate(R.layout.fragment_task_list_none,
 				container, false);
 		findViewById(view);
-		getData();
 		init();
-		initLocation();
 		return view;
 
 	}
-	private void initLocation() {
-		mLocationClient=new LocationClient(mActivity.getApplicationContext());
-		mLocationClient.registerLocationListener(new MyLocationListener());
-		LocationClientOption options=new LocationClientOption();
-		options.setLocationMode(LocationMode.Hight_Accuracy);
-		options.setOpenGps(true);
-		mLocationClient.setLocOption(options);
-		mLocationClient.start();
-	}
+	
 
 	private void findViewById(View view) {
 		mSwipeListView = (PullToRefreshSwipeMenuListView) view.findViewById(R.id.sl_task_list_listview);
 	}
-	public class MyLocationListener implements BDLocationListener{
-		@Override
-		public void onReceiveLocation(BDLocation location) {
-			if(location==null){
-				Utilities.showToast("定位失败", mActivity);
-				return ;
-			}
-			 lat=location.getLatitude();
-			 lng=location.getLongitude();
-		}
-		
-	}
-	
-	private void getData() {
-		Data4 data = new Data4("南虹小区", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
-		Data4 data1 = new Data4("徐家汇景园", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
-		Data4 data2 = new Data4("丰业广元公寓", "5", "徐汇区广元西路", "13.5km",
-				"2015-10-10");
-		Data4 data3 = new Data4("虹桥小区", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
-		Data4 data4 = new Data4("徐家汇景园", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
-		Data4 data5 = new Data4("虹桥小区", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
-		Data4 data6 = new Data4("虹桥小区", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
-		Data4 data7 = new Data4("丰业广元公寓", "5", "徐汇区广元西路", "13.5km",
-				"2015-10-10");
-		Data4 data8 = new Data4("丰业广元公寓", "5", "徐汇区广元西路", "13.5km",
-				"2015-10-10");
-		Data4 data9 = new Data4("南虹小区0", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
-		Data4 data10 = new Data4("南虹小区1", "5", "徐汇区广元西路", "13.5km",
-				"2015-10-10");
-		Data4 data11 = new Data4("南虹小区2", "5", "徐汇区广元西路", "13.5km",
-				"2015-10-10");
-		Data4 data12 = new Data4("虹桥小区", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
-		Data4 data13 = new Data4("南虹小区4", "5", "徐汇区广元西路", "13.5km",
-				"2015-10-10");
-		Data4 data14 = new Data4("虹桥小区", "5", "徐汇区广元西路", "13.5km", "2015-10-10");
-		Data4 data15 = new Data4("丰业广元公寓", "5", "徐汇区广元西路", "13.5km",
-				"2015-10-10");
-		Data4 data16 = new Data4("南虹小区7", "5", "徐汇区广元西路", "13.5km",
-				"2015-10-10");
-		Data4 data17 = new Data4("丰业广元公寓", "5", "徐汇区广元西路", "13.5km",
-				"2015-10-10");
-		list = new ArrayList<Data4>();
-		list.add(data);
-		list.add(data1);
-		list.add(data2);
-		list.add(data3);
-		list.add(data4);
-		list.add(data5);
-		list.add(data6);
-		list.add(data7);
-		list.add(data8);
-		list.add(data9);
-		list.add(data10);
-		list.add(data11);
-		list.add(data12);
-		list.add(data13);
-		list.add(data14);
-		list.add(data15);
-		list.add(data16);
-		list.add(data17);
-	}
-
-	private void initBaiduMapLocation() {
-		// 实例化定位服务，LocationClient类必须在主线程中声明
-		mLocClient = new LocationClient(mActivity);
-		mLocClient.registerLocationListener(new BDLocationListenerImpl());// 注册定位监听接口
-		LocationClientOption option = new LocationClientOption();
-		option.setOpenGps(true); // 打开GPRS
-		option.setAddrType("all");// 返回的定位结果包含地址信息
-		option.setCoorType("bd09ll");// 返回的定位结果是百度经纬度,默认值gcj02
-		option.setScanSpan(5000); // 设置发起定位请求的间隔时间为5000ms
-		mLocClient.setLocOption(option); // 设置定位参数
-		mLocClient.start();
-	}
 
 	private void init() {
-		dialogBuilder = NiftyDialogBuilder.getInstance(mActivity);
-		progressDialog=CustomProgressDialog.createDialog(mActivity);
+		mLocationClient=((MyApplication)getActivity().getApplication()).mLocationClient;
+		mLocationClient.requestLocation();
+		mLocationClient.start();
 		initListView();
 		mSwipeListView.setMenuCreator(creator);
-		TaskListAdapter mAdapter = new TaskListAdapter(list, mActivity);
-		mSwipeListView.setAdapter(mAdapter);
 		mSwipeListView
 				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
@@ -172,7 +109,7 @@ public class TaskListNoneFragment extends Fragment {
 							int index) {
 						switch (index) {
 						case 0:
-							initBaiduMapLocation();
+							
 							break;
 						case 1:
 							// Utilities.showToast("退单", mActivity);
@@ -190,6 +127,38 @@ public class TaskListNoneFragment extends Fragment {
 				Intent intent = new Intent(mActivity,
 						TaskListPackageDetailActivity.class);
 				startActivity(intent);
+			}
+		});
+		startLoading();
+	}
+
+	private void startLoading() {
+		startProgressDialog("正在加载");
+		String loginName=mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
+		Param param=new Param(Constant.LOGINNAME,loginName);
+		Request request=httpEngine.createRequest(ServicesConfig.TASK_LIST_NONE,param);
+		Call call=httpEngine.createRequestCall(request);
+		call.enqueue(new Callback() {
+			
+			@Override
+			public void onResponse(Response response) throws IOException {
+				Message msg=new Message();
+				if(response.isSuccessful()){
+					msg.what=StatusCode.TASKLIST_NONE_SUCCESS;
+					msg.obj=response.body().string();
+				}else{
+					msg.what=StatusCode.TASKLIST_NONE_FAILED;
+					msg.obj="数据异常，请稍后再试";
+				}
+				handler.sendMessage(msg);
+			}
+			
+			@Override
+			public void onFailure(Request arg0, IOException arg1) {
+				Message msg=new Message();
+				msg.what=StatusCode.TASKLIST_NONE_FAILED;
+				msg.obj="网络链接错误";
+				handler.sendMessage(msg);
 			}
 		});
 	}
@@ -247,39 +216,29 @@ public class TaskListNoneFragment extends Fragment {
 		};
 	}
 
-	public class BDLocationListenerImpl implements BDLocationListener {
+	
 
-		/**
-		 * 接收异步返回的定位结果，参数是BDLocation类型参数
-		 */
-		@Override
-		public void onReceiveLocation(BDLocation location) {
-			if (location == null) {
-				return;
-			}
-			double mLatitude = location.getLatitude();
-			double mLongitude = location.getLongitude();
-			mLocation = new LatLng(mLatitude, mLongitude);
-			startNavicate();
-		}
-	}
-
-	public void startNavicate() {
+	/*public void startNavicate() {
 		// 构建 route搜索参数
 		RouteParaOption para = new RouteParaOption().startName("我的位置")
 				.startPoint(mLocation)// 路线检索起点
-				.endName("东方明珠")// 路线检索终点名称
-				.cityName("上海")// 城市名称
 				.busStrategyType(EBusStrategyType.bus_recommend_way);
 		try {
+			BaiduMapRoutePlan.setSupportWebRoute(true);
 			BaiduMapRoutePlan.openBaiduMapTransitRoute(para, mActivity);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 	
 	private int dp2px(int dp) {
 		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
 				getResources().getDisplayMetrics());
+	}
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		mLocationClient.stop();
 	}
 }
