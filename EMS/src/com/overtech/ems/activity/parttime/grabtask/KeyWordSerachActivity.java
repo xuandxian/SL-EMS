@@ -234,12 +234,25 @@ public class KeyWordSerachActivity extends BaseActivity {
 		editor.putString("history", sb.toString());
 		editor.commit();
 	}
+	
+    private void deleteHistory(String value){
+    	Editor editor = sharedPreferences.edit();
+		String longHistory=sharedPreferences.getString("history", "");
+		String realValue=value+",";
+		StringBuilder sb=new StringBuilder(longHistory);
+		int index=sb.indexOf(realValue);
+		sb.delete(index, index+realValue.length());
+		editor.putString("history", sb.toString());
+		editor.commit();
+	}
 
 	private List<String> readHistory() {
 		String longHistory=sharedPreferences.getString("history", "");
 		String[] historyArray=longHistory.split(",");
 		for (int i = 0; i < historyArray.length; i++) {
-			historyList.add(historyArray[i]);
+			if (historyList.size()<10) {
+				historyList.add(historyArray[i]);
+			}
 		}
 		return historyList;
 	}
