@@ -130,8 +130,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 					employee.setPassword(sPassword);
 					Gson gson = new Gson();
 					String person = gson.toJson(employee);
-					Request request = httpEngine.createRequest(
-							ServicesConfig.LOGIN, person);
+					Request request = httpEngine.createRequest(ServicesConfig.LOGIN, person);
 					Call call = httpEngine.createRequestCall(request);
 					call.enqueue(new Callback() {
 						@Override
