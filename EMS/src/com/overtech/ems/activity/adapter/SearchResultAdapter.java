@@ -8,14 +8,16 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class SearchHistoryAdapter extends BaseAdapter {
+public class SearchResultAdapter extends BaseAdapter {
 
 	private ArrayList<String> list;
 	private Context context;
+	private int count;
 
-	public SearchHistoryAdapter(Context context, ArrayList<String> list) {
+	public SearchResultAdapter(Context context, ArrayList<String> list,int count) {
 		this.context = context;
 		this.list = list;
+		this.count=count;
 	}
 
 	@Override
@@ -36,19 +38,26 @@ public class SearchHistoryAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
-			convertView = View.inflate(context,R.layout.item_list_search_history, null);
+			convertView = View.inflate(context,R.layout.item_list_keyword_search, null);
 			new ViewHolder(convertView);
 		}
 		ViewHolder holder = (ViewHolder) convertView.getTag();
-		String data=list.get(position);
-		holder.history.setText(data);
+		String data=list.get(position).replace("\"", "");
+		holder.result.setText(data);
+		if (position<=count-1) {
+			holder.type.setText("区域");
+		}else {
+			holder.type.setText("小区");
+		}
 		return convertView;
 	}
 	class ViewHolder {
-		TextView history;
-		
+		TextView result;
+		TextView type;
+
 		public ViewHolder(View view) {
-			history = (TextView) view.findViewById(R.id.tv_history_name);
+			result = (TextView) view.findViewById(R.id.tv_result_name);
+			type=(TextView)view.findViewById(R.id.tv_result_type);
 			view.setTag(this);
 		}
 	}
