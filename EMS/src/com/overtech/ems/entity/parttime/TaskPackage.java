@@ -8,7 +8,7 @@ import java.io.Serializable;
  */
 public class TaskPackage implements Serializable {
 	private String taskNo;          //维保单号
-	private String projectName;        //项目名称
+	private String taskPackageName;        //项目名称
 	private String elevatorAmounts;    //电梯数量
 	private String isFinish;			//抢单人数
 	private String latitude;           //纬度
@@ -24,7 +24,7 @@ public class TaskPackage implements Serializable {
 			String topState) {
 		super();
 		this.taskNo = taskNo;
-		this.projectName = projectName;
+		this.taskPackageName = taskPackageName;
 		this.elevatorAmounts = elevatorAmounts;
 		this.isFinish = isFinish;
 		this.latitude = latitude;
@@ -69,11 +69,12 @@ public class TaskPackage implements Serializable {
 	public void setMaintenanceAddress(String maintenanceAddress) {
 		this.maintenanceAddress = maintenanceAddress;
 	}
-	public String getProjectName() {
-		return projectName;
+	
+	public String getTaskPackageName() {
+		return taskPackageName;
 	}
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
+	public void setTaskPackageName(String taskPackageName) {
+		this.taskPackageName = taskPackageName;
 	}
 	public String getTopState() {
 		return topState;

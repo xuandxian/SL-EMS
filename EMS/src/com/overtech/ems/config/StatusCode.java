@@ -37,8 +37,22 @@ public class StatusCode {
 	public static final int RESET_PASSWORD_SUCCESS = 0x14;
 	public static final int RESET_PASSWORD_FAILED = 0x15;
 
-
-
+	/**
+	 * 任务单未完成加载成功
+	 */
+	public static final int TASKLIST_NONE_SUCCESS=0x16;
+	/**
+	 * 任务单未完成加载失败
+	 */
+	public static final int TASKLIST_NONE_FAILED=0x17;
+	/**
+	 * 任务单已完成加载成功
+	 */
+	public static final int TASKLIST_DONET_SUCCESS=0x18;
+	/**
+	 * 任务单已完成加载失败
+	 */
+	public static final int TASKLIST_DONET_FAILED=0x19;
 
 
 

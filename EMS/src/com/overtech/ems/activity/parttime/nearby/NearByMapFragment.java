@@ -166,7 +166,7 @@ public class NearByMapFragment extends BaseFragment {
 					button.setGravity(Gravity.CENTER);
 					button.setPadding(5, 0, 5, 30);
 					button.setTextColor(Color.WHITE);
-					button.setText(data.getProjectName());
+					button.setText(data.getTaskPackageName());
 					bitmap = BitmapDescriptorFactory.fromView(button);
 					mOverlayOptions = new MarkerOptions().position(ll).icon(bitmap).zIndex(11).draggable(false).period(10);
 					mOverlayOptions.animateType(MarkerAnimateType.drop);
@@ -187,7 +187,7 @@ public class NearByMapFragment extends BaseFragment {
 				TaskPackage taskPackage=(TaskPackage)marker.getExtraInfo().get("taskPackage");
 				Intent intent = new Intent(activity,PackageDetailActivity.class);
 				Bundle bundle = new Bundle();
-				bundle.putString("CommunityName", taskPackage.getProjectName());
+				bundle.putString("CommunityName", taskPackage.getTaskPackageName());
 				bundle.putString("TaskNo", taskPackage.getTaskNo());
 				bundle.putString("Longitude", taskPackage.getLongitude());
 				bundle.putString("Latitude", taskPackage.getLatitude());

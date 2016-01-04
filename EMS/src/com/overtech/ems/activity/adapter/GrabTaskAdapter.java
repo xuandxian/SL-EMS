@@ -68,7 +68,7 @@ public class GrabTaskAdapter extends BaseAdapter {
 		}
 		ViewHolder holder = (ViewHolder) convertView.getTag();
 		TaskPackage data = list.get(position);
-		holder.tv_name.setText(data.getProjectName());
+		holder.tv_name.setText(data.getTaskPackageName());
 		holder.elevtorNum.setText(data.getElevatorAmounts() + "");
 		holder.addressName.setText(data.getMaintenanceAddress());
 		LatLng latlng = new LatLng(Double.valueOf(data.getLatitude()),Double.valueOf(data.getLongitude()));

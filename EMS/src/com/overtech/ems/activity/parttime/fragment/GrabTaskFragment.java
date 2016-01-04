@@ -235,7 +235,7 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 				TaskPackage data = (TaskPackage) parent.getItemAtPosition(position);
 				Intent intent = new Intent(mActivity,PackageDetailActivity.class);
 				Bundle bundle = new Bundle();
-				bundle.putString("CommunityName", data.getProjectName());
+				bundle.putString("CommunityName", data.getTaskPackageName());
 				bundle.putString("TaskNo", data.getTaskNo());
 				bundle.putString("Longitude", data.getLongitude());
 				bundle.putString("Latitude", data.getLatitude());
