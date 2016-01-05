@@ -12,6 +12,7 @@ import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.entity.parttime.TaskPackage;
 import com.overtech.ems.entity.test.Data4;
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -54,7 +55,7 @@ public class TaskListAdapter extends BaseAdapter {
 	public Object getItem(int position) {
 		return list.get(position);
 	}
-
+	
 	@Override
 	public long getItemId(int position) {
 		return position;
@@ -79,7 +80,24 @@ public class TaskListAdapter extends BaseAdapter {
 		holder.distance.setText(numFormat.format(DistanceUtil.getDistance(mLatLng, latlng)/1000.0)+"千米");
 		return convertView;
 	}
-
+	/**
+	 * 当前位置
+	 * @return
+	 */
+	public LatLng getCurrentLocation(){
+		return mLatLng;
+	}
+	/**
+	 * 指定位置
+	 * @param position
+	 * @return
+	 */
+	public LatLng getDestination(int position){
+		TaskPackage data=list.get(position);
+		String desLat=data.getLatitude();
+		String desLng=data.getLongitude();
+		return new LatLng(Double.parseDouble(desLat), Double.parseDouble(desLng));
+	}
 	class ViewHolder {
 		TextView taskPackageName;
 		TextView elevatorAmounts;

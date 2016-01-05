@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.baidu.location.LocationClient;
+import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.route.BaiduMapRoutePlan;
 import com.baidu.mapapi.utils.route.RouteParaOption;
 import com.baidu.mapapi.utils.route.RouteParaOption.EBusStrategyType;
@@ -108,11 +109,12 @@ public class TaskListNoneFragment extends BaseFragment {
 					public void onMenuItemClick(int position, SwipeMenu menu,
 							int index) {
 						switch (index) {
-						case 0:
-							
+						case 0://导航
+							LatLng startPoint=adapter.getCurrentLocation();
+							LatLng endPoint=adapter.getDestination(position);
+							startNavicate(startPoint, endPoint);
 							break;
-						case 1:
-							// Utilities.showToast("退单", mActivity);
+						case 1://t退单
 							showDialog();
 							break;
 						}
@@ -218,10 +220,11 @@ public class TaskListNoneFragment extends BaseFragment {
 
 	
 
-	/*public void startNavicate() {
+	public void startNavicate(LatLng startPoint,LatLng endPoint) {
 		// 构建 route搜索参数
 		RouteParaOption para = new RouteParaOption().startName("我的位置")
-				.startPoint(mLocation)// 路线检索起点
+				.startPoint(startPoint)// 路线检索起点
+				.endPoint(endPoint)
 				.busStrategyType(EBusStrategyType.bus_recommend_way);
 		try {
 			BaiduMapRoutePlan.setSupportWebRoute(true);
@@ -229,7 +232,7 @@ public class TaskListNoneFragment extends BaseFragment {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}*/
+	}
 	
 	private int dp2px(int dp) {
 		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
