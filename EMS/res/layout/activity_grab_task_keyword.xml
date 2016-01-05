@@ -40,11 +40,12 @@
         android:text="历史记录"
         android:visibility="gone" />
 
-    <ListView
+    <com.overtech.ems.widget.swipemenu.SwipeMenuListView
         android:id="@+id/lv_search_history"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/tv_search_history" />
+        android:layout_below="@+id/tv_search_history"
+        android:scrollbars="none" />
 
     <GridView
         android:id="@+id/gv_search_history"
