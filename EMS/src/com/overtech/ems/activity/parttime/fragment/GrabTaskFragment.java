@@ -21,7 +21,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.baidu.location.BDLocation;
@@ -122,7 +121,6 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 				break;
 			}
 			stopProgressDialog();
-
 		};
 	};
 
@@ -358,8 +356,8 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 				.withDialogColor("#FFFFFFFF").isCancelableOnTouchOutside(true)
 				.withDuration(700).withEffect(effect)
 				.withButtonDrawable(R.color.main_white).withButton1Text("否")
-				.withButton1Color(R.color.main_primary).withButton2Text("是")
-				.withButton2Color(R.color.main_primary)
+				.withButton1Color("#DD47BEE9").withButton2Text("是")
+				.withButton2Color("#DD47BEE9")
 				.setButton1Click(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
@@ -370,14 +368,11 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 					public void onClick(View v) {
 						dialogBuilder.dismiss();
 						startProgressDialog("正在抢单...");
-						String mLoginName = mSharedPreferences.getString(
-								SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
+						String mLoginName = mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
 						String mTaskNo = list.get(position).getTaskNo();
 						Param paramPhone = new Param(Constant.LOGINNAME, mLoginName);
 						Param paramTaskNo = new Param(Constant.TASKNO, mTaskNo);
-						Request request = httpEngine.createRequest(
-								ServicesConfig.Do_GRABTASK, paramPhone,
-								paramTaskNo);
+						Request request = httpEngine.createRequest(ServicesConfig.Do_GRABTASK, paramPhone,paramTaskNo);
 						Call call = httpEngine.createRequestCall(request);
 						call.enqueue(new Callback() {
 

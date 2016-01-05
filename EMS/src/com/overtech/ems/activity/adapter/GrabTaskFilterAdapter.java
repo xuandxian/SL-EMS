@@ -1,7 +1,6 @@
 package com.overtech.ems.activity.adapter;
 
 import com.overtech.ems.R;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,17 +12,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-
 import java.util.ArrayList;
-import java.util.List;
 
-public class GridViewAdapter extends BaseAdapter {
+public class GrabTaskFilterAdapter extends BaseAdapter {
 
 	private int[] image;
 	private boolean isChoice[];
 	private Context context;
 
-	public GridViewAdapter(int[] im, Context context) {
+	public GrabTaskFilterAdapter(int[] im, Context context) {
 		this.image = im;
 		isChoice = new boolean[im.length];
 		for (int i = 0; i < im.length; i++) {
@@ -62,7 +59,6 @@ public class GridViewAdapter extends BaseAdapter {
 		return convertView;
 	}
 
-	@SuppressWarnings("deprecation")
 	private LayerDrawable getView(int position) {
 
 		Bitmap bitmap = ((BitmapDrawable) context.getResources().getDrawable(image[position])).getBitmap();
@@ -77,7 +73,7 @@ public class GridViewAdapter extends BaseAdapter {
 			array[1] = new BitmapDrawable(bitmap2);
 			la = new LayerDrawable(array);
 			la.setLayerInset(0, 0, 0, 0, 0); // 第几张图离各边的间距
-			la.setLayerInset(1, 0, 30, 20, 0);
+			la.setLayerInset(1, 0, 10, 10, 0);
 		} else {
 			Drawable[] array = new Drawable[1];
 			array[0] = new BitmapDrawable(bitmap);
@@ -91,11 +87,11 @@ public class GridViewAdapter extends BaseAdapter {
 		isChoice[position] = isChoice[position] == true ? false : true;
 		this.notifyDataSetChanged();
 	}
-	public ArrayList getTypePositon(int[] im){
-		ArrayList list=new ArrayList();
+	public ArrayList<String> getTypePositon(int[] im){
+		ArrayList<String> list=new ArrayList<String>();
 		for (int i = 0; i < im.length; i++){
 			if (isChoice[i]==true){
-				list.add(i);
+				list.add(String.valueOf(i));
 			}
 		}
 		return list;

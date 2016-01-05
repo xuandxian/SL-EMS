@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
-import com.overtech.ems.activity.adapter.GridViewAdapter;
+import com.overtech.ems.activity.adapter.GrabTaskFilterAdapter;
 import java.util.ArrayList;
 
 /**
@@ -29,11 +29,11 @@ public class GrabTaskDoFilterActivity extends BaseActivity implements OnClickLis
     private TextView mHeadContent;
     private TextView mHeadContentRight;
     private GridView gridView;
-    private GridViewAdapter adapter;
-    private GridViewAdapter adapter2;
+    private GrabTaskFilterAdapter adapter;
+    private GrabTaskFilterAdapter adapter2;
     private Button mZone;
     private Button mTime;
-    int[] image = {R.drawable.filter_zone_baoshan, R.drawable.filter_zone_changning, R.drawable.filter_zone_chongming, R.drawable.filter_zone_fengxian, R.drawable.filter_zone_hongkou, R.drawable.filter_zone_huangpu, R.drawable.filter_zone_jiading, R.drawable.filter_zone_jingan, R.drawable.filter_zone_jinshan, R.drawable.filter_zone_minghang, R.drawable.filter_zone_putuo, R.drawable.filter_zone_qingpu, R.drawable.filter_zone_qingpu, R.drawable.filter_zone_xuhui, R.drawable.filter_zone_yangpu, R.drawable.filter_zone_zhabei};
+    int[] image = {R.drawable.filter_zone_huangpu, R.drawable.filter_zone_xuhui, R.drawable.filter_zone_changning, R.drawable.filter_zone_jingan, R.drawable.filter_zone_putuo, R.drawable.filter_zone_hongkou, R.drawable.filter_zone_yangpu, R.drawable.filter_zone_minghang, R.drawable.filter_zone_baoshan, R.drawable.filter_zone_jiading, R.drawable.filter_zone_pudong, R.drawable.filter_zone_jinshan, R.drawable.filter_zone_songjiang, R.drawable.filter_zone_qingpu, R.drawable.filter_zone_fengxian, R.drawable.filter_zone_chongming};
     int[] image2 = {R.drawable.filter_time_fifteen_in, R.drawable.filter_time_fifteen_out};
 
     @Override
@@ -43,10 +43,10 @@ public class GrabTaskDoFilterActivity extends BaseActivity implements OnClickLis
         setContentView(R.layout.activity_grab_task_filter);
         findViewById();
         init();
-        flushContent();
+        setOnClickListener();
     }
 
-    private void flushContent() {
+    private void setOnClickListener() {
         mZone.setOnClickListener(this);
         mTime.setOnClickListener(this);
         mHeadBack.setOnClickListener(this);
@@ -66,8 +66,8 @@ public class GrabTaskDoFilterActivity extends BaseActivity implements OnClickLis
         mHeadContent.setText("筛 选");
         mHeadContentRight.setText("确定");
         mHeadBack.setVisibility(View.VISIBLE);
-        adapter = new GridViewAdapter(image, context);
-        adapter2 = new GridViewAdapter(image2, context);
+        adapter = new GrabTaskFilterAdapter(image, context);
+        adapter2 = new GrabTaskFilterAdapter(image2, context);
         gridView.setAdapter(adapter);
         gridView.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -78,7 +78,7 @@ public class GrabTaskDoFilterActivity extends BaseActivity implements OnClickLis
         mZone.setBackgroundResource(R.drawable.selector);
     }
 
-    @Override
+	@Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.button1:
@@ -112,63 +112,63 @@ public class GrabTaskDoFilterActivity extends BaseActivity implements OnClickLis
             case R.id.tv_headTitleRight:
                 String mZone = "";
                 String mTime = "";
-                ArrayList list = adapter.getTypePositon(image);
-                ArrayList list2 = adapter2.getTypePositon(image2);
+				ArrayList<String> list = adapter.getTypePositon(image);
+                ArrayList<String> list2 = adapter2.getTypePositon(image2);
                 for (int i = 0; i < list.size(); i++) {
-                    int temp = Integer.valueOf(list.get(i).toString());
+                    int temp = Integer.valueOf(list.get(i));
                     switch (temp) {
                         case 0:
-                            mZone += "宝山区|";
+                            mZone += "黄埔区|";
                         break;
                         case 1:
-                            mZone += "长宁区|";
-                            break;
-                        case 2:
-                            mZone += "崇明县|";
-                            break;
-                        case 3:
-                            mZone += "奉贤区|";
-                            break;
-                        case 4:
-                            mZone += "虹口区|";
-                            break;
-                        case 5:
-                            mZone += "黄浦区|";
-                            break;
-                        case 6:
-                            mZone += "嘉定区|";
-                            break;
-                        case 7:
-                            mZone += "静安区|";
-                            break;
-                        case 8:
-                            mZone += "金山区|";
-                            break;
-                        case 9:
-                            mZone += "闵行区|";
-                            break;
-                        case 10:
-                            mZone += "普陀区|";
-                            break;
-                        case 11:
-                            mZone += "青浦区|";
-                            break;
-                        case 12:
-                            mZone += "青浦区|";
-                            break;
-                        case 13:
                             mZone += "徐汇区|";
                             break;
-                        case 14:
+                        case 2:
+                            mZone += "长宁区|";
+                            break;
+                        case 3:
+                            mZone += "静安区|";
+                            break;
+                        case 4:
+                            mZone += "普陀区|";
+                            break;
+                        case 5:
+                            mZone += "虹口区|";
+                            break;
+                        case 6:
                             mZone += "杨浦区|";
                             break;
+                        case 7:
+                            mZone += "闵行区|";
+                            break;
+                        case 8:
+                            mZone += "宝山区|";
+                            break;
+                        case 9:
+                            mZone += "嘉定区|";
+                            break;
+                        case 10:
+                            mZone += "浦东新区|";
+                            break;
+                        case 11:
+                            mZone += "金山区|";
+                            break;
+                        case 12:
+                            mZone += "松江区|";
+                            break;
+                        case 13:
+                            mZone += "青浦区|";
+                            break;
+                        case 14:
+                            mZone += "奉贤区|";
+                            break;
                         case 15:
-                            mZone += "闸北区|";
+                            mZone += "崇明县|";
                             break;
                     }
                 }
                 for (int i = 0; i < list2.size(); i++) {
-                    int temp2=Integer.valueOf(list2.get(i).toString());
+                    int temp2=Integer.valueOf(list2.get(i));
                     switch (temp2) {
                         case 0:
                             mTime += "0";

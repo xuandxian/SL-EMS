@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.parttime.fragment.GrabTaskFragment;
@@ -37,7 +36,6 @@ public class MainActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_main);
 		findViewById();
 		setDefaultView();
@@ -111,8 +109,8 @@ public class MainActivity extends BaseActivity {
 			.withMessageColor(R.color.main_primary).withDialogColor("#FFFFFFFF")
 			.isCancelableOnTouchOutside(true).withDuration(700)
 			.withEffect(effect).withButtonDrawable(R.color.main_white)
-			.withButton1Text("否").withButton1Color(R.color.main_primary)
-			.withButton2Text("是").withButton2Color(R.color.main_primary)
+			.withButton1Text("否").withButton1Color("#DD47BEE9")
+			.withButton2Text("是").withButton2Color("#DD47BEE9")
 			.setButton1Click(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {

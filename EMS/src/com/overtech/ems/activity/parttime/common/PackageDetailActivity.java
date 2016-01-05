@@ -205,8 +205,8 @@ public class PackageDetailActivity extends BaseActivity {
 				.withDialogColor("#FFFFFFFF").isCancelableOnTouchOutside(true)
 				.withDuration(700).withEffect(effect)
 				.withButtonDrawable(R.color.main_white).withButton1Text("否")
-				.withButton1Color(R.color.main_primary).withButton2Text("是")
-				.withButton2Color(R.color.main_primary)
+				.withButton1Color("#DD47BEE9").withButton2Text("是")
+				.withButton2Color("#DD47BEE9")
 				.setButton1Click(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
