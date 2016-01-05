@@ -18,8 +18,7 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginTop="10dp"
-            android:singleLine="true"
-            android:text="徐家汇景园" />
+            android:singleLine="true" />
 
         <TextView
             android:id="@+id/tv_address"
@@ -27,8 +26,7 @@
             android:layout_alignParentLeft="true"
             android:layout_below="@id/tv_name"
             android:layout_marginTop="10dp"
-            android:paddingBottom="10dp"
-            android:text="徐汇区广元西路" />
+            android:paddingBottom="10dp" />
 
         <TextView
             android:id="@+id/tv_num"
@@ -36,8 +34,7 @@
             android:layout_alignBaseline="@+id/tv_name"
             android:layout_alignBottom="@+id/tv_name"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="16dp"
-            android:text="5部" />
+            android:layout_marginRight="16dp" />
 
         <TextView
             android:id="@+id/tv_distance"
@@ -45,16 +42,14 @@
             android:layout_alignBaseline="@+id/tv_address"
             android:layout_alignBottom="@+id/tv_address"
             android:layout_marginLeft="16dp"
-            android:layout_toRightOf="@+id/tv_address"
-            android:text="13.5km" />
+            android:layout_toRightOf="@+id/tv_address" />
 
         <TextView
             android:id="@+id/tv_date"
             style="@style/tv_info_secondary_style"
             android:layout_alignBaseline="@+id/tv_distance"
             android:layout_alignBottom="@+id/tv_distance"
-            android:layout_alignRight="@+id/tv_num"
-            android:text="2015/10/10" />
+            android:layout_alignRight="@+id/tv_num" />
     </RelativeLayout>
 
 </LinearLayout>

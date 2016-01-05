@@ -75,7 +75,7 @@ public class BusinessConfig {
 	/**
 	 * 16.任务单（已完成）
 	 */
-	public static final String URL_TASK_LIST_DONE = "/taskListDone.action";
+	public static final String URL_TASK_LIST_DONE = "/task/taskListDone.action";
 	/**
 	 * 17.任务单（开始）--->指向最后一个界面
 	 */

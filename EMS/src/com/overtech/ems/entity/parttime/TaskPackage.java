@@ -18,7 +18,7 @@ public class TaskPackage implements Serializable {
     private String topState;			//是否置顶
     
     
-	public TaskPackage(String taskNo, String projectName,
+	public TaskPackage(String taskNo, String taskPackageName,
 			String elevatorAmounts, String isFinish, String latitude,
 			String longitude, String maintenanceAddress, long maintenanceDate,
 			String topState) {

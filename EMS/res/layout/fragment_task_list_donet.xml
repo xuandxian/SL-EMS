@@ -3,10 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
+    <View 
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/bg_bg"
+        />
     <ListView 
         android:id="@+id/donet_task_list_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:divider="@color/bg_bg"
         ></ListView>
 
 </LinearLayout>
