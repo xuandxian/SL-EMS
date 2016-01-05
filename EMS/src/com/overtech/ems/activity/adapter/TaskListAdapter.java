@@ -22,23 +22,23 @@ public class TaskListAdapter extends BaseAdapter {
 
 	private List<TaskPackage> list;
 	private Context context;
-	private SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-	private NumberFormat numFormat=NumberFormat.getInstance();
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	private NumberFormat numFormat = NumberFormat.getNumberInstance();
 	private double latitude;
 	private double longitude;
 	private LatLng mLatLng;
+
 	public List<TaskPackage> getData() {
 		return list;
 	}
 
-	
 	public TaskListAdapter(List<TaskPackage> list, Context context) {
 		super();
 		this.list = list;
 		this.context = context;
-		latitude=((MyApplication)context.getApplicationContext()).latitude;
-		longitude=((MyApplication)context.getApplicationContext()).longitude;
-		mLatLng=new LatLng(latitude, longitude);
+		latitude = ((MyApplication) context.getApplicationContext()).latitude;
+		longitude = ((MyApplication) context.getApplicationContext()).longitude;
+		mLatLng = new LatLng(latitude, longitude);
 	}
 
 	public TaskListAdapter(Context context) {
@@ -55,7 +55,7 @@ public class TaskListAdapter extends BaseAdapter {
 	public Object getItem(int position) {
 		return list.get(position);
 	}
-	
+
 	@Override
 	public long getItemId(int position) {
 		return position;
@@ -63,41 +63,50 @@ public class TaskListAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		TaskPackage data=list.get(position);
+		TaskPackage data = list.get(position);
 		if (convertView == null) {
-			convertView = View.inflate(context,
-					R.layout.item_list_tasklist, null);
+			convertView = View.inflate(context, R.layout.item_list_tasklist,
+					null);
 			new ViewHolder(convertView);
 		}
 		ViewHolder holder = (ViewHolder) convertView.getTag();
 		holder.taskPackageName.setText(data.getTaskPackageName());
 		holder.elevatorAmounts.setText(data.getElevatorAmounts());
 		holder.maintenanceAddress.setText(data.getMaintenanceAddress());
-		holder.maintenanceDate.setText(sdf.format(new Date(data.getMaintenanceDate())));
-		LatLng latlng=new LatLng(Double.parseDouble(data.getLatitude()), Double.parseDouble(data.getLongitude()));
-		numFormat.setMinimumFractionDigits(2);
-		
-		holder.distance.setText(numFormat.format(DistanceUtil.getDistance(mLatLng, latlng)/1000.0)+"千米");
+		holder.maintenanceDate.setText(sdf.format(new Date(data
+				.getMaintenanceDate())));
+		LatLng latlng = new LatLng(Double.parseDouble(data.getLatitude()),
+				Double.parseDouble(data.getLongitude()));
+		numFormat.setMaximumFractionDigits(2);
+
+		holder.distance.setText(numFormat.format(DistanceUtil.getDistance(
+				mLatLng, latlng) / 1000.0) + "千米");
 		return convertView;
 	}
+
 	/**
 	 * 当前位置
+	 * 
 	 * @return
 	 */
-	public LatLng getCurrentLocation(){
+	public LatLng getCurrentLocation() {
 		return mLatLng;
 	}
+
 	/**
 	 * 指定位置
+	 * 
 	 * @param position
 	 * @return
 	 */
-	public LatLng getDestination(int position){
-		TaskPackage data=list.get(position);
-		String desLat=data.getLatitude();
-		String desLng=data.getLongitude();
-		return new LatLng(Double.parseDouble(desLat), Double.parseDouble(desLng));
+	public LatLng getDestination(int position) {
+		TaskPackage data = list.get(position);
+		String desLat = data.getLatitude();
+		String desLng = data.getLongitude();
+		return new LatLng(Double.parseDouble(desLat),
+				Double.parseDouble(desLng));
 	}
+
 	class ViewHolder {
 		TextView taskPackageName;
 		TextView elevatorAmounts;

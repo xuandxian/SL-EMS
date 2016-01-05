@@ -30,6 +30,10 @@ public class Constant {
 	 */
 	public static final String TASKNO="taskNo";
 	/**
+	 * 
+	 */
+	public static final String TASKPACKAGENAME="taskPackageName";
+	/**
 	 * 更新手机号
 	 */
 	public static final String PHONENO="phoneNo";
@@ -41,6 +45,14 @@ public class Constant {
 	 * 经度
 	 */
 	public static final String LONGITUDE="longitude";
+	/**
+	 * 当前位置
+	 */
+	public static final String CURLOCATION="curLocation";
+	/**
+	 * 指定位置
+	 */
+	public static final String DESTINATION="destination";
 	/**
 	 * 个人信息
 	 */

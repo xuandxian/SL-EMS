@@ -49,9 +49,14 @@ public class StatusCode {
 	public static final int TASKLIST_DONET_FAILED=0x20;
 
 
-	// 任务包详情
+	/**
+	 * 任务包详情成功
+	 */
 	public static final int PACKAGE_DETAILS_SUCCESS = 0x21;
-
+	/**
+	 * 任务包详情失败
+	 */
+	public static final int PACKAGE_DETAILS_FAILED=0x22;
 
 	
 	//OnActivityFroResult StatusCode

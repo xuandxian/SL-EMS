@@ -1,57 +1,114 @@
 package com.overtech.ems.activity.parttime.tasklist;
 
-import java.util.ArrayList;
+import java.io.IOException;
+import java.util.List;
+
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.DisplayMetrics;
+import android.os.Message;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
+import android.widget.PopupWindow;
+import android.widget.TextView;
+
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.route.BaiduMapRoutePlan;
 import com.baidu.mapapi.utils.route.RouteParaOption;
 import com.baidu.mapapi.utils.route.RouteParaOption.EBusStrategyType;
+import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.TaskListPackageDetailAdapter;
-import com.overtech.ems.activity.parttime.common.ElevatorDetailActivity;
-import com.overtech.ems.entity.test.Data2;
-import com.overtech.ems.widget.CustomProgressDialog;
+import com.overtech.ems.config.StatusCode;
+import com.overtech.ems.entity.bean.TaskPackageDetailBean;
+import com.overtech.ems.entity.common.ServicesConfig;
+import com.overtech.ems.entity.parttime.TaskPackageDetail;
+import com.overtech.ems.http.HttpEngine.Param;
+import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
-import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
-import com.overtech.ems.widget.popwindow.DimPopupWindow;
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
 public class TaskListPackageDetailActivity extends BaseActivity {
 	private ImageView mDoBack;
 	private ListView mTask;
 	private Button mCancle;
+	private TextView mTaskPackageName;
+	private TextView mTaskNo;
 	private TaskListPackageDetailAdapter adapter;
-	private ArrayList<Data2> list;
+	private List<TaskPackageDetail> list;
+	private String mPhone;
 	private Context mActivity;
-	private NiftyDialogBuilder dialogBuilder;
 	private Effectstype effect;
-	private CustomProgressDialog progressDialog;
-	private LocationClient mLocClient;
-	private LatLng mLocation;
 	private ImageView mDoMore;
-	// 屏幕尺寸
-	private DisplayMetrics dm;
-	private int screenWidth;
-	private View mTitleView;
-	private DimPopupWindow popupWindow;
+	private PopupWindow popupWindow;
+	private LatLng mStartPoint;
+	private LatLng destination;
+	/**
+	 * 列表弹窗的间隔
+	 */
+	protected final int LIST_PADDING = 10;
+	/**
+	 * 实例化一个矩形
+	 */
+	private Rect mRect = new Rect();
+		
+	/**
+	 * 坐标的位置（x、y）
+	 */
+	private final int[] mLocation = new int[2];
+		
+	/**
+	 * 屏幕的宽度
+	 */
+	private int mScreenWidth;
+	/**
+	 * 屏幕的高度
+	 */
+	private int mScreenHeight;
+	private Handler handler = new Handler() {
+		public void handleMessage(android.os.Message msg) {
+			switch (msg.what) {
+			case StatusCode.PACKAGE_DETAILS_SUCCESS:
+				String json=(String) msg.obj;
+				Gson gson=new Gson();
+				TaskPackageDetailBean bean=gson.fromJson(json, TaskPackageDetailBean.class);
+				list=bean.getModel();
+				mPhone=bean.getPartnerPhone();
+				if(list!=null){
+					adapter=new TaskListPackageDetailAdapter(mActivity, list);
+					mTask.setAdapter(adapter);
+				}else{
+					Utilities.showToast("试试重新打开该页面", mActivity);
+				}
+				break;
+			case StatusCode.PACKAGE_DETAILS_FAILED:
+				Utilities.showToast((String)msg.obj, mActivity);
+				break;
+
+			default:
+				break;
+			}
+		};
+	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,17 +117,11 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 		setContentView(R.layout.activity_tasklist_package_detail);
 		initView();
 		initData();
-		initScreenSize();
-		init();
+		initEvent();
 	}
 
-	private void init() {
+	private void initEvent() {
 		mActivity = TaskListPackageDetailActivity.this;
-		dialogBuilder = NiftyDialogBuilder.getInstance(context);
-		progressDialog = CustomProgressDialog.createDialog(context);
-		popupWindow = new DimPopupWindow(activity);
-		adapter = new TaskListPackageDetailAdapter(context, list);
-		mTask.setAdapter(adapter);
 		mDoBack.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -81,9 +132,8 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1,
 					int position, long arg3) {
-				Intent intent = new Intent(context,
-						QueryTaskListActivity.class);
-				Bundle options=new Bundle();
+				Intent intent = new Intent(context, QueryTaskListActivity.class);
+				Bundle options = new Bundle();
 				options.putString("result", "json信息");
 				intent.putExtras(options);
 				startActivity(intent);
@@ -95,14 +145,19 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 			@Override
 			public void onClick(View v) {
 				effect = Effectstype.Slideright;
-				dialogBuilder.withTitle("温馨提示").withTitleColor(R.color.main_primary)
-				.withDividerColor("#11000000").withMessage("您是否要退掉此单？")
-				.withMessageColor(R.color.main_primary).withDialogColor("#FFFFFFFF")
-				.isCancelableOnTouchOutside(true).withDuration(700)
-				.withEffect(effect).withButtonDrawable(R.color.main_white)
-				.withButton1Text("否").withButton1Color(R.color.main_primary)
-				.withButton2Text("是").withButton2Color(R.color.main_primary)
-				.setButton1Click(new View.OnClickListener() {
+				dialogBuilder.withTitle("温馨提示")
+						.withTitleColor(R.color.main_primary)
+						.withDividerColor("#11000000").withMessage("您是否要退掉此单？")
+						.withMessageColor(R.color.main_primary)
+						.withDialogColor("#FFFFFFFF")
+						.isCancelableOnTouchOutside(true).withDuration(700)
+						.withEffect(effect)
+						.withButtonDrawable(R.color.main_white)
+						.withButton1Text("否")
+						.withButton1Color(R.color.main_primary)
+						.withButton2Text("是")
+						.withButton2Color(R.color.main_primary)
+						.setButton1Click(new View.OnClickListener() {
 							@Override
 							public void onClick(View v) {
 								dialogBuilder.dismiss();
@@ -124,69 +179,63 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 						}).show();
 			}
 		});
+		initPopupWindow();
 		mDoMore.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				View view = LayoutInflater.from(activity).inflate(
-						R.layout.layout_tasklist_pop, null);
-				// 弹出所有评论弹框初始化
-				LayoutParams lp_commentPopView = new LayoutParams(
-						screenWidth / 2, LayoutParams.WRAP_CONTENT);
-				view.setLayoutParams(lp_commentPopView);
-				popupWindow.setContentView(view);
-				popupWindow.showAsDropDown(mTitleView, 0, 0);
-				// initBaiduMapLocation();
+				showPopupWindow(v);
 			}
 		});
 	}
+	private void initPopupWindow() {
+		mScreenWidth=context.getResources().getDisplayMetrics().widthPixels;
+		mScreenHeight=context.getResources().getDisplayMetrics().heightPixels;
+		popupWindow=new PopupWindow(mActivity);
+		popupWindow.setWidth(mScreenWidth/2);
+		popupWindow.setHeight(LayoutParams.WRAP_CONTENT);
+		popupWindow.setFocusable(true);
+		popupWindow.setTouchable(true);
+		popupWindow.setOutsideTouchable(true);
+		popupWindow.setBackgroundDrawable(new BitmapDrawable());
+		popupWindow.setContentView(LayoutInflater.from(activity).inflate(R.layout.layout_tasklist_pop, null));
+		initUI();
+	}
+	private void initUI() {
+		popupWindow.getContentView().findViewById(R.id.ll_pop_1).setOnClickListener(//地图导航
+				new OnClickListener() {
 
-	private void initScreenSize() {
-		dm = new DisplayMetrics();
-		// 取得窗口属性
-		getWindowManager().getDefaultDisplay().getMetrics(dm);
-		// 窗口的宽度
-		screenWidth = dm.widthPixels;
+					@Override
+					public void onClick(View v) {
+						startNavicate(mStartPoint, destination);
+					}
+				});
+		popupWindow.getContentView().findViewById(R.id.ll_pop_2).setOnClickListener(//拨打搭档电话
+				new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						Intent intent=new Intent(Intent.ACTION_DIAL,Uri.parse("tel:"+mPhone));
+						startActivity(intent);
+					}
+				});
+	}
+	protected void showPopupWindow(View v) {
+		
+		v.getLocationOnScreen(mLocation);
+		//设置矩形的大小
+		mRect.set(mLocation[0], mLocation[1], mLocation[0] + v.getWidth(),mLocation[1] + v.getHeight());
+		popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, mScreenWidth-LIST_PADDING-(popupWindow.getWidth()/2), mRect.bottom);
 	}
 
-	protected void initBaiduMapLocation() {
-		// 实例化定位服务，LocationClient类必须在主线程中声明
-		mLocClient = new LocationClient(mActivity);
-		mLocClient.registerLocationListener(new BDLocationListenerImpl());// 注册定位监听接口
-		LocationClientOption option = new LocationClientOption();
-		option.setOpenGps(true); // 打开GPRS
-		option.setAddrType("all");// 返回的定位结果包含地址信息
-		option.setCoorType("bd09ll");// 返回的定位结果是百度经纬度,默认值gcj02
-		option.setScanSpan(5000); // 设置发起定位请求的间隔时间为5000ms
-		mLocClient.setLocOption(option); // 设置定位参数
-		mLocClient.start();
-	}
-
-	public class BDLocationListenerImpl implements BDLocationListener {
-
-		/**
-		 * 接收异步返回的定位结果，参数是BDLocation类型参数
-		 */
-		@Override
-		public void onReceiveLocation(BDLocation location) {
-			if (location == null) {
-				return;
-			}
-			double mLatitude = location.getLatitude();
-			double mLongitude = location.getLongitude();
-			mLocation = new LatLng(mLatitude, mLongitude);
-			startNavicate();
-		}
-	}
-
-	public void startNavicate() {
+	public void startNavicate(LatLng startPoint, LatLng endPoint) {
 		// 构建 route搜索参数
 		RouteParaOption para = new RouteParaOption().startName("我的位置")
-				.startPoint(mLocation)// 路线检索起点
-				.endName("东方明珠")// 路线检索终点名称
-				.cityName("上海")// 城市名称
+				.startPoint(startPoint)// 路线检索起点
+				.endPoint(endPoint)// 路线检索终点
 				.busStrategyType(EBusStrategyType.bus_recommend_way);
 		try {
+			BaiduMapRoutePlan.setSupportWebRoute(true);
 			BaiduMapRoutePlan.openBaiduMapTransitRoute(para, mActivity);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -194,22 +243,40 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 	}
 
 	private void initData() {
-		list = new ArrayList<Data2>();
-		Data2 data1 = new Data2("31号楼1号电梯(月保)", "上海三菱", "80032984590",
-				"20层/20站");
-		Data2 data2 = new Data2("31号楼2号电梯(季保)", "上海三菱", "80032984591",
-				"20层/20站");
-		Data2 data3 = new Data2("31号楼2号电梯(半年保)", "上海三菱", "80032984592",
-				"20层/20站");
-		Data2 data4 = new Data2("31号楼3号电梯(月保)", "上海三菱", "80032984593",
-				"20层/20站");
-		Data2 data5 = new Data2("31号楼3号电梯(年保)", "上海三菱", "80032984594",
-				"20层/20站");
-		list.add(data1);
-		list.add(data2);
-		list.add(data3);
-		list.add(data4);
-		list.add(data5);
+		Bundle bundle = getIntent().getExtras();
+		mStartPoint = bundle.getParcelable(Constant.CURLOCATION);
+		destination = bundle.getParcelable(Constant.DESTINATION);
+		String taskPackage=bundle.getString(Constant.TASKPACKAGENAME);
+		String taskNo = bundle.getString(Constant.TASKNO);
+		mTaskPackageName.setText(taskPackage);
+		mTaskNo.setText(taskNo);
+		Param param=new Param(Constant.TASKNO,taskNo);
+		Request request = httpEngine
+				.createRequest(ServicesConfig.TASK_PACKAGE_DETAIL,param);
+		Call call = httpEngine.createRequestCall(request);
+		call.enqueue(new Callback() {
+
+			@Override
+			public void onResponse(Response response) throws IOException {
+				Message msg=new Message();
+				if(response.isSuccessful()){
+					msg.what=StatusCode.PACKAGE_DETAILS_SUCCESS;
+					msg.obj=response.body().string();
+				}else{
+					msg.what=StatusCode.PACKAGE_DETAILS_FAILED;
+					msg.obj="数据异常";
+				}
+				handler.sendMessage(msg);
+			}
+
+			@Override
+			public void onFailure(Request arg0, IOException arg1) {
+				Message msg=new Message();
+				msg.what=StatusCode.PACKAGE_DETAILS_FAILED;
+				msg.obj="请检查网络";
+				handler.sendMessage(msg);
+			}
+		});
 	}
 
 	private void initView() {
@@ -219,7 +286,9 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 		mDoMore = (ImageView) findViewById(R.id.iv_navicate_right);
 		mDoMore.setBackgroundResource(R.drawable.icon_common_more);
 		mDoMore.setVisibility(View.VISIBLE);
-		mTitleView=(View)findViewById(R.id.tasklist_title_package);
-				
+		mTaskPackageName=(TextView) findViewById(R.id.tv_headTitle_community_name);
+		mTaskNo=(TextView) findViewById(R.id.tv_headTitle_taskno);
 	}
+
+	
 }

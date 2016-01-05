@@ -1,6 +1,6 @@
 package com.overtech.ems.activity.adapter;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,16 +10,16 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.overtech.ems.R;
-import com.overtech.ems.R.id;
+import com.overtech.ems.entity.parttime.TaskPackageDetail;
 import com.overtech.ems.entity.test.Data2;
 
 public class TaskListPackageDetailAdapter extends BaseAdapter {
 	
 	private Context context;
-	private ArrayList<Data2> list;
+	private List<TaskPackageDetail> list;
 	
 	
-	public TaskListPackageDetailAdapter(Context context, ArrayList<Data2> list) {
+	public TaskListPackageDetailAdapter(Context context,List<TaskPackageDetail> list) {
 		super();
 		this.context = context;
 		this.list = list;
@@ -45,7 +45,7 @@ public class TaskListPackageDetailAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		Data2 data=list.get(position);
+		TaskPackageDetail data=list.get(position);
 		ViewHolder vh=null;
 		if(convertView==null){
 			vh=new ViewHolder();
@@ -59,10 +59,10 @@ public class TaskListPackageDetailAdapter extends BaseAdapter {
 		}else{
 			vh=(ViewHolder) convertView.getTag();
 		}
-		vh.mElevatorName.setText(data.getElevtorName());
-		vh.mElevatorProductor.setText(data.getElevtorProductor());
-		vh.mElevatorNo.setText(data.getElevtorNo());
-		vh.mElevatorType.setText(data.getElevtorType());
+		vh.mElevatorName.setText(data.getElevatorName());
+		vh.mElevatorProductor.setText(data.getElevatorBrand());
+		vh.mElevatorNo.setText(data.getElevatorNo());
+		vh.mElevatorType.setText(data.getElevatorFloor());
 		return convertView;
 	}
 	class ViewHolder {

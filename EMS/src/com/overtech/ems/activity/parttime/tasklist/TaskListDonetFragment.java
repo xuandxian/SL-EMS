@@ -43,7 +43,9 @@ public class TaskListDonetFragment extends BaseFragment {
 				Gson gson=new Gson();
 				TaskPackageBean bean=gson.fromJson(json, TaskPackageBean.class);
 				list=bean.getModel();
-				adapter=new TaskListAdapter(list, mActivity);
+				if(list!=null){
+					adapter=new TaskListAdapter(list, mActivity);
+				}
 				mDonet.setAdapter(adapter);
 				break;
 			case StatusCode.TASKLIST_DONET_FAILED:

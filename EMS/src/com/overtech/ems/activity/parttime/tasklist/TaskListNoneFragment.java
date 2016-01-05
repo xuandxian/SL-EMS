@@ -1,6 +1,7 @@
 package com.overtech.ems.activity.parttime.tasklist;
 
 import java.io.IOException;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,7 +10,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -30,6 +30,7 @@ import com.overtech.ems.activity.adapter.TaskListAdapter;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.bean.TaskPackageBean;
 import com.overtech.ems.entity.common.ServicesConfig;
+import com.overtech.ems.entity.parttime.TaskPackage;
 import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.SharedPreferencesKeys;
@@ -52,6 +53,7 @@ public class TaskListNoneFragment extends BaseFragment {
 	private Effectstype effect;
 	private LocationClient mLocationClient;
 	private TaskListAdapter adapter;
+	private List<TaskPackage> list;
 	private double latitude;
 	private double longitude;
 	private Handler handler=new Handler(){
@@ -61,7 +63,10 @@ public class TaskListNoneFragment extends BaseFragment {
 				String json=(String) msg.obj;
 				Gson gson=new Gson();
 				TaskPackageBean bean=gson.fromJson(json, TaskPackageBean.class);
-				adapter=new TaskListAdapter(bean.getModel(), mActivity);
+				list=bean.getModel();
+				if(list!=null){
+					adapter=new TaskListAdapter(list, mActivity);
+				}
 				mSwipeListView.setAdapter(adapter);
 				break;
 			case StatusCode.TASKLIST_NONE_FAILED:
@@ -125,9 +130,15 @@ public class TaskListNoneFragment extends BaseFragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				Utilities.showToast("你点击了" + position + "位置", mActivity);
+				TaskPackage data=(TaskPackage) parent.getAdapter().getItem(position);
 				Intent intent = new Intent(mActivity,
 						TaskListPackageDetailActivity.class);
+				Bundle bundle=new Bundle();
+				bundle.putString(Constant.TASKNO, data.getTaskNo());
+				bundle.putString(Constant.TASKPACKAGENAME, data.getTaskPackageName());
+				bundle.putParcelable(Constant.CURLOCATION, adapter.getCurrentLocation());
+				bundle.putParcelable(Constant.DESTINATION, adapter.getDestination(position));
+				intent.putExtras(bundle);
 				startActivity(intent);
 			}
 		});
