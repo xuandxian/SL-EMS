@@ -3,22 +3,22 @@ package com.overtech.ems.activity.parttime.grabtask;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.overtech.ems.R;
@@ -30,6 +30,11 @@ import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
+import com.overtech.ems.widget.swipemenu.SwipeMenu;
+import com.overtech.ems.widget.swipemenu.SwipeMenuCreator;
+import com.overtech.ems.widget.swipemenu.SwipeMenuItem;
+import com.overtech.ems.widget.swipemenu.SwipeMenuListView;
+import com.overtech.ems.widget.swipemenu.SwipeMenuListView.OnMenuItemClickListener;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
@@ -42,7 +47,8 @@ public class KeyWordSerachActivity extends BaseActivity {
 	private TextView mDoCancel;
 	private TextView mHistoryTextView;
 	private ListView mSearchListView;
-	private ListView mHistoryListView;
+	private SwipeMenuListView mHistoryListView;
+	private SwipeMenuCreator creator;
 	private String mKeyWord;
 	private SearchResultAdapter mResultAdapter;
 	private SearchHistoryAdapter mHistoryAdapter;
@@ -75,7 +81,8 @@ public class KeyWordSerachActivity extends BaseActivity {
 							searchList.add(array[i]);
 						}
 					}
-					mResultAdapter = new SearchResultAdapter(context, searchList, zoneCount);
+					mResultAdapter = new SearchResultAdapter(context,
+							searchList, zoneCount);
 					mSearchListView.setAdapter(mResultAdapter);
 				}
 				break;
@@ -102,15 +109,20 @@ public class KeyWordSerachActivity extends BaseActivity {
 		mDoCancel = (TextView) findViewById(R.id.tv_parttime_do_cancel);
 		mHistoryTextView = (TextView) findViewById(R.id.tv_search_history);
 		mSearchListView = (ListView) findViewById(R.id.lv_search_result);
-		mHistoryListView = (ListView) findViewById(R.id.lv_search_history);
+		mHistoryListView = (SwipeMenuListView) findViewById(R.id.lv_search_history);
 	}
 
 	private void init() {
-		sharedPreferences= getSharedPreferences("search", MODE_PRIVATE);
+		sharedPreferences = getSharedPreferences("search", MODE_PRIVATE);
 		readHistory();
-		mHistoryTextView.setVisibility(View.VISIBLE);
-		mHistoryAdapter=new SearchHistoryAdapter(context, historyList);
-		mHistoryListView.setAdapter(mHistoryAdapter);
+		if (null == historyList || historyList.isEmpty()) {
+			Utilities.showToast("无历史记录", context);
+		} else {
+			initHistoryItem();
+			mHistoryTextView.setVisibility(View.VISIBLE);
+			mHistoryAdapter = new SearchHistoryAdapter(context, historyList);
+			mHistoryListView.setAdapter(mHistoryAdapter);
+		}
 		mDoSearch.addTextChangedListener(new TextWatcher() {
 
 			@Override
@@ -168,7 +180,8 @@ public class KeyWordSerachActivity extends BaseActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				mKeyWord = ((String) parent.getItemAtPosition(position)).replace("\"", "");
+				mKeyWord = ((String) parent.getItemAtPosition(position))
+						.replace("\"", "");
 				writeHistory(mKeyWord);
 				Intent intent = new Intent();
 				intent.putExtra("mKeyWord", mKeyWord);
@@ -181,7 +194,8 @@ public class KeyWordSerachActivity extends BaseActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				mKeyWord = ((String) parent.getItemAtPosition(position)).replace("\"", "");
+				mKeyWord = ((String) parent.getItemAtPosition(position))
+						.replace("\"", "");
 				writeHistory(mKeyWord);
 				Intent intent = new Intent();
 				intent.putExtra("mKeyWord", mKeyWord);
@@ -189,6 +203,18 @@ public class KeyWordSerachActivity extends BaseActivity {
 				finish();
 			}
 		});
+		mHistoryListView
+				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+					@Override
+					public void onMenuItemClick(int position, SwipeMenu menu,
+							int index) {
+						String data = historyList.get(position);
+						historyList.remove(position);
+						deleteHistory(data);
+						mHistoryAdapter.notifyDataSetChanged();
+					}
+				});
 	}
 
 	private void GetAutoCompleteResult(String keyWord) {
@@ -221,39 +247,63 @@ public class KeyWordSerachActivity extends BaseActivity {
 
 	private void writeHistory(String value) {
 		Editor editor = sharedPreferences.edit();
-		String longHistory=sharedPreferences.getString("history", "");
-		String realValue=value+",";
-		StringBuilder sb=new StringBuilder(longHistory);
+		String longHistory = sharedPreferences.getString("history", "");
+		String realValue = value + ",";
+		StringBuilder sb = new StringBuilder(longHistory);
 		if (!longHistory.contains(realValue)) {
 			sb.insert(0, realValue);
-		}else {
-			int index=sb.indexOf(realValue);
-			sb.delete(index, index+realValue.length());
+		} else {
+			int index = sb.indexOf(realValue);
+			sb.delete(index, index + realValue.length());
 			sb.insert(0, realValue);
 		}
 		editor.putString("history", sb.toString());
 		editor.commit();
 	}
-	
-    private void deleteHistory(String value){
-    	Editor editor = sharedPreferences.edit();
-		String longHistory=sharedPreferences.getString("history", "");
-		String realValue=value+",";
-		StringBuilder sb=new StringBuilder(longHistory);
-		int index=sb.indexOf(realValue);
-		sb.delete(index, index+realValue.length());
+
+	private void deleteHistory(String value) {
+		Editor editor = sharedPreferences.edit();
+		String longHistory = sharedPreferences.getString("history", "");
+		String realValue = value + ",";
+		StringBuilder sb = new StringBuilder(longHistory);
+		int index = sb.indexOf(realValue);
+		sb.delete(index, index + realValue.length());
 		editor.putString("history", sb.toString());
 		editor.commit();
 	}
 
 	private List<String> readHistory() {
-		String longHistory=sharedPreferences.getString("history", "");
-		String[] historyArray=longHistory.split(",");
-		for (int i = 0; i < historyArray.length; i++) {
-			if (historyList.size()<10) {
-				historyList.add(historyArray[i]);
+		String longHistory = sharedPreferences.getString("history", "");
+		if ("" != longHistory) {
+			String[] historyArray = longHistory.split(",");
+			for (int i = 0; i < historyArray.length; i++) {
+				if (historyList.size() < 10) {
+					historyList.add(historyArray[i]);
+				}
 			}
-		}
+		} 
 		return historyList;
+	}
+
+	private void initHistoryItem() {
+		creator = new SwipeMenuCreator() {
+			@Override
+			public void create(SwipeMenu menu) {
+				SwipeMenuItem deleteItem = new SwipeMenuItem(context);
+				deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
+						0x3F, 0x25)));
+				deleteItem.setWidth(dp2px(60));
+				deleteItem.setTitle("删除");
+				deleteItem.setTitleSize(18);
+				deleteItem.setTitleColor(Color.WHITE);
+				menu.addMenuItem(deleteItem);
+			}
+		};
+		mHistoryListView.setMenuCreator(creator);
+	}
+
+	private int dp2px(int dp) {
+		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
+				getResources().getDisplayMetrics());
 	}
 }
