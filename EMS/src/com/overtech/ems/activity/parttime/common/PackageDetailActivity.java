@@ -25,6 +25,7 @@ import com.overtech.ems.entity.bean.TaskPackageDetailBean;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.TaskPackageDetail;
 import com.overtech.ems.http.HttpEngine.Param;
+import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
@@ -126,7 +127,7 @@ public class PackageDetailActivity extends BaseActivity {
 
 	private void getDataByTaskNo(String url) {
 		startProgressDialog("正在查询...");
-		Param param = new Param("mTaskNo", mTaskNo);
+		Param param = new Param(Constant.TASKNO, mTaskNo);
 		Request request = httpEngine.createRequest(url, param);
 		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {
@@ -219,8 +220,8 @@ public class PackageDetailActivity extends BaseActivity {
 						startProgressDialog("正在抢单...");
 						String mLoginName = mSharedPreferences.getString(
 								SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
-						Param paramPhone = new Param("loginName", mLoginName);
-						Param paramTaskNo = new Param("taskNo", mTaskNo);
+						Param paramPhone = new Param(Constant.LOGINNAME, mLoginName);
+						Param paramTaskNo = new Param(Constant.TASKNO, mTaskNo);
 						Request request = httpEngine.createRequest(
 								ServicesConfig.Do_GRABTASK, paramPhone,
 								paramTaskNo);

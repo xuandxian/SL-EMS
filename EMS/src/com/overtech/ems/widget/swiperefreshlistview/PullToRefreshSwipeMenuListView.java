@@ -340,6 +340,7 @@ public class PullToRefreshSwipeMenuListView extends ListView implements OnScroll
         } else {
             mHeaderViewContent.setVisibility(View.VISIBLE);
         }
+        mHeaderViewContent.setOnClickListener(null);
     }
 
     /**
