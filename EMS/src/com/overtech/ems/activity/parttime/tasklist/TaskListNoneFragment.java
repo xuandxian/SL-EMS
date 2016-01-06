@@ -38,6 +38,7 @@ import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView;
+import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView.IXListViewListener;
 import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView.OnMenuItemClickListener;
 import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenu;
 import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuCreator;
@@ -47,7 +48,7 @@ import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-public class TaskListNoneFragment extends BaseFragment {
+public class TaskListNoneFragment extends BaseFragment implements IXListViewListener{
 	private PullToRefreshSwipeMenuListView mSwipeListView;
 	private SwipeMenuCreator creator;
 	private Activity mActivity;
@@ -108,6 +109,7 @@ public class TaskListNoneFragment extends BaseFragment {
 		mLocationClient.start();
 		initListView();
 		mSwipeListView.setMenuCreator(creator);
+		mSwipeListView.setXListViewListener(this);
 		mSwipeListView
 				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
@@ -258,5 +260,17 @@ public class TaskListNoneFragment extends BaseFragment {
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		mLocationClient.stop();
+	}
+
+	@Override
+	public void onRefresh() {
+		// TODO Auto-generated method stub
+		mSwipeListView.stopRefresh();
+	}
+
+	@Override
+	public void onLoadMore() {
+		// TODO Auto-generated method stub
+		mSwipeListView.stopLoadMore();
 	}
 }
