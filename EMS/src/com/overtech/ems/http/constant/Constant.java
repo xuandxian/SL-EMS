@@ -30,7 +30,7 @@ public class Constant {
 	 */
 	public static final String TASKNO="taskNo";
 	/**
-	 * 
+	 * 任务单名称
 	 */
 	public static final String TASKPACKAGENAME="taskPackageName";
 	/**
@@ -53,6 +53,10 @@ public class Constant {
 	 * 指定位置
 	 */
 	public static final String DESTINATION="destination";
+	/**
+	 * 终点位置名称
+	 */
+	public static final String DESNAME="desName";
 	/**
 	 * 个人信息
 	 */

@@ -117,7 +117,8 @@ public class TaskListNoneFragment extends BaseFragment {
 						case 0://导航
 							LatLng startPoint=adapter.getCurrentLocation();
 							LatLng endPoint=adapter.getDestination(position);
-							startNavicate(startPoint, endPoint);
+							String endName=adapter.getDesName(position);
+							startNavicate(startPoint, endPoint,endName);
 							break;
 						case 1://t退单
 							showDialog();
@@ -136,6 +137,7 @@ public class TaskListNoneFragment extends BaseFragment {
 				Bundle bundle=new Bundle();
 				bundle.putString(Constant.TASKNO, data.getTaskNo());
 				bundle.putString(Constant.TASKPACKAGENAME, data.getTaskPackageName());
+				bundle.putString(Constant.DESNAME, data.getTaskPackageName());
 				bundle.putParcelable(Constant.CURLOCATION, adapter.getCurrentLocation());
 				bundle.putParcelable(Constant.DESTINATION, adapter.getDestination(position));
 				intent.putExtras(bundle);
@@ -231,11 +233,12 @@ public class TaskListNoneFragment extends BaseFragment {
 
 	
 
-	public void startNavicate(LatLng startPoint,LatLng endPoint) {
+	public void startNavicate(LatLng startPoint,LatLng endPoint,String endName) {
 		// 构建 route搜索参数
 		RouteParaOption para = new RouteParaOption().startName("我的位置")
 				.startPoint(startPoint)// 路线检索起点
 				.endPoint(endPoint)
+				.endName(endName)
 				.busStrategyType(EBusStrategyType.bus_recommend_way);
 		try {
 			BaiduMapRoutePlan.setSupportWebRoute(true);

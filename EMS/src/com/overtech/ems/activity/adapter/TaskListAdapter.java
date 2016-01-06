@@ -106,6 +106,14 @@ public class TaskListAdapter extends BaseAdapter {
 		return new LatLng(Double.parseDouble(desLat),
 				Double.parseDouble(desLng));
 	}
+	/**
+	 *	目的地名称
+	 * @param position
+	 * @return
+	 */
+	public String getDesName(int position){
+		return list.get(position).getTaskPackageName();
+	}
 
 	class ViewHolder {
 		TextView taskPackageName;

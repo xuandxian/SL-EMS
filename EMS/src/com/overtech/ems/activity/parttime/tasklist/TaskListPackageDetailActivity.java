@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,6 +61,7 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 	private PopupWindow popupWindow;
 	private LatLng mStartPoint;
 	private LatLng destination;
+	private String mDesName;
 	/**
 	 * 列表弹窗的间隔
 	 */
@@ -207,7 +207,7 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 
 					@Override
 					public void onClick(View v) {
-						startNavicate(mStartPoint, destination);
+						startNavicate(mStartPoint, destination,mDesName);
 					}
 				});
 		popupWindow.getContentView().findViewById(R.id.ll_pop_2).setOnClickListener(//拨打搭档电话
@@ -228,11 +228,12 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 		popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, mScreenWidth-LIST_PADDING-(popupWindow.getWidth()/2), mRect.bottom);
 	}
 
-	public void startNavicate(LatLng startPoint, LatLng endPoint) {
+	public void startNavicate(LatLng startPoint, LatLng endPoint,String endName) {
 		// 构建 route搜索参数
 		RouteParaOption para = new RouteParaOption().startName("我的位置")
 				.startPoint(startPoint)// 路线检索起点
 				.endPoint(endPoint)// 路线检索终点
+				.endName(endName)
 				.busStrategyType(EBusStrategyType.bus_recommend_way);
 		try {
 			BaiduMapRoutePlan.setSupportWebRoute(true);
@@ -246,6 +247,7 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 		Bundle bundle = getIntent().getExtras();
 		mStartPoint = bundle.getParcelable(Constant.CURLOCATION);
 		destination = bundle.getParcelable(Constant.DESTINATION);
+		mDesName=bundle.getString(Constant.DESNAME);
 		String taskPackage=bundle.getString(Constant.TASKPACKAGENAME);
 		String taskNo = bundle.getString(Constant.TASKNO);
 		mTaskPackageName.setText(taskPackage);
