@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -116,8 +117,8 @@ public class TaskListNoneFragment extends BaseFragment {
 						switch (index) {
 						case 0://导航
 							LatLng startPoint=adapter.getCurrentLocation();
-							LatLng endPoint=adapter.getDestination(position);
-							String endName=adapter.getDesName(position);
+							LatLng endPoint=adapter.getDestination(position-1);//加header后，该处的position比adapter的position大
+							String endName=adapter.getDesName(position-1);//同上
 							startNavicate(startPoint, endPoint,endName);
 							break;
 						case 1://t退单
@@ -139,7 +140,7 @@ public class TaskListNoneFragment extends BaseFragment {
 				bundle.putString(Constant.TASKPACKAGENAME, data.getTaskPackageName());
 				bundle.putString(Constant.DESNAME, data.getTaskPackageName());
 				bundle.putParcelable(Constant.CURLOCATION, adapter.getCurrentLocation());
-				bundle.putParcelable(Constant.DESTINATION, adapter.getDestination(position));
+				bundle.putParcelable(Constant.DESTINATION, adapter.getDestination(position-1));//position比adapter里面的position大1
 				intent.putExtras(bundle);
 				startActivity(intent);
 			}
