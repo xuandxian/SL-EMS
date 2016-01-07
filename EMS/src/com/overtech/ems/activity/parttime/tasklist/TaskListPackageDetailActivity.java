@@ -1,6 +1,7 @@
 package com.overtech.ems.activity.parttime.tasklist;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
@@ -32,7 +33,7 @@ import com.baidu.mapapi.utils.route.RouteParaOption.EBusStrategyType;
 import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
-import com.overtech.ems.activity.adapter.TaskListPackageDetailAdapter;
+import com.overtech.ems.activity.adapter.PackageDetailAdapter;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.bean.TaskPackageDetailBean;
 import com.overtech.ems.entity.common.ServicesConfig;
@@ -52,8 +53,6 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 	private Button mCancle;
 	private TextView mTaskPackageName;
 	private TextView mTaskNo;
-	private TaskListPackageDetailAdapter adapter;
-	private List<TaskPackageDetail> list;
 	private String mPhone;
 	private Context mActivity;
 	private Effectstype effect;
@@ -62,6 +61,8 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 	private LatLng mStartPoint;
 	private LatLng destination;
 	private String mDesName;
+	private PackageDetailAdapter adapter;
+	private ArrayList<TaskPackageDetail> list;
 	/**
 	 * 列表弹窗的间隔
 	 */
@@ -91,10 +92,10 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 				String json=(String) msg.obj;
 				Gson gson=new Gson();
 				TaskPackageDetailBean bean=gson.fromJson(json, TaskPackageDetailBean.class);
-				list=bean.getModel();
+				list=(ArrayList<TaskPackageDetail>)bean.getModel();
 				mPhone=bean.getPartnerPhone();
 				if(list!=null){
-					adapter=new TaskListPackageDetailAdapter(mActivity, list);
+					adapter = new PackageDetailAdapter(context, list);
 					mTask.setAdapter(adapter);
 				}else{
 					Utilities.showToast("试试重新打开该页面", mActivity);
@@ -130,15 +131,15 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 		});
 		mTask.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1,
-					int position, long arg3) {
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				TaskPackageDetail detail =(TaskPackageDetail)parent.getItemAtPosition(position);
+				String workType=detail.getWorkType();
 				Intent intent = new Intent(context, QueryTaskListActivity.class);
-				Bundle options = new Bundle();
-				options.putString("result", "json信息");
-				intent.putExtras(options);
+				Bundle bundle = new Bundle();
+				bundle.putString("mWorkType", workType);
+				intent.putExtras(bundle);
 				startActivity(intent);
 			}
-
 		});
 		mCancle.setOnClickListener(new OnClickListener() {
 
@@ -163,20 +164,20 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 								dialogBuilder.dismiss();
 							}
 						}).setButton2Click(new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								dialogBuilder.dismiss();
-								progressDialog.setMessage("正在退单");
-								progressDialog.show();
-								new Handler().postDelayed(new Runnable() {
+					@Override
+					public void onClick(View v) {
+						dialogBuilder.dismiss();
+						progressDialog.setMessage("正在退单");
+						progressDialog.show();
+						new Handler().postDelayed(new Runnable() {
 
-									@Override
-									public void run() {
-										finish();
-									}
-								}, 3000);
+							@Override
+							public void run() {
+								finish();
 							}
-						}).show();
+						}, 3000);
+					}
+				}).show();
 			}
 		});
 		initPopupWindow();
@@ -207,7 +208,7 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 
 					@Override
 					public void onClick(View v) {
-						startNavicate(mStartPoint, destination,mDesName);
+						startNavicate(mStartPoint, destination, mDesName);
 					}
 				});
 		popupWindow.getContentView().findViewById(R.id.ll_pop_2).setOnClickListener(//拨打搭档电话
@@ -224,8 +225,8 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 		
 		v.getLocationOnScreen(mLocation);
 		//设置矩形的大小
-		mRect.set(mLocation[0], mLocation[1], mLocation[0] + v.getWidth(),mLocation[1] + v.getHeight());
-		popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, mScreenWidth-LIST_PADDING-(popupWindow.getWidth()/2), mRect.bottom);
+		mRect.set(mLocation[0], mLocation[1], mLocation[0] + v.getWidth(), mLocation[1] + v.getHeight());
+		popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, mScreenWidth - LIST_PADDING - (popupWindow.getWidth() / 2), mRect.bottom);
 	}
 
 	public void startNavicate(LatLng startPoint, LatLng endPoint,String endName) {
@@ -260,22 +261,22 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 
 			@Override
 			public void onResponse(Response response) throws IOException {
-				Message msg=new Message();
-				if(response.isSuccessful()){
-					msg.what=StatusCode.PACKAGE_DETAILS_SUCCESS;
-					msg.obj=response.body().string();
-				}else{
-					msg.what=StatusCode.PACKAGE_DETAILS_FAILED;
-					msg.obj="数据异常";
+				Message msg = new Message();
+				if (response.isSuccessful()) {
+					msg.what = StatusCode.PACKAGE_DETAILS_SUCCESS;
+					msg.obj = response.body().string();
+				} else {
+					msg.what = StatusCode.PACKAGE_DETAILS_FAILED;
+					msg.obj = "数据异常";
 				}
 				handler.sendMessage(msg);
 			}
 
 			@Override
 			public void onFailure(Request arg0, IOException arg1) {
-				Message msg=new Message();
-				msg.what=StatusCode.PACKAGE_DETAILS_FAILED;
-				msg.obj="请检查网络";
+				Message msg = new Message();
+				msg.what = StatusCode.PACKAGE_DETAILS_FAILED;
+				msg.obj = "请检查网络";
 				handler.sendMessage(msg);
 			}
 		});

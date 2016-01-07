@@ -76,43 +76,47 @@ public class ServicesConfig {
 	 */
 	public static final String TASK_START = SystemConfig.IP+ BusinessConfig.URL_TASK_START;
 	/**
-	 * 18.维保清单完成
+	 * 18.根据工作类型获取工作内容
+	 */
+	public static final String WORK_TYPE = SystemConfig.IP+ BusinessConfig.URL_WORK_TYPE;
+	/**
+	 * 19.维保清单完成
 	 */
 	public static final String MAINTENCE_LIST_COMPLETE = SystemConfig.IP+ BusinessConfig.URL_MAINTENCE_LIST_COMPLETE;
 	/**
-	 * 19.问题反馈
+	 * 20.问题反馈
 	 */
 	public static final String PROBLEMS_FEEDBACK = SystemConfig.IP+ BusinessConfig.URL_PROBLEMS_FEEDBACK;
 	/**
-	 * 20.互相评价
+	 * 21.互相评价
 	 */
 	public static final String EVALUATION_EACH_OTHER = SystemConfig.IP+ BusinessConfig.URL_EVALUATION_EACH_OTHER;
 	/**
-	 * 21.我的
+	 * 22.我的
 	 */
 	public static final String PERSONAL_AVATOR = SystemConfig.IP+ BusinessConfig.URL_PERSONAL_AVATOR;
 	/**
-	 * 22.账户信息
+	 * 23.账户信息
 	 */
 	public static final String PERSONAL_ACCOUNT = SystemConfig.IP+ BusinessConfig.URL_PERSONAL_ACCOUNT;
 	/**
-	 * 23.更换手机号（验证密码）
+	 * 24.更换手机号（验证密码）
 	 */
 	public static final String CHANGE_PHONENO_PASSWORD = SystemConfig.IP+ BusinessConfig.URL_CHANGE_PHONENO_PASSWORD;
 	/**
-	 * 24.更换手机号（手机号码／短信验证码）
+	 * 25.更换手机号（手机号码／短信验证码）
 	 */
 	public static final String CHANGE_PHONENO_UPDATE = SystemConfig.IP+ BusinessConfig.URL_CHANGE_PHONENO_UPDATE;
 	/**
-	 * 25.我的账单（已结算／未结算）
+	 * 26.我的账单（已结算／未结算）
 	 */
 	public static final String PERSONAL_BILL = SystemConfig.IP+ BusinessConfig.URL_PERSONAL_BILL;
 	/**
-	 * 26.奖励记录
+	 * 27.奖励记录
 	 */
 	public static final String PERSONAL_BONUS_LIST = SystemConfig.IP+ BusinessConfig.URL_PERSONAL_BONUS_LIST;
 	/**
-	 * 27.退单纪录
+	 * 28.退单纪录
 	 */
 	public static final String PERSONAL_CHARGEBACK_LIST = SystemConfig.IP+ BusinessConfig.URL_PERSONAL_CHARGEBACK_LIST;
 

@@ -77,4 +77,9 @@ public class Constant {
 	 * 其他证书
 	 */
 	public static final String OTHERCERTIFICATE="othercertificate";
+	/**
+	 * 工作类型
+	 */
+	public static final String WORKTYPE="workType";
+
 }

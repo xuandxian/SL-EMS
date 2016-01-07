@@ -81,6 +81,10 @@ public class BusinessConfig {
 	 */
 	public static final String URL_TASK_START = "/taskStart.action";
 	/**
+	 * 17.任务单（开始）--->指向最后一个界面
+	 */
+	public static final String URL_WORK_TYPE = "/workType.action";
+	/**
 	 * 18.维保清单完成
 	 */
 	public static final String URL_MAINTENCE_LIST_COMPLETE = "/maintenceListComplete.action";
