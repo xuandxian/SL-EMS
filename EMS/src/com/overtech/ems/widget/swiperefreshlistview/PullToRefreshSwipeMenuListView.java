@@ -366,6 +366,10 @@ public class PullToRefreshSwipeMenuListView extends ListView implements OnScroll
             });
         }
     }
+    
+    public void setFooterViewInvisible(){
+    	mFooterView.setState(PullToRefreshListFooter.STATE_INVISIBLE);
+    }
 
     /**
      * stop refresh, reset header view.

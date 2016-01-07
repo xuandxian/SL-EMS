@@ -57,7 +57,8 @@ import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-public class GrabTaskFragment extends BaseFragment implements IXListViewListener {
+public class GrabTaskFragment extends BaseFragment implements
+		IXListViewListener {
 
 	private PullToRefreshSwipeMenuListView mSwipeListView;
 	private SwipeMenuCreator creator;
@@ -68,7 +69,6 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 	private Effectstype effect;
 	private GrabTaskAdapter mAdapter;
 	private ArrayList<TaskPackage> list;
-	private Handler mHandler;
 	private TextView mHeadTitle;
 
 	public LatLng myLocation;
@@ -92,6 +92,7 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 				}
 				mAdapter = new GrabTaskAdapter(list, myLocation, mActivity);
 				mSwipeListView.setAdapter(mAdapter);
+				onLoad();
 				break;
 			case StatusCode.GRAB_FAILED:
 				Utilities.showToast("请求失败", context);
@@ -133,7 +134,8 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_grab_task, container,false);
+		View view = inflater.inflate(R.layout.fragment_grab_task, container,
+				false);
 		initBaiDuLocation();
 		findViewById(view);
 		init();
@@ -171,14 +173,18 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 					location.getLongitude());
 			Log.e("GrabTaskFragment", "location:" + "(" + myLocation.latitude
 					+ "," + myLocation.longitude + ")");
-			initData(ServicesConfig.GRABTASK,"0");
+			initData(ServicesConfig.GRABTASK, "0");
 		}
 	}
 
-	public void initData(String url,String flag, Param... params) {
-		if (TextUtils.equals("0",flag)) {
+	public void initData(String url, String flag, Param... params) {
+		if (TextUtils.equals("0", flag)) {
 			startProgressDialog("正在查询...");
+		} else if (TextUtils.equals("2", flag)) {
+			mSwipeListView.setFooterViewInvisible();
+			mSwipeListView.setPullRefreshEnable(false);
 		}
+
 		Request request = httpEngine.createRequest(url, params);
 		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {
@@ -213,12 +219,16 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 		mSwipeListView.setPullRefreshEnable(true);
 		mSwipeListView.setPullLoadEnable(true);
 		mSwipeListView.setXListViewListener(this);
-		mHeadView = LayoutInflater.from(mActivity).inflate(R.layout.listview_header_filter, null);
+		mHeadView = LayoutInflater.from(mActivity).inflate(
+				R.layout.listview_header_filter, null);
+		mHeadView.setOnClickListener(null);
 		mSwipeListView.addHeaderView(mHeadView);
-		mPartTimeDoFifter = (LinearLayout) mHeadView.findViewById(R.id.ll_grab_task);
-		mKeyWordSearch = (TextView) mHeadView.findViewById(R.id.et_do_parttime_search);
-		mHandler = new Handler();
-		mSwipeListView.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+		mPartTimeDoFifter = (LinearLayout) mHeadView
+				.findViewById(R.id.ll_grab_task);
+		mKeyWordSearch = (TextView) mHeadView
+				.findViewById(R.id.et_do_parttime_search);
+		mSwipeListView
+				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
 					@Override
 					public void onMenuItemClick(int position, SwipeMenu menu,
@@ -229,9 +239,12 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 		mSwipeListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
-				TaskPackage data = (TaskPackage) parent.getItemAtPosition(position);
-				Intent intent = new Intent(mActivity,PackageDetailActivity.class);
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				TaskPackage data = (TaskPackage) parent
+						.getItemAtPosition(position);
+				Intent intent = new Intent(mActivity,
+						PackageDetailActivity.class);
 				Bundle bundle = new Bundle();
 				bundle.putString("CommunityName", data.getTaskPackageName());
 				bundle.putString("TaskNo", data.getTaskNo());
@@ -245,26 +258,29 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 
 			@Override
 			public void onClick(View arg0) {
-				Intent intent = new Intent(mActivity,GrabTaskDoFilterActivity.class);
+				Intent intent = new Intent(mActivity,
+						GrabTaskDoFilterActivity.class);
 				startActivityForResult(intent, StatusCode.RESULT_GRAB_DO_FILTER);
 			}
 		});
 
 		mKeyWordSearch.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
-				Intent intent = new Intent(mActivity,KeyWordSerachActivity.class);
+				Intent intent = new Intent(mActivity,
+						KeyWordSerachActivity.class);
 				startActivityForResult(intent, StatusCode.RESULT_GRAB_DO_SEARCH);
 			}
 		});
-		
+
 	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == StatusCode.RESULT_GRAB_DO_FILTER && resultCode == Activity.RESULT_OK) {
+		if (requestCode == StatusCode.RESULT_GRAB_DO_FILTER
+				&& resultCode == Activity.RESULT_OK) {
 			String mZone = data.getStringExtra("mZone");
 			String mTime = data.getStringExtra("mTime");
 			Param zoneParam = new Param(Constant.FILTERZONE, mZone);
@@ -275,8 +291,9 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 			if (mAdapter != null) {
 				mAdapter.notifyDataSetChanged();
 			}
-			initData(ServicesConfig.DO_FILTER, "0",zoneParam, timeParam);
-		}else if (requestCode == StatusCode.RESULT_GRAB_DO_SEARCH && resultCode == Activity.RESULT_OK){
+			initData(ServicesConfig.DO_FILTER, "2", zoneParam, timeParam);
+		} else if (requestCode == StatusCode.RESULT_GRAB_DO_SEARCH
+				&& resultCode == Activity.RESULT_OK) {
 			String keyWord = data.getStringExtra("mKeyWord");
 			Param keyWordParam = new Param(Constant.KEYWORD, keyWord);
 			if (list != null) {
@@ -285,7 +302,7 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 			if (mAdapter != null) {
 				mAdapter.notifyDataSetChanged();
 			}
-			initData(ServicesConfig.GRABTASK, "0",keyWordParam);
+			initData(ServicesConfig.GRABTASK, "2", keyWordParam);
 		}
 	}
 
@@ -294,7 +311,8 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 			@Override
 			public void create(SwipeMenu menu) {
 				SwipeMenuItem openItem = new SwipeMenuItem(mActivity);
-				openItem.setBackground(new ColorDrawable(Color.rgb(0xFF, 0x3A,0x30)));
+				openItem.setBackground(new ColorDrawable(Color.rgb(0xFF, 0x3A,
+						0x30)));
 				openItem.setWidth(dp2px(90));
 				openItem.setTitle("抢");
 				openItem.setTitleSize(18);
@@ -306,31 +324,23 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 
 	public void onRefresh() {
 		Utilities.showToast("下拉刷新", mActivity);
-		mHandler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				SimpleDateFormat df = new SimpleDateFormat("MM-dd HH:mm",Locale.getDefault());
-				RefreshTime.setRefreshTime(mActivity, df.format(new Date()));
-				onLoad();
-				initData(ServicesConfig.GRABTASK, "1");
-			}
-		}, 2000);
+		initData(ServicesConfig.GRABTASK, "1");
 	}
 
 	public void onLoadMore() {
-		Utilities.showToast("上拉加载", mActivity);
-		mHandler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				onLoad();
-			}
-		}, 2000);
+		// 此处暂时关闭，等待后台分页数据
+		Utilities.showToast("上拉加载-->直接关闭", mActivity);
+		mSwipeListView.stopLoadMore();
 	}
 
 	private void onLoad() {
+		SimpleDateFormat df = new SimpleDateFormat("MM-dd HH:mm",
+				Locale.getDefault());
+		RefreshTime.setRefreshTime(mActivity, df.format(new Date()));
 		mSwipeListView.setRefreshTime(RefreshTime.getRefreshTime(mActivity));
 		mSwipeListView.stopRefresh();
 		mSwipeListView.stopLoadMore();
+		Utilities.showToast("刷新完毕", mActivity);
 	}
 
 	public class BDLocationListenerImpl implements BDLocationListener {
@@ -368,11 +378,15 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 					public void onClick(View v) {
 						dialogBuilder.dismiss();
 						startProgressDialog("正在抢单...");
-						String mLoginName = mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
+						String mLoginName = mSharedPreferences.getString(
+								SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
 						String mTaskNo = list.get(position).getTaskNo();
-						Param paramPhone = new Param(Constant.LOGINNAME, mLoginName);
+						Param paramPhone = new Param(Constant.LOGINNAME,
+								mLoginName);
 						Param paramTaskNo = new Param(Constant.TASKNO, mTaskNo);
-						Request request = httpEngine.createRequest(ServicesConfig.Do_GRABTASK, paramPhone,paramTaskNo);
+						Request request = httpEngine.createRequest(
+								ServicesConfig.Do_GRABTASK, paramPhone,
+								paramTaskNo);
 						Call call = httpEngine.createRequestCall(request);
 						call.enqueue(new Callback() {
 
