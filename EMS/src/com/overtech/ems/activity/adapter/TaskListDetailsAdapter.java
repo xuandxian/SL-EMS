@@ -2,7 +2,7 @@ package com.overtech.ems.activity.adapter;
 
 import java.util.ArrayList;
 import com.overtech.ems.R;
-import com.overtech.ems.entity.test.Data3;
+import com.overtech.ems.entity.parttime.MaintenanceType;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +13,11 @@ import android.widget.TextView;
 public class TaskListDetailsAdapter extends BaseAdapter {
 	
 	private Context context;
-	private ArrayList<Data3> list = new ArrayList<Data3>();
+	private ArrayList<MaintenanceType> list = new ArrayList<MaintenanceType>();
 	public static final int ITEM_TITLE = 0;
 	public static final int ITEM_CONTENT = 1;
 
-	public TaskListDetailsAdapter(Context context, ArrayList<Data3> list) {
+	public TaskListDetailsAdapter(Context context, ArrayList<MaintenanceType> list) {
 		super();
 		this.context = context;
 		this.list = list;
@@ -57,7 +57,7 @@ public class TaskListDetailsAdapter extends BaseAdapter {
 		ViewHolder holder = null;
 		ViewHolder2 holder2 = null;
 		int type = getItemViewType(position);
-		Data3 data = list.get(position);
+		MaintenanceType data = list.get(position);
 		if (convertView == null) {
 			switch (type) {
 			case ITEM_TITLE:
@@ -75,8 +75,8 @@ public class TaskListDetailsAdapter extends BaseAdapter {
 				holder2.mContentType=(TextView)convertView.findViewById(R.id.title_type);
 				holder2.mContentContent=(TextView)convertView.findViewById(R.id.title_content);
 				holder2.mContentId.setText(data.getId());
-				holder2.mContentType.setText(data.getType());
-				holder2.mContentContent.setText(data.getContent());
+				holder2.mContentType.setText(data.getMaintenanceType());
+				holder2.mContentContent.setText(data.getMaintenanceContent());
 				convertView.setTag(holder2);
 				break;
 			}
@@ -88,8 +88,8 @@ public class TaskListDetailsAdapter extends BaseAdapter {
 			case ITEM_CONTENT:
 				holder2 = (ViewHolder2) convertView.getTag();
 				holder2.mContentId.setText(data.getId());
-				holder2.mContentType.setText(data.getType());
-				holder2.mContentContent.setText(data.getContent());
+				holder2.mContentType.setText(data.getMaintenanceType());
+				holder2.mContentContent.setText(data.getMaintenanceContent());
 				break;
 			}
 		}

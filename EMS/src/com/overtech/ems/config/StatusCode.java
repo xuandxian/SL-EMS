@@ -57,6 +57,14 @@ public class StatusCode {
 	 * 任务包详情失败
 	 */
 	public static final int PACKAGE_DETAILS_FAILED=0x22;
+	/**
+	 * 获取工作类型内容成功
+	 */
+	public static final int WORK_DETAILS_SUCCESS = 0x23;
+	/**
+	 * 获取工作类型内容失败
+	 */
+	public static final int WORK_DETAILS_FAILED=0x24;
 
 	
 	//OnActivityFroResult StatusCode

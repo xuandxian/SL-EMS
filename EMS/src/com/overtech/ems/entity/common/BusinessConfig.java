@@ -83,7 +83,7 @@ public class BusinessConfig {
 	/**
 	 * 17.任务单（开始）--->指向最后一个界面
 	 */
-	public static final String URL_WORK_TYPE = "/workType.action";
+	public static final String URL_WORK_TYPE = "/task/workType.action";
 	/**
 	 * 18.维保清单完成
 	 */

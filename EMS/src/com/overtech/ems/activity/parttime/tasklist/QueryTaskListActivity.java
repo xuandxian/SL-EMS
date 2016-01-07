@@ -3,8 +3,9 @@ package com.overtech.ems.activity.parttime.tasklist;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,11 +15,18 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import com.google.gson.Gson;
 import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
+import com.overtech.ems.activity.adapter.PackageDetailAdapter;
 import com.overtech.ems.activity.adapter.TaskListDetailsAdapter;
+import com.overtech.ems.config.StatusCode;
+import com.overtech.ems.entity.bean.TaskPackageDetailBean;
+import com.overtech.ems.entity.bean.WorkTypeBean;
 import com.overtech.ems.entity.common.ServicesConfig;
+import com.overtech.ems.entity.parttime.MaintenanceType;
+import com.overtech.ems.entity.parttime.TaskPackageDetail;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.CustomProgressDialog;
@@ -29,9 +37,9 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class QueryTaskListActivity extends BaseActivity implements OnClickListener {
-	private CustomProgressDialog progressDialog = null;
 	private Context context;
 	private TextView mHeadContent;
 	private ImageView mHeadBack,mCallPhone;
@@ -46,6 +54,39 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 	 */
 	private boolean isAchieve=false;
 	private boolean isAllAchieve=false;
+	ArrayList<MaintenanceType> list=new ArrayList<MaintenanceType>();
+	
+	private Handler handler = new Handler() {
+		Gson gson=new Gson();
+		public void handleMessage(android.os.Message msg) {
+			switch (msg.what) {
+			case StatusCode.WORK_DETAILS_SUCCESS:
+				String json=(String) msg.obj;
+				WorkTypeBean bean=gson.fromJson(json, WorkTypeBean.class);
+				ArrayList<String> tempList=bean.getModel();
+				for (int i = 0; i < tempList.size(); i++) {
+					String allString=tempList.get(i);
+					String[] data=allString.split("\\|");
+					MaintenanceType type=new MaintenanceType(String.valueOf(i), data[0], data[1]);
+					list.add(type);
+				}
+				mTaskDetailsTitle.setVisibility(View.VISIBLE);
+				adapter = new TaskListDetailsAdapter(context, list);
+				mTaskListData.setAdapter(adapter);
+				break;
+			case StatusCode.WORK_DETAILS_FAILED:
+				Utilities.showToast("服务器异常", context);
+				break;
+			case StatusCode.RESPONSE_NET_FAILED:
+				Utilities.showToast("网络链接失败", context);
+				break;
+			default:
+				break;
+			}
+			stopProgressDialog();
+		};
+	};
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -81,7 +122,6 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 		Intent intent = getIntent();
 		Bundle bundle = intent.getExtras();
 		mWorktype = bundle.getString("mWorkType","").trim();
-		Utilities.showToast(mWorktype, this);
 	}
 	private void getData(){
 		String type="";
@@ -96,20 +136,27 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 		}else if (TextUtils.equals("年保",mWorktype)){
 			type="3";
 		}
+		startProgressDialog("正在加载...");
 		Param param = new Param(Constant.WORKTYPE, type);
 		final Request request = httpEngine.createRequest(ServicesConfig.WORK_TYPE, param);
 		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {
 			@Override
-			public void onFailure(Request request, IOException e) {
-
-			}
-
-			@Override
 			public void onResponse(Response response) throws IOException {
-				Log.e("QueryTaskListActivity",response.body().toString());
-
+				Message msg = new Message();
+				if (response.isSuccessful()) {
+					msg.what = StatusCode.WORK_DETAILS_SUCCESS;
+					msg.obj = response.body().string();
+				} else {
+					msg.what = StatusCode.WORK_DETAILS_FAILED;
+				}
+				handler.sendMessage(msg);
 			}
+			@Override
+			public void onFailure(Request request, IOException e) {
+				Log.e("QueryTaskListActivity:onFailure","onFailure");
+			}
+
 		});
 
 	}

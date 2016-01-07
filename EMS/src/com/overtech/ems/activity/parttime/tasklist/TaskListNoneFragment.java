@@ -74,7 +74,9 @@ public class TaskListNoneFragment extends BaseFragment implements IXListViewList
 			case StatusCode.TASKLIST_NONE_FAILED:
 				Utilities.showToast((String)msg.obj, mActivity);
 				break;
-
+			case StatusCode.RESPONSE_NET_FAILED:
+				Utilities.showToast("网络链接失败", mActivity);
+				break;
 			default:
 				break;
 			}
@@ -173,9 +175,8 @@ public class TaskListNoneFragment extends BaseFragment implements IXListViewList
 			
 			@Override
 			public void onFailure(Request arg0, IOException arg1) {
-				Message msg=new Message();
-				msg.what=StatusCode.TASKLIST_NONE_FAILED;
-				msg.obj="网络链接错误";
+				Message msg = new Message();
+				msg.what = StatusCode.RESPONSE_NET_FAILED;
 				handler.sendMessage(msg);
 			}
 		});
