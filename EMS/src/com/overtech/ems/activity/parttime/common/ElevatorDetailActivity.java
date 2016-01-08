@@ -80,6 +80,8 @@ public class ElevatorDetailActivity extends BaseActivity {
 						mDeviceAddress.setText(model.getString("deviceAddress"));
 						mAnnualInspectionDate.setText(model.getString("annualInspectionDate"));
 						mLastMaintenanceDate.setText(model.getString("lastMaintenanceDate"));
+						
+						stopProgressDialog();
 					}else{
 						Utilities.showToast("没有查询到电梯信息", mActivity);
 						stopProgressDialog();

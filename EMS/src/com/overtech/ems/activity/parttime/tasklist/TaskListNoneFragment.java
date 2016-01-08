@@ -123,8 +123,8 @@ public class TaskListNoneFragment extends BaseFragment implements IXListViewList
 						switch (index) {
 						case 0://导航
 							LatLng startPoint=adapter.getCurrentLocation();
-							LatLng endPoint=adapter.getDestination(position-1);//加header后，该处的position比adapter的position大
-							String endName=adapter.getDesName(position-1);//同上
+							LatLng endPoint=adapter.getDestination(position);
+							String endName=adapter.getDesName(position);
 							startNavicate(startPoint, endPoint,endName);
 							break;
 						case 1://t退单

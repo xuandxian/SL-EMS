@@ -206,6 +206,7 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 		popupWindow.setContentView(LayoutInflater.from(activity).inflate(R.layout.layout_tasklist_pop, null));
 		initUI();
 	}
+	//对popupWindow的ui进行初始化
 	private void initUI() {
 		popupWindow.getContentView().findViewById(R.id.ll_pop_1).setOnClickListener(//地图导航
 				new OnClickListener() {
@@ -225,6 +226,7 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 					}
 				});
 	}
+	//弹出popupWindow
 	protected void showPopupWindow(View v) {
 		
 		v.getLocationOnScreen(mLocation);
