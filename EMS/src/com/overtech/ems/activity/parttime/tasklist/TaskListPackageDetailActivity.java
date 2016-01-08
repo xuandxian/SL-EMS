@@ -12,6 +12,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -48,7 +50,7 @@ import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-public class TaskListPackageDetailActivity extends BaseActivity {
+public class TaskListPackageDetailActivity extends BaseActivity implements OnRefreshListener {
 	private ImageView mDoBack;
 	private ListView mTask;
 	private Button mCancle;
@@ -63,6 +65,8 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 	private LatLng mStartPoint;
 	private LatLng destination;
 	private String mDesName;
+	
+	private SwipeRefreshLayout mSwipeLayout;
 	private PackageDetailAdapter adapter;
 	private ArrayList<TaskPackageDetail> list;
 	/**
@@ -107,6 +111,10 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 			case StatusCode.PACKAGE_DETAILS_FAILED:
 				Utilities.showToast((String)msg.obj, mActivity);
 				break;
+			case 0x1:
+				Utilities.showToast("刷新完成", mActivity);
+				mSwipeLayout.setRefreshing(false);
+				break;
 
 			default:
 				break;
@@ -126,6 +134,9 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 
 	private void initEvent() {
 		mActivity = TaskListPackageDetailActivity.this;
+		mSwipeLayout.setOnRefreshListener(this);
+		mSwipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light,  
+                android.R.color.holo_orange_light, android.R.color.holo_red_light);
 		mDoBack.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -297,6 +308,12 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 		mDoMore.setVisibility(View.VISIBLE);
 		mTaskPackageName=(TextView) findViewById(R.id.tv_headTitle_community_name);
 		mTaskNo=(TextView) findViewById(R.id.tv_headTitle_taskno);
+		mSwipeLayout=(SwipeRefreshLayout) findViewById(R.id.srl_container);
+	}
+
+	@Override
+	public void onRefresh() {
+		handler.sendEmptyMessageDelayed(0x1, 2000);
 	}
 
 	
