@@ -81,5 +81,20 @@ public class Constant {
 	 * 工作类型
 	 */
 	public static final String WORKTYPE="workType";
-
+	/**
+	 * 扫描结果
+	 */
+	public static final String RESULT="result";
+	/**
+	 * 扫描图片
+	 */
+	public static final String BITMAP="bitmap";
+	/**
+	 * 电梯编号
+	 */
+	public static final String ELEVATORNO="elevatorNo";
+	/**
+	 * 技术支持电话
+	 */
+	public static final String ZONEPHONE="zonePhone";
 }

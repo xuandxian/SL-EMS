@@ -13,16 +13,10 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
-import com.baidu.location.LocationClientOption.LocationMode;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.parttime.tasklist.ScanCodeActivity;
 import com.overtech.ems.activity.parttime.tasklist.TaskListDonetFragment;
 import com.overtech.ems.activity.parttime.tasklist.TaskListNoneFragment;
-import com.overtech.ems.utils.Utilities;
 
 public class TaskListFragment extends Fragment implements OnClickListener {
 

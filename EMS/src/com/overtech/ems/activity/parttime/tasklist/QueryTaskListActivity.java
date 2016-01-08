@@ -44,6 +44,7 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 	private TextView mHeadContent;
 	private ImageView mHeadBack,mCallPhone;
 	private String mWorktype;
+	private String mZonePhone;
 	private ListView mTaskListData;
 	private View mListFooterView;
 	private Button mDone;
@@ -121,7 +122,8 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 	private void getExtraData() {
 		Intent intent = getIntent();
 		Bundle bundle = intent.getExtras();
-		mWorktype = bundle.getString("mWorkType","").trim();
+		mWorktype = bundle.getString(Constant.WORKTYPE,"").trim();
+		mZonePhone=bundle.getString(Constant.ZONEPHONE,"");
 	}
 	private void getData(){
 		String type="";
@@ -253,8 +255,7 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 			
 			break;
 		case R.id.iv_headTitleRight:
-			String phoneNo="15021565127";
-			Intent intent2 =new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+phoneNo));
+			Intent intent2 =new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+mZonePhone));
 			startActivity(intent2);
 			break;
 		default:

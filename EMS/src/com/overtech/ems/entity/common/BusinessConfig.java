@@ -67,7 +67,7 @@ public class BusinessConfig {
 	/**
 	 * 14.电梯详情
 	 */
-	public static final String URL_ELEVATOR_DETAIL = "/elevatorDetail.action";
+	public static final String URL_ELEVATOR_DETAIL = "/task/elevatorDetail.action";
 	/**
 	 * 15.任务单（退单）
 	 */

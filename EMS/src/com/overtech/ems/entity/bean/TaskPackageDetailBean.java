@@ -7,6 +7,13 @@ public class TaskPackageDetailBean {
 	private List<TaskPackageDetail> model;
 	private boolean success;
 	private String partnerPhone;
+	private String zonePhone;
+	public String getZonePhone() {
+		return zonePhone;
+	}
+	public void setZonePhone(String zonePhone) {
+		this.zonePhone = zonePhone;
+	}
 	public String getPartnerPhone() {
 		return partnerPhone;
 	}

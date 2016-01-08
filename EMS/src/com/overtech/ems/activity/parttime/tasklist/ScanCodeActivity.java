@@ -27,6 +27,7 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.parttime.common.ElevatorDetailActivity;
+import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.zxing.camera.CameraManager;
 import com.overtech.ems.widget.zxing.decoding.CaptureActivityHandler;
@@ -131,8 +132,8 @@ public class ScanCodeActivity extends Activity implements Callback {
 			Intent intent = new Intent(ScanCodeActivity.this,
 					ElevatorDetailActivity.class);
 			Bundle bundle = new Bundle();
-			bundle.putString("result", resultString);
-			bundle.putParcelable("bitmap", barcode);
+			bundle.putString(Constant.RESULT, resultString);
+			bundle.putParcelable(Constant.BITMAP, barcode);
 			intent.putExtras(bundle);
 			startActivity(intent);
 		}

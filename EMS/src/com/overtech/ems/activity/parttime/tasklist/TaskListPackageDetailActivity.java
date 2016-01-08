@@ -12,6 +12,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,6 +55,7 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 	private TextView mTaskPackageName;
 	private TextView mTaskNo;
 	private String mPhone;
+	private String mZonePhone;
 	private Context mActivity;
 	private Effectstype effect;
 	private ImageView mDoMore;
@@ -94,6 +96,7 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 				TaskPackageDetailBean bean=gson.fromJson(json, TaskPackageDetailBean.class);
 				list=(ArrayList<TaskPackageDetail>)bean.getModel();
 				mPhone=bean.getPartnerPhone();
+				mZonePhone=bean.getZonePhone();
 				if(list!=null){
 					adapter = new PackageDetailAdapter(context, list);
 					mTask.setAdapter(adapter);
@@ -136,7 +139,8 @@ public class TaskListPackageDetailActivity extends BaseActivity {
 				String workType=detail.getWorkType();
 				Intent intent = new Intent(context, QueryTaskListActivity.class);
 				Bundle bundle = new Bundle();
-				bundle.putString("mWorkType", workType);
+				bundle.putString(Constant.WORKTYPE, workType);
+				bundle.putString(Constant.ZONEPHONE, mZonePhone);
 				intent.putExtras(bundle);
 				startActivity(intent);
 			}

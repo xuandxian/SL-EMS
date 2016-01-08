@@ -112,6 +112,8 @@ public class TaskListNoneFragment extends BaseFragment implements IXListViewList
 		initListView();
 		mSwipeListView.setMenuCreator(creator);
 		mSwipeListView.setXListViewListener(this);
+		mSwipeListView.setPullRefreshEnable(true);
+		mSwipeListView.setPullLoadEnable(true);
 		mSwipeListView
 				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 

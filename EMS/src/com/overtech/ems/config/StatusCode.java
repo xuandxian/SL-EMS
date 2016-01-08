@@ -66,6 +66,14 @@ public class StatusCode {
 	 */
 	public static final int WORK_DETAILS_FAILED=0x24;
 
+	/**
+	 * 获取电梯详情成功
+	 */
+	public static final int ELEVATOR_SUCCESS=0x25;
+	/**
+	 * 获取电梯详情失败
+	 */
+	public static final int ELEVATOR_FAILED=0x26;
 	
 	//OnActivityFroResult StatusCode
 

@@ -238,7 +238,7 @@ public class PullToRefreshSwipeMenuListView extends ListView implements OnScroll
             break;
         case MotionEvent.ACTION_UP:
             mLastY = -1; // reset
-            if (mEnablePullLoad && mFooterView.getBottomMargin() > PULL_LOAD_MORE_DELTA) {
+            if (mEnablePullLoad && mFooterView.getHeight()>0 && mFooterView.getBottomMargin() > PULL_LOAD_MORE_DELTA) {
                 startLoadMore();
                 resetFooterHeight();
                 new ResetHeaderHeightTask().execute();
