@@ -26,10 +26,9 @@
         android:id="@+id/title_type"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
         android:layout_weight="3"
         android:gravity="center"
-        android:text="维保内容1" />
+        android:text="维保内容" />
 
     <View
         android:layout_width="1dp"
@@ -40,10 +39,9 @@
         android:id="@+id/title_content"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
         android:layout_weight="3"
         android:gravity="center"
-        android:text="维保内容基本要求12" />
+        android:text="维保内容基本要求" />
 
     <View
         android:layout_width="1dp"
