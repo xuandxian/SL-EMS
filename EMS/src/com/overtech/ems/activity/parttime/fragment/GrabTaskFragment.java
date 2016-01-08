@@ -57,8 +57,7 @@ import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-public class GrabTaskFragment extends BaseFragment implements
-		IXListViewListener {
+public class GrabTaskFragment extends BaseFragment implements IXListViewListener {
 
 	private PullToRefreshSwipeMenuListView mSwipeListView;
 	private SwipeMenuCreator creator;
@@ -70,21 +69,16 @@ public class GrabTaskFragment extends BaseFragment implements
 	private GrabTaskAdapter mAdapter;
 	private ArrayList<TaskPackage> list;
 	private TextView mHeadTitle;
-
 	public LatLng myLocation;
-
 	public LocationClient mLocationClient = null;
-
 	public BDLocationListener myListener = new MyLocationListener();
-
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			Gson gson = new Gson();
 			switch (msg.what) {
-			case StatusCode.GRAB_SUCCESS:
+			case StatusCode.GRAB_GET_DATA_SUCCESS:
 				String json = (String) msg.obj;
-				TaskPackageBean tasks = gson.fromJson(json,
-						TaskPackageBean.class);
+				TaskPackageBean tasks = gson.fromJson(json,TaskPackageBean.class);
 				list = (ArrayList<TaskPackage>) tasks.getModel();
 				if (null == myLocation) {
 					Utilities.showToast("定位失败", context);
@@ -92,15 +86,13 @@ public class GrabTaskFragment extends BaseFragment implements
 				}
 				mAdapter = new GrabTaskAdapter(list, myLocation, mActivity);
 				mSwipeListView.setAdapter(mAdapter);
-				onLoad();
 				break;
-			case StatusCode.GRAB_FAILED:
-				Utilities.showToast("请求失败", context);
+			case StatusCode.GRAB_GET_DATA_FAILED:
+				Utilities.showToast("服务器异常", context);
 				break;
 			case StatusCode.GRAG_RESPONSE_SUCCESS:
 				String status = (String) msg.obj;
-				StatusCodeBean bean = gson.fromJson(status,
-						StatusCodeBean.class);
+				StatusCodeBean bean = gson.fromJson(status,StatusCodeBean.class);
 				String content = bean.getModel();
 				if (TextUtils.equals(content, "0")) {
 					Utilities.showToast("请不要重复抢单", context);
@@ -112,15 +104,14 @@ public class GrabTaskFragment extends BaseFragment implements
 					Utilities.showToast("差一点就抢到了", context);
 				}
 				break;
+			case StatusCode.GRAG_RESPONSE_OTHER_FAILED:
+				Utilities.showToast("服务器异常", context);
+				break;
 			case StatusCode.RESPONSE_NET_FAILED:
 				Utilities.showToast("网络异常", context);
 				break;
-			case StatusCode.GRAG_RESPONSE_OTHER_FAILED:
-				Utilities.showToast("网络异常", context);
-				break;
-			default:
-				break;
 			}
+			onLoad();
 			stopProgressDialog();
 		};
 	};
@@ -132,10 +123,8 @@ public class GrabTaskFragment extends BaseFragment implements
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_grab_task, container,
-				false);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.fragment_grab_task, container,false);
 		initBaiDuLocation();
 		findViewById(view);
 		init();
@@ -155,8 +144,7 @@ public class GrabTaskFragment extends BaseFragment implements
 	}
 
 	private void findViewById(View view) {
-		mSwipeListView = (PullToRefreshSwipeMenuListView) view
-				.findViewById(R.id.sl_qiandan_listview);
+		mSwipeListView = (PullToRefreshSwipeMenuListView) view.findViewById(R.id.sl_qiandan_listview);
 		mHeadTitle = (TextView) view.findViewById(R.id.tv_headTitle);
 	}
 
@@ -168,11 +156,8 @@ public class GrabTaskFragment extends BaseFragment implements
 				Log.e("GrabTaskFragment", "定位失败");
 				return;
 			}
-			Log.e("GrabTaskFragment", "定位成功");
-			myLocation = new LatLng(location.getLatitude(),
-					location.getLongitude());
-			Log.e("GrabTaskFragment", "location:" + "(" + myLocation.latitude
-					+ "," + myLocation.longitude + ")");
+			myLocation = new LatLng(location.getLatitude(),location.getLongitude());
+			Log.e("GrabTaskFragment", "location:" + "(" + myLocation.latitude+ "," + myLocation.longitude + ")");
 			initData(ServicesConfig.GRABTASK, "0");
 		}
 	}
@@ -184,7 +169,6 @@ public class GrabTaskFragment extends BaseFragment implements
 			mSwipeListView.setFooterViewInvisible();
 			mSwipeListView.setPullRefreshEnable(false);
 		}
-
 		Request request = httpEngine.createRequest(url, params);
 		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {
@@ -193,18 +177,17 @@ public class GrabTaskFragment extends BaseFragment implements
 			public void onResponse(Response response) throws IOException {
 				Message msg = new Message();
 				if (response.isSuccessful()) {
-					msg.what = StatusCode.GRAB_SUCCESS;
+					msg.what = StatusCode.GRAB_GET_DATA_SUCCESS;
 					msg.obj = response.body().string();
 				} else {
-					msg.what = StatusCode.GRAB_FAILED;
+					msg.what = StatusCode.GRAB_GET_DATA_FAILED;
 				}
 				handler.sendMessage(msg);
 			}
-
 			@Override
 			public void onFailure(Request request, IOException e) {
 				Message msg = new Message();
-				msg.what = StatusCode.GRAB_FAILED;
+				msg.what = StatusCode.RESPONSE_NET_FAILED;
 				handler.sendMessage(msg);
 			}
 		});
@@ -219,32 +202,24 @@ public class GrabTaskFragment extends BaseFragment implements
 		mSwipeListView.setPullRefreshEnable(true);
 		mSwipeListView.setPullLoadEnable(true);
 		mSwipeListView.setXListViewListener(this);
-		mHeadView = LayoutInflater.from(mActivity).inflate(
-				R.layout.listview_header_filter, null);
+		mHeadView = LayoutInflater.from(mActivity).inflate(R.layout.listview_header_filter, null);
 		mHeadView.setOnClickListener(null);
 		mSwipeListView.addHeaderView(mHeadView);
-		mPartTimeDoFifter = (LinearLayout) mHeadView
-				.findViewById(R.id.ll_grab_task);
-		mKeyWordSearch = (TextView) mHeadView
-				.findViewById(R.id.et_do_parttime_search);
-		mSwipeListView
-				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+		mPartTimeDoFifter = (LinearLayout) mHeadView.findViewById(R.id.ll_grab_task);
+		mKeyWordSearch = (TextView) mHeadView.findViewById(R.id.et_do_parttime_search);
+		mSwipeListView.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
 					@Override
-					public void onMenuItemClick(int position, SwipeMenu menu,
-							int index) {
+					public void onMenuItemClick(int position, SwipeMenu menu,int index) {
 						showDialog(position);
 					}
 				});
 		mSwipeListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				TaskPackage data = (TaskPackage) parent
-						.getItemAtPosition(position);
-				Intent intent = new Intent(mActivity,
-						PackageDetailActivity.class);
+			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+				TaskPackage data = (TaskPackage) parent.getItemAtPosition(position);
+				Intent intent = new Intent(mActivity,PackageDetailActivity.class);
 				Bundle bundle = new Bundle();
 				bundle.putString("CommunityName", data.getTaskPackageName());
 				bundle.putString("TaskNo", data.getTaskNo());
@@ -258,8 +233,7 @@ public class GrabTaskFragment extends BaseFragment implements
 
 			@Override
 			public void onClick(View arg0) {
-				Intent intent = new Intent(mActivity,
-						GrabTaskDoFilterActivity.class);
+				Intent intent = new Intent(mActivity,GrabTaskDoFilterActivity.class);
 				startActivityForResult(intent, StatusCode.RESULT_GRAB_DO_FILTER);
 			}
 		});
@@ -268,8 +242,7 @@ public class GrabTaskFragment extends BaseFragment implements
 
 			@Override
 			public void onClick(View arg0) {
-				Intent intent = new Intent(mActivity,
-						KeyWordSerachActivity.class);
+				Intent intent = new Intent(mActivity,KeyWordSerachActivity.class);
 				startActivityForResult(intent, StatusCode.RESULT_GRAB_DO_SEARCH);
 			}
 		});
@@ -279,8 +252,7 @@ public class GrabTaskFragment extends BaseFragment implements
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == StatusCode.RESULT_GRAB_DO_FILTER
-				&& resultCode == Activity.RESULT_OK) {
+		if (requestCode == StatusCode.RESULT_GRAB_DO_FILTER&& resultCode == Activity.RESULT_OK) {
 			String mZone = data.getStringExtra("mZone");
 			String mTime = data.getStringExtra("mTime");
 			Param zoneParam = new Param(Constant.FILTERZONE, mZone);
@@ -292,8 +264,7 @@ public class GrabTaskFragment extends BaseFragment implements
 				mAdapter.notifyDataSetChanged();
 			}
 			initData(ServicesConfig.DO_FILTER, "2", zoneParam, timeParam);
-		} else if (requestCode == StatusCode.RESULT_GRAB_DO_SEARCH
-				&& resultCode == Activity.RESULT_OK) {
+		} else if (requestCode == StatusCode.RESULT_GRAB_DO_SEARCH&& resultCode == Activity.RESULT_OK) {
 			String keyWord = data.getStringExtra("mKeyWord");
 			Param keyWordParam = new Param(Constant.KEYWORD, keyWord);
 			if (list != null) {
@@ -311,8 +282,7 @@ public class GrabTaskFragment extends BaseFragment implements
 			@Override
 			public void create(SwipeMenu menu) {
 				SwipeMenuItem openItem = new SwipeMenuItem(mActivity);
-				openItem.setBackground(new ColorDrawable(Color.rgb(0xFF, 0x3A,
-						0x30)));
+				openItem.setBackground(new ColorDrawable(Color.rgb(0xFF, 0x3A,0x30)));
 				openItem.setWidth(dp2px(90));
 				openItem.setTitle("抢");
 				openItem.setTitleSize(18);
@@ -334,13 +304,11 @@ public class GrabTaskFragment extends BaseFragment implements
 	}
 
 	private void onLoad() {
-		SimpleDateFormat df = new SimpleDateFormat("MM-dd HH:mm",
-				Locale.getDefault());
+		SimpleDateFormat df = new SimpleDateFormat("MM-dd HH:mm",Locale.getDefault());
 		RefreshTime.setRefreshTime(mActivity, df.format(new Date()));
 		mSwipeListView.setRefreshTime(RefreshTime.getRefreshTime(mActivity));
 		mSwipeListView.stopRefresh();
 		mSwipeListView.stopLoadMore();
-		Utilities.showToast("刷新完毕", mActivity);
 	}
 
 	public class BDLocationListenerImpl implements BDLocationListener {
@@ -353,8 +321,7 @@ public class GrabTaskFragment extends BaseFragment implements
 			double mLatitude = location.getLatitude();
 			double mLongitude = location.getLongitude();
 			Log.e("经纬度", "经纬度：" + "(" + mLongitude + "," + mLatitude + ")");
-			myLocation = new LatLng(location.getLatitude(),
-					location.getLongitude());
+			myLocation = new LatLng(location.getLatitude(),location.getLongitude());
 		}
 	}
 
@@ -378,22 +345,18 @@ public class GrabTaskFragment extends BaseFragment implements
 					public void onClick(View v) {
 						dialogBuilder.dismiss();
 						startProgressDialog("正在抢单...");
-						String mLoginName = mSharedPreferences.getString(
-								SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
+						String mLoginName = mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
 						String mTaskNo = list.get(position).getTaskNo();
-						Param paramPhone = new Param(Constant.LOGINNAME,
-								mLoginName);
+						Param paramPhone = new Param(Constant.LOGINNAME,mLoginName);
 						Param paramTaskNo = new Param(Constant.TASKNO, mTaskNo);
-						Request request = httpEngine.createRequest(
-								ServicesConfig.Do_GRABTASK, paramPhone,
-								paramTaskNo);
+						Request request = httpEngine.createRequest(ServicesConfig.Do_GRABTASK, paramPhone,paramTaskNo);
 						Call call = httpEngine.createRequestCall(request);
 						call.enqueue(new Callback() {
 
 							@Override
 							public void onFailure(Request request, IOException e) {
 								Message msg = new Message();
-								msg.what = StatusCode.GRAG_RESPONSE_OTHER_FAILED;
+								msg.what = StatusCode.RESPONSE_NET_FAILED;
 								handler.sendMessage(msg);
 							}
 
@@ -405,7 +368,7 @@ public class GrabTaskFragment extends BaseFragment implements
 									msg.what = StatusCode.GRAG_RESPONSE_SUCCESS;
 									msg.obj = response.body().string();
 								} else {
-									msg.what = StatusCode.RESPONSE_NET_FAILED;
+									msg.what = StatusCode.GRAG_RESPONSE_OTHER_FAILED;
 								}
 								handler.sendMessage(msg);
 							}
@@ -424,7 +387,6 @@ public class GrabTaskFragment extends BaseFragment implements
 	}
 
 	private int dp2px(int dp) {
-		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
-				getResources().getDisplayMetrics());
+		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,getResources().getDisplayMetrics());
 	}
 }

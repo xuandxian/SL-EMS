@@ -11,8 +11,8 @@ public class StatusCode {
 	public static final int LOGIN_NOT_EXIST=0x04;
 	
 	// 抢单
-	public static final int GRAB_FAILED = 0x05;
-	public static final int GRAB_SUCCESS = 0x06;
+	public static final int GRAB_GET_DATA_FAILED = 0x05;
+	public static final int GRAB_GET_DATA_SUCCESS = 0x06;
 	public static final int GRAG_RESPONSE_SUCCESS = 0x07;
 	public static final int GRAG_RESPONSE_OTHER_FAILED = 0x08;
 	public static final int KEYWORDS_SUCCESS = 0x09;
