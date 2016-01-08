@@ -12,6 +12,7 @@ import com.overtech.ems.activity.parttime.fragment.GrabTaskFragment;
 import com.overtech.ems.activity.parttime.fragment.NearByFragment;
 import com.overtech.ems.activity.parttime.fragment.TaskListFragment;
 import com.overtech.ems.activity.parttime.fragment.PersonalZoneFragment;
+import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -28,10 +29,10 @@ public class MainActivity extends BaseActivity {
 	private RadioButton mHomeFindRb;
 	private RadioButton mHomeSearchRb;
 	private RadioButton mHomeProfileRb;
-	private Fragment mGrabTaskFragment;
-	private Fragment mTaskListFragment;
-	private Fragment mPersonalZoneFragment;
-	private Fragment mNearByFragment;
+	private GrabTaskFragment mGrabTaskFragment;
+	private TaskListFragment mTaskListFragment;
+	private PersonalZoneFragment mPersonalZoneFragment;
+	private NearByFragment mNearByFragment;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -59,28 +60,28 @@ public class MainActivity extends BaseActivity {
 
 	private void initEvents() {
 		mHomeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-					@Override
-					public void onCheckedChanged(RadioGroup group, int checkedId) {
-						switch (checkedId) {
-						case R.id.mHomeHomeRb:
-							mGrabTaskFragment = new GrabTaskFragment();
-							switchFragment(mGrabTaskFragment);
-							break;
-						case R.id.mHomeFindRb:
-							mNearByFragment = new NearByFragment();
-							switchFragment(mNearByFragment);
-							break;
-						case R.id.mHomeSearchRb:
-							mTaskListFragment = new TaskListFragment();
-							switchFragment(mTaskListFragment);
-							break;
-						case R.id.mHomeProfileRb:
-							mPersonalZoneFragment = new PersonalZoneFragment();
-							switchFragment(mPersonalZoneFragment);
-							break;
-						}
-					}
-				});
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				switch (checkedId) {
+					case R.id.mHomeHomeRb:
+						mGrabTaskFragment = new GrabTaskFragment();
+						switchFragment(mGrabTaskFragment);
+						break;
+					case R.id.mHomeFindRb:
+						mNearByFragment = new NearByFragment();
+						switchFragment(mNearByFragment);
+						break;
+					case R.id.mHomeSearchRb:
+						mTaskListFragment = new TaskListFragment();
+						switchFragment(mTaskListFragment);
+						break;
+					case R.id.mHomeProfileRb:
+						mPersonalZoneFragment = new PersonalZoneFragment();
+						switchFragment(mPersonalZoneFragment);
+						break;
+				}
+			}
+		});
 	}
 	
 	public void switchFragment(Fragment mFragment) {

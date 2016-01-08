@@ -122,6 +122,10 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 		mActivity = activity;
 	}
 
+	public void reflush(){
+
+	}
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_grab_task, container,false);
@@ -293,8 +297,7 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 	}
 
 	public void onRefresh() {
-		Utilities.showToast("下拉刷新", mActivity);
-		initData(ServicesConfig.GRABTASK, "1");
+		initData(ServicesConfig.GRABTASK, "0");
 	}
 
 	public void onLoadMore() {
@@ -303,7 +306,7 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 		mSwipeListView.stopLoadMore();
 	}
 
-	private void onLoad() {
+	public void onLoad() {
 		SimpleDateFormat df = new SimpleDateFormat("MM-dd HH:mm",Locale.getDefault());
 		RefreshTime.setRefreshTime(mActivity, df.format(new Date()));
 		mSwipeListView.setRefreshTime(RefreshTime.getRefreshTime(mActivity));
