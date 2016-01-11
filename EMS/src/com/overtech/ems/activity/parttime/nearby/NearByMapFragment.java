@@ -145,8 +145,7 @@ public class NearByMapFragment extends BaseFragment {
 		} else {
 			return;
 		}
-//		setMyLocationMarker(myLocation);
-		if (dataList.size() == 0) {
+		if (null==dataList||dataList.size() == 0) {
 			Utilities.showToast("无数据", context);
 		} else {
 			if (null != clickLocation) {
