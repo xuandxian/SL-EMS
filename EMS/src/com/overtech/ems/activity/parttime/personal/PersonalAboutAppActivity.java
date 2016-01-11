@@ -7,6 +7,8 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.onekeyshare.OnekeyShare;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
@@ -62,10 +64,27 @@ public class PersonalAboutAppActivity extends BaseActivity implements OnClickLis
 			startActivity(intent);
 			break;
 		case R.id.rl_share:
-			
+			showShare();
 			break;
 		default:
 			break;
 		}
+	}
+	private void showShare() {
+		ShareSDK.initSDK(this);
+		OnekeyShare oks = new OnekeyShare();
+		oks.disableSSOWhenAuthorize();
+		oks.setTitle("分享");
+		// titleUrl是标题的网络链接，仅在人人网和QQ空间使用
+		oks.setTitleUrl("http://fir.im/SSDKShareDemo");
+		// text是分享文本，所有平台都需要这个字段
+		oks.setText("点击http://fir.im/SSDKShareDemo，可以下载App");
+		// url仅在微信（包括好友和朋友圈）中使用
+		oks.setUrl("http://fir.im/SSDKShareDemo");
+		// siteUrl是分享此内容的网站地址，仅在QQ空间使用
+		oks.setSiteUrl("http://fir.im/SSDKShareDemo");
+		oks.setVenueName("24梯");
+		// 启动分享GUI
+		oks.show(this);
 	}
 }

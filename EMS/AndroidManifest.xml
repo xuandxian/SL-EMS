@@ -26,10 +26,10 @@
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
-<uses-permission android:name="android.permission.FLASHLIGHT"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
@@ -56,8 +56,9 @@
             android:name="com.overtech.ems.activity.common.LoginActivity"
             android:launchMode="singleTask" >
         </activity>
-        <activity android:name="com.overtech.ems.activity.parttime.MainActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <activity
+            android:name="com.overtech.ems.activity.parttime.MainActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name="com.overtech.ems.activity.common.LostPasswordActivity" />
         <activity android:name="com.overtech.ems.activity.common.ResetPasswordActivity" />
         <activity android:name="com.overtech.ems.activity.common.ResetPasswordSuccessActivity" />
@@ -79,15 +80,43 @@
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.EvaluationActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.TaskListPackageDetailActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.nearby.TaskPackageListActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalCancleListActivity"/>
-        <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalHelpDocActivity"/>
-        <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAnnouncementActivity"/>
-        <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAnnouncementDetailActivity"/>
-        <activity android:name="com.overtech.ems.activity.parttime.common.ShowCommunityLocationActivity"/>
-		<activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAboutAppActivity"/>
-        <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAboutCompanyActivity"/>
-        <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAppDeveloperActivity"/>
-        <activity android:name="com.overtech.ems.activity.common.RegisterSuccessActivity"/>
+        <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalCancleListActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalHelpDocActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAnnouncementActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAnnouncementDetailActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.common.ShowCommunityLocationActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAboutAppActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAboutCompanyActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAppDeveloperActivity" />
+        <activity android:name="com.overtech.ems.activity.common.RegisterSuccessActivity" />
+        <activity
+            android:name="com.mob.tools.MobUIShell"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden|adjustResize" >
+            <intent-filter>
+                <data android:scheme="tencent100371282" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <!-- 调用新浪原生SDK，需要注册的回调activity -->
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!-- 微信分享回调 -->
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     </application>
 
 </manifest>
