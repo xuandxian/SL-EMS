@@ -175,7 +175,7 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 			this.finish();
 			break;
 		case R.id.rl_change_phoneNo:
-			Intent intent = new Intent(PersonalDeatilsActivity.this,ChangePhoneNoVCActivity.class);
+			Intent intent = new Intent(PersonalDeatilsActivity.this,ChangePhoneNoValidatePasswordActivity.class);
 			String phone=mPhone.getText().toString();
 			intent.putExtra("phone", phone);
 			startActivity(intent);

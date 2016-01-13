@@ -8,12 +8,16 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.widget.EditTextWithDelete;
-
-public class ChangePhoneNoVCActivity extends BaseActivity implements OnClickListener {
+/*
+ *修改手机号功能（验证登录密码）
+ *@author Tony
+ *@date change on 2016-01-13
+ *
+ */
+public class ChangePhoneNoValidatePasswordActivity extends BaseActivity implements OnClickListener {
 	private TextView mHeadContent;
 	private ImageView mDoBack;
 	private Button mNextContent;

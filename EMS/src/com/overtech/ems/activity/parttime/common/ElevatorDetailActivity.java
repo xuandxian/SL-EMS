@@ -50,8 +50,7 @@ public class ElevatorDetailActivity extends BaseActivity {
 	private TextView mDeviceAddress;
 	private TextView mAnnualInspectionDate;
 	private TextView mLastMaintenanceDate;
-	
-	private String mScanResult;
+	private String sElevatorNo;
 	private Handler handler=new Handler(){
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -136,7 +135,7 @@ public class ElevatorDetailActivity extends BaseActivity {
 
 	private void init() {
 		Bundle bundle=getIntent().getExtras();
-		mScanResult=bundle.getString(Constant.RESULT);
+		sElevatorNo=bundle.getString(Constant.RESULT);
 		mGoBack.setVisibility(View.VISIBLE);
 		mHeadContent.setText("电梯详情");
 		mGoBack.setOnClickListener(new OnClickListener() {
@@ -152,7 +151,7 @@ public class ElevatorDetailActivity extends BaseActivity {
 	private void startLoading() {
 		// TODO Auto-generated method stub
 		startProgressDialog("正在加载数据");
-		Param param=new Param(Constant.ELEVATORNO,"dt0001");
+		Param param=new Param(Constant.ELEVATORNO,sElevatorNo);
 		Request request=httpEngine.createRequest(ServicesConfig.ELEVATOR_DETAIL, param);
 		Call call=httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {

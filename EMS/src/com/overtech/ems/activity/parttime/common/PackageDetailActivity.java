@@ -34,6 +34,13 @@ import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
+/*
+ *任务包详情
+ * @author Tony
+ * @date 2016-01-13
+ * 
+ */
+
 public class PackageDetailActivity extends BaseActivity {
 	private ListView mPackageDetailListView;
 	private PackageDetailAdapter adapter;
@@ -83,10 +90,8 @@ public class PackageDetailActivity extends BaseActivity {
 				Utilities.showToast("网络异常", context);
 				mGrabTaskBtn.setText("抢单(￥" + String.valueOf(totalPrice) + "元)");
 				break;
-			case StatusCode.GRAG_RESPONSE_OTHER_FAILED:
-				Utilities.showToast("请求失败", context);
-				break;
-			default:
+			case StatusCode.RESPONSE_SERVER_EXCEPTION:
+				Utilities.showToast("服务端异常", context);
 				break;
 			}
 			stopProgressDialog();
@@ -139,7 +144,7 @@ public class PackageDetailActivity extends BaseActivity {
 					msg.what = StatusCode.PACKAGE_DETAILS_SUCCESS;
 					msg.obj = response.body().string();
 				} else {
-					msg.what = StatusCode.RESPONSE_NET_FAILED;
+					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
 				}
 				handler.sendMessage(msg);
 			}
@@ -151,20 +156,21 @@ public class PackageDetailActivity extends BaseActivity {
 				handler.sendMessage(msg);
 			}
 		});
-
 	}
 
 	private void init() {
 		mHeadTitleCommunity.setText(mCommunityName);
 		mHeadTitleTaskNo.setText(mTaskNo);
-		mPackageDetailListView
-				.setOnItemClickListener(new OnItemClickListener() {
+		mPackageDetailListView.setOnItemClickListener(new OnItemClickListener() {
 
 					@Override
-					public void onItemClick(AdapterView<?> parent, View view,
-							int position, long id) {
-						Intent intent = new Intent(PackageDetailActivity.this,
-								ElevatorDetailActivity.class);
+					public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+						TaskPackageDetail data=(TaskPackageDetail)parent.getItemAtPosition(position);
+						String elevatorNo=data.getElevatorNo();
+						Intent intent = new Intent(PackageDetailActivity.this,ElevatorDetailActivity.class);
+						Bundle bundle=new Bundle();
+						bundle.putString(Constant.RESULT, elevatorNo);
+						intent.putExtras(bundle);
 						startActivity(intent);
 					}
 				});
@@ -231,7 +237,7 @@ public class PackageDetailActivity extends BaseActivity {
 							@Override
 							public void onFailure(Request request, IOException e) {
 								Message msg = new Message();
-								msg.what = StatusCode.GRAG_RESPONSE_OTHER_FAILED;
+								msg.what = StatusCode.RESPONSE_NET_FAILED;
 								handler.sendMessage(msg);
 							}
 
@@ -243,7 +249,7 @@ public class PackageDetailActivity extends BaseActivity {
 									msg.what = StatusCode.GRAG_RESPONSE_SUCCESS;
 									msg.obj = response.body().string();
 								} else {
-									msg.what = StatusCode.RESPONSE_NET_FAILED;
+									msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
 								}
 								handler.sendMessage(msg);
 							}

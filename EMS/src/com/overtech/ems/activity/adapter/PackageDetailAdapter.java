@@ -15,7 +15,8 @@ public class PackageDetailAdapter extends BaseAdapter {
 	private Context context;
 	private ArrayList<TaskPackageDetail> list = new ArrayList<TaskPackageDetail>();
 
-	public PackageDetailAdapter(Context context, ArrayList<TaskPackageDetail> list) {
+	public PackageDetailAdapter(Context context,
+			ArrayList<TaskPackageDetail> list) {
 		super();
 		this.context = context;
 		this.list = list;
@@ -23,7 +24,7 @@ public class PackageDetailAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		return list.size();
+		return list.size() == 0 ? 0 : list.size();
 	}
 
 	@Override
@@ -60,7 +61,7 @@ public class PackageDetailAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		holder.mElevtorName.setText(data.getElevatorName());
-		holder.mWorkType.setText("("+data.getWorkType()+")");
+		holder.mWorkType.setText("(" + data.getWorkType() + ")");
 		holder.mElevtorProductor.setText(data.getElevatorBrand());
 		holder.mElevtorNo.setText(data.getElevatorNo());
 		holder.mElevtorType.setText(data.getElevatorFloor());
