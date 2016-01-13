@@ -80,5 +80,6 @@
     <color name="result_view">#b0000000</color>
     <color name="viewfinder_mask">#60000000</color>
     <color name="possible_result_points">#c0ffff00</color>
-
+    <!-- 任务包详情中电梯完成状态的背景色 -->
+	<color name="package_detail">#72d97d</color>
 </resources>

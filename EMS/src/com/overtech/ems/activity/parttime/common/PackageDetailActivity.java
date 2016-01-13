@@ -58,8 +58,12 @@ public class PackageDetailActivity extends BaseActivity {
 				String json = (String) msg.obj;
 				TaskPackageDetailBean tasks = gson.fromJson(json,TaskPackageDetailBean.class);
 				list = (ArrayList<TaskPackageDetail>) tasks.getModel();
-				adapter = new PackageDetailAdapter(context, list);
-				mPackageDetailListView.setAdapter(adapter);
+				if(null==list||list.size()==0){
+					Utilities.showToast("程序员哥哥正在努力抢修中...", context);
+				}else{
+					adapter = new PackageDetailAdapter(context, list);
+					mPackageDetailListView.setAdapter(adapter);
+				}
 				for (int i = 0; i < list.size(); i++) {
 					totalPrice += Integer.valueOf(list.get(i).getMaintainPrice());
 				}

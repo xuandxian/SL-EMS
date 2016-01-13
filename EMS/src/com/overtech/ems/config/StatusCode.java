@@ -74,6 +74,14 @@ public class StatusCode {
 	 * 获取电梯详情失败
 	 */
 	public static final int ELEVATOR_FAILED=0x26;
+	/**
+	 * 获取电梯完成状态成功
+	 */
+	public static final int MAINTENANCE_COMPLETE_SUCCESS=0x30;
+	/**
+	 * 获取电梯完成状态失败
+	 */
+	public static final int MAINTENENCE_COMPLETE_FAILED=0x31;
 	
 	//OnActivityFroResult StatusCode
 
@@ -81,5 +89,9 @@ public class StatusCode {
 	public static final int RESULT_GRAB_DO_FILTER = 0x50;
 	public static final int RESULT_GRAB_DO_SEARCH = 0x51;
 
+	/**
+	 * 任务包详情-->维保清单
+	 */
+	public static final int RESULT_TASKLIST_PACKAGEDETAIL=0x60;
 	
 }

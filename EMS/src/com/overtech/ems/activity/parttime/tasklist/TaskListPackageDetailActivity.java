@@ -43,6 +43,7 @@ import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.TaskPackageDetail;
 import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.squareup.okhttp.Call;
@@ -58,6 +59,8 @@ public class TaskListPackageDetailActivity extends BaseActivity implements OnRef
 	private TextView mTaskNo;
 	private String mPhone;
 	private String mZonePhone;
+	private String taskNo;
+	private String mLoginName;
 	private Context mActivity;
 	private Effectstype effect;
 	private ImageView mDoMore;
@@ -101,26 +104,23 @@ public class TaskListPackageDetailActivity extends BaseActivity implements OnRef
 				list=(ArrayList<TaskPackageDetail>)bean.getModel();
 				mPhone=bean.getPartnerPhone();
 				mZonePhone=bean.getZonePhone();
-				if(list!=null){
+				if(null==list||list.size()==0){
+					Utilities.showToast("试试重新打开该页面", mActivity);
+				}else{
 					adapter = new PackageDetailAdapter(context, list);
 					mTask.setAdapter(adapter);
-				}else{
-					Utilities.showToast("试试重新打开该页面", mActivity);
 				}
 				break;
 			case StatusCode.PACKAGE_DETAILS_FAILED:
 				Utilities.showToast((String)msg.obj, mActivity);
 				break;
-			case 0x1:
-				Utilities.showToast("刷新完成", mActivity);
-				mSwipeLayout.setRefreshing(false);
-				break;
-
 			default:
 				break;
 			}
+			mSwipeLayout.setRefreshing(false);
 		};
 	};
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -146,14 +146,25 @@ public class TaskListPackageDetailActivity extends BaseActivity implements OnRef
 		mTask.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				TaskPackageDetail detail =(TaskPackageDetail)parent.getItemAtPosition(position);
-				String workType=detail.getWorkType();
-				Intent intent = new Intent(context, QueryTaskListActivity.class);
-				Bundle bundle = new Bundle();
-				bundle.putString(Constant.WORKTYPE, workType);
-				bundle.putString(Constant.ZONEPHONE, mZonePhone);
-				intent.putExtras(bundle);
-				startActivity(intent);
+				if(adapter.isAllCompleted()){
+					Intent intent =new Intent(context,QuestionResponseActivity.class);
+					startActivity(intent);
+				}else{
+					TaskPackageDetail detail =(TaskPackageDetail)parent.getItemAtPosition(position);
+					String workType=detail.getWorkType();
+					if(detail.getIsFinish().equals("1")){
+						Utilities.showToast("你好，该电梯已经完成", mActivity);
+					}else{
+						Intent intent = new Intent(context, QueryTaskListActivity.class);
+						Bundle bundle = new Bundle();
+						bundle.putString(Constant.WORKTYPE, workType);
+						bundle.putString(Constant.ZONEPHONE, mZonePhone);
+						bundle.putString(Constant.TASKNO, taskNo);
+						bundle.putString(Constant.ELEVATORNO, detail.getElevatorNo());
+						intent.putExtras(bundle);
+						startActivityForResult(intent, StatusCode.RESULT_TASKLIST_PACKAGEDETAIL);
+					}
+				}
 			}
 		});
 		mCancle.setOnClickListener(new OnClickListener() {
@@ -267,12 +278,20 @@ public class TaskListPackageDetailActivity extends BaseActivity implements OnRef
 		destination = bundle.getParcelable(Constant.DESTINATION);
 		mDesName=bundle.getString(Constant.DESNAME);
 		String taskPackage=bundle.getString(Constant.TASKPACKAGENAME);
-		String taskNo = bundle.getString(Constant.TASKNO);
+		taskNo = bundle.getString(Constant.TASKNO);
 		mTaskPackageName.setText(taskPackage);
 		mTaskNo.setText(taskNo);
+		
+		
 		Param param=new Param(Constant.TASKNO,taskNo);
+		mLoginName=mSharedPreferences.getString(Constant.LOGINNAME, "");
+		Param param2=new Param(Constant.LOGINNAME,mLoginName);
+		startLoading(param,param2);
+	}
+
+	private void startLoading(Param... params) {
 		Request request = httpEngine
-				.createRequest(ServicesConfig.TASK_PACKAGE_DETAIL,param);
+				.createRequest(ServicesConfig.TASK_PACKAGE_DETAIL,params);
 		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {
 
@@ -310,10 +329,25 @@ public class TaskListPackageDetailActivity extends BaseActivity implements OnRef
 		mTaskNo=(TextView) findViewById(R.id.tv_headTitle_taskno);
 		mSwipeLayout=(SwipeRefreshLayout) findViewById(R.id.srl_container);
 	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		switch (requestCode) {
+		case StatusCode.RESULT_TASKLIST_PACKAGEDETAIL:
+			onRefresh();
+			break;
 
+		default:
+			break;
+		}
+	}
 	@Override
 	public void onRefresh() {
-		handler.sendEmptyMessageDelayed(0x1, 2000);
+		Param param =new Param(Constant.TASKNO,taskNo);
+		Param param2=new Param(Constant.LOGINNAME,mLoginName);
+		startLoading(param,param2);
 	}
 
 	

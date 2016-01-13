@@ -87,7 +87,7 @@ public class BusinessConfig {
 	/**
 	 * 18.维保清单完成
 	 */
-	public static final String URL_MAINTENCE_LIST_COMPLETE = "/maintenceListComplete.action";
+	public static final String URL_MAINTENCE_LIST_COMPLETE = "/task/maintenceListComplete.action";
 	/**
 	 * 19.问题反馈
 	 */

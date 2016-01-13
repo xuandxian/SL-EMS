@@ -2,10 +2,16 @@ package com.overtech.ems.activity.common;
 
 import java.io.IOException;
 import java.util.Date;
+
+import cn.jpush.android.api.InstrumentedActivity;
+import cn.jpush.android.api.JPushInterface;
+
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
+import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.entity.common.ServicesConfig;
+import com.overtech.ems.http.HttpEngine;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
@@ -23,17 +29,18 @@ import android.view.WindowManager;
  * @description 欢迎界面
  * @date 2015-10-05
  */
-public class SplashActivity extends BaseActivity {
+public class SplashActivity extends InstrumentedActivity {
 	
 	private final long timePeriod=2592000000L; //30天的毫秒数
 //	private final long timePeriod=60000L;      //60秒（测试）
-
+	private HttpEngine httpEngine;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.splash);
-		
+		httpEngine=HttpEngine.getInstance();
+		httpEngine.initContext(this);
 		Request request = httpEngine.createRequest(ServicesConfig.RSA_INIT);
 		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {
@@ -53,7 +60,7 @@ public class SplashActivity extends BaseActivity {
 
 			@Override
 			public void run() {
-				long lastDate=mSharedPreferences.getLong(SharedPreferencesKeys.CURRENT_DATE, 0);
+				long lastDate=((MyApplication)getApplication()).getSharePreference().getLong(SharedPreferencesKeys.CURRENT_DATE, 0);
 				if(lastDate==0){
 					Intent intent = new Intent(SplashActivity.this,LoginActivity.class);
 					startActivity(intent);
@@ -73,6 +80,19 @@ public class SplashActivity extends BaseActivity {
 				}
 			}
 		}, 5000);
+		JPushInterface.resumePush(this);
 	}
-
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		JPushInterface.onResume(this);
+	}
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		JPushInterface.onPause(this);
+	}
+	
 }

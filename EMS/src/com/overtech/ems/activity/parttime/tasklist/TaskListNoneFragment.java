@@ -66,10 +66,12 @@ public class TaskListNoneFragment extends BaseFragment implements IXListViewList
 				Gson gson=new Gson();
 				TaskPackageBean bean=gson.fromJson(json, TaskPackageBean.class);
 				list=bean.getModel();
-				if(list!=null){
+				if(null==list||list.size()==0){
+					Utilities.showToast("后台正在抢修中,请重试...", mActivity);
+				}else{
 					adapter=new TaskListAdapter(list, mActivity);
+					mSwipeListView.setAdapter(adapter);
 				}
-				mSwipeListView.setAdapter(adapter);
 				break;
 			case StatusCode.TASKLIST_NONE_FAILED:
 				Utilities.showToast((String)msg.obj, mActivity);
