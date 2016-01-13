@@ -97,4 +97,8 @@ public class Constant {
 	 * 电梯的完成状态
 	 */
 	public static final String STATUS="isFinish";
+	/**
+	 * 更新手机号（新手机号）
+	 */
+	public static final String NEWPHONE="newPhone";
 }

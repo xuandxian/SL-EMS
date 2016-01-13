@@ -84,6 +84,29 @@ public class StatusCode {
 	 * 获取电梯完成状态失败
 	 */
 	public static final int MAINTENENCE_COMPLETE_FAILED=0x31;
+	/**
+	 * 更换手机号
+	 */
+	public static final int RESPONSE_VALICATE_PASSWORD_SUCCESS=0x40;
+	public static final int RESPONSE_VALICATE_PASSWORD_FAILURE=0x41;
+	public static final int GET_PHONENO_NOT_EXIST=0x42;
+	public static final int GET_PHONENO_EXIST=0x43;
+	public static final int UPDATE_PHONENO_SUCCESS=0x44;
+	public static final int UPDATE_PHONENO_FAILURE=0x45;
+	/**
+	 * 任务包详情-->维保清单
+	 */
+	public static final int RESULT_TASKLIST_PACKAGEDETAIL=0x46;
+	
+	/**
+	 * 个人详细信息返回码--成功
+	 */
+	public static final int PERSONAL_DETAIL_SUCCESS=0x47;
+	/**
+	 * 个人详细信息返回码--失败
+	 */
+	public static final int PERSONAL_DETAIL_FAILED=0x44;
+	
 	
 	//OnActivityFroResult StatusCode
 
@@ -91,17 +114,4 @@ public class StatusCode {
 	public static final int RESULT_GRAB_DO_FILTER = 0x50;
 	public static final int RESULT_GRAB_DO_SEARCH = 0x51;
 
-	/**
-	 * 任务包详情-->维保清单
-	 */
-	public static final int RESULT_TASKLIST_PACKAGEDETAIL=0x60;
-	
-	/**
-	 * 个人详细信息返回码--成功
-	 */
-	public static final int PERSONAL_DETAIL_SUCCESS=0x70;
-	/**
-	 * 个人详细信息返回码--失败
-	 */
-	public static final int PERSONAL_DETAIL_FAILED=0x71;
 }

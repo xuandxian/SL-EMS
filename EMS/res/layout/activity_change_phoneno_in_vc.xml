@@ -7,55 +7,56 @@
     <include
         android:id="@+id/include_phone_change"
         layout="@layout/headview" />
-	<RelativeLayout 
-	    android:id="@+id/rl_change_title"
-	    android:layout_width="match_parent"
-	    android:layout_height="50dp"
-	    android:layout_below="@id/include_phone_change"
-	    >
-	    <LinearLayout 
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:orientation="horizontal"
-	        android:layout_centerInParent="true"
-	        >
-	        <TextView 
-	            android:id="@+id/verify_password"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="验证手机号"
-	            android:textColor="#757575"
-	            />
-	        <ImageView 
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_marginLeft="5dp"
-	            android:layout_marginRight="5dp"
-	            android:src="@drawable/icon_arrow_right"
-	            />
-	        <TextView 
-	            android:id="@+id/verification"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="输入验证码"
-	            android:textColor="#00ff00"
-	            />
-	        <ImageView 
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:layout_marginLeft="5dp"
-	            android:layout_marginRight="5dp"
-	            android:src="@drawable/icon_arrow_right"
-	            />
-	        <TextView 
-	            android:id="@+id/complication"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:text="更换成功"
-	            android:textColor="#757575"
-	            />
-	    </LinearLayout>
-	</RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_change_title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@id/include_phone_change" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/verify_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="验证手机号"
+                android:textColor="#757575" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/icon_arrow_right" />
+
+            <TextView
+                android:id="@+id/verification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="输入验证码"
+                android:textColor="#00ff00" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:src="@drawable/icon_arrow_right" />
+
+            <TextView
+                android:id="@+id/complication"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="更换成功"
+                android:textColor="#757575" />
+        </LinearLayout>
+    </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/rl_register_1 "
         android:layout_width="match_parent"
@@ -64,7 +65,7 @@
         android:background="@color/main_white" >
 
         <com.overtech.ems.widget.EditTextWithDelete
-            android:id="@+id/et_phone"
+            android:id="@+id/et_update_phone"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
@@ -75,18 +76,19 @@
             android:hint="输入新手机号"
             android:inputType="phone"
             android:maxLength="11" />
-        <Button
-	        android:id="@+id/get_verification"
-	        android:layout_alignParentRight="true"
-	        android:layout_centerVertical="true"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:textColor="@color/actionbar_title_pressbg"
-	        android:background="@drawable/shape_button_visiable"
-	        android:layout_margin="10dp"
-	        android:textSize="@dimen/text_size_hint"
-	        android:visibility="visible"
-	        android:text="获取验证码" />
+
+        <com.overtech.ems.widget.TimeButton
+            android:id="@+id/get_verification_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_margin="10dp"
+            android:background="@drawable/shape_button_visiable"
+            android:text="获取验证码"
+            android:textColor="@color/actionbar_title_pressbg"
+            android:textSize="@dimen/text_size_hint"
+            android:visibility="visible" />
     </RelativeLayout>
 
     <TextView
@@ -105,7 +107,7 @@
         android:background="@color/main_white" >
 
         <com.overtech.ems.widget.EditTextWithDelete
-            android:id="@+id/et_verificate_password"
+            android:id="@+id/et_update_verificate_password"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="20dp"
@@ -118,10 +120,9 @@
 
     <Button
         android:id="@+id/btn_next"
+        style="@style/btn_title_white_style"
         android:layout_below="@+id/rl_register_2"
         android:background="@drawable/shape_button_visiable"
-        style="@style/btn_title_white_style"
         android:text="下一步" />
-
 
 </RelativeLayout>

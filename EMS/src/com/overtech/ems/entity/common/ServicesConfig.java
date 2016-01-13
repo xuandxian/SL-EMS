@@ -104,19 +104,23 @@ public class ServicesConfig {
 	 */
 	public static final String CHANGE_PHONENO_PASSWORD = SystemConfig.IP+ BusinessConfig.URL_CHANGE_PHONENO_PASSWORD;
 	/**
-	 * 25.更换手机号（手机号码／短信验证码）
+	 * 25.更换手机号（验证新手机号是否存在）
+	 */
+	public static final String CHANGE_PHONENO_VALICATE = SystemConfig.IP+ BusinessConfig.URL_CHANGE_PHONENO_VALIDATE;
+	/**
+	 * 26.更换手机号（更新手机号）
 	 */
 	public static final String CHANGE_PHONENO_UPDATE = SystemConfig.IP+ BusinessConfig.URL_CHANGE_PHONENO_UPDATE;
 	/**
-	 * 26.我的账单（已结算／未结算）
+	 * 27.我的账单（已结算／未结算）
 	 */
 	public static final String PERSONAL_BILL = SystemConfig.IP+ BusinessConfig.URL_PERSONAL_BILL;
 	/**
-	 * 27.奖励记录
+	 * 28.奖励记录
 	 */
 	public static final String PERSONAL_BONUS_LIST = SystemConfig.IP+ BusinessConfig.URL_PERSONAL_BONUS_LIST;
 	/**
-	 * 28.退单纪录
+	 * 29.退单纪录
 	 */
 	public static final String PERSONAL_CHARGEBACK_LIST = SystemConfig.IP+ BusinessConfig.URL_PERSONAL_CHARGEBACK_LIST;
 

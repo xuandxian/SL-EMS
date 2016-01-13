@@ -107,11 +107,15 @@ public class BusinessConfig {
 	/**
 	 * 23.更换手机号（验证密码）
 	 */
-	public static final String URL_CHANGE_PHONENO_PASSWORD = "/changePhoneNoPassword.action";
+	public static final String URL_CHANGE_PHONENO_PASSWORD = "/employee/changePhoneNoPassword.action";
+	/**
+	 * 23.更换手机号（验证手机号）
+	 */
+	public static final String URL_CHANGE_PHONENO_VALIDATE = "/employee/validatePhoneNo.action";
 	/**
 	 * 24.更换手机号（手机号码／短信验证码）
 	 */
-	public static final String URL_CHANGE_PHONENO_UPDATE = "/changePhoneNoUpdate.action";
+	public static final String URL_CHANGE_PHONENO_UPDATE = "/employee/changePhoneNoUpdate.action";
 	/**
 	 * 25.我的账单（已结算／未结算）
 	 */
