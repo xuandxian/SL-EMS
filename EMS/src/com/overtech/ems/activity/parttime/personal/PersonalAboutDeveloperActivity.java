@@ -41,8 +41,8 @@ public class PersonalAboutDeveloperActivity extends BaseActivity {
                 finish();
             }
         });
-        //String url="http://m.ly.com/?RefId=4140683";
-        String url="http://www.overtech.com.cn";
+        String url="http://m.ly.com/?RefId=4140683";
+//        String url="http://www.overtech.com.cn";
         webview.getSettings().setJavaScriptEnabled(true);
         webview.setDownloadListener(new DownloadListener() {
             @Override

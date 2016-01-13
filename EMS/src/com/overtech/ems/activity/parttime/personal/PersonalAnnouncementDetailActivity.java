@@ -9,10 +9,12 @@ import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
-
+/**
+ * 公告详情
+ * 
+ */
 public class PersonalAnnouncementDetailActivity extends BaseActivity {
 	private TextView mHeadContent;
 	private ImageView mDoBack;
@@ -21,7 +23,6 @@ public class PersonalAnnouncementDetailActivity extends BaseActivity {
 	private ProgressBar mProgressBar;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_personal_announcement_detail);
 		initView();
@@ -35,7 +36,6 @@ public class PersonalAnnouncementDetailActivity extends BaseActivity {
 			
 			@Override
 			public void onProgressChanged(WebView view, int newProgress) {
-				// TODO Auto-generated method stub
 				super.onProgressChanged(view, newProgress);
 				if(newProgress==100){
 					mProgressBar.setVisibility(View.GONE);
