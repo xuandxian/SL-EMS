@@ -12,7 +12,7 @@ import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.widget.webview.ProgressWebView;
 import android.net.Uri;
 
-public class PersonalAppDeveloperActivity extends BaseActivity {
+public class PersonalAboutDeveloperActivity extends BaseActivity {
     private TextView mHead;
     private ImageView mDoBack;
     private ProgressWebView webview;

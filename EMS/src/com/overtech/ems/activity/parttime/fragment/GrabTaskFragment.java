@@ -87,9 +87,6 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 				mAdapter = new GrabTaskAdapter(list, myLocation, mActivity);
 				mSwipeListView.setAdapter(mAdapter);
 				break;
-			case StatusCode.GRAB_GET_DATA_FAILED:
-				Utilities.showToast("服务器异常", context);
-				break;
 			case StatusCode.GRAG_RESPONSE_SUCCESS:
 				String status = (String) msg.obj;
 				StatusCodeBean bean = gson.fromJson(status,StatusCodeBean.class);
@@ -104,7 +101,7 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 					Utilities.showToast("差一点就抢到了", context);
 				}
 				break;
-			case StatusCode.GRAG_RESPONSE_OTHER_FAILED:
+			case StatusCode.RESPONSE_SERVER_EXCEPTION:
 				Utilities.showToast("服务器异常", context);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
@@ -181,7 +178,7 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 					msg.what = StatusCode.GRAB_GET_DATA_SUCCESS;
 					msg.obj = response.body().string();
 				} else {
-					msg.what = StatusCode.GRAB_GET_DATA_FAILED;
+					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
 				}
 				handler.sendMessage(msg);
 			}
@@ -368,7 +365,7 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 									msg.what = StatusCode.GRAG_RESPONSE_SUCCESS;
 									msg.obj = response.body().string();
 								} else {
-									msg.what = StatusCode.GRAG_RESPONSE_OTHER_FAILED;
+									msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
 								}
 								handler.sendMessage(msg);
 							}

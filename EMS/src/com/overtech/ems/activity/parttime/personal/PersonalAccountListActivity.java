@@ -1,10 +1,6 @@
 package com.overtech.ems.activity.parttime.personal;
 
 import java.io.IOException;
-import java.util.ArrayList;
-
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,16 +11,13 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
-import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.adapter.PersonalAccountListAdapter;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.bean.BillBean;
 import com.overtech.ems.entity.common.ServicesConfig;
-import com.overtech.ems.entity.test.Data2;
 import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.SharedPreferencesKeys;
@@ -41,8 +34,6 @@ public class PersonalAccountListActivity extends BaseActivity implements OnClick
 	private TextView mHasCount;
 	private TextView mNoCount;
 	private PersonalAccountListAdapter adapter;
-	private Context context;
-	private SharedPreferences sp;
 	private static final String HASCOUNT="1";
 	private static final String NOCOUNT="0";
 	
@@ -56,11 +47,11 @@ public class PersonalAccountListActivity extends BaseActivity implements OnClick
 				adapter=new PersonalAccountListAdapter(context, datas.getModel());
 				mPersonalAccountListView.setAdapter(adapter);
 				break;
-			case StatusCode.ACCOUNT_LIST_FAILED:
-				Utilities.showToast((String)msg.obj, context);
+			case StatusCode.RESPONSE_SERVER_EXCEPTION:
+				Utilities.showToast("服务端异常", context);
 				break;
-
-			default:
+			case StatusCode.RESPONSE_NET_FAILED:
+				Utilities.showToast("网络异常", context);
 				break;
 			}
 			stopProgressDialog();
@@ -78,7 +69,7 @@ public class PersonalAccountListActivity extends BaseActivity implements OnClick
 
 	private void startLoading(String billState) {
 		startProgressDialog("正在加载...");
-		Param phoneParam =new Param(Constant.LOGINNAME, sp.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null));
+		Param phoneParam =new Param(Constant.LOGINNAME, mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null));
 		Param flagParam = new Param(Constant.CLOSINGSTATE,billState);
 		Request requst=httpEngine.createRequest(ServicesConfig.PERSONAL_BILL, phoneParam,flagParam);
 		Call call=httpEngine.createRequestCall(requst);
@@ -91,8 +82,7 @@ public class PersonalAccountListActivity extends BaseActivity implements OnClick
 					msg.what=StatusCode.ACCOUNT_LIST_SUCCESS;
 					msg.obj=response.body().string();
 				}else{
-					msg.what=StatusCode.ACCOUNT_LIST_FAILED;
-					msg.obj="网络异常";
+					msg.what=StatusCode.RESPONSE_SERVER_EXCEPTION;
 				}
 				handler.sendMessage(msg);
 			}
@@ -100,15 +90,13 @@ public class PersonalAccountListActivity extends BaseActivity implements OnClick
 			@Override
 			public void onFailure(Request response, IOException arg1) {
 				Message msg = new Message();
-				msg.what=StatusCode.ACCOUNT_LIST_FAILED;
-				msg.obj="请检查网络";
+				msg.what=StatusCode.RESPONSE_NET_FAILED;
 				handler.sendMessage(msg);
 			}
 		});
 	}
 
 	private void findViewById() {
-		sp=((MyApplication)getApplication()).getSharePreference();
 		mDoBack=(ImageView)findViewById(R.id.iv_headBack);
 		mHeadContent=(TextView)findViewById(R.id.tv_headTitle);
 		mPersonalAccountListView=(ListView)findViewById(R.id.lv_personal_account_list);
@@ -124,7 +112,6 @@ public class PersonalAccountListActivity extends BaseActivity implements OnClick
 		mDoBack.setOnClickListener(this);
 		mHasCount.setOnClickListener(this);
 		mNoCount.setOnClickListener(this);
-		
 	}
 
 	@Override

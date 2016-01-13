@@ -105,16 +105,13 @@ public class StatusCode {
 	/**
 	 * 个人详细信息返回码--失败
 	 */
-	public static final int PERSONAL_DETAIL_FAILED=0x44;
+	public static final int PERSONAL_DETAIL_FAILED=0x48;
 	
 	/**
 	 * 个人账单加载成功
 	 */
-	public static final int ACCOUNT_LIST_SUCCESS=0x46;
-	/**
-	 * 个人账单加载失败
-	 */
-	public static final int ACCOUNT_LIST_FAILED=0x47;
+	public static final int ACCOUNT_LIST_SUCCESS=0x49;
+	
 	//OnActivityFroResult StatusCode
 
 	//抢单
