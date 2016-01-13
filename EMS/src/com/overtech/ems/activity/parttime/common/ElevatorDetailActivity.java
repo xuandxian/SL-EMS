@@ -135,7 +135,7 @@ public class ElevatorDetailActivity extends BaseActivity {
 
 	private void init() {
 		Bundle bundle=getIntent().getExtras();
-		sElevatorNo=bundle.getString(Constant.RESULT);
+		sElevatorNo=bundle.getString(Constant.ELEVATORNO);
 		mGoBack.setVisibility(View.VISIBLE);
 		mHeadContent.setText("电梯详情");
 		mGoBack.setOnClickListener(new OnClickListener() {

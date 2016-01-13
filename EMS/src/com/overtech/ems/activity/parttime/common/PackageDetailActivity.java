@@ -173,7 +173,7 @@ public class PackageDetailActivity extends BaseActivity {
 						String elevatorNo=data.getElevatorNo();
 						Intent intent = new Intent(PackageDetailActivity.this,ElevatorDetailActivity.class);
 						Bundle bundle=new Bundle();
-						bundle.putString(Constant.RESULT, elevatorNo);
+						bundle.putString(Constant.ELEVATORNO, elevatorNo);
 						intent.putExtras(bundle);
 						startActivity(intent);
 					}

@@ -82,10 +82,6 @@ public class Constant {
 	 */
 	public static final String WORKTYPE="workType";
 	/**
-	 * 扫描结果
-	 */
-	public static final String RESULT="result";
-	/**
 	 * 扫描图片
 	 */
 	public static final String BITMAP="bitmap";

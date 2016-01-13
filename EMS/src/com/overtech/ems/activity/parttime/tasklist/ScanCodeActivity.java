@@ -132,7 +132,7 @@ public class ScanCodeActivity extends Activity implements Callback {
 			Intent intent = new Intent(ScanCodeActivity.this,
 					ElevatorDetailActivity.class);
 			Bundle bundle = new Bundle();
-			bundle.putString(Constant.RESULT, resultString);
+			bundle.putString(Constant.ELEVATORNO, resultString);
 			bundle.putParcelable(Constant.BITMAP, barcode);
 			intent.putExtras(bundle);
 			startActivity(intent);
