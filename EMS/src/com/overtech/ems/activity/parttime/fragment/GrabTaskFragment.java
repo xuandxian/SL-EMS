@@ -122,10 +122,6 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 		mActivity = activity;
 	}
 
-	public void reflush(){
-
-	}
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_grab_task, container,false);
@@ -170,6 +166,7 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 		if (TextUtils.equals("0", flag)) {
 			startProgressDialog("正在查询...");
 		} else if (TextUtils.equals("2", flag)) {
+			startProgressDialog("正在查询...");
 			mSwipeListView.setFooterViewInvisible();
 			mSwipeListView.setPullRefreshEnable(false);
 		}
@@ -297,7 +294,7 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 	}
 
 	public void onRefresh() {
-		initData(ServicesConfig.GRABTASK, "0");
+		initData(ServicesConfig.GRABTASK, "1");
 	}
 
 	public void onLoadMore() {

@@ -62,8 +62,9 @@
             android:name="com.overtech.ems.activity.common.LoginActivity"
             android:launchMode="singleTask" >
         </activity>
-        <activity android:name="com.overtech.ems.activity.parttime.MainActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
+        <activity
+            android:name="com.overtech.ems.activity.parttime.MainActivity"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name="com.overtech.ems.activity.common.LostPasswordActivity" />
         <activity android:name="com.overtech.ems.activity.common.ResetPasswordActivity" />
         <activity android:name="com.overtech.ems.activity.common.ResetPasswordSuccessActivity" />
@@ -183,6 +184,34 @@
         <!-- Required  . Enable it you can get statistics data with channel -->
         <meta-data android:name="JPUSH_CHANNEL" android:value="developer-default"/>
         <meta-data android:name="JPUSH_APPKEY" android:value="47e3c96e973c115a5d204187" /> <!--  </>值来自开发者平台取得的AppKey-->
+        <activity
+            android:name="com.mob.tools.MobUIShell"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:windowSoftInputMode="stateHidden|adjustResize" >
+            <intent-filter>
+                <data android:scheme="tencent100371282" />
+
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <!-- 调用新浪原生SDK，需要注册的回调activity -->
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!-- 微信分享回调 -->
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
     </application>
 
 </manifest>

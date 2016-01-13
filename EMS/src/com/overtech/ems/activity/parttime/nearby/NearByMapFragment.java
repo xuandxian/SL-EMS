@@ -3,7 +3,6 @@ package com.overtech.ems.activity.parttime.nearby;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import com.baidu.location.LocationClient;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BaiduMap.OnMapLongClickListener;
 import com.baidu.mapapi.map.BaiduMap.OnMarkerClickListener;
@@ -145,8 +144,7 @@ public class NearByMapFragment extends BaseFragment {
 		} else {
 			return;
 		}
-//		setMyLocationMarker(myLocation);
-		if (dataList.size() == 0) {
+		if (null==dataList||dataList.size() == 0) {
 			Utilities.showToast("无数据", context);
 		} else {
 			if (null != clickLocation) {
@@ -206,7 +204,7 @@ public class NearByMapFragment extends BaseFragment {
 				mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(12.0f));
 				clickLocation = point;
 				Param latitude = new Param(Constant.LATITUDE, String.valueOf(point.latitude));
-				Param longitude = new Param(Constant.LOGINNAME, String.valueOf(point.longitude));
+				Param longitude = new Param(Constant.LONGITUDE, String.valueOf(point.longitude));
 				getDataByLatlng(ServicesConfig.NEARBY, "1", latitude, longitude);
 			}
 		});
