@@ -21,6 +21,7 @@ import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.adapter.PersonalAccountListAdapter;
+import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.bean.BillBean;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.test.Data2;
@@ -40,28 +41,23 @@ public class PersonalAccountListActivity extends BaseActivity implements OnClick
 	private TextView mHasCount;
 	private TextView mNoCount;
 	private PersonalAccountListAdapter adapter;
-	private PersonalAccountListAdapter adapter2;
-	private ArrayList<Data2> list;
-	private ArrayList<Data2> list2;
 	private Context context;
 	private SharedPreferences sp;
 	private static final String HASCOUNT="1";
 	private static final String NOCOUNT="0";
-	private static final int SUCCESS=1;
-	private static final int FAILED=0;
 	
 	private Handler handler=new Handler(){
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
-			case SUCCESS:
+			case StatusCode.ACCOUNT_LIST_SUCCESS:
 				String json=(String) msg.obj;
 				Gson gson=new Gson();
 				BillBean datas=gson.fromJson(json, BillBean.class);
 				adapter=new PersonalAccountListAdapter(context, datas.getModel());
 				mPersonalAccountListView.setAdapter(adapter);
 				break;
-			case FAILED:
-				Utilities.showToast("网络异常", context);
+			case StatusCode.ACCOUNT_LIST_FAILED:
+				Utilities.showToast((String)msg.obj, context);
 				break;
 
 			default:
@@ -91,15 +87,21 @@ public class PersonalAccountListActivity extends BaseActivity implements OnClick
 			@Override
 			public void onResponse(Response response) throws IOException {
 				Message msg=new Message();
-				msg.what=SUCCESS;
-				msg.obj=response.body().string();
+				if(response.isSuccessful()){
+					msg.what=StatusCode.ACCOUNT_LIST_SUCCESS;
+					msg.obj=response.body().string();
+				}else{
+					msg.what=StatusCode.ACCOUNT_LIST_FAILED;
+					msg.obj="网络异常";
+				}
 				handler.sendMessage(msg);
 			}
 			
 			@Override
 			public void onFailure(Request response, IOException arg1) {
 				Message msg = new Message();
-				msg.what=FAILED;
+				msg.what=StatusCode.ACCOUNT_LIST_FAILED;
+				msg.obj="请检查网络";
 				handler.sendMessage(msg);
 			}
 		});

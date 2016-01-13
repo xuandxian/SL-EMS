@@ -27,6 +27,8 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:background="@color/main_white"
+            android:textColor="#DD47BEE9"
             android:text="确认"
             />
         <Button 
@@ -34,6 +36,8 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:background="@color/main_white"
+            android:textColor="#DD47BEE9"
             android:text="取消"
             />
     </LinearLayout>
