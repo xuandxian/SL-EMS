@@ -69,7 +69,6 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 			switch (msg.what) {
 			case StatusCode.WORK_DETAILS_SUCCESS:
 				String json=(String) msg.obj;
-				Log.e("====",json);
 				WorkTypeBean bean=gson.fromJson(json, WorkTypeBean.class);
 				ArrayList<String> tempList=bean.getModel();
 				list.add(new MaintenanceType("0", "Title", "content"));
@@ -104,6 +103,7 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 					if(completeProgress){
 						Intent intent =new Intent(QueryTaskListActivity.this,QuestionResponseActivity.class);
 						startActivity(intent);
+						finish();
 					}else{
 						Utilities.showToast("你还有未完成的电梯", context);
 						finish();

@@ -96,4 +96,12 @@ public class StatusCode {
 	 */
 	public static final int RESULT_TASKLIST_PACKAGEDETAIL=0x60;
 	
+	/**
+	 * 个人详细信息返回码--成功
+	 */
+	public static final int PERSONAL_DETAIL_SUCCESS=0x70;
+	/**
+	 * 个人详细信息返回码--失败
+	 */
+	public static final int PERSONAL_DETAIL_FAILED=0x71;
 }

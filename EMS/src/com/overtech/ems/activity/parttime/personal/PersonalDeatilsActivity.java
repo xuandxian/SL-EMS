@@ -30,6 +30,7 @@ import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.common.LoginActivity;
+import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
@@ -64,50 +65,58 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 	private SharedPreferences sp;
 	private Handler handler=new Handler(){
 		public void handleMessage(android.os.Message msg) {
-			String json=(String) msg.obj;
-			try {
-				JSONObject jsonObject=new JSONObject(json);
-				JSONObject model=(JSONObject) jsonObject.get("model");
-				String avatorUrl= model.getString("avatorUrl");
-				float rate=(float) model.getDouble("employeeRate");
-				String id= model.getString("id");
-				String name= model.getString("name");
-				String phone= model.getString("phoneNo");
-				long registerTime=model.getLong("registerTime");
-				String workNo=model.getString("workNo");
-				
-				if (avatorUrl == null || "".equals(avatorUrl)) {
-					avator.setScaleType(ScaleType.FIT_XY);
-					avator.setImageResource(STUB_ID);
-				} else {
-					//调用从网络中加载过来的图片
-					Picasso.with(context).load(avatorUrl).placeholder(STUB_ID)
-							.error(STUB_ID).config(DEFAULT_CONFIG)
-							.transform(new Transformation() {
-								//圆角图片的实现
-								@Override
-								public Bitmap transform(Bitmap source) {
-									return ImageCacheUtils.toRoundBitmap(source);
-								}
+			switch (msg.what) {
+			case StatusCode.PERSONAL_DETAIL_SUCCESS:
+				String json=(String) msg.obj;
+				try {
+					JSONObject jsonObject=new JSONObject(json);
+					JSONObject model=(JSONObject) jsonObject.get("model");
+					String avatorUrl= model.getString("avatorUrl");
+					float rate=(float) model.getDouble("employeeRate");
+					String id= model.getString("id");
+					String name= model.getString("name");
+					String phone= model.getString("phoneNo");
+					String registerTime=model.getString("registerTime");
+					String workNo=model.getString("workNo");
+					if (avatorUrl == null || "".equals(avatorUrl)) {
+						avator.setScaleType(ScaleType.FIT_XY);
+						avator.setImageResource(STUB_ID);
+					} else {
+						//调用从网络中加载过来的图片
+						Picasso.with(context).load(avatorUrl).placeholder(STUB_ID)
+								.error(STUB_ID).config(DEFAULT_CONFIG)
+								.transform(new Transformation() {
+									//圆角图片的实现
+									@Override
+									public Bitmap transform(Bitmap source) {
+										return ImageCacheUtils.toRoundBitmap(source);
+									}
 
-								@Override
-								public String key() {
-									// TODO Auto-generated method stub
-									return null;
-								}
-							}).into(avator);
+									@Override
+									public String key() {
+										// TODO Auto-generated method stub
+										return null;
+									}
+								}).into(avator);
 
+					}
+					mPhone.setText(phone);
+					mId.setText(id);
+					mName.setText(name);
+					mCertificateNo.setText(workNo);
+					mRegisterDate.setText(registerTime);
+					mRatingBar.setRating(rate);
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				mPhone.setText(phone);
-				mId.setText(id);
-				mName.setText(name);
-				mCertificateNo.setText(workNo);
-				SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd");
-				mRegisterDate.setText(sdf.format(new Date(registerTime)));
-				mRatingBar.setRating(rate);
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				break;
+			case StatusCode.PERSONAL_DETAIL_FAILED:
+				
+				break;
+
+			default:
+				break;
 			}
 			stopProgressDialog();
 		};
@@ -132,13 +141,23 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 			@Override
 			public void onResponse(Response arg0) throws IOException {
 				Message msg=new Message();
-				msg.obj=arg0.body().string();
-				handler.sendMessage(msg);
+				if(arg0.isSuccessful()){
+					msg.obj=arg0.body().string();
+					msg.what=StatusCode.PERSONAL_DETAIL_SUCCESS;
+					handler.sendMessage(msg);
+				}else{
+					msg.obj="服务器异常";
+					msg.what=StatusCode.PERSONAL_DETAIL_FAILED;
+					handler.sendMessage(msg);
+				}
 			}
 			
 			@Override
 			public void onFailure(Request arg0, IOException arg1) {
-				
+				Message msg=new Message();
+				msg.what=StatusCode.PERSONAL_DETAIL_FAILED;
+				msg.obj="网络异常";
+				handler.sendMessage(msg);
 			}
 		});
 	}
@@ -150,7 +169,7 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 		mDoBack = (ImageView) findViewById(R.id.iv_headBack);
 		mChangePhoneNo = (RelativeLayout) findViewById(R.id.rl_change_phoneNo);
 		mDoExit = (Button) findViewById(R.id.btn_exit);
-		mPhone=(TextView) findViewById(R.id.textView3);
+		mPhone=(TextView) findViewById(R.id.tv_personal_phone);
 		avator=(ImageView)findViewById(R.id.iv_avator);
 		mId=(TextView)findViewById(R.id.tv_id);
 		mName=(TextView)findViewById(R.id.tv_username);

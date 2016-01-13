@@ -30,7 +30,6 @@
                 android:paddingTop="8dip" >
 
                 <TextView
-                    android:id="@+id/textView1"
                     style="@style/tv_title_primary_style"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
@@ -61,7 +60,7 @@
                     android:id="@+id/tv_id"
                     style="@style/tv_list_primary_style"
                     android:layout_alignParentRight="true"
-                    android:text="10012" />
+                     />
             </RelativeLayout>
 
             <RelativeLayout
@@ -80,7 +79,7 @@
                     android:id="@+id/tv_username"
                     style="@style/tv_list_primary_style"
                     android:layout_alignParentRight="true"
-                    android:text="Tony" />
+                    />
             </RelativeLayout>
 
             <RelativeLayout
@@ -105,11 +104,11 @@
                     android:src="@drawable/icon_arrow_right" />
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/tv_personal_phone"
                     style="@style/tv_list_primary_style"
                     android:layout_alignTop="@+id/imageView1"
                     android:layout_toLeftOf="@+id/imageView1"
-                    android:text="150****5127" />
+                    />
 
             </RelativeLayout>
 
@@ -129,7 +128,7 @@
                     android:id="@+id/tv_certificate_no"
                     style="@style/tv_list_primary_style"
                     android:layout_alignParentRight="true"
-                    android:text="1008611" />
+                     />
             </RelativeLayout>
 
             <RelativeLayout
@@ -148,7 +147,7 @@
                     android:id="@+id/tv_register_time"
                     style="@style/tv_list_primary_style"
                     android:layout_alignParentRight="true"
-                    android:text="2015-09-01" />
+                     />
             </RelativeLayout>
 
             <RelativeLayout
@@ -168,7 +167,6 @@
                      />
 
                 <TextView
-                    android:id="@+id/textView2"
                     style="@style/tv_title_primary_style"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
