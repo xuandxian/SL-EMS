@@ -7,7 +7,6 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.PersonalHelpDocAdapter;
@@ -20,7 +19,6 @@ public class PersonalHelpDocActivity extends BaseActivity {
 	private PersonalHelpDocAdapter adapter;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_personal_helpdoc);
 		context=this;

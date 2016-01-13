@@ -9,14 +9,10 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.os.Message;
 import android.view.GestureDetector;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
-
-import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
-
 import com.baidu.mapapi.SDKInitializer;
 import com.overtech.ems.R;
 import com.overtech.ems.http.HttpEngine;
@@ -56,7 +52,7 @@ public class BaseActivity extends Activity {
 	public CustomProgressDialog progressDialog;
 
 	public NiftyDialogBuilder dialogBuilder;
-	
+
 	public SharedPreferences mSharedPreferences;
 
 	private InputMethodManager imm;
@@ -81,7 +77,7 @@ public class BaseActivity extends Activity {
 		imageLoader.initContext(context);
 		progressDialog = CustomProgressDialog.createDialog(context);
 		progressDialog.setMessage(context.getString(R.string.loading_public_default));
-		mSharedPreferences=((MyApplication)getApplication()).getSharePreference();
+		mSharedPreferences = ((MyApplication) getApplication()).getSharePreference();
 	}
 
 	private void initGestureDetector() {
@@ -98,7 +94,7 @@ public class BaseActivity extends Activity {
 		this.mNeedBackGesture = mNeedBackGesture;
 	}
 
-	public void initSMS(){
+	public void initSMS() {
 		SMSSDK.initSDK(this, "b731c30880f4", "1c3e262449b1c77498f37c78586b8cf1");
 	}
 
@@ -137,7 +133,7 @@ public class BaseActivity extends Activity {
 		if (progressDialog == null) {
 			progressDialog = CustomProgressDialog.createDialog(this);
 		}
-		progressDialog.setMessage(content);  
+		progressDialog.setMessage(content);
 		progressDialog.show();
 	}
 
@@ -153,7 +149,8 @@ public class BaseActivity extends Activity {
 		public void onReceive(Context context, Intent intent) {
 			String action = intent.getAction();
 			if (ACTION_NETWORK_CHANGE.equals(action)) {
-				boolean isNetworkConnected=Utilities.isNetworkConnected(context);
+				boolean isNetworkConnected = Utilities
+						.isNetworkConnected(context);
 				if (!isNetworkConnected) {
 					Utilities.showToast("无网络连接，请检查网络！！", context);
 				}
@@ -169,7 +166,8 @@ public class BaseActivity extends Activity {
 			imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
 		}
 		if (imm != null) {
-			imm.hideSoftInputFromWindow(getWindow().getDecorView().getWindowToken(), 0);
+			imm.hideSoftInputFromWindow(getWindow().getDecorView()
+					.getWindowToken(), 0);
 		}
 	}
 }

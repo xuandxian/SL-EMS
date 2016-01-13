@@ -21,7 +21,6 @@ public class PersonalAboutAppActivity extends BaseActivity implements OnClickLis
 	private RelativeLayout rl_share;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_personal_about_app);
 		findViewById();
@@ -60,7 +59,7 @@ public class PersonalAboutAppActivity extends BaseActivity implements OnClickLis
 			startActivity(intent);
 			break;
 		case R.id.rl_app_developers:
-			intent.setClass(this, PersonalAppDeveloperActivity.class);
+			intent.setClass(this, PersonalAboutDeveloperActivity.class);
 			startActivity(intent);
 			break;
 		case R.id.rl_share:
