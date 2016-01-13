@@ -166,6 +166,7 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 		if (TextUtils.equals("0", flag)) {
 			startProgressDialog("正在查询...");
 		} else if (TextUtils.equals("2", flag)) {
+			startProgressDialog("正在查询...");
 			mSwipeListView.setFooterViewInvisible();
 			mSwipeListView.setPullRefreshEnable(false);
 		}

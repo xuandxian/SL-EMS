@@ -4,6 +4,8 @@ public class StatusCode {
 	
 	//网络异常
 	public static final int RESPONSE_NET_FAILED = 0x01;
+	//服务端异常
+    public static final int RESPONSE_SERVER_EXCEPTION = 0x99;
 	
 	//登录
 	public static final int LOGIN_FAILED = 0x02;

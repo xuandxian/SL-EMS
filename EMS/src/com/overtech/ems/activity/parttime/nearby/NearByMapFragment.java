@@ -204,7 +204,7 @@ public class NearByMapFragment extends BaseFragment {
 				mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(12.0f));
 				clickLocation = point;
 				Param latitude = new Param(Constant.LATITUDE, String.valueOf(point.latitude));
-				Param longitude = new Param(Constant.LOGINNAME, String.valueOf(point.longitude));
+				Param longitude = new Param(Constant.LONGITUDE, String.valueOf(point.longitude));
 				getDataByLatlng(ServicesConfig.NEARBY, "1", latitude, longitude);
 			}
 		});
