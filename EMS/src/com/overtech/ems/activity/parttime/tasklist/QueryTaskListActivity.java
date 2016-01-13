@@ -39,22 +39,26 @@ import com.squareup.okhttp.Response;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class QueryTaskListActivity extends BaseActivity implements OnClickListener {
 	private Context context;
 	private TextView mHeadContent;
 	private ImageView mHeadBack,mCallPhone;
 	private String mWorktype;
 	private String mZonePhone;
+	private String mTaskNo;
+	private String mElevatorNo;
+	/**
+	 * 当前电梯的完成状态
+	 */
+	private boolean currentElevatorIsFinish;
 	private ListView mTaskListData;
 	private View mListFooterView;
 	private Button mDone;
 	private TaskListDetailsAdapter adapter;
 	private TextView mTaskDetailsTitle;
-	/**
-	 * 默认的没有维保的电梯
-	 */
-	private boolean isAchieve=false;
-	private boolean isAllAchieve=false;
 	private final String TYPE1="CALL_PHONE";
 	private final String TYPE2="CONFIRM";
 	ArrayList<MaintenanceType> list=new ArrayList<MaintenanceType>();
@@ -65,6 +69,7 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 			switch (msg.what) {
 			case StatusCode.WORK_DETAILS_SUCCESS:
 				String json=(String) msg.obj;
+				Log.e("====",json);
 				WorkTypeBean bean=gson.fromJson(json, WorkTypeBean.class);
 				ArrayList<String> tempList=bean.getModel();
 				list.add(new MaintenanceType("0", "Title", "content"));
@@ -84,12 +89,40 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 			case StatusCode.RESPONSE_NET_FAILED:
 				Utilities.showToast("网络链接失败", context);
 				break;
+			case StatusCode.MAINTENANCE_COMPLETE_SUCCESS:
+				
+				String maintenanceJson=(String)msg.obj ;//提交电梯完成状态后，后台返回的信息
+				try {
+					JSONObject jsonObject=new JSONObject(maintenanceJson);
+					String updateMsg=jsonObject.getString("msg");//该电梯完成状态是否已经更新，0，表示更新失败，1表示更新成功
+					boolean completeProgress=jsonObject.getBoolean("success");//该电梯所在的任务包中，是否还有未完成的电梯，true代表全部完成，false代表还有未完成的
+					if(updateMsg.equals("1")){
+						currentElevatorIsFinish=true;
+					}else{
+						currentElevatorIsFinish=false;
+					}
+					if(completeProgress){
+						Intent intent =new Intent(QueryTaskListActivity.this,QuestionResponseActivity.class);
+						startActivity(intent);
+					}else{
+						Utilities.showToast("你还有未完成的电梯", context);
+						finish();
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				break;
+			case StatusCode.MAINTENENCE_COMPLETE_FAILED:
+				Utilities.showToast((String)msg.obj, context);
+				break;
 			default:
 				break;
 			}
 			stopProgressDialog();
 		};
 	};
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -121,29 +154,21 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 		mTaskListData = (ListView) findViewById(R.id.lv_task_details);
 		mTaskListData.addFooterView(mListFooterView);
 	}
-
+	/**
+	 * 前一个页面传过来的值
+	 */
 	private void getExtraData() {
 		Intent intent = getIntent();
 		Bundle bundle = intent.getExtras();
 		mWorktype = bundle.getString(Constant.WORKTYPE,"").trim();
 		mZonePhone=bundle.getString(Constant.ZONEPHONE,"");
+		mTaskNo=bundle.getString(Constant.TASKNO);
+		mElevatorNo=bundle.getString(Constant.ELEVATORNO);
 	}
 	private void getData(){
-		String type="";
-		if (TextUtils.equals("",mWorktype)){
-			return;
-		}else if (TextUtils.equals("半月保",mWorktype)){
-			type="0";
-		}else if (TextUtils.equals("季度保",mWorktype)){
-			type="1";
-		}else if (TextUtils.equals("半年保",mWorktype)){
-			type="2";
-		}else if (TextUtils.equals("年保",mWorktype)){
-			type="3";
-		}
 		startProgressDialog("正在加载...");
-		Param param = new Param(Constant.WORKTYPE, type);
-		final Request request = httpEngine.createRequest(ServicesConfig.WORK_TYPE, param);
+		Param param = new Param(Constant.WORKTYPE, mWorktype);
+		Request request = httpEngine.createRequest(ServicesConfig.WORK_TYPE, param);
 		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {
 			@Override
@@ -208,13 +233,12 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 							Intent intent2 =new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+phoneNo));
 							startActivity(intent2);
 						}else {
-							//请求服务器
-							if(isAllAchieve){
-								Utilities.showToast("恭喜，你的工作全部完成", context);
-								Intent intent =new Intent(QueryTaskListActivity.this,QuestionResponseActivity.class);
-								startActivity(intent);
+							if(!currentElevatorIsFinish){
+								Param taskNoParam = new Param(Constant.TASKNO,mTaskNo);
+								Param elevatorNoParam=new Param(Constant.ELEVATORNO,mElevatorNo);
+								startLoading(taskNoParam,elevatorNoParam);
 							}else{
-								Utilities.showToast("恭喜你，该电梯已完成，请继续剩下的维保工作", context);
+								Utilities.showToast("该电梯已经完成", context);
 							}
 						}
 					}
@@ -224,5 +248,33 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 						dialogBuilder.dismiss();
 					}
 				}).show();
+	}
+
+	protected void startLoading(Param... params) {
+		Request request=httpEngine.createRequest(ServicesConfig.MAINTENCE_LIST_COMPLETE, params);
+		Call call=httpEngine.createRequestCall(request);
+		call.enqueue(new Callback() {
+			
+			@Override
+			public void onResponse(Response response) throws IOException {
+				Message msg=new Message();
+				if(response.isSuccessful()){
+					msg.what=StatusCode.MAINTENANCE_COMPLETE_SUCCESS;
+					msg.obj=response.body().string();
+				}else{
+					msg.what=StatusCode.MAINTENENCE_COMPLETE_FAILED;
+					msg.obj="服务器响应失败";
+				}
+				handler.sendMessage(msg);
+			}
+			
+			@Override
+			public void onFailure(Request arg0, IOException arg1) {
+				Message msg=new Message();
+				msg.what=StatusCode.RESPONSE_NET_FAILED;
+				handler.sendMessage(msg);
+			}
+		});
+		
 	}
 }

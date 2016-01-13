@@ -1,5 +1,7 @@
 package com.overtech.ems.activity;
 
+import cn.jpush.android.api.JPushInterface;
+
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -31,6 +33,9 @@ public class MyApplication extends Application {
 		mMyLocationClient=new MyLocationListener();
 		mLocationClient.setLocOption(options);
 		mLocationClient.registerLocationListener(mMyLocationClient);
+		
+		JPushInterface.setDebugMode(true); 	// 设置开启日志,发布时请关闭日志
+        JPushInterface.init(this);     		// 初始化 JPush
 	}
 
 	public SharedPreferences getSharePreference() {

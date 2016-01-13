@@ -11,7 +11,10 @@ public class TaskPackageDetail {
     private String maintainPrice;      //维保价格
     private String elevatorFloor;      //电梯层站
     private String partnerPhone;       //搭档电话（主要用于我的任务单）
+    private String isFinish;			   //电梯的完成状态（用于提交电梯完成）
     
+	
+
 	public TaskPackageDetail(String elevatorName, String elevatorBrand,
 			String workType, String elevatorNo, String maintainPrice,
 			String elevatorFloor, String partnerPhone) {
@@ -80,4 +83,13 @@ public class TaskPackageDetail {
     public void setPartnerPhone(String partnerPhone) {
         this.partnerPhone = partnerPhone;
     }
+
+	public String getIsFinish() {
+		return isFinish;
+	}
+
+	public void setIsFinish(String isFinish) {
+		this.isFinish = isFinish;
+	}
+    
 }

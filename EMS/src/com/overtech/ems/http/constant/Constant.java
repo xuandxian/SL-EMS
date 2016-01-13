@@ -97,4 +97,8 @@ public class Constant {
 	 * 技术支持电话
 	 */
 	public static final String ZONEPHONE="zonePhone";
+	/**
+	 * 电梯的完成状态
+	 */
+	public static final String STATUS="isFinish";
 }
