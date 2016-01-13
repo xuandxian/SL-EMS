@@ -55,7 +55,7 @@ public class ChangePhoneNoValidatePasswordActivity extends BaseActivity implemen
 			finish();
 			break;
 		case R.id.btn_next:
-			Intent intent=new Intent(this,ChangePhoneNoInVCActivity.class);
+			Intent intent=new Intent(this,ChangePhoneNoValicateSmsCodeActivity.class);
 			startActivity(intent);
 			break;
 		default:

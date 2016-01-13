@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 
-public class ChangePhoneNoInVCActivity extends BaseActivity implements OnClickListener {
+public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity implements OnClickListener {
 	private TextView mHeadContent;
 	private ImageView mDoBack;
 	private Button mNextContent;

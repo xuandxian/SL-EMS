@@ -78,8 +78,8 @@
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAccountListActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalBoundsActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalChangePhoneNoActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.personal.ChangePhoneNoVCActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.personal.ChangePhoneNoInVCActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.personal.ChangePhoneNoValidatePasswordActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.personal.ChangePhoneNoValicateSmsCodeActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.ChangePhoneNoSuccessActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.QueryTaskListActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.QuestionResponseActivity" />
