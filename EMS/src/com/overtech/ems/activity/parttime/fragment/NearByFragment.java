@@ -2,7 +2,6 @@ package com.overtech.ems.activity.parttime.fragment;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -22,17 +21,18 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.baidu.mapapi.model.LatLng;
 import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
 import com.overtech.ems.activity.parttime.nearby.NearByListFragment;
 import com.overtech.ems.activity.parttime.nearby.NearByMapFragment;
+import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.bean.TaskPackageBean;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.TaskPackage;
 import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.utils.Utilities;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
@@ -49,7 +49,6 @@ public class NearByFragment extends BaseFragment implements OnClickListener {
 	private Fragment mNearByList;
 	private TextView mHeadTitle;
 	private ArrayList<TaskPackage> list;
-	private LatLng myLocation;
 	private double mLatitude;
 	private double mLongitude;
 	public LocationClient mLocationClient = null;
@@ -58,12 +57,22 @@ public class NearByFragment extends BaseFragment implements OnClickListener {
 	private Handler handler = new Handler() {
 
 		public void handleMessage(android.os.Message msg) {
-			String json = (String) msg.obj;
 			Gson gson = new Gson();
-			TaskPackageBean tasks = gson.fromJson(json, TaskPackageBean.class);
-			list=(ArrayList<TaskPackage>) tasks.getModel();
-			setDefaultView(list);
-//			addOverLay((ArrayList<TaskPackage>) tasks.getModel());
+			switch (msg.what) {
+			case StatusCode.GET_DATA_BY_MYLOCATION_SUCCESS:
+				String json = (String) msg.obj;
+				TaskPackageBean tasks = gson.fromJson(json, TaskPackageBean.class);
+				list=(ArrayList<TaskPackage>) tasks.getModel();
+				setDefaultView(list);
+				break;
+			case StatusCode.RESPONSE_SERVER_EXCEPTION:
+				Utilities.showToast("服务器异常", context);
+				break;
+			case StatusCode.RESPONSE_NET_FAILED:
+				Utilities.showToast("网络异常", context);
+				break;
+			}
+			stopProgressDialog();
 		};
 	};
 	
@@ -138,33 +147,36 @@ public class NearByFragment extends BaseFragment implements OnClickListener {
 			Log.e("NearByMapFragment","定位成功,location:" + "(" + location.getLatitude() + ","+ location.getLongitude() + ")");
 			mLatitude=location.getLatitude();
 			mLongitude=location.getLongitude();
-			myLocation = new LatLng(location.getLatitude(),location.getLongitude());
-			Param latitude = new Param(Constant.LATITUDE, String.valueOf(location.getLatitude()));
-			Param longitude = new Param(Constant.LONGITUDE, String.valueOf(location.getLongitude()));
+			Param latitude = new Param(Constant.LATITUDE, String.valueOf(mLatitude));
+			Param longitude = new Param(Constant.LONGITUDE, String.valueOf(mLongitude));
 			getDataByLocation(ServicesConfig.NEARBY, "0", latitude, longitude);
 		}
 	}
 	private void getDataByLocation(String url, String flag, Param... params) {
 		if (TextUtils.equals(flag, "0")) {
 			startProgressDialog("正在定位...");
-		} else {
-			startProgressDialog("正在查询...");
-		}
+		} 
 		Request request = httpEngine.createRequest(url, params);
 		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {
 
 			@Override
 			public void onResponse(Response response) throws IOException {
-				stopProgressDialog();
 				Message msg = new Message();
-				msg.obj = response.body().string();
+				if (response.isSuccessful()) {
+					msg.what = StatusCode.GET_DATA_BY_MYLOCATION_SUCCESS;
+					msg.obj = response.body().string();
+				} else {
+					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
+				}
 				handler.sendMessage(msg);
 			}
 
 			@Override
 			public void onFailure(Request request, IOException e) {
-				stopProgressDialog();
+				Message msg = new Message();
+				msg.what = StatusCode.RESPONSE_NET_FAILED;
+				handler.sendMessage(msg);
 			}
 		});
 	}

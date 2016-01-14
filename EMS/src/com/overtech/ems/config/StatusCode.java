@@ -19,71 +19,75 @@ public class StatusCode {
 	public static final int GRAG_RESPONSE_OTHER_FAILED = 0x08;
 	public static final int KEYWORDS_SUCCESS = 0x09;
 	public static final int KEYWORDS_FAILED = 0x10;
-	
+	//附近
+	public static final int GET_DATA_BY_MYLOCATION_SUCCESS = 0x11;
+	public static final int GET_DATA_BY_MYLOCATION_FAILED = 0x12;
+	public static final int GET_DATA_BY_LOCATION_SUCCESS = 0x13;
+	public static final int GET_DATA_BY_LOCATION_FAILED = 0x14;
 	//注册
-	public static final int REGISTER_SUCCESS=0x11;
-	public static final int REGISTER_FAILED=0x12;
+	public static final int REGISTER_SUCCESS=0x15;
+	public static final int REGISTER_FAILED=0x16;
 	
 
 
 	// 忘记密码
-	public static final int GET_PHONENO_SUCCESS_EXIST = 0x13;
-	public static final int GET_PHONENO_SUCCESS_NONE = 0x14;
+	public static final int GET_PHONENO_SUCCESS_EXIST = 0x17;
+	public static final int GET_PHONENO_SUCCESS_NONE = 0x18;
 	// 忘记密码
-	public static final int RESET_PASSWORD_SUCCESS = 0x15;
-	public static final int RESET_PASSWORD_FAILED = 0x16;
+	public static final int RESET_PASSWORD_SUCCESS = 0x19;
+	public static final int RESET_PASSWORD_FAILED = 0x20;
 
 	/**
 	 * 任务单未完成加载成功
 	 */
-	public static final int TASKLIST_NONE_SUCCESS=0x17;
+	public static final int TASKLIST_NONE_SUCCESS=0x21;
 	/**
 	 * 任务单未完成加载失败
 	 */
-	public static final int TASKLIST_NONE_FAILED=0x18;
+	public static final int TASKLIST_NONE_FAILED=0x22;
 	/**
 	 * 任务单已完成加载成功
 	 */
-	public static final int TASKLIST_DONET_SUCCESS=0x19;
+	public static final int TASKLIST_DONET_SUCCESS=0x23;
 	/**
 	 * 任务单已完成加载失败
 	 */
-	public static final int TASKLIST_DONET_FAILED=0x20;
+	public static final int TASKLIST_DONET_FAILED=0x24;
 
 
 	/**
 	 * 任务包详情成功
 	 */
-	public static final int PACKAGE_DETAILS_SUCCESS = 0x21;
+	public static final int PACKAGE_DETAILS_SUCCESS = 0x25;
 	/**
 	 * 任务包详情失败
 	 */
-	public static final int PACKAGE_DETAILS_FAILED=0x22;
+	public static final int PACKAGE_DETAILS_FAILED=0x26;
 	/**
 	 * 获取工作类型内容成功
 	 */
-	public static final int WORK_DETAILS_SUCCESS = 0x23;
+	public static final int WORK_DETAILS_SUCCESS = 0x27;
 	/**
 	 * 获取工作类型内容失败
 	 */
-	public static final int WORK_DETAILS_FAILED=0x24;
+	public static final int WORK_DETAILS_FAILED=0x28;
 
 	/**
 	 * 获取电梯详情成功
 	 */
-	public static final int ELEVATOR_SUCCESS=0x25;
+	public static final int ELEVATOR_SUCCESS=0x29;
 	/**
 	 * 获取电梯详情失败
 	 */
-	public static final int ELEVATOR_FAILED=0x26;
+	public static final int ELEVATOR_FAILED=0x30;
 	/**
 	 * 获取电梯完成状态成功
 	 */
-	public static final int MAINTENANCE_COMPLETE_SUCCESS=0x30;
+	public static final int MAINTENANCE_COMPLETE_SUCCESS=0x31;
 	/**
 	 * 获取电梯完成状态失败
 	 */
-	public static final int MAINTENENCE_COMPLETE_FAILED=0x31;
+	public static final int MAINTENENCE_COMPLETE_FAILED=0x32;
 	/**
 	 * 更换手机号
 	 */

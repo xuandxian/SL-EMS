@@ -60,7 +60,7 @@ public class NearByMapFragment extends BaseFragment {
 		public void handleMessage(Message msg) {
 			Gson gson = new Gson();
 			switch (msg.what) {
-			case StatusCode.GRAB_GET_DATA_SUCCESS:
+			case StatusCode.GET_DATA_BY_LOCATION_SUCCESS:
 				String json = (String) msg.obj;
 				TaskPackageBean tasks = gson.fromJson(json,TaskPackageBean.class);
 				ArrayList<TaskPackage> newData = (ArrayList<TaskPackage>) tasks.getModel();
@@ -110,9 +110,7 @@ public class NearByMapFragment extends BaseFragment {
 	}
 
 	private void getDataByLatlng(String url, String flag, Param... params) {
-		if (TextUtils.equals(flag, "0")) {
-			startProgressDialog("正在定位...");
-		} else {
+		if (TextUtils.equals(flag, "1")) {
 			startProgressDialog("正在查询...");
 		}
 		Request request = httpEngine.createRequest(url, params);
@@ -123,7 +121,7 @@ public class NearByMapFragment extends BaseFragment {
 			public void onResponse(Response response) throws IOException {
 				Message msg = new Message();
 				if (response.isSuccessful()) {
-					msg.what = StatusCode.GRAB_GET_DATA_SUCCESS;
+					msg.what = StatusCode.GET_DATA_BY_LOCATION_SUCCESS;
 					msg.obj = response.body().string();
 				} else {
 					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
