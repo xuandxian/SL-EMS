@@ -2,8 +2,6 @@ package com.overtech.ems.activity.parttime.tasklist;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -14,7 +12,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,7 +25,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
-
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.route.BaiduMapRoutePlan;
 import com.baidu.mapapi.utils.route.RouteParaOption;
@@ -36,14 +32,13 @@ import com.baidu.mapapi.utils.route.RouteParaOption.EBusStrategyType;
 import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
-import com.overtech.ems.activity.adapter.PackageDetailAdapter;
+import com.overtech.ems.activity.adapter.TaskListPackageDetailAdapter;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.bean.TaskPackageDetailBean;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.TaskPackageDetail;
 import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
-import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.squareup.okhttp.Call;
@@ -70,7 +65,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements OnRef
 	private String mDesName;
 	
 	private SwipeRefreshLayout mSwipeLayout;
-	private PackageDetailAdapter adapter;
+	private TaskListPackageDetailAdapter adapter;
 	private ArrayList<TaskPackageDetail> list;
 	/**
 	 * 列表弹窗的间隔
@@ -107,7 +102,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements OnRef
 				if(null==list||list.size()==0){
 					Utilities.showToast("试试重新打开该页面", mActivity);
 				}else{
-					adapter = new PackageDetailAdapter(context, list);
+					adapter = new TaskListPackageDetailAdapter(context, list);
 					mTask.setAdapter(adapter);
 				}
 				break;

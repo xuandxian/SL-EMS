@@ -66,7 +66,7 @@ public class PackageDetailActivity extends BaseActivity {
 				TaskPackageDetailBean tasks = gson.fromJson(json,TaskPackageDetailBean.class);
 				list = (ArrayList<TaskPackageDetail>) tasks.getModel();
 				if(null==list||list.size()==0){
-					Utilities.showToast("程序员哥哥正在努力抢修中...", context);
+					Utilities.showToast("数据异常", context);
 				}else{
 					adapter = new PackageDetailAdapter(context, list);
 					mPackageDetailListView.setAdapter(adapter);

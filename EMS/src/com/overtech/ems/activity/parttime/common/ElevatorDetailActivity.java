@@ -1,25 +1,20 @@
 package com.overtech.ems.activity.parttime.common;
 
 import java.io.IOException;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
-
+import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.config.StatusCode;
+import com.overtech.ems.entity.bean.ElevatorInfoBean;
 import com.overtech.ems.entity.common.ServicesConfig;
+import com.overtech.ems.entity.parttime.ElevatorInfo;
 import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.Utilities;
@@ -32,7 +27,6 @@ public class ElevatorDetailActivity extends BaseActivity {
 
 	private ImageView mGoBack;
 	private TextView mHeadContent;
-	private Context mActivity;
 	private TextView mProjectName;
 	private TextView mElevatorBrand;
 	private TextView mElevatorModel;
@@ -51,93 +45,84 @@ public class ElevatorDetailActivity extends BaseActivity {
 	private TextView mAnnualInspectionDate;
 	private TextView mLastMaintenanceDate;
 	private String sElevatorNo;
-	private Handler handler=new Handler(){
-		public void handleMessage(android.os.Message msg) {
+
+	private Handler handler = new Handler() {
+		public void handleMessage(Message msg) {
 			switch (msg.what) {
-			case StatusCode.ELEVATOR_SUCCESS:
-				String json=(String) msg.obj;
-				Log.e("========", json);
-				try {
-					JSONObject jsonObj=new JSONObject(json);
-					if(!jsonObj.isNull("model")){
-						JSONObject model=jsonObj.getJSONObject("model");
-						Log.e("=====", "length="+model.length());
-						mProjectName.setText(model.getString("projectName"));
-						mElevatorBrand.setText(model.getString("elevatorBrand"));
-						mElevatorModel.setText(model.getString("elevatorModel"));
-						mElevatorNo.setText(model.getString("elevatorNo"));
-						mElevatorAliase.setText(model.getString("elevatorAliase"));
-						mTenementCompany.setText(model.getString("tenementCompany"));
-						mTenementPerson.setText(model.getString("tenementPerson"));
-						mTenementTel.setText(model.getString("tenementTel"));
-						mMaintenanceCompany.setText(model.getString("maintenanceCompany"));
-						mLoadCapacity.setText(model.getString("loadCapacity"));
-						mNominalSpeed.setText(model.getString("nominalSpeed"));
-						mStoreyPlatformDoor.setText(model.getString("storeyPlatformDoor"));
-						mElevatorHigher.setText(model.getString("elevatorHigher"));
-						mMaintenanceType.setText(model.getString("maintenanceType"));
-						mDeviceAddress.setText(model.getString("deviceAddress"));
-						mAnnualInspectionDate.setText(model.getString("annualInspectionDate"));
-						mLastMaintenanceDate.setText(model.getString("lastMaintenanceDate"));
-						
-						stopProgressDialog();
-					}else{
-						Utilities.showToast("没有查询到电梯信息", mActivity);
-						stopProgressDialog();
-						finish();
-					}
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
+			case StatusCode.GET_ELEVATOR_DETAILS_SUCCESS:
+				String json = (String) msg.obj;
+				Gson gson = new Gson();
+				ElevatorInfoBean tasks = gson.fromJson(json,ElevatorInfoBean.class);
+				ElevatorInfo model = tasks.getModel();
+				mProjectName.setText(model.getProjectName());
+				mElevatorBrand.setText(model.getElevatorBrand());
+				mElevatorModel.setText(model.getElevatorModel());
+				mElevatorNo.setText(model.getElevatorNo());
+				mElevatorAliase.setText(model.getElevatorAliase());
+				mTenementCompany.setText(model.getTenementCompany());
+				mTenementPerson.setText(model.getTenementPerson());
+				mTenementTel.setText(model.getTenementTel());
+				mMaintenanceCompany.setText(model.getMaintenanceCompany());
+				mLoadCapacity.setText(model.getLoadCapacity());
+				mNominalSpeed.setText(model.getNominalSpeed());
+				mStoreyPlatformDoor.setText(model.getStoreyPlatformDoor());
+				mElevatorHigher.setText(model.getElevatorHigher());
+				mMaintenanceType.setText(model.getMaintenanceType());
+				mDeviceAddress.setText(model.getDeviceAddress());
+				mAnnualInspectionDate.setText(model.getAnnualInspectionDate());
+				mLastMaintenanceDate.setText(model.getLastMaintenanceDate());
 				break;
-			case StatusCode.ELEVATOR_FAILED:
-				String info=(String) msg.obj;
-				Utilities.showToast(info, mActivity);
+			case StatusCode.RESPONSE_NET_FAILED:
+				Utilities.showToast("网络异常", context);
 				break;
-			default:
+			case StatusCode.RESPONSE_SERVER_EXCEPTION:
+				Utilities.showToast("服务端异常", context);
 				break;
 			}
+			stopProgressDialog();
 		};
 	};
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_elevator_detail);
-		initView();
+		findViewById();
+		getExtraData();
 		init();
 	}
 
-	private void initView() {
-		mActivity=ElevatorDetailActivity.this;
+	private void findViewById() {
 		mGoBack = (ImageView) findViewById(R.id.iv_headBack);
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
-		mProjectName=(TextView) findViewById(R.id.tv_project_name);
-		mElevatorBrand=(TextView) findViewById(R.id.tv_elevator_brand);
-		mElevatorModel=(TextView) findViewById(R.id.tv_elevator_model);
-		mElevatorNo=(TextView) findViewById(R.id.tv_elevator_no);
-		mElevatorAliase=(TextView) findViewById(R.id.tv_elevator_aliase);
-		mTenementCompany=(TextView) findViewById(R.id.tv_tenement_company);
-		mTenementPerson=(TextView) findViewById(R.id.tv_tenement_person);
-		mTenementTel=(TextView) findViewById(R.id.tv_tenement_tel);
-		mMaintenanceCompany=(TextView) findViewById(R.id.tv_maitenance_company);
-		mLoadCapacity=(TextView) findViewById(R.id.tv_load_capacity);
-		mNominalSpeed=(TextView) findViewById(R.id.tv_nominal_speed);
-		mStoreyPlatformDoor=(TextView) findViewById(R.id.tv_storey_platform_door);
-		mElevatorHigher=(TextView) findViewById(R.id.tv_elevator_higher);
-		mMaintenanceType=(TextView) findViewById(R.id.tv_maintenance_type);
-		mDeviceAddress=(TextView) findViewById(R.id.tv_device_address);
-		mAnnualInspectionDate=(TextView) findViewById(R.id.tv_annual_inspection_date);
-		mLastMaintenanceDate=(TextView) findViewById(R.id.tv_last_maintenance_date);
+		mProjectName = (TextView) findViewById(R.id.tv_project_name);
+		mElevatorBrand = (TextView) findViewById(R.id.tv_elevator_brand);
+		mElevatorModel = (TextView) findViewById(R.id.tv_elevator_model);
+		mElevatorNo = (TextView) findViewById(R.id.tv_elevator_no);
+		mElevatorAliase = (TextView) findViewById(R.id.tv_elevator_aliase);
+		mTenementCompany = (TextView) findViewById(R.id.tv_tenement_company);
+		mTenementPerson = (TextView) findViewById(R.id.tv_tenement_person);
+		mTenementTel = (TextView) findViewById(R.id.tv_tenement_tel);
+		mMaintenanceCompany = (TextView) findViewById(R.id.tv_maitenance_company);
+		mLoadCapacity = (TextView) findViewById(R.id.tv_load_capacity);
+		mNominalSpeed = (TextView) findViewById(R.id.tv_nominal_speed);
+		mStoreyPlatformDoor = (TextView) findViewById(R.id.tv_storey_platform_door);
+		mElevatorHigher = (TextView) findViewById(R.id.tv_elevator_higher);
+		mMaintenanceType = (TextView) findViewById(R.id.tv_maintenance_type);
+		mDeviceAddress = (TextView) findViewById(R.id.tv_device_address);
+		mAnnualInspectionDate = (TextView) findViewById(R.id.tv_annual_inspection_date);
+		mLastMaintenanceDate = (TextView) findViewById(R.id.tv_last_maintenance_date);
+	}
+
+	private void getExtraData() {
+		Bundle bundle = getIntent().getExtras();
+		sElevatorNo = bundle.getString(Constant.ELEVATORNO);
 	}
 
 	private void init() {
-		Bundle bundle=getIntent().getExtras();
-		sElevatorNo=bundle.getString(Constant.ELEVATORNO);
 		mGoBack.setVisibility(View.VISIBLE);
 		mHeadContent.setText("电梯详情");
+		getDataByElevatorNo();
 		mGoBack.setOnClickListener(new OnClickListener() {
 			
 			@Override
@@ -145,38 +130,34 @@ public class ElevatorDetailActivity extends BaseActivity {
 				finish();
 			}
 		});
-		startLoading();
 	}
 
-	private void startLoading() {
-		// TODO Auto-generated method stub
+	private void getDataByElevatorNo() {
 		startProgressDialog("正在加载数据");
-		Param param=new Param(Constant.ELEVATORNO,sElevatorNo);
-		Request request=httpEngine.createRequest(ServicesConfig.ELEVATOR_DETAIL, param);
-		Call call=httpEngine.createRequestCall(request);
+		Param param = new Param(Constant.ELEVATORNO, sElevatorNo);
+		Request request = httpEngine.createRequest(ServicesConfig.ELEVATOR_DETAIL, param);
+		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {
-			
 			@Override
 			public void onResponse(Response response) throws IOException {
-				Message msg=new Message();
-				if(response.isSuccessful()){
-					msg.what=StatusCode.ELEVATOR_SUCCESS;
-					msg.obj=response.body().string();
-				}else{
-					msg.what=StatusCode.ELEVATOR_FAILED;
-					msg.obj="后台君出了点问题";
+				Message msg = new Message();
+				if (response.isSuccessful()) {
+					msg.what = StatusCode.GET_ELEVATOR_DETAILS_SUCCESS;
+					msg.obj = response.body().string();
+				} else {
+					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
+					msg.obj = "服务器异常";
 				}
 				handler.sendMessage(msg);
 			}
-			
+
 			@Override
 			public void onFailure(Request request, IOException exception) {
-				Message msg=new Message();
-				msg.what=StatusCode.ELEVATOR_FAILED;
-				msg.obj="网络异常，请检查网络";
+				Message msg = new Message();
+				msg.what = StatusCode.RESPONSE_NET_FAILED;
+				msg.obj = "网络异常";
 				handler.sendMessage(msg);
 			}
 		});
-		
 	}
 }

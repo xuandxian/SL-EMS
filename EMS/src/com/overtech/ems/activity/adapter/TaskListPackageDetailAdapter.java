@@ -11,12 +11,12 @@ import android.widget.BaseAdapter;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class PackageDetailAdapter extends BaseAdapter {
+public class TaskListPackageDetailAdapter extends BaseAdapter {
 
 	private Context context;
 	private ArrayList<TaskPackageDetail> list = new ArrayList<TaskPackageDetail>();
 
-	public PackageDetailAdapter(Context context, ArrayList<TaskPackageDetail> list) {
+	public TaskListPackageDetailAdapter(Context context, ArrayList<TaskPackageDetail> list) {
 		super();
 		this.context = context;
 		this.list = list;
@@ -62,12 +62,7 @@ public class PackageDetailAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		String temp=data.getElevatorName();
-		if (temp.contains("路")) {
-			holder.mElevtorName.setText(temp.split("路")[1]);
-		}else {
-			holder.mElevtorName.setText(temp);
-		}
+		holder.mElevtorName.setText(data.getElevatorName());
 		if(data.getWorkType().equals("0")){
 			holder.mWorkType.setText("(半月保)");
 		}else if(data.getWorkType().equals("1")){
@@ -80,9 +75,25 @@ public class PackageDetailAdapter extends BaseAdapter {
 		holder.mElevtorProductor.setText(data.getElevatorBrand());
 		holder.mElevtorNo.setText(data.getElevatorNo());
 		holder.mElevtorType.setText(data.getElevatorFloor());
+		if(data.getIsFinish().equalsIgnoreCase("1")){
+			holder.mRelativeLayout.setBackgroundResource(R.color.package_detail);
+		}else{
+			holder.mRelativeLayout.setBackgroundDrawable(null);
+		}
 		return convertView;
 	}
-	
+	/**
+	 * 对电梯的完成状态进行遍历，如果全部完成则返回true，否则返回false；
+	 * @return
+	 */
+	public boolean isAllCompleted(){
+		for(int i=0;i<getCount();i++){
+			if("0".equals(list.get(i).getIsFinish())){
+				return false;
+			}
+		}
+		return true;
+	}
 	class ViewHolder {
 		public RelativeLayout mRelativeLayout;
 		public TextView mElevtorName;

@@ -73,13 +73,10 @@ public class StatusCode {
 	public static final int WORK_DETAILS_FAILED=0x28;
 
 	/**
-	 * 获取电梯详情成功
+	 * 电梯详情
 	 */
-	public static final int ELEVATOR_SUCCESS=0x29;
-	/**
-	 * 获取电梯详情失败
-	 */
-	public static final int ELEVATOR_FAILED=0x30;
+	public static final int GET_ELEVATOR_DETAILS_SUCCESS=0x29;
+	public static final int GET_ELEVATOR_DETAILS_FAILED=0x30;
 	/**
 	 * 获取电梯完成状态成功
 	 */
