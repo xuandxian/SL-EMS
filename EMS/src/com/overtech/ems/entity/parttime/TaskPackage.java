@@ -14,13 +14,13 @@ public class TaskPackage implements Serializable {
 	private String latitude;           //纬度
 	private String longitude;          //经度
 	private String maintenanceAddress; //维保地点
-	private long maintenanceDate;    //维保日期
+	private String maintenanceDate;    //维保日期
     private String topState;			//是否置顶
     
     
 	public TaskPackage(String taskNo, String taskPackageName,
 			String elevatorAmounts, String isFinish, String latitude,
-			String longitude, String maintenanceAddress, long maintenanceDate,
+			String longitude, String maintenanceAddress, String maintenanceDate,
 			String topState) {
 		super();
 		this.taskNo = taskNo;
@@ -82,10 +82,10 @@ public class TaskPackage implements Serializable {
 	public void setTopState(String topState) {
 		this.topState = topState;
 	}
-	public long getMaintenanceDate() {
+	public String getMaintenanceDate() {
 		return maintenanceDate;
 	}
-	public void setMaintenanceDate(long maintenanceDate) {
+	public void setMaintenanceDate(String maintenanceDate) {
 		this.maintenanceDate = maintenanceDate;
 	}
 	 

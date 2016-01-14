@@ -71,7 +71,11 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 	private TextView mHeadTitle;
 	public LatLng myLocation;
 	public LocationClient mLocationClient = null;
+	private final static String REFRESH_TYPE_DEFAULT="0";
+	private final static String REFRESH_TYPE_LOADING="1";
+	private final static String REFRESH_TYPE_FILTER="2";
 	public BDLocationListener myListener = new MyLocationListener();
+	
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			Gson gson = new Gson();
@@ -82,6 +86,9 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 				list = (ArrayList<TaskPackage>) tasks.getModel();
 				if (null == myLocation) {
 					Utilities.showToast("定位失败", context);
+					return;
+				}
+				if (null==list || list.isEmpty()) {
 					return;
 				}
 				mAdapter = new GrabTaskAdapter(list, myLocation, mActivity);
@@ -155,14 +162,14 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 			}
 			myLocation = new LatLng(location.getLatitude(),location.getLongitude());
 			Log.e("GrabTaskFragment", "location:" + "(" + myLocation.latitude+ "," + myLocation.longitude + ")");
-			initData(ServicesConfig.GRABTASK, "0");
+			initData(ServicesConfig.GRABTASK,REFRESH_TYPE_DEFAULT);
 		}
 	}
 
 	public void initData(String url, String flag, Param... params) {
-		if (TextUtils.equals("0", flag)) {
+		if (TextUtils.equals(REFRESH_TYPE_DEFAULT, flag)) {
 			startProgressDialog("正在查询...");
-		} else if (TextUtils.equals("2", flag)) {
+		} else if (TextUtils.equals(REFRESH_TYPE_FILTER, flag)) {
 			startProgressDialog("正在查询...");
 			mSwipeListView.setFooterViewInvisible();
 			mSwipeListView.setPullRefreshEnable(false);
@@ -261,7 +268,7 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 			if (mAdapter != null) {
 				mAdapter.notifyDataSetChanged();
 			}
-			initData(ServicesConfig.DO_FILTER, "2", zoneParam, timeParam);
+			initData(ServicesConfig.DO_FILTER, REFRESH_TYPE_FILTER, zoneParam, timeParam);
 		} else if (requestCode == StatusCode.RESULT_GRAB_DO_SEARCH&& resultCode == Activity.RESULT_OK) {
 			String keyWord = data.getStringExtra("mKeyWord");
 			Param keyWordParam = new Param(Constant.KEYWORD, keyWord);
@@ -271,7 +278,7 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 			if (mAdapter != null) {
 				mAdapter.notifyDataSetChanged();
 			}
-			initData(ServicesConfig.GRABTASK, "2", keyWordParam);
+			initData(ServicesConfig.GRABTASK,REFRESH_TYPE_FILTER, keyWordParam);
 		}
 	}
 
@@ -291,7 +298,8 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 	}
 
 	public void onRefresh() {
-		initData(ServicesConfig.GRABTASK, "1");
+		Utilities.showToast("下拉刷新", mActivity);
+		initData(ServicesConfig.GRABTASK, REFRESH_TYPE_LOADING);
 	}
 
 	public void onLoadMore() {

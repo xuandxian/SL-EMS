@@ -86,7 +86,7 @@ public class KeyWordSerachActivity extends BaseActivity {
 					mSearchListView.setAdapter(mResultAdapter);
 				}
 				break;
-			case StatusCode.KEYWORDS_FAILED:
+			case StatusCode.RESPONSE_SERVER_EXCEPTION:
 				Utilities.showToast("服务器异常", context);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
@@ -230,10 +230,9 @@ public class KeyWordSerachActivity extends BaseActivity {
 					msg.what = StatusCode.KEYWORDS_SUCCESS;
 					msg.obj = response.body().string();
 				} else {
-					msg.what = StatusCode.KEYWORDS_FAILED;
+					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
 				}
 				handler.sendMessage(msg);
-				// Log.e("KeyWordSerachActivity", response.body().string());
 			}
 
 			@Override

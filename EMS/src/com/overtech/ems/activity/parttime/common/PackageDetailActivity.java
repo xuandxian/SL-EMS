@@ -35,7 +35,7 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 /*
- *任务包详情
+ *任务包详情(抢单模块)
  * @author Tony
  * @date 2016-01-13
  * 

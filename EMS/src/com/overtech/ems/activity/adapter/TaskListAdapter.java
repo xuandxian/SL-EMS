@@ -1,18 +1,13 @@
 package com.overtech.ems.activity.adapter;
 
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.entity.parttime.TaskPackage;
-import com.overtech.ems.entity.test.Data4;
 import android.content.Context;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -22,7 +17,6 @@ public class TaskListAdapter extends BaseAdapter {
 
 	private List<TaskPackage> list;
 	private Context context;
-	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 	private NumberFormat numFormat = NumberFormat.getNumberInstance();
 	private double latitude;
 	private double longitude;
@@ -65,22 +59,17 @@ public class TaskListAdapter extends BaseAdapter {
 	public View getView(int position, View convertView, ViewGroup parent) {
 		TaskPackage data = list.get(position);
 		if (convertView == null) {
-			convertView = View.inflate(context, R.layout.item_list_tasklist,
-					null);
+			convertView = View.inflate(context, R.layout.item_list_tasklist,null);
 			new ViewHolder(convertView);
 		}
 		ViewHolder holder = (ViewHolder) convertView.getTag();
 		holder.taskPackageName.setText(data.getTaskPackageName());
 		holder.elevatorAmounts.setText(data.getElevatorAmounts());
 		holder.maintenanceAddress.setText(data.getMaintenanceAddress());
-		holder.maintenanceDate.setText(sdf.format(new Date(data
-				.getMaintenanceDate())));
-		LatLng latlng = new LatLng(Double.parseDouble(data.getLatitude()),
-				Double.parseDouble(data.getLongitude()));
+		holder.maintenanceDate.setText(data.getMaintenanceDate());
+		LatLng latlng = new LatLng(Double.parseDouble(data.getLatitude()),Double.parseDouble(data.getLongitude()));
 		numFormat.setMaximumFractionDigits(2);
-
-		holder.distance.setText(numFormat.format(DistanceUtil.getDistance(
-				mLatLng, latlng) / 1000.0) + "千米");
+		holder.distance.setText(numFormat.format(DistanceUtil.getDistance(mLatLng, latlng) / 1000.0) + "千米");
 		return convertView;
 	}
 
@@ -103,8 +92,7 @@ public class TaskListAdapter extends BaseAdapter {
 		TaskPackage data = list.get(position);
 		String desLat = data.getLatitude();
 		String desLng = data.getLongitude();
-		return new LatLng(Double.parseDouble(desLat),
-				Double.parseDouble(desLng));
+		return new LatLng(Double.parseDouble(desLat),Double.parseDouble(desLng));
 	}
 	/**
 	 *	目的地名称

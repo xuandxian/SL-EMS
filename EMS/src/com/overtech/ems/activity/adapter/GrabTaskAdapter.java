@@ -1,8 +1,6 @@
 package com.overtech.ems.activity.adapter;
 
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import android.content.Context;
 import android.text.TextUtils;
@@ -20,7 +18,6 @@ public class GrabTaskAdapter extends BaseAdapter {
 
 	private List<TaskPackage> list;
 	private Context context;
-	private SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd");
 	private LatLng mLocation;
 
 	public List<TaskPackage> getData() {
@@ -75,7 +72,7 @@ public class GrabTaskAdapter extends BaseAdapter {
 		NumberFormat numberFormat=NumberFormat.getNumberInstance();//保留两位小数
 		numberFormat.setMaximumFractionDigits(2);
 		holder.distance.setText(numberFormat.format(DistanceUtil.getDistance(mLocation, latlng)/1000.0)+ "km");
-		holder.date.setText(format.format(new Date(data.getMaintenanceDate())));// 时间尚未刷新
+		holder.date.setText(data.getMaintenanceDate());
 		if (TextUtils.equals(data.getIsFinish(), "0")) {
 			holder.iv_icon.setImageResource(R.drawable.icon_task_none);
 		} else if (TextUtils.equals(data.getIsFinish(), "1")) {
