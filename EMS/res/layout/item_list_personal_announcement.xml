@@ -23,7 +23,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginTop="5dp"
         android:singleLine="true"
-        android:textSize="@dimen/text_size_large" />
+        android:textSize="@dimen/text_size_title" />
 	<TextView 
 	    android:id="@+id/tv_announcement_abstract"
 	    android:layout_width="150dp"
