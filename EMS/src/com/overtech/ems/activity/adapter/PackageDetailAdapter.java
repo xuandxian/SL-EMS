@@ -63,8 +63,8 @@ public class PackageDetailAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		String temp=data.getElevatorName();
-		if (temp.contains("路")) {
-			holder.mElevtorName.setText(temp.split("路")[1]);
+		if (temp.contains("号")) {
+			holder.mElevtorName.setText(temp.split("号")[1]);
 		}else {
 			holder.mElevtorName.setText(temp);
 		}

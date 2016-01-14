@@ -54,23 +54,27 @@ public class ElevatorDetailActivity extends BaseActivity {
 				Gson gson = new Gson();
 				ElevatorInfoBean tasks = gson.fromJson(json,ElevatorInfoBean.class);
 				ElevatorInfo model = tasks.getModel();
-				mProjectName.setText(model.getProjectName());
-				mElevatorBrand.setText(model.getElevatorBrand());
-				mElevatorModel.setText(model.getElevatorModel());
-				mElevatorNo.setText(model.getElevatorNo());
-				mElevatorAliase.setText(model.getElevatorAliase());
-				mTenementCompany.setText(model.getTenementCompany());
-				mTenementPerson.setText(model.getTenementPerson());
-				mTenementTel.setText(model.getTenementTel());
-				mMaintenanceCompany.setText(model.getMaintenanceCompany());
-				mLoadCapacity.setText(model.getLoadCapacity());
-				mNominalSpeed.setText(model.getNominalSpeed());
-				mStoreyPlatformDoor.setText(model.getStoreyPlatformDoor());
-				mElevatorHigher.setText(model.getElevatorHigher());
-				mMaintenanceType.setText(model.getMaintenanceType());
-				mDeviceAddress.setText(model.getDeviceAddress());
-				mAnnualInspectionDate.setText(model.getAnnualInspectionDate());
-				mLastMaintenanceDate.setText(model.getLastMaintenanceDate());
+				if (null==model) {
+					Utilities.showToast("信息查询失败", context);
+				}else {
+					mProjectName.setText(model.getProjectName());
+					mElevatorBrand.setText(model.getElevatorBrand());
+					mElevatorModel.setText(model.getElevatorModel());
+					mElevatorNo.setText(model.getElevatorNo());
+					mElevatorAliase.setText(model.getElevatorAliase());
+					mTenementCompany.setText(model.getTenementCompany());
+					mTenementPerson.setText(model.getTenementPerson());
+					mTenementTel.setText(model.getTenementTel());
+					mMaintenanceCompany.setText(model.getMaintenanceCompany());
+					mLoadCapacity.setText(model.getLoadCapacity());
+					mNominalSpeed.setText(model.getNominalSpeed());
+					mStoreyPlatformDoor.setText(model.getStoreyPlatformDoor());
+					mElevatorHigher.setText(model.getElevatorHigher());
+					mMaintenanceType.setText(model.getMaintenanceType());
+					mDeviceAddress.setText(model.getDeviceAddress());
+					mAnnualInspectionDate.setText(model.getAnnualInspectionDate());
+					mLastMaintenanceDate.setText(model.getLastMaintenanceDate());
+				}
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
 				Utilities.showToast("网络异常", context);
