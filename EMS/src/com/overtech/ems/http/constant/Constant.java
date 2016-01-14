@@ -101,4 +101,8 @@ public class Constant {
 	 * 更新手机号（新手机号）
 	 */
 	public static final String NEWPHONE="newPhone";
+	/**
+	 * 公告id
+	 */
+	public static final String ANNOUNCEMENTID="id";
 }

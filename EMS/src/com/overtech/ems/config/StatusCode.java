@@ -115,11 +115,14 @@ public class StatusCode {
 	 * 个人账单加载成功
 	 */
 	public static final int ACCOUNT_LIST_SUCCESS=0x49;
-	
 	//OnActivityFroResult StatusCode
 
 	//抢单
 	public static final int RESULT_GRAB_DO_FILTER = 0x50;
 	public static final int RESULT_GRAB_DO_SEARCH = 0x51;
+	/**
+	 * 公告加载成功
+	 */
+	public static final int ANNOUNCEMENT_SUCCESS=0x52;
 
 }

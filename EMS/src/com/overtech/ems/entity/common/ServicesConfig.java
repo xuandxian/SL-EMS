@@ -123,5 +123,12 @@ public class ServicesConfig {
 	 * 29.退单纪录
 	 */
 	public static final String PERSONAL_CHARGEBACK_LIST = SystemConfig.IP+ BusinessConfig.URL_PERSONAL_CHARGEBACK_LIST;
-
+	/**
+	 * 30.公告
+	 */
+	public static final String PERSONAL_ANNOUNCEMENT=SystemConfig.IP+BusinessConfig.URL_PERSONAL_ANNOUNCEMENT;
+	/**
+	 * 31.公告详情
+	 */
+	public static final String PERSONAL_ANNOUNCEMENT_DETAIL=SystemConfig.IP+BusinessConfig.URL_PERSONAL_ANNOUNCEMENT_DETAIL;
 }

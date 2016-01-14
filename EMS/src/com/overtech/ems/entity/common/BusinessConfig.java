@@ -109,24 +109,31 @@ public class BusinessConfig {
 	 */
 	public static final String URL_CHANGE_PHONENO_PASSWORD = "/employee/changePhoneNoPassword.action";
 	/**
-	 * 23.更换手机号（验证手机号）
+	 * 24.更换手机号（验证手机号）
 	 */
 	public static final String URL_CHANGE_PHONENO_VALIDATE = "/employee/validatePhoneNo.action";
 	/**
-	 * 24.更换手机号（手机号码／短信验证码）
+	 * 25.更换手机号（手机号码／短信验证码）
 	 */
 	public static final String URL_CHANGE_PHONENO_UPDATE = "/employee/changePhoneNoUpdate.action";
 	/**
-	 * 25.我的账单（已结算／未结算）
+	 * 26.我的账单（已结算／未结算）
 	 */
     public static final String URL_PERSONAL_BILL = "/employee/personalBill.action";
 	/**
-	 * 26.奖励记录
+	 * 27.奖励记录
 	 */
 	public static final String URL_PERSONAL_BONUS_LIST = "/employee/personalBonusList.action";
 	/**
-	 * 27.退单纪录
+	 * 28.退单纪录
 	 */
 	public static final String URL_PERSONAL_CHARGEBACK_LIST = "/employee/personalChargeBackList.action";
-
+	/**
+	 * 29.公告
+	 */
+	public static final String URL_PERSONAL_ANNOUNCEMENT="/task/personalAnnouncement.action";
+	/**
+	 * 30.公告详情
+	 */
+	public static final String URL_PERSONAL_ANNOUNCEMENT_DETAIL="/task/personalAnnouncementDetail.action";
 }
