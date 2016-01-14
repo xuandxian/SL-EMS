@@ -100,15 +100,17 @@ public class TaskListPackageDetailActivity extends BaseActivity implements OnRef
 				mPhone=bean.getPartnerPhone();
 				mZonePhone=bean.getZonePhone();
 				if(null==list||list.size()==0){
-					Utilities.showToast("试试重新打开该页面", mActivity);
+					Utilities.showToast("无数据", mActivity);
 				}else{
 					adapter = new TaskListPackageDetailAdapter(context, list);
 					mTask.setAdapter(adapter);
 				}
 				break;
-			case StatusCode.PACKAGE_DETAILS_FAILED:
-				Utilities.showToast((String)msg.obj, mActivity);
+			case StatusCode.RESPONSE_SERVER_EXCEPTION:
+				Utilities.showToast((String)msg.obj, context);
 				break;
+			case StatusCode.RESPONSE_NET_FAILED:
+				Utilities.showToast((String)msg.obj, context);
 			default:
 				break;
 			}
@@ -297,8 +299,8 @@ public class TaskListPackageDetailActivity extends BaseActivity implements OnRef
 					msg.what = StatusCode.PACKAGE_DETAILS_SUCCESS;
 					msg.obj = response.body().string();
 				} else {
-					msg.what = StatusCode.PACKAGE_DETAILS_FAILED;
-					msg.obj = "数据异常";
+					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
+					msg.obj = "服务器异常";
 				}
 				handler.sendMessage(msg);
 			}
@@ -306,8 +308,8 @@ public class TaskListPackageDetailActivity extends BaseActivity implements OnRef
 			@Override
 			public void onFailure(Request arg0, IOException arg1) {
 				Message msg = new Message();
-				msg.what = StatusCode.PACKAGE_DETAILS_FAILED;
-				msg.obj = "请检查网络";
+				msg.what = StatusCode.RESPONSE_NET_FAILED;
+				msg.obj = "网络异常";
 				handler.sendMessage(msg);
 			}
 		});

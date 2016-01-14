@@ -49,7 +49,7 @@ public class PersonalAnnouncementActivity extends BaseActivity {
 				AnnouncementBean bean=gson.fromJson(json, AnnouncementBean.class);
 				list=bean.getModel();
 				if(null==list||list.size()==0){
-					Utilities.showToast("出了小小的问题，请重新加载试试", activity);
+					Utilities.showToast("无数据", activity);
 				}else{
 					adapter=new PersonalAnnounceAdapter(context, list);
 					mAnnouncement.setAdapter(adapter);
@@ -118,7 +118,7 @@ public class PersonalAnnouncementActivity extends BaseActivity {
 					msg.obj=response.body().string();
 				}else{
 					msg.what=StatusCode.RESPONSE_SERVER_EXCEPTION;
-					msg.obj="服务君打了个盹儿，请重新试试";
+					msg.obj="服务器异常";
 				}
 				handler.sendMessage(msg);
 			}
@@ -127,7 +127,7 @@ public class PersonalAnnouncementActivity extends BaseActivity {
 			public void onFailure(Request arg0, IOException arg1) {
 				Message msg=new Message();
 				msg.what=StatusCode.RESPONSE_NET_FAILED;
-				msg.obj="网络异常，请检查网络";
+				msg.obj="网络异常";
 				handler.sendMessage(msg);
 			}
 		});

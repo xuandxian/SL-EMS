@@ -29,6 +29,7 @@ import com.overtech.ems.activity.parttime.personal.PersonalBoundsActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalCancleListActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalDeatilsActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalHelpDocActivity;
+import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
@@ -36,6 +37,7 @@ import com.overtech.ems.picasso.Picasso;
 import com.overtech.ems.picasso.Transformation;
 import com.overtech.ems.utils.ImageCacheUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
+import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.CustomScrollView;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
@@ -64,35 +66,48 @@ public class PersonalZoneFragment extends BaseFragment implements OnClickListene
 	
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
-			String info = (String) msg.obj;
-			try {
-				JSONObject json = new JSONObject(info);
-				JSONObject model = (JSONObject) json.get("model");
-				String imageUrl = model.getString("avatorUrl");
-				String name = model.getString("name");
-				if (imageUrl == null || "".equals(imageUrl)) {
-					mAvator.setScaleType(ScaleType.FIT_XY);
-					mAvator.setImageResource(STUB_ID);
-				} else {
-					//调用从网络中加载过来的图片
-					Picasso.with(context).load(imageUrl).placeholder(STUB_ID).error(STUB_ID).config(DEFAULT_CONFIG).transform(new Transformation() {
-								//圆角图片的实现
-								@Override
-								public Bitmap transform(Bitmap source) {
-									return ImageCacheUtils.toRoundBitmap(source);
-								}
-
-								@Override
-								public String key() {
-									return null;
-								}
-							}).into(mAvator);
-
+			switch (msg.what) {
+			case StatusCode.PERSONAL_ZONE_SUCCESS:
+				String info = (String) msg.obj;
+				try {
+					JSONObject json = new JSONObject(info);
+					JSONObject model = (JSONObject) json.get("model");
+					String imageUrl = model.getString("avatorUrl");
+					String name = model.getString("name");
+					if (imageUrl == null || "".equals(imageUrl)) {
+						mAvator.setScaleType(ScaleType.FIT_XY);
+						mAvator.setImageResource(STUB_ID);
+					} else {
+						//调用从网络中加载过来的图片
+						Picasso.with(context).load(imageUrl).placeholder(STUB_ID).error(STUB_ID).config(DEFAULT_CONFIG).transform(new Transformation() {
+							//圆角图片的实现
+							@Override
+							public Bitmap transform(Bitmap source) {
+								return ImageCacheUtils.toRoundBitmap(source);
+							}
+							
+							@Override
+							public String key() {
+								return null;
+							}
+						}).into(mAvator);
+						
+					}
+					mName.setText(name);
+					stopProgressDialog();//图片加载完成后停止进度框
+				} catch (JSONException e) {
+					e.printStackTrace();
 				}
-				mName.setText(name);
-				stopProgressDialog();//图片加载完成后停止进度框
-			} catch (JSONException e) {
-				e.printStackTrace();
+				
+				break;
+			case StatusCode.RESPONSE_SERVER_EXCEPTION:
+				Utilities.showToast("服务器异常", mActivity);
+				break;
+			case StatusCode.RESPONSE_NET_FAILED:
+				Utilities.showToast("网络异常", mActivity);
+				break;
+			default:
+				break;
 			}
 
 		};
@@ -126,13 +141,20 @@ public class PersonalZoneFragment extends BaseFragment implements OnClickListene
 			@Override
 			public void onResponse(Response response) throws IOException {
 				Message msg = new Message();
-				msg.obj = response.body().string();
+				if(response.isSuccessful()){
+					msg.what=StatusCode.PERSONAL_ZONE_SUCCESS;
+					msg.obj = response.body().string();
+				}else{
+					msg.what=StatusCode.RESPONSE_SERVER_EXCEPTION;
+				}
 				handler.sendMessage(msg);
 			}
 
 			@Override
 			public void onFailure(Request request, IOException e) {
-
+				Message msg=new Message();
+				msg.what=StatusCode.RESPONSE_NET_FAILED;
+				handler.sendMessage(msg);
 			}
 		});
 	}

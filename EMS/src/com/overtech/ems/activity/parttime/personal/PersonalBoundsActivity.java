@@ -1,11 +1,9 @@
 package com.overtech.ems.activity.parttime.personal;
 
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.List;
 
-import android.app.ExpandableListActivity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,17 +13,16 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
-import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.adapter.PersonalBonusListAdapter;
+import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.bean.BonusBean;
 import com.overtech.ems.entity.common.ServicesConfig;
-import com.overtech.ems.entity.test.Data2;
+import com.overtech.ems.entity.parttime.Bonus;
 import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.SharedPreferencesKeys;
@@ -40,26 +37,31 @@ public class PersonalBoundsActivity extends BaseActivity implements OnClickListe
 	private TextView mHeadContent;
 	private ExpandableListView mPersonalAccountListView;
 	private PersonalBonusListAdapter adapter;
+	private List<Bonus> list;
 	private Context context;
-	private final int SUCCESS=1;
-	private final int FAILED=0;
 	private Handler handler=new Handler(){
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
-			case SUCCESS:
+			case StatusCode.PERSONAL_BOUNDS_SUCCESS:
 				String json=(String) msg.obj;
-				Log.e("bonus======", json);
 				Gson gson=new Gson();
 				BonusBean bean=gson.fromJson(json, BonusBean.class);
-				adapter=new PersonalBonusListAdapter(bean.getModel(), context);
-				mPersonalAccountListView.setAdapter(adapter);
+				list=bean.getModel();
+				if(list==null||list.size()==0){
+					Utilities.showToast("无数据", context);
+				}else{
+					adapter=new PersonalBonusListAdapter(list, context);
+					mPersonalAccountListView.setAdapter(adapter);
+				}
 				
 				break;
-			case FAILED:
+			case StatusCode.RESPONSE_SERVER_EXCEPTION:
 				String exception=(String) msg.obj;
 				Utilities.showToast(exception, context);
 				break;
-
+			case StatusCode.RESPONSE_NET_FAILED:
+				Utilities.showToast((String)msg.obj, context);
+				break;
 			default:
 				break;
 			}
@@ -98,11 +100,11 @@ public class PersonalBoundsActivity extends BaseActivity implements OnClickListe
 			public void onResponse(Response response) throws IOException {
 				Message msg=new Message();
 				if(response.isSuccessful()){
-					msg.what=SUCCESS;
+					msg.what=StatusCode.PERSONAL_BOUNDS_SUCCESS;
 					msg.obj=response.body().string();
 				}else{
-					msg.what=FAILED;
-					msg.obj="数据异常";
+					msg.what=StatusCode.RESPONSE_SERVER_EXCEPTION;
+					msg.obj="服务器异常";
 				}
 				handler.sendMessage(msg);
 			}
@@ -110,7 +112,7 @@ public class PersonalBoundsActivity extends BaseActivity implements OnClickListe
 			@Override
 			public void onFailure(Request request, IOException arg1) {
 				Message msg=new Message();
-				msg.what=FAILED;
+				msg.what=StatusCode.RESPONSE_NET_FAILED;
 				msg.obj="网络异常";
 				handler.sendMessage(msg);
 			}

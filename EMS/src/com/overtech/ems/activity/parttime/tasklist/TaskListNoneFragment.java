@@ -67,17 +67,17 @@ public class TaskListNoneFragment extends BaseFragment implements IXListViewList
 				TaskPackageBean bean=gson.fromJson(json, TaskPackageBean.class);
 				list=bean.getModel();
 				if(null==list||list.size()==0){
-					Utilities.showToast("后台正在抢修中,请重试...", mActivity);
+					Utilities.showToast("无数据", mActivity);
 				}else{
 					adapter=new TaskListAdapter(list, mActivity);
 					mSwipeListView.setAdapter(adapter);
 				}
 				break;
-			case StatusCode.TASKLIST_NONE_FAILED:
+			case StatusCode.RESPONSE_SERVER_EXCEPTION:
 				Utilities.showToast((String)msg.obj, mActivity);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast("网络链接失败", mActivity);
+				Utilities.showToast((String)msg.obj, mActivity);
 				break;
 			default:
 				break;
@@ -171,8 +171,8 @@ public class TaskListNoneFragment extends BaseFragment implements IXListViewList
 					msg.what=StatusCode.TASKLIST_NONE_SUCCESS;
 					msg.obj=response.body().string();
 				}else{
-					msg.what=StatusCode.TASKLIST_NONE_FAILED;
-					msg.obj="数据异常，请稍后再试";
+					msg.what=StatusCode.RESPONSE_SERVER_EXCEPTION;
+					msg.obj="服务器异常";
 				}
 				handler.sendMessage(msg);
 			}
@@ -181,6 +181,7 @@ public class TaskListNoneFragment extends BaseFragment implements IXListViewList
 			public void onFailure(Request arg0, IOException arg1) {
 				Message msg = new Message();
 				msg.what = StatusCode.RESPONSE_NET_FAILED;
+				msg.obj="网络异常";
 				handler.sendMessage(msg);
 			}
 		});

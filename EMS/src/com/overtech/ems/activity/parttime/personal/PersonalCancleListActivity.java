@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.MyApplication;
+import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
@@ -29,19 +31,19 @@ public class PersonalCancleListActivity extends BaseActivity {
 	private ImageView mDoBack;
 	private TextView mHeadTitle;
 	private ListView mCancleTaskRecord;
-	private SharedPreferences sp;
-	private final int SUCCESS=1;
-	private final int FAILED=0;
 	private Handler handler=new Handler(){
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
-			case SUCCESS:
+			case StatusCode.PERSONAL_CHARGEBACK_SUCCESS:
 				String info=(String) msg.obj;
-				
+				Log.e("===", info);
 				break;
-			case FAILED:
+			case StatusCode.RESPONSE_SERVER_EXCEPTION:
 				String exception=(String) msg.obj;
 				Utilities.showToast(exception, context);
+				break;
+			case StatusCode.RESPONSE_NET_FAILED:
+				Utilities.showToast((String)msg.obj, context);
 				break;
 			default:
 				break;
@@ -70,8 +72,8 @@ public class PersonalCancleListActivity extends BaseActivity {
 	}
 
 	private void startLoading() {
-		startProgressDialog("正在玩命加载中...");
-		Param param=new Param(Constant.LOGINNAME, sp.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null));
+		startProgressDialog("正在加载中...");
+		Param param=new Param(Constant.LOGINNAME, mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null));
 		Request request=httpEngine.createRequest(ServicesConfig.PERSONAL_CHARGEBACK_LIST, param);
 		Call call=httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {
@@ -80,11 +82,11 @@ public class PersonalCancleListActivity extends BaseActivity {
 			public void onResponse(Response response) throws IOException {
 				Message msg=new Message();
 				if(response.isSuccessful()){
-					msg.what=SUCCESS;
+					msg.what=StatusCode.PERSONAL_CHARGEBACK_SUCCESS;
 					msg.obj=response.body().string();
 				}else{
-					msg.what=FAILED;
-					msg.obj="对不起，数据异常";
+					msg.what=StatusCode.RESPONSE_SERVER_EXCEPTION;
+					msg.obj="服务器异常";
 				}
 				handler.sendMessage(msg);
 			}
@@ -92,7 +94,7 @@ public class PersonalCancleListActivity extends BaseActivity {
 			@Override
 			public void onFailure(Request arg0, IOException arg1) {
 				Message msg=new Message();
-				msg.what=FAILED;
+				msg.what=StatusCode.RESPONSE_NET_FAILED;
 				msg.obj="网络异常";
 				handler.sendMessage(msg);
 			}
@@ -102,6 +104,5 @@ public class PersonalCancleListActivity extends BaseActivity {
 		mDoBack=(ImageView) findViewById(R.id.iv_headBack);
 		mHeadTitle=(TextView) findViewById(R.id.tv_headTitle);
 		mCancleTaskRecord=(ListView) findViewById(R.id.lv_cancle_task_record);
-		sp=((MyApplication)getApplication()).getSharePreference();
 	}
 }

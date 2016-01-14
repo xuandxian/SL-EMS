@@ -43,12 +43,17 @@ public class TaskListDonetFragment extends BaseFragment {
 				Gson gson=new Gson();
 				TaskPackageBean bean=gson.fromJson(json, TaskPackageBean.class);
 				list=bean.getModel();
-				if(list!=null){
+				if(list==null||list.size()==0){
+					Utilities.showToast("无数据", mActivity);
+				}else{
 					adapter=new TaskListAdapter(list, mActivity);
+					mDonet.setAdapter(adapter);
 				}
-				mDonet.setAdapter(adapter);
 				break;
-			case StatusCode.TASKLIST_DONET_FAILED:
+			case StatusCode.RESPONSE_SERVER_EXCEPTION:
+				Utilities.showToast((String)msg.obj, mActivity);
+				break;
+			case StatusCode.RESPONSE_NET_FAILED:
 				Utilities.showToast((String)msg.obj, mActivity);
 				break;
 
@@ -87,8 +92,8 @@ public class TaskListDonetFragment extends BaseFragment {
 					msg.what=StatusCode.TASKLIST_DONET_SUCCESS;
 					msg.obj=response.body().string();
 				}else{
-					msg.what=StatusCode.TASKLIST_DONET_FAILED;
-					msg.obj="数据异常";
+					msg.what=StatusCode.RESPONSE_SERVER_EXCEPTION;
+					msg.obj="服务器异常";
 				}
 				handler.sendMessage(msg);
 			}
@@ -96,8 +101,8 @@ public class TaskListDonetFragment extends BaseFragment {
 			@Override
 			public void onFailure(Request arg0, IOException arg1) {
 				Message msg=new Message();
-				msg.what=StatusCode.TASKLIST_DONET_FAILED;
-				msg.obj="网络链接错误";
+				msg.what=StatusCode.RESPONSE_NET_FAILED;
+				msg.obj="网络异常";
 				handler.sendMessage(msg);
 			}
 		});

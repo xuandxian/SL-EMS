@@ -82,12 +82,7 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 				adapter = new TaskListDetailsAdapter(context, list);
 				mTaskListData.setAdapter(adapter);
 				break;
-			case StatusCode.WORK_DETAILS_FAILED:
-				Utilities.showToast("服务器异常", context);
-				break;
-			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast("网络链接失败", context);
-				break;
+			
 			case StatusCode.MAINTENANCE_COMPLETE_SUCCESS:
 				
 				String maintenanceJson=(String)msg.obj ;//提交电梯完成状态后，后台返回的信息
@@ -113,9 +108,13 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 					e.printStackTrace();
 				}
 				break;
-			case StatusCode.MAINTENENCE_COMPLETE_FAILED:
+			case StatusCode.RESPONSE_NET_FAILED:
 				Utilities.showToast((String)msg.obj, context);
 				break;
+			case StatusCode.RESPONSE_SERVER_EXCEPTION:
+				Utilities.showToast((String)msg.obj, context);
+				break;
+			
 			default:
 				break;
 			}
@@ -178,13 +177,17 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 					msg.what = StatusCode.WORK_DETAILS_SUCCESS;
 					msg.obj = response.body().string();
 				} else {
-					msg.what = StatusCode.WORK_DETAILS_FAILED;
+					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
+					msg.obj="服务器异常";
 				}
 				handler.sendMessage(msg);
 			}
 			@Override
 			public void onFailure(Request request, IOException e) {
-				Log.e("QueryTaskListActivity:onFailure","onFailure");
+				Message msg=new Message();
+				msg.what=StatusCode.RESPONSE_NET_FAILED;
+				msg.obj="网络异常";
+				handler.sendMessage(msg);
 			}
 
 		});
@@ -262,8 +265,8 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 					msg.what=StatusCode.MAINTENANCE_COMPLETE_SUCCESS;
 					msg.obj=response.body().string();
 				}else{
-					msg.what=StatusCode.MAINTENENCE_COMPLETE_FAILED;
-					msg.obj="服务器响应失败";
+					msg.what=StatusCode.RESPONSE_SERVER_EXCEPTION;
+					msg.obj="服务器异常";
 				}
 				handler.sendMessage(msg);
 			}
@@ -272,6 +275,7 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 			public void onFailure(Request arg0, IOException arg1) {
 				Message msg=new Message();
 				msg.what=StatusCode.RESPONSE_NET_FAILED;
+				msg.obj="网络异常";
 				handler.sendMessage(msg);
 			}
 		});

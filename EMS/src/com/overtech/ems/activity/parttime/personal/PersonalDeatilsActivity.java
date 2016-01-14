@@ -38,6 +38,7 @@ import com.overtech.ems.picasso.Picasso;
 import com.overtech.ems.picasso.Transformation;
 import com.overtech.ems.utils.ImageCacheUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
+import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
 import com.squareup.okhttp.Call;
@@ -111,10 +112,12 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 					e.printStackTrace();
 				}
 				break;
-			case StatusCode.PERSONAL_DETAIL_FAILED:
-				
+			case StatusCode.RESPONSE_SERVER_EXCEPTION:
+				Utilities.showToast((String)msg.obj, context);
 				break;
-
+			case StatusCode.RESPONSE_NET_FAILED:
+				Utilities.showToast((String)msg.obj, context);
+				break;
 			default:
 				break;
 			}
@@ -147,7 +150,7 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 					handler.sendMessage(msg);
 				}else{
 					msg.obj="服务器异常";
-					msg.what=StatusCode.PERSONAL_DETAIL_FAILED;
+					msg.what=StatusCode.RESPONSE_SERVER_EXCEPTION;
 					handler.sendMessage(msg);
 				}
 			}
@@ -155,7 +158,7 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 			@Override
 			public void onFailure(Request arg0, IOException arg1) {
 				Message msg=new Message();
-				msg.what=StatusCode.PERSONAL_DETAIL_FAILED;
+				msg.what=StatusCode.RESPONSE_NET_FAILED;
 				msg.obj="网络异常";
 				handler.sendMessage(msg);
 			}

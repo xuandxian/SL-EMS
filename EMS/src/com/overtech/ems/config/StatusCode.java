@@ -98,7 +98,18 @@ public class StatusCode {
 	 * 任务包详情-->维保清单
 	 */
 	public static final int RESULT_TASKLIST_PACKAGEDETAIL=0x46;
-	
+	/**
+	 * 个人信息概览返回码--成功
+	 */
+	public static final int PERSONAL_ZONE_SUCCESS=0x33;
+	/**
+	 * 个人账单加载成功
+	 */
+	public static final int PERSONAL_BOUNDS_SUCCESS=0x34;
+	/**
+	 * 个人信息退单成功
+	 */
+	public static final int PERSONAL_CHARGEBACK_SUCCESS=0x35;
 	/**
 	 * 个人详细信息返回码--成功
 	 */
