@@ -89,10 +89,11 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 					return;
 				}
 				if (null==list || list.isEmpty()) {
-					return;
+					Utilities.showToast("无数据", context);
+				}else {
+					mAdapter = new GrabTaskAdapter(list, myLocation, mActivity);
+					mSwipeListView.setAdapter(mAdapter);
 				}
-				mAdapter = new GrabTaskAdapter(list, myLocation, mActivity);
-				mSwipeListView.setAdapter(mAdapter);
 				break;
 			case StatusCode.GRAG_RESPONSE_SUCCESS:
 				String status = (String) msg.obj;

@@ -2,7 +2,6 @@ package com.overtech.ems.activity.parttime.nearby;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BaiduMap.OnMapLongClickListener;
 import com.baidu.mapapi.map.BaiduMap.OnMarkerClickListener;
@@ -22,6 +21,7 @@ import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
 import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
+import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.bean.TaskPackageBean;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.TaskPackage;
@@ -47,8 +47,6 @@ import android.widget.Button;
 public class NearByMapFragment extends BaseFragment {
 
 	ArrayList<TaskPackageBean> dataList = new ArrayList<TaskPackageBean>();
-	private HashMap<String, TaskPackage> mHashMap = new HashMap<String, TaskPackage>();
-	private NearByListFragment mNearByListFragment;
 	private MapView mMapView = null;
 	private BaiduMap mBaiduMap = null;
 	private BitmapDescriptor bitmap;
@@ -57,22 +55,33 @@ public class NearByMapFragment extends BaseFragment {
 	private View view;
 	private TaskPackage data;
 	private LatLng myLocation, clickLocation;
-
+	
 	private Handler handler = new Handler() {
-		public void handleMessage(android.os.Message msg) {
-			String json = (String) msg.obj;
+		public void handleMessage(Message msg) {
 			Gson gson = new Gson();
-			TaskPackageBean tasks = gson.fromJson(json, TaskPackageBean.class);
-			ArrayList<TaskPackage> newData=(ArrayList<TaskPackage>) tasks.getModel();
-			addOverLay(newData);
-//			mNearByListFragment.reflushAdapter(newData);
+			switch (msg.what) {
+			case StatusCode.GRAB_GET_DATA_SUCCESS:
+				String json = (String) msg.obj;
+				TaskPackageBean tasks = gson.fromJson(json,TaskPackageBean.class);
+				ArrayList<TaskPackage> newData = (ArrayList<TaskPackage>) tasks.getModel();
+				addOverLay(newData);
+				break;
+			case StatusCode.RESPONSE_SERVER_EXCEPTION:
+				Utilities.showToast("服务器异常", context);
+				break;
+			case StatusCode.RESPONSE_NET_FAILED:
+				Utilities.showToast("网络异常", context);
+				break;
+			}
+			stopProgressDialog();
 		};
 	};
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_nearby_map, container,false);
+		View view = inflater.inflate(R.layout.fragment_nearby_map, container,
+				false);
 		initView(view);
 		getExtralData();
 		setMarkerClick();
@@ -82,18 +91,19 @@ public class NearByMapFragment extends BaseFragment {
 
 	@SuppressWarnings("unchecked")
 	private void getExtralData() {
-		Bundle bundle=getArguments();
-		if (null==bundle) {
+		Bundle bundle = getArguments();
+		if (null == bundle) {
 			return;
 		}
-		ArrayList<TaskPackage> list=(ArrayList<TaskPackage>) bundle.getSerializable("taskPackage");
-		myLocation=new LatLng(bundle.getDouble(Constant.LATITUDE), bundle.getDouble(Constant.LONGITUDE));
+		ArrayList<TaskPackage> list = (ArrayList<TaskPackage>) bundle
+				.getSerializable("taskPackage");
+		myLocation = new LatLng(bundle.getDouble(Constant.LATITUDE),
+				bundle.getDouble(Constant.LONGITUDE));
 		addOverLay(list);
 		setMyLocationMarker(myLocation);
-    }
+	}
 
 	private void initView(View view) {
-		mNearByListFragment=new NearByListFragment();
 		mMapView = (MapView) view.findViewById(R.id.bmapView);
 		mBaiduMap = mMapView.getMap();
 		mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(17.0f));// 缩放到16
@@ -111,23 +121,30 @@ public class NearByMapFragment extends BaseFragment {
 
 			@Override
 			public void onResponse(Response response) throws IOException {
-				stopProgressDialog();
 				Message msg = new Message();
-				msg.obj = response.body().string();
+				if (response.isSuccessful()) {
+					msg.what = StatusCode.GRAB_GET_DATA_SUCCESS;
+					msg.obj = response.body().string();
+				} else {
+					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
+				}
 				handler.sendMessage(msg);
 			}
 
 			@Override
 			public void onFailure(Request request, IOException e) {
-				stopProgressDialog();
+				Message msg = new Message();
+				msg.what = StatusCode.RESPONSE_NET_FAILED;
+				handler.sendMessage(msg);
 			}
 		});
 	}
 
-
 	private void setMyLocationMarker(LatLng point) {
-		BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.icon_location);
-		MarkerOptions option = new MarkerOptions().position(point).icon(bitmap).zIndex(0);
+		BitmapDescriptor bitmap = BitmapDescriptorFactory
+				.fromResource(R.drawable.icon_location);
+		MarkerOptions option = new MarkerOptions().position(point).icon(bitmap)
+				.zIndex(0);
 		option.animateType(MarkerAnimateType.grow);
 		mBaiduMap.addOverlay(option);
 		MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(myLocation);
@@ -144,13 +161,16 @@ public class NearByMapFragment extends BaseFragment {
 		} else {
 			return;
 		}
-		if (null==dataList||dataList.size() == 0) {
+		if (null == dataList || dataList.size() == 0) {
 			Utilities.showToast("无数据", context);
 		} else {
 			if (null != clickLocation) {
-				OverlayOptions ooCircle = new CircleOptions().fillColor(0x6663B8FF).center(clickLocation).stroke(new Stroke(1, 0x330000ff)).radius(10000);
+				OverlayOptions ooCircle = new CircleOptions()
+						.fillColor(0x6663B8FF).center(clickLocation)
+						.stroke(new Stroke(1, 0x330000ff)).radius(10000);
 				mBaiduMap.addOverlay(ooCircle);
-				MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(clickLocation);
+				MapStatusUpdate u = MapStatusUpdateFactory
+						.newLatLng(clickLocation);
 				mBaiduMap.animateMapStatus(u);
 			}
 			for (int i = 0; i < dataList.size(); i++) {
@@ -158,7 +178,8 @@ public class NearByMapFragment extends BaseFragment {
 				String lat = data.getLatitude();
 				String lon = data.getLongitude();
 				if (!(TextUtils.isEmpty(lat) || TextUtils.isEmpty(lon))) {
-					LatLng ll = new LatLng(Double.parseDouble(lat),Double.parseDouble(lon));
+					LatLng ll = new LatLng(Double.parseDouble(lat),
+							Double.parseDouble(lon));
 					Button button = new Button(getActivity());
 					button.setBackgroundResource(R.drawable.map_popcontent);
 					button.setGravity(Gravity.CENTER);
@@ -166,26 +187,31 @@ public class NearByMapFragment extends BaseFragment {
 					button.setTextColor(Color.WHITE);
 					button.setText(data.getTaskPackageName());
 					bitmap = BitmapDescriptorFactory.fromView(button);
-					mOverlayOptions = new MarkerOptions().position(ll).icon(bitmap).zIndex(11).draggable(false).period(10);
+					mOverlayOptions = new MarkerOptions().position(ll)
+							.icon(bitmap).zIndex(11).draggable(false)
+							.period(10);
 					mOverlayOptions.animateType(MarkerAnimateType.drop);
 					mMarker = (Marker) (mBaiduMap.addOverlay(mOverlayOptions));
-					Bundle bundle=new Bundle();
+					Bundle bundle = new Bundle();
 					bundle.putSerializable("taskPackage", data);
 					mMarker.setExtraInfo(bundle);
 				}
 			}
 		}
 	}
-	
+
 	private void setMarkerClick() {
 		mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener() {
 
 			@Override
 			public boolean onMarkerClick(final Marker marker) {
-				TaskPackage taskPackage=(TaskPackage)marker.getExtraInfo().get("taskPackage");
-				Intent intent = new Intent(activity,PackageDetailActivity.class);
+				TaskPackage taskPackage = (TaskPackage) marker.getExtraInfo()
+						.get("taskPackage");
+				Intent intent = new Intent(activity,
+						PackageDetailActivity.class);
 				Bundle bundle = new Bundle();
-				bundle.putString("CommunityName", taskPackage.getTaskPackageName());
+				bundle.putString("CommunityName",
+						taskPackage.getTaskPackageName());
 				bundle.putString("TaskNo", taskPackage.getTaskNo());
 				bundle.putString("Longitude", taskPackage.getLongitude());
 				bundle.putString("Latitude", taskPackage.getLatitude());
@@ -203,8 +229,10 @@ public class NearByMapFragment extends BaseFragment {
 			public void onMapLongClick(LatLng point) {
 				mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(12.0f));
 				clickLocation = point;
-				Param latitude = new Param(Constant.LATITUDE, String.valueOf(point.latitude));
-				Param longitude = new Param(Constant.LONGITUDE, String.valueOf(point.longitude));
+				Param latitude = new Param(Constant.LATITUDE, String
+						.valueOf(point.latitude));
+				Param longitude = new Param(Constant.LONGITUDE, String
+						.valueOf(point.longitude));
 				getDataByLatlng(ServicesConfig.NEARBY, "1", latitude, longitude);
 			}
 		});
