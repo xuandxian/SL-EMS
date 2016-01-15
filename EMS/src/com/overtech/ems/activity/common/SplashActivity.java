@@ -16,6 +16,7 @@ import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.http.HttpEngine;
+import com.overtech.ems.test.TestActivity;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
@@ -67,7 +68,10 @@ public class SplashActivity extends Activity {
 					long currentDate=new Date().getTime();
 					long period=currentDate-lastDate;
 					if (period<timePeriod) {
-						Intent intent = new Intent(SplashActivity.this,MainActivity.class);
+						//该部分直接走Login
+//						Intent intent = new Intent(SplashActivity.this,MainActivity.class);
+//						Intent intent = new Intent(SplashActivity.this,TestActivity.class);
+						Intent intent = new Intent(SplashActivity.this,LoginActivity.class);
 						startActivity(intent);
 						finish();
 					}else {
