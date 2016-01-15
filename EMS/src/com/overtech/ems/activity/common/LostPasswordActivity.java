@@ -4,8 +4,23 @@ import static cn.smssdk.framework.utils.R.getStringRes;
 
 import java.io.IOException;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
+
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.config.StatusCode;
@@ -19,17 +34,6 @@ import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.text.TextUtils;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 public class LostPasswordActivity extends BaseActivity {
 	private String mPhoneNo;
@@ -129,15 +133,35 @@ public class LostPasswordActivity extends BaseActivity {
 					}
 				}
 				break;
-			case StatusCode.GET_PHONENO_SUCCESS_EXIST:
-				mGetValicateCode.setTextAfter("秒后重新获取").setTextBefore("点击获取验证码").setLenght(60 * 1000);
-				SMSSDK.getVerificationCode("86", mPhoneNo);
-				break;
-			case StatusCode.GET_PHONENO_SUCCESS_NONE:
-				Utilities.showToast("该手机号还没有注册", context);
+			case StatusCode.GET_SERVER_SUCCESS://首先请求服务器对该手机号进行验证，根据结果确定要不要进行下一步的验证
+				String json=(String)msg.obj;
+				try {
+					JSONObject jsonObj=new JSONObject(json);
+					String model=jsonObj.getString("model");
+					if(model.equals("0")){
+						Utilities.showToast("该手机号尚未注册",context);
+					}else if(model.equals("1")){
+						Utilities.showToast("该手机号尚未通过审核,请等待结果", context);
+					}else if(model.equals("2")){
+						
+						SMSSDK.getVerificationCode("86", mPhoneNo);//该手机号是在职的，然后调用第三方的短信验证
+						
+					}else if(model.equals("3")){
+						Utilities.showToast("员工已经离职，不能使用该功能", context);
+					}else{
+						Utilities.showToast("该手机号已经被禁用", context);
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
 				Utilities.showToast("网络异常", context);
+				break;
+			case StatusCode.RESPONSE_SERVER_EXCEPTION:
+				Utilities.showToast("服务器异常", context);
+				break;
 			default:
 				break;
 			}
@@ -156,13 +180,10 @@ public class LostPasswordActivity extends BaseActivity {
 				Message msg = new Message();
 				if (response.isSuccessful()) {
 					String result = response.body().string();
-					if (TextUtils.equals("true", result)) {
-						msg.what = StatusCode.GET_PHONENO_SUCCESS_EXIST;
-					} else {
-						msg.what = StatusCode.GET_PHONENO_SUCCESS_NONE;
-					}
+					msg.what=StatusCode.GET_SERVER_SUCCESS;
+					msg.obj=result;
 				} else {
-					msg.what = StatusCode.RESPONSE_NET_FAILED;
+					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
 				}
 				handler.sendMessage(msg);
 			}

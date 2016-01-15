@@ -3,11 +3,15 @@ package com.overtech.ems.activity.common;
 import java.io.IOException;
 import java.util.Date;
 
-import cn.jpush.android.api.InstrumentedActivity;
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.view.WindowManager;
 import cn.jpush.android.api.JPushInterface;
 
 import com.overtech.ems.R;
-import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.entity.common.ServicesConfig;
@@ -18,18 +22,12 @@ import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-import android.content.Intent;
-import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
-import android.view.WindowManager;
-
 /**
  * @author Tony
  * @description 欢迎界面
  * @date 2015-10-05
  */
-public class SplashActivity extends InstrumentedActivity {
+public class SplashActivity extends Activity {
 	
 	private final long timePeriod=2592000000L; //30天的毫秒数
 //	private final long timePeriod=60000L;      //60秒（测试）
