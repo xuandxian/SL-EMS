@@ -39,6 +39,7 @@ import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.TaskPackageDetail;
 import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.squareup.okhttp.Call;
@@ -278,17 +279,14 @@ public class TaskListPackageDetailActivity extends BaseActivity implements OnRef
 		taskNo = bundle.getString(Constant.TASKNO);
 		mTaskPackageName.setText(taskPackage);
 		mTaskNo.setText(taskNo);
-		
-		
 		Param param=new Param(Constant.TASKNO,taskNo);
-		mLoginName=mSharedPreferences.getString(Constant.LOGINNAME, "");
+		mLoginName=mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
 		Param param2=new Param(Constant.LOGINNAME,mLoginName);
 		startLoading(param,param2);
 	}
 
 	private void startLoading(Param... params) {
-		Request request = httpEngine
-				.createRequest(ServicesConfig.TASK_PACKAGE_DETAIL,params);
+		Request request = httpEngine.createRequest(ServicesConfig.TASK_PACKAGE_DETAIL,params);
 		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {
 
@@ -346,6 +344,4 @@ public class TaskListPackageDetailActivity extends BaseActivity implements OnRef
 		Param param2=new Param(Constant.LOGINNAME,mLoginName);
 		startLoading(param,param2);
 	}
-
-	
 }

@@ -54,8 +54,6 @@ public class TaskListNoneFragment extends BaseFragment implements IXListViewList
 	private LocationClient mLocationClient;
 	private TaskListAdapter adapter;
 	private List<TaskPackage> list;
-	private double latitude;
-	private double longitude;
 	private Handler handler=new Handler(){
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
