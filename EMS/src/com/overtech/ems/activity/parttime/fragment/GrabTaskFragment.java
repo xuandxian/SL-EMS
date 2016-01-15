@@ -102,8 +102,12 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 					Utilities.showToast("请不要重复抢单", context);
 				} else if (TextUtils.equals(content, "1")) {
 					Utilities.showToast("抢单成功，等待第二个人抢", context);
+					onRefresh();
+					mAdapter.notifyDataSetChanged();
 				} else if (TextUtils.equals(content, "2")) {
 					Utilities.showToast("抢单成功，请到任务中查看", context);
+					onRefresh();
+					mAdapter.notifyDataSetChanged();
 				} else if (TextUtils.equals(content, "3")) {
 					Utilities.showToast("差一点就抢到了", context);
 				}
@@ -298,7 +302,7 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 	}
 
 	public void onRefresh() {
-		Utilities.showToast("下拉刷新", mActivity);
+		Utilities.showToast("刷新", mActivity);
 		initData(ServicesConfig.GRABTASK, REFRESH_TYPE_LOADING);
 	}
 

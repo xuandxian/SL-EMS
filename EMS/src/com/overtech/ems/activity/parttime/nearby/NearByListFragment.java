@@ -1,9 +1,6 @@
 package com.overtech.ems.activity.parttime.nearby;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Locale;
 import com.baidu.mapapi.model.LatLng;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
@@ -11,13 +8,11 @@ import com.overtech.ems.activity.adapter.GrabTaskAdapter;
 import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
 import com.overtech.ems.entity.parttime.TaskPackage;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
-import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView;
-import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView.IXListViewListener;
-import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView.OnMenuItemClickListener;
-import com.overtech.ems.widget.swiperefreshlistview.pulltorefresh.RefreshTime;
-import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenu;
-import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuCreator;
-import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuItem;
+import com.overtech.ems.widget.swipemenu.SwipeMenu;
+import com.overtech.ems.widget.swipemenu.SwipeMenuCreator;
+import com.overtech.ems.widget.swipemenu.SwipeMenuItem;
+import com.overtech.ems.widget.swipemenu.SwipeMenuListView;
+import com.overtech.ems.widget.swipemenu.SwipeMenuListView.OnMenuItemClickListener;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -31,13 +26,12 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
 @SuppressWarnings("unchecked")
-public class NearByListFragment extends BaseFragment implements IXListViewListener {
+public class NearByListFragment extends BaseFragment{
 
-	private PullToRefreshSwipeMenuListView mNearBySwipeListView;
+	private SwipeMenuListView mNearBySwipeListView;
 	private SwipeMenuCreator creator;
 	private Activity mActivity;
 	private Effectstype effect;
-	private Handler mHandler;
 	private ArrayList<TaskPackage> list=new ArrayList<TaskPackage>();
 	private LatLng myLocation;
 	private GrabTaskAdapter mAdapter;
@@ -66,7 +60,7 @@ public class NearByListFragment extends BaseFragment implements IXListViewListen
 	}
 
 	private void initListView(View view) {
-		mNearBySwipeListView = (PullToRefreshSwipeMenuListView) view.findViewById(R.id.sl_nearby_listview);
+		mNearBySwipeListView = (SwipeMenuListView) view.findViewById(R.id.sl_nearby_listview);
 		creator = new SwipeMenuCreator() {
 			@Override
 			public void create(SwipeMenu menu) {
@@ -82,10 +76,6 @@ public class NearByListFragment extends BaseFragment implements IXListViewListen
 		mNearBySwipeListView.setMenuCreator(creator);
 		mAdapter = new GrabTaskAdapter(list,myLocation,mActivity);
 		mNearBySwipeListView.setAdapter(mAdapter);
-		mNearBySwipeListView.setPullRefreshEnable(true);
-		mNearBySwipeListView.setPullLoadEnable(true);
-		mNearBySwipeListView.setXListViewListener(this);
-		mHandler = new Handler();
 		mNearBySwipeListView.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
 					@Override
@@ -109,15 +99,6 @@ public class NearByListFragment extends BaseFragment implements IXListViewListen
 			}
 		});
 	}
-	
-//	public void reflushAdapter(ArrayList<TaskPackage> data){
-//		Log.e("NearByListFragment", "reflushAdapter");
-//		if (!list.isEmpty()) {
-//			list.clear();
-//		}
-//		list.addAll(data);
-//		mAdapter.notifyDataSetChanged();
-//	}
 	
 	private void showDialog() {
 		effect = Effectstype.Slideright;
@@ -147,30 +128,5 @@ public class NearByListFragment extends BaseFragment implements IXListViewListen
 						}, 3000);
 					}
 				}).show();
-	}
-	public void onRefresh() {
-		mHandler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				SimpleDateFormat df = new SimpleDateFormat("MM-dd HH:mm",Locale.getDefault());
-				RefreshTime.setRefreshTime(mActivity, df.format(new Date()));
-				onLoad();
-			}
-		}, 2000);
-	}
-
-	public void onLoadMore() {
-		mHandler.postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				onLoad();
-			}
-		}, 2000);
-	}
-
-	private void onLoad() {
-		mNearBySwipeListView.setRefreshTime(RefreshTime.getRefreshTime(mActivity));
-		mNearBySwipeListView.stopRefresh();
-		mNearBySwipeListView.stopLoadMore();
 	}
 }
