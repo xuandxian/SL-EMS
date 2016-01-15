@@ -10,8 +10,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -257,26 +255,19 @@ public class TaskListNoneFragment extends BaseFragment implements IXListViewList
 		}
 	}
 	
-	private int dp2px(int dp) {
-		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
-				getResources().getDisplayMetrics());
-	}
 	@Override
 	public void onDestroy() {
-		// TODO Auto-generated method stub
 		super.onDestroy();
 		mLocationClient.stop();
 	}
 
 	@Override
 	public void onRefresh() {
-		// TODO Auto-generated method stub
 		mSwipeListView.stopRefresh();
 	}
 
 	@Override
 	public void onLoadMore() {
-		// TODO Auto-generated method stub
 		mSwipeListView.stopLoadMore();
 	}
 }

@@ -24,7 +24,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -173,10 +172,5 @@ public class NearByListFragment extends BaseFragment implements IXListViewListen
 		mNearBySwipeListView.setRefreshTime(RefreshTime.getRefreshTime(mActivity));
 		mNearBySwipeListView.stopRefresh();
 		mNearBySwipeListView.stopLoadMore();
-	}
-
-	private int dp2px(int dp) {
-		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
-				getResources().getDisplayMetrics());
 	}
 }

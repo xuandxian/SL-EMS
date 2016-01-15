@@ -6,6 +6,8 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.TypedValue;
+import com.baidu.location.LocationClient;
 import com.overtech.ems.R;
 import com.overtech.ems.http.HttpEngine;
 import com.overtech.ems.http.OkHttpClientManager;
@@ -17,6 +19,8 @@ import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
  * Created by Tony1213 on 15/12/21.
  */
 public class BaseFragment extends Fragment {
+	
+	public MyApplication application;
 
     public ImageLoader imageLoader;
 
@@ -36,9 +40,12 @@ public class BaseFragment extends Fragment {
     
     public SharedPreferences mSharedPreferences;
     
+    public LocationClient mLocationClient;
+    
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        application=(MyApplication)getActivity().getApplication();
         activity=getActivity();
         context =getActivity();
         fragmentManager = getFragmentManager();
@@ -49,7 +56,9 @@ public class BaseFragment extends Fragment {
         imageLoader.initContext(context);
         progressDialog = CustomProgressDialog.createDialog(context);
         progressDialog.setMessage(context.getString(R.string.loading_public_default));
-        mSharedPreferences = ((MyApplication) activity.getApplication()).getSharePreference();
+        progressDialog.setCanceledOnTouchOutside(false);
+        mSharedPreferences = application.getSharePreference();
+        mLocationClient=application.mLocationClient;
     }
     
 	@Override
@@ -59,6 +68,7 @@ public class BaseFragment extends Fragment {
             progressDialog.dismiss();
             progressDialog = null;
         }
+        mLocationClient.stop();
     }
 
     public void startProgressDialog(String content) {
@@ -75,4 +85,8 @@ public class BaseFragment extends Fragment {
             progressDialog = null;
         }
     }
+    
+    public int dp2px(int dp) {
+		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,getResources().getDisplayMetrics());
+	}
 }

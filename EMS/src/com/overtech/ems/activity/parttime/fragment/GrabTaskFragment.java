@@ -14,7 +14,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -390,9 +389,5 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 			mLocationClient.unRegisterLocationListener(myListener);
 			mLocationClient.stop();
 		}
-	}
-
-	private int dp2px(int dp) {
-		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,getResources().getDisplayMetrics());
 	}
 }
