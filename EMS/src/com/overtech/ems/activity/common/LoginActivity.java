@@ -55,7 +55,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 				mSharedPreferences.edit().putLong(SharedPreferencesKeys.CURRENT_DATE, new Date().getTime()).commit();
 				Intent intent = new Intent(LoginActivity.this,MainActivity.class);
 				startActivity(intent);
-				finish();
 				break;
 			case StatusCode.LOGIN_FAILED:
 				Utilities.showToast("登录失败", context);

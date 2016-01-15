@@ -204,6 +204,7 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 			break;
 		case R.id.btn_exit:
 			Intent intent2 = new Intent(PersonalDeatilsActivity.this,LoginActivity.class);
+			intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent2);
 			finish();
 			break;
