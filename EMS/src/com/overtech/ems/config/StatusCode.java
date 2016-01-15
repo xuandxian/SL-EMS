@@ -64,6 +64,14 @@ public class StatusCode {
 	 */
 	public static final int PACKAGE_DETAILS_FAILED=0x26;
 	/**
+	 * 退单验证维保时间与服务器当前时间差
+	 */
+	public static final int VALIDATE_TIME_SUCCESS=0x33;
+	/**
+	 * 退单与服务器交互成功
+	 */
+	public static final int CHARGEBACK_SUCCESS=0x34;
+	/**
 	 * 获取工作类型内容成功
 	 */
 	public static final int WORK_DETAILS_SUCCESS = 0x27;

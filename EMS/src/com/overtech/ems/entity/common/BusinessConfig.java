@@ -69,71 +69,75 @@ public class BusinessConfig {
 	 */
 	public static final String URL_ELEVATOR_DETAIL = "/task/elevatorDetail.action";
 	/**
-	 * 15.任务单（退单）
+	 * 15.任务单退单(验证时间)
 	 */
-	public static final String URL_CHARGE_BACK_TASK = "/chargeBackTask.action";
+	public static final String URL_CHARGE_BACK_TASK_VALIDATE_TIME="/task/chargeBackTaskValidateTime.action";
 	/**
-	 * 16.任务单（已完成）
+	 * 16.任务单（退单）
+	 */
+	public static final String URL_CHARGE_BACK_TASK = "/task/chargeBackTask.action";
+	/**
+	 * 17.任务单（已完成）
 	 */
 	public static final String URL_TASK_LIST_DONE = "/task/taskListDone.action";
 	/**
-	 * 17.任务单（开始）--->指向最后一个界面
+	 * 18.任务单（开始）--->指向最后一个界面
 	 */
 	public static final String URL_TASK_START = "/taskStart.action";
 	/**
-	 * 17.任务单（开始）--->指向最后一个界面
+	 * 19.任务单（开始）--->指向最后一个界面
 	 */
 	public static final String URL_WORK_TYPE = "/task/workType.action";
 	/**
-	 * 18.维保清单完成
+	 * 20.维保清单完成
 	 */
 	public static final String URL_MAINTENCE_LIST_COMPLETE = "/task/maintenceListComplete.action";
 	/**
-	 * 19.问题反馈
+	 * 21.问题反馈
 	 */
 	public static final String URL_PROBLEMS_FEEDBACK = "/feedBack.action";
 	/**
-	 * 20.互相评价
+	 * 22.互相评价
 	 */
 	public static final String URL_EVALUATION_EACH_OTHER = "/evaluationEachOther.action";
 	/**
-	 * 21.我的
+	 * 23.我的
 	 */
 	public static final String URL_PERSONAL_AVATOR="/employee/personalAvator.action";
 	/**
-	 * 22.账户信息
+	 * 24.账户信息
 	 */
 	public static final String URL_PERSONAL_ACCOUNT = "/employee/personalAccount.action";
 	/**
-	 * 23.更换手机号（验证密码）
+	 * 25.更换手机号（验证密码）
 	 */
 	public static final String URL_CHANGE_PHONENO_PASSWORD = "/employee/changePhoneNoPassword.action";
 	/**
-	 * 24.更换手机号（验证手机号）
+	 * 26.更换手机号（验证手机号）
 	 */
 	public static final String URL_CHANGE_PHONENO_VALIDATE = "/employee/validatePhoneNo.action";
 	/**
-	 * 25.更换手机号（手机号码／短信验证码）
+	 * 27.更换手机号（手机号码／短信验证码）
 	 */
 	public static final String URL_CHANGE_PHONENO_UPDATE = "/employee/changePhoneNoUpdate.action";
 	/**
-	 * 26.我的账单（已结算／未结算）
+	 * 28.我的账单（已结算／未结算）
 	 */
     public static final String URL_PERSONAL_BILL = "/employee/personalBill.action";
 	/**
-	 * 27.奖励记录
+	 * 29.奖励记录
 	 */
 	public static final String URL_PERSONAL_BONUS_LIST = "/employee/personalBonusList.action";
 	/**
-	 * 28.退单纪录
+	 * 30.退单纪录
 	 */
 	public static final String URL_PERSONAL_CHARGEBACK_LIST = "/employee/personalChargeBackList.action";
 	/**
-	 * 29.公告
+	 * 31.公告
 	 */
 	public static final String URL_PERSONAL_ANNOUNCEMENT="/task/personalAnnouncement.action";
 	/**
-	 * 30.公告详情
+	 * 32.公告详情
 	 */
 	public static final String URL_PERSONAL_ANNOUNCEMENT_DETAIL="/task/personalAnnouncementDetail.action";
 }
