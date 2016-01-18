@@ -105,7 +105,9 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				mZonePhone = bean.getZonePhone();
 				if (null == list || list.size() == 0) {
 					Utilities.showToast("无数据", mActivity);
+					mCancle.setVisibility(View.GONE);
 				} else {
+					mCancle.setVisibility(View.VISIBLE);
 					adapter = new TaskListPackageDetailAdapter(context, list);
 					mTask.setAdapter(adapter);
 				}
