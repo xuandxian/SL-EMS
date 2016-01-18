@@ -78,7 +78,7 @@
         <activity android:name="com.overtech.ems.activity.parttime.grabtask.GrabTaskDoFilterActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.grabtask.KeyWordSerachActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.ScanCodeActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.common.PackageDetailActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.grabtask.PackageDetailActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.common.ElevatorDetailActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAccountListActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalBoundsActivity" />
@@ -89,6 +89,7 @@
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.QueryTaskListActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.QuestionResponseActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.EvaluationActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.tasklist.QueryTaskPackageActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.TaskListPackageDetailActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.nearby.TaskPackageListActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalCancleListActivity" />

@@ -5,7 +5,7 @@ import com.baidu.mapapi.model.LatLng;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
 import com.overtech.ems.activity.adapter.GrabTaskAdapter;
-import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
+import com.overtech.ems.activity.parttime.grabtask.PackageDetailActivity;
 import com.overtech.ems.entity.parttime.TaskPackage;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.swipemenu.SwipeMenu;

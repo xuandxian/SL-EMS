@@ -53,8 +53,6 @@ public class StatusCode {
 	 * 任务单已完成加载失败
 	 */
 	public static final int TASKLIST_DONET_FAILED=0x24;
-
-
 	/**
 	 * 任务包详情成功
 	 */
@@ -64,81 +62,92 @@ public class StatusCode {
 	 */
 	public static final int PACKAGE_DETAILS_FAILED=0x26;
 	/**
+	 * 二维码扫描查询任务包中电梯（成功）
+	 */
+	public static final int QUERY_TASK_PACKAGE_ELEVATOR_SUCCESS=0x27;
+	/**
+	 * 二维码扫描查询任务包中电梯（失败）
+	 */
+	public static final int QUERY_TASK_PACKAGE_ELEVATOR_FAILED=0x28;
+	
+	
+	
+	/**
 	 * 退单验证维保时间与服务器当前时间差
 	 */
-	public static final int VALIDATE_TIME_SUCCESS=0x33;
+	public static final int VALIDATE_TIME_SUCCESS=0x35;
 	/**
 	 * 退单与服务器交互成功
 	 */
-	public static final int CHARGEBACK_SUCCESS=0x34;
+	public static final int CHARGEBACK_SUCCESS=0x36;
 	/**
 	 * 获取工作类型内容成功
 	 */
-	public static final int WORK_DETAILS_SUCCESS = 0x27;
+	public static final int WORK_DETAILS_SUCCESS = 0x37;
 	/**
 	 * 获取工作类型内容失败
 	 */
-	public static final int WORK_DETAILS_FAILED=0x28;
+	public static final int WORK_DETAILS_FAILED=0x38;
 
 	/**
 	 * 电梯详情
 	 */
-	public static final int GET_ELEVATOR_DETAILS_SUCCESS=0x29;
-	public static final int GET_ELEVATOR_DETAILS_FAILED=0x30;
+	public static final int GET_ELEVATOR_DETAILS_SUCCESS=0x39;
+	public static final int GET_ELEVATOR_DETAILS_FAILED=0x40;
 	/**
 	 * 获取电梯完成状态成功
 	 */
-	public static final int MAINTENANCE_COMPLETE_SUCCESS=0x31;
+	public static final int MAINTENANCE_COMPLETE_SUCCESS=0x41;
 	/**
 	 * 获取电梯完成状态失败
 	 */
-	public static final int MAINTENENCE_COMPLETE_FAILED=0x32;
+	public static final int MAINTENENCE_COMPLETE_FAILED=0x42;
 	/**
 	 * 更换手机号
 	 */
-	public static final int RESPONSE_VALICATE_PASSWORD_SUCCESS=0x40;
-	public static final int RESPONSE_VALICATE_PASSWORD_FAILURE=0x41;
-	public static final int GET_PHONENO_NOT_EXIST=0x42;
-	public static final int GET_PHONENO_EXIST=0x43;
-	public static final int UPDATE_PHONENO_SUCCESS=0x44;
-	public static final int UPDATE_PHONENO_FAILURE=0x45;
+	public static final int RESPONSE_VALICATE_PASSWORD_SUCCESS=0x43;
+	public static final int RESPONSE_VALICATE_PASSWORD_FAILURE=0x44;
+	public static final int GET_PHONENO_NOT_EXIST=0x45;
+	public static final int GET_PHONENO_EXIST=0x46;
+	public static final int UPDATE_PHONENO_SUCCESS=0x47;
+	public static final int UPDATE_PHONENO_FAILURE=0x48;
 	/**
 	 * 任务包详情-->维保清单
 	 */
-	public static final int RESULT_TASKLIST_PACKAGEDETAIL=0x46;
+	public static final int RESULT_TASKLIST_PACKAGEDETAIL=0x49;
 	/**
 	 * 个人信息概览返回码--成功
 	 */
-	public static final int PERSONAL_ZONE_SUCCESS=0x33;
+	public static final int PERSONAL_ZONE_SUCCESS=0x50;
 	/**
 	 * 个人账单加载成功
 	 */
-	public static final int PERSONAL_BOUNDS_SUCCESS=0x34;
+	public static final int PERSONAL_BOUNDS_SUCCESS=0x51;
 	/**
 	 * 个人信息退单成功
 	 */
-	public static final int PERSONAL_CHARGEBACK_SUCCESS=0x35;
+	public static final int PERSONAL_CHARGEBACK_SUCCESS=0x52;
 	/**
 	 * 个人详细信息返回码--成功
 	 */
-	public static final int PERSONAL_DETAIL_SUCCESS=0x47;
+	public static final int PERSONAL_DETAIL_SUCCESS=0x53;
 	/**
 	 * 个人详细信息返回码--失败
 	 */
-	public static final int PERSONAL_DETAIL_FAILED=0x48;
+	public static final int PERSONAL_DETAIL_FAILED=0x54;
 	
 	/**
 	 * 个人账单加载成功
 	 */
-	public static final int ACCOUNT_LIST_SUCCESS=0x49;
+	public static final int ACCOUNT_LIST_SUCCESS=0x55;
 	//OnActivityFroResult StatusCode
 
 	//抢单
-	public static final int RESULT_GRAB_DO_FILTER = 0x50;
-	public static final int RESULT_GRAB_DO_SEARCH = 0x51;
+	public static final int RESULT_GRAB_DO_FILTER = 0x56;
+	public static final int RESULT_GRAB_DO_SEARCH = 0x57;
 	/**
 	 * 公告加载成功
 	 */
-	public static final int ANNOUNCEMENT_SUCCESS=0x52;
+	public static final int ANNOUNCEMENT_SUCCESS=0x58;
 
 }

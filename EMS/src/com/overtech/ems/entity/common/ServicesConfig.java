@@ -61,6 +61,10 @@ public class ServicesConfig {
 	 */
 	public static final String TASK_PACKAGE_DETAIL = SystemConfig.IP+ BusinessConfig.URL_TASK_PACKAGE_DETAIL;
 	/**
+	 * 14.扫描二维码，查询任务包中的电梯
+	 */
+	public static final String QUERY_TASK_PACKAGE_ELEVATOR = SystemConfig.IP+ BusinessConfig.URL_QUERY_TASK_PACKAGE_ELEVATOR;
+	/**
 	 * 14.电梯详情
 	 */
 	public static final String ELEVATOR_DETAIL = SystemConfig.IP+ BusinessConfig.URL_ELEVATOR_DETAIL;

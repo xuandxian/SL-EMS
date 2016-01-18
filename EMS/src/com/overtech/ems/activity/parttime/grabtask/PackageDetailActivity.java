@@ -1,4 +1,4 @@
-package com.overtech.ems.activity.parttime.common;
+package com.overtech.ems.activity.parttime.grabtask;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,6 +19,8 @@ import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.PackageDetailAdapter;
+import com.overtech.ems.activity.parttime.common.ElevatorDetailActivity;
+import com.overtech.ems.activity.parttime.common.ShowCommunityLocationActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.bean.StatusCodeBean;
 import com.overtech.ems.entity.bean.TaskPackageDetailBean;
@@ -66,7 +68,7 @@ public class PackageDetailActivity extends BaseActivity {
 				TaskPackageDetailBean tasks = gson.fromJson(json,TaskPackageDetailBean.class);
 				list = (ArrayList<TaskPackageDetail>) tasks.getModel();
 				if(null==list||list.size()==0){
-					Utilities.showToast("数据异常", context);
+					Utilities.showToast("无数据", context);
 				}else{
 					adapter = new PackageDetailAdapter(context, list);
 					mPackageDetailListView.setAdapter(adapter);
