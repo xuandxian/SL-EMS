@@ -10,6 +10,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,19 +38,19 @@ import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
-import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView;
-import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView.IXListViewListener;
-import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView.OnMenuItemClickListener;
-import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenu;
-import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuCreator;
-import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuItem;
+import com.overtech.ems.widget.swipemenu.SwipeMenu;
+import com.overtech.ems.widget.swipemenu.SwipeMenuCreator;
+import com.overtech.ems.widget.swipemenu.SwipeMenuItem;
+import com.overtech.ems.widget.swipemenu.SwipeMenuListView;
+import com.overtech.ems.widget.swipemenu.SwipeMenuListView.OnMenuItemClickListener;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-public class TaskListNoneFragment extends BaseFragment implements IXListViewListener{
-	private PullToRefreshSwipeMenuListView mSwipeListView;
+public class TaskListNoneFragment extends BaseFragment implements OnRefreshListener {
+	private SwipeRefreshLayout mSwipeRefresh;
+	private SwipeMenuListView mSwipeListView;
 	private SwipeMenuCreator creator;
 	private Activity mActivity;
 	private Effectstype effect;
@@ -56,22 +58,24 @@ public class TaskListNoneFragment extends BaseFragment implements IXListViewList
 	private TaskListAdapter adapter;
 	private List<TaskPackage> list;
 	private String mTaskNo;
+	private String loginName;
 	/**
 	 * 访问任务包详情的请求码
 	 */
-	private final int REQUESTCODE=0x11;
-	private Handler handler=new Handler(){
+	private final int REQUESTCODE = 0x11;
+	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case StatusCode.TASKLIST_NONE_SUCCESS:
-				String json=(String) msg.obj;
-				Gson gson=new Gson();
-				TaskPackageBean bean=gson.fromJson(json, TaskPackageBean.class);
-				list=bean.getModel();
-				if(null==list||list.size()==0){
+				String json = (String) msg.obj;
+				Gson gson = new Gson();
+				TaskPackageBean bean = gson.fromJson(json,
+						TaskPackageBean.class);
+				list = bean.getModel();
+				if (null == list || list.size() == 0) {
 					Utilities.showToast("无数据", mActivity);
-				}else{
-					adapter=new TaskListAdapter(list, mActivity);
+				} else {
+					adapter = new TaskListAdapter(list, mActivity);
 					mSwipeListView.setAdapter(adapter);
 				}
 				break;
@@ -108,7 +112,8 @@ public class TaskListNoneFragment extends BaseFragment implements IXListViewList
 
 								Param param1 = new Param(Constant.TASKNO,
 										mTaskNo);
-								Param param2 = new Param(Constant.LOGINNAME,loginName);
+								Param param2 = new Param(Constant.LOGINNAME,
+										loginName);
 								startLoading(ServicesConfig.CHARGE_BACK_TASK,
 										new com.squareup.okhttp.Callback() {
 
@@ -143,25 +148,27 @@ public class TaskListNoneFragment extends BaseFragment implements IXListViewList
 			case StatusCode.CHARGEBACK_SUCCESS:
 				stopProgressDialog();
 				String state = (String) msg.obj;
-				if(state.equals("true")){
-					Utilities.showToast("退单成功",context);
-				}else{
-					Utilities.showToast("退单失败",context);
+				if (state.equals("true")) {
+					Utilities.showToast("退单成功", context);
+				} else {
+					Utilities.showToast("退单失败", context);
 				}
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast((String)msg.obj, mActivity);
+				Utilities.showToast((String) msg.obj, mActivity);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast((String)msg.obj, mActivity);
+				Utilities.showToast((String) msg.obj, mActivity);
 				break;
 			default:
 				break;
 			}
+			mSwipeRefresh.setRefreshing(false);
 			stopProgressDialog();
 		};
 	};
-	private String loginName;
+	
+
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -178,39 +185,45 @@ public class TaskListNoneFragment extends BaseFragment implements IXListViewList
 		return view;
 
 	}
-	
 
 	private void findViewById(View view) {
-		mSwipeListView = (PullToRefreshSwipeMenuListView) view.findViewById(R.id.sl_task_list_listview);
+		mSwipeListView = (SwipeMenuListView) view
+				.findViewById(R.id.sl_task_list_listview);
+		mSwipeRefresh=(SwipeRefreshLayout)view.findViewById(R.id.sr_layout);
 	}
 
 	private void init() {
-		mLocationClient=((MyApplication)getActivity().getApplication()).mLocationClient;
+		mLocationClient = ((MyApplication) getActivity().getApplication()).mLocationClient;
 		mLocationClient.requestLocation();
 		mLocationClient.start();
+		mSwipeRefresh.setOnRefreshListener(this);
+		mSwipeRefresh.setColorSchemeColors(android.R.color.holo_blue_bright,
+				android.R.color.holo_green_light,
+				android.R.color.holo_orange_light,
+				android.R.color.holo_red_light);
 		initListView();
 		mSwipeListView.setMenuCreator(creator);
-		mSwipeListView.setXListViewListener(this);
-		mSwipeListView.setPullRefreshEnable(true);
-		mSwipeListView.setPullLoadEnable(true);
 		mSwipeListView
 				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
 					@Override
 					public void onMenuItemClick(int position, SwipeMenu menu,
 							int index) {
+						// TODO Auto-generated method stub
 						switch (index) {
-						case 0://导航
-							LatLng startPoint=adapter.getCurrentLocation();
-							LatLng endPoint=adapter.getDestination(position);
-							String endName=adapter.getDesName(position);
-							startNavicate(startPoint, endPoint,endName);
+						case 0:// 导航
+							LatLng startPoint = adapter.getCurrentLocation();
+							LatLng endPoint = adapter.getDestination(position);
+							String endName = adapter.getDesName(position);
+							startNavicate(startPoint, endPoint, endName);
 							break;
-						case 1://t退单
-							TaskPackage data=(TaskPackage) adapter.getItem(position);
-							mTaskNo=data.getTaskNo();
+						case 1:// t退单
+							TaskPackage data = (TaskPackage) adapter
+									.getItem(position);
+							mTaskNo = data.getTaskNo();
 							Param param = new Param(Constant.TASKNO, mTaskNo);
-							startLoading(ServicesConfig.CHARGE_BACK_TASK_VALIDATE_TIME,
+							startLoading(
+									ServicesConfig.CHARGE_BACK_TASK_VALIDATE_TIME,
 									new Callback() {
 
 										@Override
@@ -220,7 +233,8 @@ public class TaskListNoneFragment extends BaseFragment implements IXListViewList
 											Message msg = new Message();
 											if (response.isSuccessful()) {
 												msg.what = StatusCode.VALIDATE_TIME_SUCCESS;
-												msg.obj = response.body().string();
+												msg.obj = response.body()
+														.string();
 											} else {
 												msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
 												msg.obj = "服务器异常";
@@ -229,7 +243,8 @@ public class TaskListNoneFragment extends BaseFragment implements IXListViewList
 										}
 
 										@Override
-										public void onFailure(Request arg0, IOException arg1) {
+										public void onFailure(Request arg0,
+												IOException arg1) {
 											// TODO Auto-generated method stub
 											Message msg = new Message();
 											msg.what = StatusCode.RESPONSE_NET_FAILED;
@@ -239,6 +254,7 @@ public class TaskListNoneFragment extends BaseFragment implements IXListViewList
 									}, param);
 							break;
 						}
+
 					}
 				});
 		mSwipeListView.setOnItemClickListener(new OnItemClickListener() {
@@ -246,67 +262,72 @@ public class TaskListNoneFragment extends BaseFragment implements IXListViewList
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				TaskPackage data=(TaskPackage) parent.getAdapter().getItem(position);
+				TaskPackage data = (TaskPackage) parent.getAdapter().getItem(
+						position);
 				Intent intent = new Intent(mActivity,
 						TaskListPackageDetailActivity.class);
-				Bundle bundle=new Bundle();
-				bundle.putString(Constant.TASKNO,data.getTaskNo());
-				bundle.putString(Constant.TASKPACKAGENAME, data.getTaskPackageName());
+				Bundle bundle = new Bundle();
+				bundle.putString(Constant.TASKNO, data.getTaskNo());
+				bundle.putString(Constant.TASKPACKAGENAME,
+						data.getTaskPackageName());
 				bundle.putString(Constant.DESNAME, data.getTaskPackageName());
-				bundle.putParcelable(Constant.CURLOCATION, adapter.getCurrentLocation());
-				bundle.putParcelable(Constant.DESTINATION, adapter.getDestination(position-1));//position比adapter里面的position大1
+				bundle.putParcelable(Constant.CURLOCATION,
+						adapter.getCurrentLocation());
+				bundle.putParcelable(Constant.DESTINATION,
+						adapter.getDestination(position));
 				intent.putExtras(bundle);
-//				startActivity(intent);
-				startActivityForResult(intent,REQUESTCODE);
+				// startActivity(intent);
+				startActivityForResult(intent, REQUESTCODE);
 			}
 		});
+		loginName = mSharedPreferences.getString(
+				SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
 		startLoading();
 	}
 
 	private void startLoading() {
 		startProgressDialog("正在加载");
-		loginName = mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
-		Param param=new Param(Constant.LOGINNAME,loginName);
-		startLoading(ServicesConfig.TASK_LIST_NONE,new Callback() {
-			
+		Param param = new Param(Constant.LOGINNAME, loginName);
+		startLoading(ServicesConfig.TASK_LIST_NONE, new Callback() {
+
 			@Override
 			public void onResponse(Response response) throws IOException {
-				Message msg=new Message();
-				if(response.isSuccessful()){
-					msg.what=StatusCode.TASKLIST_NONE_SUCCESS;
-					msg.obj=response.body().string();
-				}else{
-					msg.what=StatusCode.RESPONSE_SERVER_EXCEPTION;
-					msg.obj="服务器异常";
+				Message msg = new Message();
+				if (response.isSuccessful()) {
+					msg.what = StatusCode.TASKLIST_NONE_SUCCESS;
+					msg.obj = response.body().string();
+				} else {
+					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
+					msg.obj = "服务器异常";
 				}
 				handler.sendMessage(msg);
 			}
-			
+
 			@Override
 			public void onFailure(Request arg0, IOException arg1) {
 				Message msg = new Message();
 				msg.what = StatusCode.RESPONSE_NET_FAILED;
-				msg.obj="网络异常";
+				msg.obj = "网络异常";
 				handler.sendMessage(msg);
 			}
-		},param);
+		}, param);
 	}
-
-	
 
 	private void initListView() {
 		creator = new SwipeMenuCreator() {
 			@Override
 			public void create(SwipeMenu menu) {
 				SwipeMenuItem navicateItem = new SwipeMenuItem(mActivity);
-				navicateItem.setBackground(new ColorDrawable(Color.rgb(0xFF,0x9D, 0x00)));
+				navicateItem.setBackground(new ColorDrawable(Color.rgb(0xFF,
+						0x9D, 0x00)));
 				navicateItem.setWidth(dp2px(90));
 				navicateItem.setTitle("导航");
 				navicateItem.setTitleSize(18);
 				navicateItem.setTitleColor(Color.WHITE);
 				menu.addMenuItem(navicateItem);
 				SwipeMenuItem deleteItem = new SwipeMenuItem(mActivity);
-				deleteItem.setBackground(new ColorDrawable(Color.rgb(0xFF,0x3A, 0x30)));
+				deleteItem.setBackground(new ColorDrawable(Color.rgb(0xFF,
+						0x3A, 0x30)));
 				deleteItem.setWidth(dp2px(90));
 				deleteItem.setTitle("退单");
 				deleteItem.setTitleSize(18);
@@ -316,14 +337,12 @@ public class TaskListNoneFragment extends BaseFragment implements IXListViewList
 		};
 	}
 
-	
-
-	public void startNavicate(LatLng startPoint,LatLng endPoint,String endName) {
+	public void startNavicate(LatLng startPoint, LatLng endPoint, String endName) {
 		// 构建 route搜索参数
 		RouteParaOption para = new RouteParaOption().startName("我的位置")
-				.startPoint(startPoint)// 路线检索起点
-				.endPoint(endPoint)
-				.endName(endName)
+				.startPoint(startPoint)
+				// 路线检索起点
+				.endPoint(endPoint).endName(endName)
 				.busStrategyType(EBusStrategyType.bus_recommend_way);
 		try {
 			BaiduMapRoutePlan.setSupportWebRoute(true);
@@ -332,21 +351,22 @@ public class TaskListNoneFragment extends BaseFragment implements IXListViewList
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
-		if(requestCode==REQUESTCODE){
+		if (requestCode == REQUESTCODE) {
 			onRefresh();
 		}
 	}
-	
+
 	protected void startLoading(String url, Callback callback, Param... params) {
 		Request request = httpEngine.createRequest(url, params);
 		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(callback);
 	}
+
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
@@ -355,11 +375,7 @@ public class TaskListNoneFragment extends BaseFragment implements IXListViewList
 
 	@Override
 	public void onRefresh() {
-		mSwipeListView.stopRefresh();
+		startLoading();
 	}
-
-	@Override
-	public void onLoadMore() {
-		mSwipeListView.stopLoadMore();
-	}
+	
 }
