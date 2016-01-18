@@ -10,6 +10,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +55,11 @@ public class TaskListNoneFragment extends BaseFragment implements IXListViewList
 	private LocationClient mLocationClient;
 	private TaskListAdapter adapter;
 	private List<TaskPackage> list;
+	private String mTaskNo;
+	/**
+	 * 访问任务包详情的请求码
+	 */
+	private final int REQUESTCODE=0x11;
 	private Handler handler=new Handler(){
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -69,6 +75,80 @@ public class TaskListNoneFragment extends BaseFragment implements IXListViewList
 					mSwipeListView.setAdapter(adapter);
 				}
 				break;
+			case StatusCode.VALIDATE_TIME_SUCCESS:
+				String time = (String) msg.obj;
+				if (time.equals("true")) {
+					dialogBuilder.withMessage("72小时内退单会影响星级评定，你是否要退单？");
+				} else {
+					dialogBuilder.withMessage("你是否要退单");
+				}
+				effect = Effectstype.Slideright;
+				dialogBuilder.withTitle("温馨提示")
+						.withTitleColor(R.color.main_primary)
+						.withDividerColor("#11000000")
+						.withMessageColor(R.color.main_primary)
+						.withDialogColor("#FFFFFFFF")
+						.isCancelableOnTouchOutside(true).withDuration(700)
+						.withEffect(effect)
+						.withButtonDrawable(R.color.main_white)
+						.withButton1Text("否")
+						.withButton1Color(R.color.main_primary)
+						.withButton2Text("是")
+						.withButton2Color(R.color.main_primary)
+						.setButton1Click(new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								dialogBuilder.dismiss();
+							}
+						}).setButton2Click(new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								dialogBuilder.dismiss();
+								startProgressDialog("正在退单");
+
+								Param param1 = new Param(Constant.TASKNO,
+										mTaskNo);
+								Param param2 = new Param(Constant.LOGINNAME,loginName);
+								startLoading(ServicesConfig.CHARGE_BACK_TASK,
+										new com.squareup.okhttp.Callback() {
+
+											@Override
+											public void onResponse(
+													Response response)
+													throws IOException {
+												Message msg = new Message();
+												if (response.isSuccessful()) {
+													msg.what = StatusCode.CHARGEBACK_SUCCESS;
+													msg.obj = response.body()
+															.string();
+												} else {
+													msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
+													msg.obj = "服务器异常";
+												}
+												handler.sendMessage(msg);
+											}
+
+											@Override
+											public void onFailure(Request arg0,
+													IOException arg1) {
+												Message msg = new Message();
+												msg.what = StatusCode.RESPONSE_NET_FAILED;
+												msg.obj = "网络异常";
+												handler.sendMessage(msg);
+											}
+										}, param1, param2);
+							}
+						}).show();
+				break;
+			case StatusCode.CHARGEBACK_SUCCESS:
+				stopProgressDialog();
+				String state = (String) msg.obj;
+				if(state.equals("true")){
+					Utilities.showToast("退单成功",context);
+				}else{
+					Utilities.showToast("退单失败",context);
+				}
+				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
 				Utilities.showToast((String)msg.obj, mActivity);
 				break;
@@ -81,6 +161,7 @@ public class TaskListNoneFragment extends BaseFragment implements IXListViewList
 			stopProgressDialog();
 		};
 	};
+	private String loginName;
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -126,7 +207,36 @@ public class TaskListNoneFragment extends BaseFragment implements IXListViewList
 							startNavicate(startPoint, endPoint,endName);
 							break;
 						case 1://t退单
-							showDialog();
+							TaskPackage data=(TaskPackage) adapter.getItem(position);
+							mTaskNo=data.getTaskNo();
+							Param param = new Param(Constant.TASKNO, mTaskNo);
+							startLoading(ServicesConfig.CHARGE_BACK_TASK_VALIDATE_TIME,
+									new Callback() {
+
+										@Override
+										public void onResponse(Response response)
+												throws IOException {
+											// TODO Auto-generated method stub
+											Message msg = new Message();
+											if (response.isSuccessful()) {
+												msg.what = StatusCode.VALIDATE_TIME_SUCCESS;
+												msg.obj = response.body().string();
+											} else {
+												msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
+												msg.obj = "服务器异常";
+											}
+											handler.sendMessage(msg);
+										}
+
+										@Override
+										public void onFailure(Request arg0, IOException arg1) {
+											// TODO Auto-generated method stub
+											Message msg = new Message();
+											msg.what = StatusCode.RESPONSE_NET_FAILED;
+											msg.obj = "网络异常";
+											handler.sendMessage(msg);
+										}
+									}, param);
 							break;
 						}
 					}
@@ -140,13 +250,14 @@ public class TaskListNoneFragment extends BaseFragment implements IXListViewList
 				Intent intent = new Intent(mActivity,
 						TaskListPackageDetailActivity.class);
 				Bundle bundle=new Bundle();
-				bundle.putString(Constant.TASKNO, data.getTaskNo());
+				bundle.putString(Constant.TASKNO,data.getTaskNo());
 				bundle.putString(Constant.TASKPACKAGENAME, data.getTaskPackageName());
 				bundle.putString(Constant.DESNAME, data.getTaskPackageName());
 				bundle.putParcelable(Constant.CURLOCATION, adapter.getCurrentLocation());
 				bundle.putParcelable(Constant.DESTINATION, adapter.getDestination(position-1));//position比adapter里面的position大1
 				intent.putExtras(bundle);
-				startActivity(intent);
+//				startActivity(intent);
+				startActivityForResult(intent,REQUESTCODE);
 			}
 		});
 		startLoading();
@@ -154,11 +265,9 @@ public class TaskListNoneFragment extends BaseFragment implements IXListViewList
 
 	private void startLoading() {
 		startProgressDialog("正在加载");
-		String loginName=mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
+		loginName = mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
 		Param param=new Param(Constant.LOGINNAME,loginName);
-		Request request=httpEngine.createRequest(ServicesConfig.TASK_LIST_NONE,param);
-		Call call=httpEngine.createRequestCall(request);
-		call.enqueue(new Callback() {
+		startLoading(ServicesConfig.TASK_LIST_NONE,new Callback() {
 			
 			@Override
 			public void onResponse(Response response) throws IOException {
@@ -180,39 +289,10 @@ public class TaskListNoneFragment extends BaseFragment implements IXListViewList
 				msg.obj="网络异常";
 				handler.sendMessage(msg);
 			}
-		});
+		},param);
 	}
 
-	protected void showDialog() {
-		effect = Effectstype.Slideright;
-		dialogBuilder.withTitle("温馨提示").withTitleColor(R.color.main_primary)
-		.withDividerColor("#11000000").withMessage("您是否要退掉此单？")
-		.withMessageColor(R.color.main_primary).withDialogColor("#FFFFFFFF")
-		.isCancelableOnTouchOutside(true).withDuration(700)
-		.withEffect(effect).withButtonDrawable(R.color.main_white)
-		.withButton1Text("否").withButton1Color(R.color.main_primary)
-		.withButton2Text("是").withButton2Color(R.color.main_primary)
-		.setButton1Click(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						dialogBuilder.dismiss();
-					}
-				}).setButton2Click(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						dialogBuilder.dismiss();
-						progressDialog.setMessage("正在退单");
-						progressDialog.show();
-						new Handler().postDelayed(new Runnable() {
-
-							@Override
-							public void run() {
-								progressDialog.dismiss();
-							}
-						}, 3000);
-					}
-				}).show();
-	}
+	
 
 	private void initListView() {
 		creator = new SwipeMenuCreator() {
@@ -253,6 +333,20 @@ public class TaskListNoneFragment extends BaseFragment implements IXListViewList
 		}
 	}
 	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		if(requestCode==REQUESTCODE){
+			onRefresh();
+		}
+	}
+	
+	protected void startLoading(String url, Callback callback, Param... params) {
+		Request request = httpEngine.createRequest(url, params);
+		Call call = httpEngine.createRequestCall(request);
+		call.enqueue(callback);
+	}
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
