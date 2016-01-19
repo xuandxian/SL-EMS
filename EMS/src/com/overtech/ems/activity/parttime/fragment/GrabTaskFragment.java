@@ -31,9 +31,9 @@ import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
 import com.overtech.ems.activity.adapter.GrabTaskAdapter;
-import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
 import com.overtech.ems.activity.parttime.grabtask.GrabTaskDoFilterActivity;
 import com.overtech.ems.activity.parttime.grabtask.KeyWordSerachActivity;
+import com.overtech.ems.activity.parttime.grabtask.PackageDetailActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.bean.StatusCodeBean;
 import com.overtech.ems.entity.bean.TaskPackageBean;
@@ -103,11 +103,9 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 				} else if (TextUtils.equals(content, "1")) {
 					Utilities.showToast("抢单成功，等待第二个人抢", context);
 					onRefresh();
-					mAdapter.notifyDataSetChanged();
 				} else if (TextUtils.equals(content, "2")) {
 					Utilities.showToast("抢单成功，请到任务中查看", context);
 					onRefresh();
-					mAdapter.notifyDataSetChanged();
 				} else if (TextUtils.equals(content, "3")) {
 					Utilities.showToast("差一点就抢到了", context);
 				}
@@ -235,7 +233,8 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 				bundle.putString("Longitude", data.getLongitude());
 				bundle.putString("Latitude", data.getLatitude());
 				intent.putExtras(bundle);
-				startActivity(intent);
+//				startActivity(intent);
+				startActivityForResult(intent, StatusCode.RESULT_GRAB_DO_GRAB);
 			}
 		});
 		mPartTimeDoFifter.setOnClickListener(new OnClickListener() {
@@ -283,6 +282,8 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 				mAdapter.notifyDataSetChanged();
 			}
 			initData(ServicesConfig.GRABTASK,REFRESH_TYPE_FILTER, keyWordParam);
+		}else if (requestCode == StatusCode.RESULT_GRAB_DO_GRAB&& resultCode == Activity.RESULT_OK) {
+			onRefresh();
 		}
 	}
 
@@ -304,6 +305,7 @@ public class GrabTaskFragment extends BaseFragment implements IXListViewListener
 	public void onRefresh() {
 		Utilities.showToast("刷新", mActivity);
 		initData(ServicesConfig.GRABTASK, REFRESH_TYPE_LOADING);
+		mAdapter.notifyDataSetChanged();
 	}
 
 	public void onLoadMore() {

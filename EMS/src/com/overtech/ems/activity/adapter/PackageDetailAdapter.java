@@ -16,7 +16,7 @@ public class PackageDetailAdapter extends BaseAdapter {
 	private Context context;
 	private ArrayList<TaskPackageDetail> list = new ArrayList<TaskPackageDetail>();
 
-	public PackageDetailAdapter(Context context, ArrayList<TaskPackageDetail> list) {
+	public PackageDetailAdapter(Context context,ArrayList<TaskPackageDetail> list) {
 		super();
 		this.context = context;
 		this.list = list;
@@ -24,7 +24,7 @@ public class PackageDetailAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		return list.size();
+		return list.size() == 0 ? 0 : list.size();
 	}
 
 	@Override
@@ -45,7 +45,7 @@ public class PackageDetailAdapter extends BaseAdapter {
 			holder = new ViewHolder();
 			convertView = LayoutInflater.from(context).inflate(
 					R.layout.item_grab_task_package_detail, null);
-			holder.mRelativeLayout=(RelativeLayout) convertView
+			holder.mRelativeLayout = (RelativeLayout) convertView
 					.findViewById(R.id.rl_item_package_detail);
 			holder.mElevtorName = (TextView) convertView
 					.findViewById(R.id.tv_grab_task_package_name);
@@ -62,19 +62,19 @@ public class PackageDetailAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		String temp=data.getElevatorName();
+		String temp = data.getElevatorName();
 		if (temp.contains("号")) {
 			holder.mElevtorName.setText(temp.split("号")[1]);
-		}else {
+		} else {
 			holder.mElevtorName.setText(temp);
 		}
-		if(data.getWorkType().equals("0")){
+		if (data.getWorkType().equals("0")) {
 			holder.mWorkType.setText("(半月保)");
-		}else if(data.getWorkType().equals("1")){
+		} else if (data.getWorkType().equals("1")) {
 			holder.mWorkType.setText("(季度保)");
-		}else if(data.getWorkType().equals("2")){
+		} else if (data.getWorkType().equals("2")) {
 			holder.mWorkType.setText("(半年保)");
-		}else{
+		} else {
 			holder.mWorkType.setText("(年保)");
 		}
 		holder.mElevtorProductor.setText(data.getElevatorBrand());
@@ -82,7 +82,7 @@ public class PackageDetailAdapter extends BaseAdapter {
 		holder.mElevtorType.setText(data.getElevatorFloor());
 		return convertView;
 	}
-	
+
 	class ViewHolder {
 		public RelativeLayout mRelativeLayout;
 		public TextView mElevtorName;

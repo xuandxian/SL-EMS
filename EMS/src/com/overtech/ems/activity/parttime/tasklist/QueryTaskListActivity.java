@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,28 +18,27 @@ import com.google.gson.Gson;
 import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
-import com.overtech.ems.activity.adapter.PackageDetailAdapter;
 import com.overtech.ems.activity.adapter.TaskListDetailsAdapter;
 import com.overtech.ems.config.StatusCode;
-import com.overtech.ems.entity.bean.TaskPackageDetailBean;
 import com.overtech.ems.entity.bean.WorkTypeBean;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.MaintenanceType;
-import com.overtech.ems.entity.parttime.TaskPackageDetail;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.Utilities;
-import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-
 import java.io.IOException;
 import java.util.ArrayList;
-
 import org.json.JSONException;
 import org.json.JSONObject;
+
+/*
+ *维保清单列表
+ * 
+ */
 
 public class QueryTaskListActivity extends BaseActivity implements OnClickListener {
 	private Context context;
@@ -50,9 +48,7 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 	private String mZonePhone;
 	private String mTaskNo;
 	private String mElevatorNo;
-	/**
-	 * 当前电梯的完成状态
-	 */
+	//当前电梯的完成状态
 	private boolean currentElevatorIsFinish;
 	private ListView mTaskListData;
 	private View mListFooterView;
@@ -104,7 +100,6 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 						finish();
 					}
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				break;
@@ -113,9 +108,6 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
 				Utilities.showToast((String)msg.obj, context);
-				break;
-			
-			default:
 				break;
 			}
 			stopProgressDialog();
@@ -132,13 +124,16 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 		initEvent();
 		getData();
 	}
-
-	private void initEvent() {
-		mHeadBack.setOnClickListener(this);
-		mCallPhone.setOnClickListener(this);
-		mDone.setOnClickListener(this);
+	
+	private void getExtraData() {
+		Intent intent = getIntent();
+		Bundle bundle = intent.getExtras();
+		mWorktype = bundle.getString(Constant.WORKTYPE,"").trim();
+		mZonePhone=bundle.getString(Constant.ZONEPHONE,"");
+		mTaskNo=bundle.getString(Constant.TASKNO);
+		mElevatorNo=bundle.getString(Constant.ELEVATORNO);
 	}
-
+	
 	private void init() {
 		context = QueryTaskListActivity.this;
 		mListFooterView=LayoutInflater.from(context).inflate(R.layout.listview_footer_done, null);
@@ -153,17 +148,13 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 		mTaskListData = (ListView) findViewById(R.id.lv_task_details);
 		mTaskListData.addFooterView(mListFooterView);
 	}
-	/**
-	 * 前一个页面传过来的值
-	 */
-	private void getExtraData() {
-		Intent intent = getIntent();
-		Bundle bundle = intent.getExtras();
-		mWorktype = bundle.getString(Constant.WORKTYPE,"").trim();
-		mZonePhone=bundle.getString(Constant.ZONEPHONE,"");
-		mTaskNo=bundle.getString(Constant.TASKNO);
-		mElevatorNo=bundle.getString(Constant.ELEVATORNO);
+
+	private void initEvent() {
+		mHeadBack.setOnClickListener(this);
+		mCallPhone.setOnClickListener(this);
+		mDone.setOnClickListener(this);
 	}
+
 	private void getData(){
 		startProgressDialog("正在加载...");
 		Param param = new Param(Constant.WORKTYPE, mWorktype);
@@ -189,12 +180,8 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 				msg.obj="网络异常";
 				handler.sendMessage(msg);
 			}
-
 		});
-
 	}
-
-
 
 	@Override
 	protected void onDestroy() {
@@ -232,9 +219,8 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 					@Override
 					public void onClick(View v) {
 						if (TextUtils.equals(type, TYPE1)) {
-							String phoneNo="15021565127";
-							Intent intent2 =new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+phoneNo));
-							startActivity(intent2);
+							Intent intent =new Intent(Intent.ACTION_CALL, Uri.parse("tel:"+mZonePhone));
+							startActivity(intent);
 						}else {
 							if(!currentElevatorIsFinish){
 								Param taskNoParam = new Param(Constant.TASKNO,mTaskNo);

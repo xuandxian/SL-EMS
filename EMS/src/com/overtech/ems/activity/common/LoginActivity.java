@@ -58,8 +58,8 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 				Intent intent = new Intent(LoginActivity.this,MainActivity.class);
 				startActivity(intent);
 				break;
-			case StatusCode.LOGIN_FAILED:
-				Utilities.showToast("登录失败", context);
+			case StatusCode.RESPONSE_SERVER_EXCEPTION:
+				Utilities.showToast("服务端异常", context);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
 				Utilities.showToast("网络异常", context);
@@ -137,7 +137,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 						@Override
 						public void onFailure(Request request, IOException e) {
 							Message msg=new Message();
-							msg.what=StatusCode.LOGIN_FAILED;
+							msg.what=StatusCode.RESPONSE_NET_FAILED;
 							handler.sendMessage(msg);
 						}
 
@@ -153,7 +153,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 									msg.what = StatusCode.LOGIN_NOT_EXIST;
 								}
 							} else {
-								msg.what = StatusCode.RESPONSE_NET_FAILED;
+								msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
 							}
 							handler.sendMessage(msg);
 						}
