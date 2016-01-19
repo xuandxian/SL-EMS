@@ -2,6 +2,8 @@ package com.overtech.ems.activity.parttime.grabtask;
 
 import java.io.IOException;
 import java.util.ArrayList;
+
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -86,8 +88,10 @@ public class PackageDetailActivity extends BaseActivity {
 					Utilities.showToast("请不要重复抢单", context);
 				} else if (TextUtils.equals(content, "1")) {
 					Utilities.showToast("抢单成功，等待第二个人抢", context);
+					onActivityForResult();
 				} else if (TextUtils.equals(content, "2")) {
 					Utilities.showToast("抢单成功，请到任务中查看", context);
+					onActivityForResult();
 				} else if (TextUtils.equals(content, "3")) {
 					Utilities.showToast("差一点就抢到了", context);
 				}
@@ -263,5 +267,10 @@ public class PackageDetailActivity extends BaseActivity {
 					}
 				}).show();
 	}
-
+	
+	private void onActivityForResult(){
+		Intent intent=new Intent();
+        setResult(Activity.RESULT_OK, intent);
+        finish();
+	}
 }

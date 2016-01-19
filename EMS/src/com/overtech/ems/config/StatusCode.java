@@ -145,9 +145,11 @@ public class StatusCode {
 	//抢单
 	public static final int RESULT_GRAB_DO_FILTER = 0x56;
 	public static final int RESULT_GRAB_DO_SEARCH = 0x57;
+	//抢单任务包详情
+	public static final int RESULT_GRAB_DO_GRAB = 0x58;
 	/**
 	 * 公告加载成功
 	 */
-	public static final int ANNOUNCEMENT_SUCCESS=0x58;
+	public static final int ANNOUNCEMENT_SUCCESS=0x59;
 
 }
