@@ -10,8 +10,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,8 +46,7 @@ import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-public class TaskListNoneFragment extends BaseFragment implements OnRefreshListener {
-	private SwipeRefreshLayout mSwipeRefresh;
+public class TaskListNoneFragment extends BaseFragment {
 	private SwipeMenuListView mSwipeListView;
 	private SwipeMenuCreator creator;
 	private Activity mActivity;
@@ -163,11 +160,9 @@ public class TaskListNoneFragment extends BaseFragment implements OnRefreshListe
 			default:
 				break;
 			}
-			mSwipeRefresh.setRefreshing(false);
 			stopProgressDialog();
 		};
 	};
-	
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -189,18 +184,12 @@ public class TaskListNoneFragment extends BaseFragment implements OnRefreshListe
 	private void findViewById(View view) {
 		mSwipeListView = (SwipeMenuListView) view
 				.findViewById(R.id.sl_task_list_listview);
-		mSwipeRefresh=(SwipeRefreshLayout)view.findViewById(R.id.sr_layout);
 	}
 
 	private void init() {
 		mLocationClient = ((MyApplication) getActivity().getApplication()).mLocationClient;
 		mLocationClient.requestLocation();
 		mLocationClient.start();
-		mSwipeRefresh.setOnRefreshListener(this);
-		mSwipeRefresh.setColorSchemeColors(android.R.color.holo_blue_bright,
-				android.R.color.holo_green_light,
-				android.R.color.holo_orange_light,
-				android.R.color.holo_red_light);
 		initListView();
 		mSwipeListView.setMenuCreator(creator);
 		mSwipeListView
@@ -254,8 +243,9 @@ public class TaskListNoneFragment extends BaseFragment implements OnRefreshListe
 									}, param);
 							break;
 						}
-
 					}
+
+					
 				});
 		mSwipeListView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -357,7 +347,7 @@ public class TaskListNoneFragment extends BaseFragment implements OnRefreshListe
 		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == REQUESTCODE) {
-			onRefresh();
+			startLoading();
 		}
 	}
 
@@ -373,9 +363,5 @@ public class TaskListNoneFragment extends BaseFragment implements OnRefreshListe
 		mLocationClient.stop();
 	}
 
-	@Override
-	public void onRefresh() {
-		startLoading();
-	}
 	
 }

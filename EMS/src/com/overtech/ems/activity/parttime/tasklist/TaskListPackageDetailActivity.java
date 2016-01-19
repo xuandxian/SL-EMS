@@ -180,7 +180,6 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 						}).show();
 				break;
 			case StatusCode.CHARGEBACK_SUCCESS:
-				stopProgressDialog();
 				String state = (String) msg.obj;
 				Log.e("==", state);
 				if(state.equals("true")){
@@ -198,6 +197,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			default:
 				break;
 			}
+			stopProgressDialog();
 			mSwipeLayout.setRefreshing(false);
 		};
 	};
