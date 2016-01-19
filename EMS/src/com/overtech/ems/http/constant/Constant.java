@@ -6,6 +6,11 @@ package com.overtech.ems.http.constant;
  */
 public class Constant {
 	/**
+	 * 自动登录标志
+	 */
+	public static final String AUTO_LOGIN="auto_login";
+	
+	/**
 	 * 登录名
 	 */
 	public static final String LOGINNAME="loginName";

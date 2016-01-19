@@ -26,6 +26,7 @@ import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.Employee;
+import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
@@ -48,13 +49,14 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	private Button mLogin;
 	private TextView mRegister;
 	private ToggleButton mChangePasswordState;
-	
+	private String mAutoLoginFlag;
+
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case StatusCode.LOGIN_SUCCESS:
-				mSharedPreferences.edit().putString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, sUserName).commit();// 将登陆的用户名保存
-				mSharedPreferences.edit().putLong(SharedPreferencesKeys.CURRENT_DATE, new Date().getTime()).commit();
+				mSharedPreferences.edit().putString(SharedPreferencesKeys.CURRENT_LOGIN_NAME,sUserName).commit();// 将登陆的用户名保存
+				mSharedPreferences.edit().putLong(SharedPreferencesKeys.CURRENT_DATE,new Date().getTime()).commit();
 				Intent intent = new Intent(LoginActivity.this,MainActivity.class);
 				startActivity(intent);
 				break;
@@ -67,8 +69,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			case StatusCode.LOGIN_NOT_EXIST:
 				Utilities.showToast("用户或者密码错误", context);
 				break;
-			default:
-				break;
 			}
 			stopProgressDialog();
 		};
@@ -78,8 +78,20 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		initView();
-		initData();
+		getExtraData();
+		if (TextUtils.equals("true", mAutoLoginFlag)) {
+
+		} else {
+			initView();
+			initData();
+		}
+	}
+
+	private void getExtraData() {
+		Bundle bundle = getIntent().getExtras();
+		if (null != bundle) {
+			mAutoLoginFlag = bundle.getString(Constant.AUTO_LOGIN, "");
+		}
 	}
 
 	private void initView() {
@@ -125,42 +137,47 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 						|| TextUtils.isEmpty(sPassword)) {
 					Utilities.showToast("输入不能为空", context);
 				} else {
-					startProgressDialog("正在登录...");
-					Employee employee = new Employee();
-					employee.setLoginName(sUserName);
-					employee.setPassword(sPassword);
-					Gson gson = new Gson();
-					String person = gson.toJson(employee);
-					Request request = httpEngine.createRequest(ServicesConfig.LOGIN, person);
-					Call call = httpEngine.createRequestCall(request);
-					call.enqueue(new Callback() {
-						@Override
-						public void onFailure(Request request, IOException e) {
-							Message msg=new Message();
-							msg.what=StatusCode.RESPONSE_NET_FAILED;
-							handler.sendMessage(msg);
-						}
-
-						@Override
-						public void onResponse(Response response)
-								throws IOException {
-							Message msg = new Message();
-							if (response.isSuccessful()) {
-								String result = response.body().string();
-								if (TextUtils.equals("true", result)) {
-									msg.what = StatusCode.LOGIN_SUCCESS;
-								} else {
-									msg.what = StatusCode.LOGIN_NOT_EXIST;
-								}
-							} else {
-								msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
-							}
-							handler.sendMessage(msg);
-						}
-					});
+					doLogin(sUserName,sPassword);
 				}
 			}
 		});
+	}
+	
+	private void doLogin(String username,String password){
+		startProgressDialog("正在登录...");
+		Employee employee = new Employee();
+		employee.setLoginName(username);
+		employee.setPassword(password);
+		Gson gson = new Gson();
+		String person = gson.toJson(employee);
+		Request request = httpEngine.createRequest(ServicesConfig.LOGIN, person);
+		Call call = httpEngine.createRequestCall(request);
+		call.enqueue(new Callback() {
+			@Override
+			public void onFailure(Request request, IOException e) {
+				Message msg = new Message();
+				msg.what = StatusCode.RESPONSE_NET_FAILED;
+				handler.sendMessage(msg);
+			}
+
+			@Override
+			public void onResponse(Response response)
+					throws IOException {
+				Message msg = new Message();
+				if (response.isSuccessful()) {
+					String result = response.body().string();
+					if (TextUtils.equals("true", result)) {
+						msg.what = StatusCode.LOGIN_SUCCESS;
+					} else {
+						msg.what = StatusCode.LOGIN_NOT_EXIST;
+					}
+				} else {
+					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
+				}
+				handler.sendMessage(msg);
+			}
+		});
+		
 	}
 
 	@Override
@@ -178,8 +195,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			break;
 		case R.id.iv_headBack:
 			onBackPressed();
-			break;
-		default:
 			break;
 		}
 	}
