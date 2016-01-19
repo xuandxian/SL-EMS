@@ -95,11 +95,11 @@ public class BusinessConfig {
 	/**
 	 * 21.问题反馈
 	 */
-	public static final String URL_PROBLEMS_FEEDBACK = "/feedBack.action";
+	public static final String URL_PROBLEMS_FEEDBACK = "/task/feedBack.action";
 	/**
 	 * 22.互相评价
 	 */
-	public static final String URL_EVALUATION_EACH_OTHER = "/evaluationEachOther.action";
+	public static final String URL_EVALUATION_EACH_OTHER = "/task/evaluationEachOther.action";
 	/**
 	 * 23.我的
 	 */

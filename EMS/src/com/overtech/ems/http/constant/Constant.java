@@ -98,6 +98,18 @@ public class Constant {
 	 */
 	public static final String STATUS="isFinish";
 	/**
+	 * 问题反馈
+	 */
+	public static final String FEEDBACKINFO="feedBackInfo";
+	/**
+	 * 互相评价--分值
+	 */
+	public static final String EVALUATELEVEL="evaluateLevel";
+	/**
+	 * 互相评价--评价原因
+	 */
+	public static final String EVALUATEINFO="evaluateInfo";
+	/**
 	 * 更新手机号（新手机号）
 	 */
 	public static final String NEWPHONE="newPhone";

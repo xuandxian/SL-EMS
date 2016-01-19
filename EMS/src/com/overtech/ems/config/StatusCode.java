@@ -140,5 +140,13 @@ public class StatusCode {
 	 * 公告加载成功
 	 */
 	public static final int ANNOUNCEMENT_SUCCESS=0x52;
+	/**
+	 * 问题反馈成功
+	 */
+	public static final int QUESTIONFEEDBACK=0x60;
+	/**
+	 * 互相评价成功
+	 */
+	public static final int EVALUATEOTHER=0x70;
 
 }
