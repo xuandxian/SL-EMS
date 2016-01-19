@@ -74,7 +74,8 @@ public class ScanCodeActivity extends BaseActivity implements Callback {
 				boolean isTrue = bean.isSuccess();
 				if (isTrue) {
 					ArrayList<String> tempList = bean.getModel();
-					Intent intent = new Intent(ScanCodeActivity.this,QueryTaskListActivity.class);
+					Intent intent = new Intent(ScanCodeActivity.this,
+							QueryTaskListActivity.class);
 					Bundle bundle = new Bundle();
 					bundle.putString(Constant.WORKTYPE, tempList.get(1));
 					bundle.putString(Constant.ZONEPHONE, tempList.get(2));
@@ -93,7 +94,6 @@ public class ScanCodeActivity extends BaseActivity implements Callback {
 				Utilities.showToast("网络异常", context);
 				break;
 			}
-			stopProgressDialog();
 		};
 	};
 
@@ -171,7 +171,6 @@ public class ScanCodeActivity extends BaseActivity implements Callback {
 		if (mElevatorNo.equals("")) {
 			Utilities.showToast("扫描失败", mContext);
 		} else {
-			startProgressDialog("正在查询...");
 			Param param = new Param(Constant.ELEVATORNO, mElevatorNo);
 			Request request = httpEngine.createRequest(
 					ServicesConfig.QUERY_TASK_PACKAGE_ELEVATOR, param);
@@ -197,15 +196,6 @@ public class ScanCodeActivity extends BaseActivity implements Callback {
 					handler2.sendMessage(msg);
 				}
 			});
-
-			// Intent intent = new
-			// Intent(ScanCodeActivity.this,QueryTaskPackageActivity.class);
-			// Bundle bundle = new Bundle();
-			// bundle.putString(Constant.ELEVATORNO, resultString);
-			// bundle.putString(Constant.LOGINNAME, mLoginName);
-			// bundle.putParcelable(Constant.BITMAP, barcode);
-			// intent.putExtras(bundle);
-			// startActivity(intent);
 		}
 		ScanCodeActivity.this.finish();
 	}
