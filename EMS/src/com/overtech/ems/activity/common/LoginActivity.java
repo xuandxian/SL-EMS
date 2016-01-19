@@ -22,6 +22,7 @@ import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.Employee;
 import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.security.MD5Util;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
@@ -48,12 +49,14 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	private TextView mRegister;
 	private ToggleButton mChangePasswordState;
 	private String mAutoLoginFlag;
+	String encryptPassword;
 
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case StatusCode.LOGIN_SUCCESS:
 				mSharedPreferences.edit().putString(SharedPreferencesKeys.CURRENT_LOGIN_NAME,sUserName).commit();// 将登陆的用户名保存
+				mSharedPreferences.edit().putString(SharedPreferencesKeys.CURRENT_LOGIN_PASSWORD,encryptPassword).commit();// 将登陆的密码保存
 				mSharedPreferences.edit().putLong(SharedPreferencesKeys.CURRENT_DATE,new Date().getTime()).commit();
 				Intent intent = new Intent(LoginActivity.this,MainActivity.class);
 				startActivity(intent);
@@ -78,7 +81,13 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		setContentView(R.layout.activity_login);
 		getExtraData();
 		if (TextUtils.equals("true", mAutoLoginFlag)) {
-
+			String username=mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME,"");
+			String password=mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_PASSWORD, "");
+			if (TextUtils.equals("", username)||TextUtils.equals("", password)) {
+				return;
+			}else {
+				doLogin(username, password);
+			}
 		} else {
 			initView();
 			initData();
@@ -109,19 +118,14 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		mLostPassword.setOnClickListener(this);
 		mRegister.setOnClickListener(this);
 		mHeadBack.setOnClickListener(this);
-		mChangePasswordState
-				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		mChangePasswordState.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 					@Override
 					public void onCheckedChanged(CompoundButton buttonView,
 							boolean isChecked) {
 						if (isChecked) {
-							mPassword
-									.setTransformationMethod(HideReturnsTransformationMethod
-											.getInstance());// 设置密码为可见的
+							mPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());// 设置密码为可见的
 						} else {
-							mPassword
-									.setTransformationMethod(PasswordTransformationMethod
-											.getInstance());
+							mPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
 						}
 					}
 				});
@@ -131,8 +135,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			public void onClick(View arg0) {
 				sUserName = mUserName.getText().toString().trim();
 				sPassword = mPassword.getText().toString().trim();
-				if (TextUtils.isEmpty(sUserName)
-						|| TextUtils.isEmpty(sPassword)) {
+				if (TextUtils.isEmpty(sUserName) || TextUtils.isEmpty(sPassword)) {
 					Utilities.showToast("输入不能为空", context);
 				} else {
 					doLogin(sUserName,sPassword);
@@ -142,10 +145,15 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	}
 	
 	private void doLogin(String username,String password){
+		try {
+			encryptPassword = MD5Util.md5Encode(password);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
 		startProgressDialog("正在登录...");
 		Employee employee = new Employee();
 		employee.setLoginName(username);
-		employee.setPassword(password);
+		employee.setPassword(encryptPassword);
 		Gson gson = new Gson();
 		String person = gson.toJson(employee);
 		Request request = httpEngine.createRequest(ServicesConfig.LOGIN, person);
@@ -159,8 +167,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			}
 
 			@Override
-			public void onResponse(Response response)
-					throws IOException {
+			public void onResponse(Response response)throws IOException {
 				Message msg = new Message();
 				if (response.isSuccessful()) {
 					String result = response.body().string();
@@ -182,13 +189,11 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.tv_lost_password:
-			Intent intent = new Intent(LoginActivity.this,
-					LostPasswordActivity.class);
+			Intent intent = new Intent(LoginActivity.this,LostPasswordActivity.class);
 			startActivity(intent);
 			break;
 		case R.id.tv_login_by_message:
-			Intent intent2 = new Intent(LoginActivity.this,
-					RegisterActivity.class);
+			Intent intent2 = new Intent(LoginActivity.this,RegisterActivity.class);
 			startActivity(intent2);
 			break;
 		case R.id.iv_headBack:
