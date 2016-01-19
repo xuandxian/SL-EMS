@@ -1,8 +1,5 @@
 package com.overtech.ems.activity.common;
 
-import java.io.IOException;
-import java.util.Date;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,8 +15,6 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
-
-import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
@@ -30,10 +25,13 @@ import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
+import com.google.gson.Gson;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
+import java.io.IOException;
+import java.util.Date;
 
 /**
  * @author Tony

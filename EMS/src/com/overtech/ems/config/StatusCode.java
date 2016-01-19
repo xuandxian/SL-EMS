@@ -1,6 +1,8 @@
 package com.overtech.ems.config;
 
 public class StatusCode {
+	//初始化RSA
+	public static final int INIT_RSA_SUCCESS = 0x100;
 	
 	//网络异常
 	public static final int RESPONSE_NET_FAILED = 0x01;
