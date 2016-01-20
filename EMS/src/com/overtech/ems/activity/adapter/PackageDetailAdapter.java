@@ -43,20 +43,13 @@ public class PackageDetailAdapter extends BaseAdapter {
 		TaskPackageDetail data = list.get(position);
 		if (convertView == null) {
 			holder = new ViewHolder();
-			convertView = LayoutInflater.from(context).inflate(
-					R.layout.item_grab_task_package_detail, null);
-			holder.mRelativeLayout = (RelativeLayout) convertView
-					.findViewById(R.id.rl_item_package_detail);
-			holder.mElevtorName = (TextView) convertView
-					.findViewById(R.id.tv_grab_task_package_name);
-			holder.mWorkType = (TextView) convertView
-					.findViewById(R.id.tv_grab_task_package_work_type);
-			holder.mElevtorProductor = (TextView) convertView
-					.findViewById(R.id.tv_grab_task_package_productor);
-			holder.mElevtorNo = (TextView) convertView
-					.findViewById(R.id.tv_grab_task_package_eveltor_no);
-			holder.mElevtorType = (TextView) convertView
-					.findViewById(R.id.tv_grab_task_package_type);
+			convertView = LayoutInflater.from(context).inflate(R.layout.item_grab_task_package_detail, null);
+			holder.mRelativeLayout = (RelativeLayout) convertView.findViewById(R.id.rl_item_package_detail);
+			holder.mElevtorName = (TextView) convertView.findViewById(R.id.tv_grab_task_package_name);
+			holder.mWorkType = (TextView) convertView.findViewById(R.id.tv_grab_task_package_work_type);
+			holder.mElevtorProductor = (TextView) convertView.findViewById(R.id.tv_grab_task_package_productor);
+			holder.mElevtorNo = (TextView) convertView.findViewById(R.id.tv_grab_task_package_eveltor_no);
+			holder.mElevtorType = (TextView) convertView.findViewById(R.id.tv_grab_task_package_type);
 			convertView.setTag(holder);
 
 		} else {
@@ -64,7 +57,11 @@ public class PackageDetailAdapter extends BaseAdapter {
 		}
 		String temp = data.getElevatorName();
 		if (temp.contains("号")) {
-			holder.mElevtorName.setText(temp.split("号")[1]);
+			if (temp.endsWith("号")) {
+				holder.mElevtorName.setText(temp);
+			} else {
+				holder.mElevtorName.setText(temp.split("号")[1]);
+			}
 		} else {
 			holder.mElevtorName.setText(temp);
 		}
