@@ -66,8 +66,11 @@
     <color name="btn_orange">#ffff8400</color>
     <!-- 橙色 -->
     <color name="home_search_hint">#ffaaaaaa</color>
-    <!-- 大首页搜索框hint -->
-
+    <!-- 按钮颜色(可点击) -->
+    <color name="btn_visiable_bg">#ff32CD32</color>
+    <!-- 按钮颜色(不可点击) -->
+    <color name="btn_disable_bg">#ffcccccc</color>
+    
     <color name="line_blue_color">#7FBDED</color>
     <color name="bg_title_red">#FF3A30</color>
     <color name="bg_titile_black">#4D4D4D</color>

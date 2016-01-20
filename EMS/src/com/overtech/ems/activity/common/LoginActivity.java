@@ -57,6 +57,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 				mSharedPreferences.edit().putLong(SharedPreferencesKeys.CURRENT_DATE,new Date().getTime()).commit();
 				Intent intent = new Intent(LoginActivity.this,MainActivity.class);
 				startActivity(intent);
+				mPassword.setText("");
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
 				Utilities.showToast("服务端异常", context);

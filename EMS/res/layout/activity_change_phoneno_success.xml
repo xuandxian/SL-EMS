@@ -53,7 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="更换成功"
-                android:textColor="#00ff00" />
+                android:textColor="@color/btn_visiable_bg" />
         </LinearLayout>
     </RelativeLayout>
 

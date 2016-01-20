@@ -31,16 +31,16 @@ public class ChangePhoneNoSuccessActivity extends BaseActivity {
 		mDoBack=(ImageView) findViewById(R.id.iv_headBack);
 		mHeadContent.setText("更换成功");
 		mDoBack.setVisibility(View.VISIBLE);
-		startProgressDialog("2秒后跳转到登录");
 		new Handler().postDelayed(new Runnable() {
 			
 			@Override
 			public void run() {
-				stopProgressDialog();
+				startProgressDialog("跳转中...");
 				Intent intent = new Intent(ChangePhoneNoSuccessActivity.this,LoginActivity.class);
 				startActivity(intent);
 				finish();
 			}
 		}, 2000);
+		stopProgressDialog();
 	}
 }
