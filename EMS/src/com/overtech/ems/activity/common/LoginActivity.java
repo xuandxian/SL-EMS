@@ -21,7 +21,6 @@ import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.Employee;
-import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.security.MD5Util;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
@@ -48,7 +47,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	private Button mLogin;
 	private TextView mRegister;
 	private ToggleButton mChangePasswordState;
-	private String mAutoLoginFlag;
 	String encryptPassword;
 
 	private Handler handler = new Handler() {
@@ -56,7 +54,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			switch (msg.what) {
 			case StatusCode.LOGIN_SUCCESS:
 				mSharedPreferences.edit().putString(SharedPreferencesKeys.CURRENT_LOGIN_NAME,sUserName).commit();// 将登陆的用户名保存
-				mSharedPreferences.edit().putString(SharedPreferencesKeys.CURRENT_LOGIN_PASSWORD,encryptPassword).commit();// 将登陆的密码保存
 				mSharedPreferences.edit().putLong(SharedPreferencesKeys.CURRENT_DATE,new Date().getTime()).commit();
 				Intent intent = new Intent(LoginActivity.this,MainActivity.class);
 				startActivity(intent);
@@ -79,28 +76,10 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		getExtraData();
-		if (TextUtils.equals("true", mAutoLoginFlag)) {
-			String username=mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME,"");
-			String password=mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_PASSWORD, "");
-			if (TextUtils.equals("", username)||TextUtils.equals("", password)) {
-				return;
-			}else {
-				doLogin(username, password);
-			}
-		} else {
-			initView();
-			initData();
-		}
+		initView();
+		initData();
 	}
-
-	private void getExtraData() {
-		Bundle bundle = getIntent().getExtras();
-		if (null != bundle) {
-			mAutoLoginFlag = bundle.getString(Constant.AUTO_LOGIN, "");
-		}
-	}
-
+	
 	private void initView() {
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
 		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
@@ -120,8 +99,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		mHeadBack.setOnClickListener(this);
 		mChangePasswordState.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 					@Override
-					public void onCheckedChanged(CompoundButton buttonView,
-							boolean isChecked) {
+					public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
 						if (isChecked) {
 							mPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());// 设置密码为可见的
 						} else {
