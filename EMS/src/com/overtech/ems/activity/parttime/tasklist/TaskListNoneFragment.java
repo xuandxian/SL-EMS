@@ -56,6 +56,7 @@ public class TaskListNoneFragment extends BaseFragment {
 	private List<TaskPackage> list;
 	private String mTaskNo;
 	private String loginName;
+	private int mPosition;
 	/**
 	 * 访问任务包详情的请求码
 	 */
@@ -65,6 +66,7 @@ public class TaskListNoneFragment extends BaseFragment {
 			switch (msg.what) {
 			case StatusCode.TASKLIST_NONE_SUCCESS:
 				String json = (String) msg.obj;
+//				Log.e("==未完成任务单==", json);
 				Gson gson = new Gson();
 				TaskPackageBean bean = gson.fromJson(json,
 						TaskPackageBean.class);
@@ -78,7 +80,14 @@ public class TaskListNoneFragment extends BaseFragment {
 				break;
 			case StatusCode.VALIDATE_TIME_SUCCESS:
 				String time = (String) msg.obj;
-				if (time.equals("true")) {
+//				Log.e("==未完成时间什么值==", time);
+				if(time.equals("-1")){
+					Utilities.showToast("已超过退单时间！！！", context);
+					break;
+				}else if(time.equals("0")){
+					Utilities.showToast("当天的任务不可以退单！！！", context);
+					break;
+				}else if (time.equals("1")) {
 					dialogBuilder.withMessage("72小时内退单会影响星级评定，你是否要退单？");
 				} else {
 					dialogBuilder.withMessage("你是否要退单");
@@ -147,6 +156,8 @@ public class TaskListNoneFragment extends BaseFragment {
 				String state = (String) msg.obj;
 				if (state.equals("true")) {
 					Utilities.showToast("退单成功", context);
+					list.remove(mPosition);
+					adapter.notifyDataSetChanged();
 				} else {
 					Utilities.showToast("退单失败", context);
 				}
@@ -210,6 +221,7 @@ public class TaskListNoneFragment extends BaseFragment {
 							TaskPackage data = (TaskPackage) adapter
 									.getItem(position);
 							mTaskNo = data.getTaskNo();
+							mPosition=position;
 							Param param = new Param(Constant.TASKNO, mTaskNo);
 							startLoading(
 									ServicesConfig.CHARGE_BACK_TASK_VALIDATE_TIME,

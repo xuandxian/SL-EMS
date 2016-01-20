@@ -64,7 +64,11 @@ public class TaskListPackageDetailAdapter extends BaseAdapter {
 		}
 		String temp=data.getElevatorName();
 		if (temp.contains("号")) {
-			holder.mElevtorName.setText(temp.split("号")[1]);
+			if(temp.split("号").length==2){
+				holder.mElevtorName.setText(temp.split("号")[1]);
+			}else{
+				holder.mElevtorName.setText(temp);
+			}
 		}else {
 			holder.mElevtorName.setText(temp);
 		}

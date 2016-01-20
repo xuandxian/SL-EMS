@@ -97,6 +97,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			switch (msg.what) {
 			case StatusCode.PACKAGE_DETAILS_SUCCESS:
 				String json = (String) msg.obj;
+//				Log.e("未完成任务包详情", json);
 				Gson gson = new Gson();
 				TaskPackageDetailBean bean = gson.fromJson(json,
 						TaskPackageDetailBean.class);
@@ -114,9 +115,16 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				break;
 			case StatusCode.VALIDATE_TIME_SUCCESS:
 				String time = (String) msg.obj;
-				if (time.equals("true")) {
+//				Log.e("==任务单详情时间==", time);
+				if(time.equals("-1")){
+					Utilities.showToast("已超过退单时间！！！", context);
+					break;
+				}else if(time.equals("0")){
+					Utilities.showToast("当天的任务不可以被退单！！！", context);
+					break;
+				}else if (time.equals("1")) {
 					dialogBuilder.withMessage("72小时内退单会影响星级评定，你是否要退单？");
-				} else {
+				}else {
 					dialogBuilder.withMessage("你是否要退单");
 				}
 				effect = Effectstype.Slideright;
@@ -181,7 +189,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				break;
 			case StatusCode.CHARGEBACK_SUCCESS:
 				String state = (String) msg.obj;
-				Log.e("==", state);
+//				Log.e("==", state);
 				if(state.equals("true")){
 					Utilities.showToast("退单成功",context);
 					finish();
@@ -232,6 +240,9 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				if (adapter.isAllCompleted()) {
 					Intent intent = new Intent(context,
 							QuestionResponseActivity.class);
+					Bundle bundle=new Bundle();
+					bundle.putString(Constant.TASKNO, taskNo);
+					intent.putExtras(bundle);
 					startActivity(intent);
 				} else {
 					TaskPackageDetail detail = (TaskPackageDetail) parent
