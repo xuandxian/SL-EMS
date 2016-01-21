@@ -57,6 +57,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	private TextView mTaskNo;
 	private String mPhone;
 	private String mZonePhone;
+	private String mPartnerName;
 	private String taskNo;
 	private String mLoginName;
 	private Context mActivity;
@@ -97,13 +98,14 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			switch (msg.what) {
 			case StatusCode.PACKAGE_DETAILS_SUCCESS:
 				String json = (String) msg.obj;
-//				Log.e("未完成任务包详情", json);
+				Log.e("未完成任务包详情", json);
 				Gson gson = new Gson();
 				TaskPackageDetailBean bean = gson.fromJson(json,
 						TaskPackageDetailBean.class);
 				list = (ArrayList<TaskPackageDetail>) bean.getModel();
 				mPhone = bean.getPartnerPhone();
 				mZonePhone = bean.getZonePhone();
+				mPartnerName = bean.getPartnerName();
 				if (null == list || list.size() == 0) {
 					Utilities.showToast("无数据", mActivity);
 					mCancle.setVisibility(View.GONE);
@@ -343,9 +345,32 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 
 							@Override
 							public void onClick(View v) {
-								Intent intent = new Intent(Intent.ACTION_DIAL,
-										Uri.parse("tel:" + mPhone));
-								startActivity(intent);
+								if(mPartnerName==null||mPhone==null){
+									Utilities.showToast("该任务单还没有被其他客户抢单，请耐心等待...", context);
+								}else{
+									Effectstype effect = Effectstype.Shake;
+									dialogBuilder.withTitle("温馨提示").withTitleColor(R.color.main_primary)
+									.withDividerColor("#11000000").withMessage("您是否要拨打电话给您的搭档："+mPartnerName)
+									.withMessageColor(R.color.main_primary).withDialogColor("#FFFFFFFF")
+									.isCancelableOnTouchOutside(true).withDuration(700)
+									.withEffect(effect).withButtonDrawable(R.color.main_white)
+									.withButton1Text("否").withButton1Color("#DD47BEE9")
+									.withButton2Text("是").withButton2Color("#DD47BEE9")
+									.setButton1Click(new View.OnClickListener() {
+												@Override
+												public void onClick(View v) {
+													dialogBuilder.dismiss();
+												}
+											}).setButton2Click(new View.OnClickListener() {
+												@Override
+												public void onClick(View v) {
+													Intent intent = new Intent(Intent.ACTION_CALL,
+															Uri.parse("tel:" + mPhone));
+													startActivity(intent);
+												}
+											}).show();
+								}
+								
 							}
 						});
 	}

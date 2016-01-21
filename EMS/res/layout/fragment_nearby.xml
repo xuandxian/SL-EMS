@@ -42,10 +42,10 @@
             android:textSize="15sp" />
     </LinearLayout>
 
-    <RelativeLayout
+    <FrameLayout
         android:id="@+id/rl_nearby_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
-    </RelativeLayout>
+    </FrameLayout>
 
 </LinearLayout>

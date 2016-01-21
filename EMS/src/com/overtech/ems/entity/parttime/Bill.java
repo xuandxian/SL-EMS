@@ -5,23 +5,11 @@ package com.overtech.ems.entity.parttime;
  * 我的账单
  */
 public class Bill {
-    private long maintenanceDate;
-    private String projectName;
+    private String maintenanceDate;
+    private String taskPackageName;
     private String taskNo;
     private String totalPrice;
-    private long closingDate;
-	public long getMaintenanceDate() {
-		return maintenanceDate;
-	}
-	public void setMaintenanceDate(long maintenanceDate) {
-		this.maintenanceDate = maintenanceDate;
-	}
-	public String getProjectName() {
-		return projectName;
-	}
-	public void setProjectName(String projectName) {
-		this.projectName = projectName;
-	}
+    private String closingDate;
 	public String getTaskNo() {
 		return taskNo;
 	}
@@ -34,10 +22,22 @@ public class Bill {
 	public void setTotalPrice(String totalPrice) {
 		this.totalPrice = totalPrice;
 	}
-	public long getClosingDate() {
+	public String getMaintenanceDate() {
+		return maintenanceDate;
+	}
+	public void setMaintenanceDate(String maintenanceDate) {
+		this.maintenanceDate = maintenanceDate;
+	}
+	public String getTaskPackageName() {
+		return taskPackageName;
+	}
+	public void setTaskPackageName(String taskPackageName) {
+		this.taskPackageName = taskPackageName;
+	}
+	public String getClosingDate() {
 		return closingDate;
 	}
-	public void setClosingDate(long closingDate) {
+	public void setClosingDate(String closingDate) {
 		this.closingDate = closingDate;
 	}
 	

@@ -62,18 +62,12 @@ public class PersonalAccountListAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		holder.mVillageName.setText(data.getProjectName());
-		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-		Date date=new Date(data.getMaintenanceDate());
-		Date date2=new Date(data.getClosingDate());
+		holder.mVillageName.setText(data.getTaskPackageName());
 		
-		holder.mMaintenanceTime.setText(sdf.format(date));
+		
+		holder.mMaintenanceTime.setText(data.getMaintenanceDate());
 		holder.mPersonalAccount.setText(data.getTotalPrice());
-		if(data.getClosingDate()==0){
-			holder.mMaintenanceEndTime.setText(null);
-		}else{
-			holder.mMaintenanceEndTime.setText(sdf.format(date2));
-		}
+		
 		return convertView;
 	}
 

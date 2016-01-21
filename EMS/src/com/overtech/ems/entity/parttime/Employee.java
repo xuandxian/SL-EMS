@@ -10,7 +10,7 @@ public class Employee implements Serializable{
 	/**
 	 * 性别
 	 */
-	private int gender;
+	private String gender;
 	/**
 	 * 电话号码
 	 */
@@ -74,10 +74,7 @@ public class Employee implements Serializable{
 	public void setName(String name) {
 		this.name = name;
 	}
-	public int getGender() {
-		return gender;
-	}
-	public void setGender(int gender) {
+	public void setGender(String gender) {
 		this.gender = gender;
 	}
 	public String getPhoneNo() {

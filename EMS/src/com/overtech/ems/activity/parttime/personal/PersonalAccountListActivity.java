@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -42,6 +43,7 @@ public class PersonalAccountListActivity extends BaseActivity implements OnClick
 			switch (msg.what) {
 			case StatusCode.ACCOUNT_LIST_SUCCESS:
 				String json=(String) msg.obj;
+				Log.e("==w我的账单==", json);
 				Gson gson=new Gson();
 				BillBean datas=gson.fromJson(json, BillBean.class);
 				adapter=new PersonalAccountListAdapter(context, datas.getModel());

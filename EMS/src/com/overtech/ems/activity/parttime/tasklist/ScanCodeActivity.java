@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
@@ -70,6 +71,7 @@ public class ScanCodeActivity extends BaseActivity implements Callback {
 			switch (msg.what) {
 			case StatusCode.QUERY_TASK_PACKAGE_ELEVATOR_SUCCESS:
 				String json = (String) msg.obj;
+				Log.e("==扫描结果==", json);
 				ScanResultBean bean = gson.fromJson(json, ScanResultBean.class);
 				boolean isTrue = bean.isSuccess();
 				if (isTrue) {

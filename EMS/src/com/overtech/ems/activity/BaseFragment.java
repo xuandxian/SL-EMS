@@ -57,6 +57,7 @@ public class BaseFragment extends Fragment {
         progressDialog = CustomProgressDialog.createDialog(context);
         progressDialog.setMessage(context.getString(R.string.loading_public_default));
         progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setCancelable(false);
         mSharedPreferences = application.getSharePreference();
         mLocationClient=application.mLocationClient;
     }

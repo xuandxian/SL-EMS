@@ -7,6 +7,8 @@ public class TaskPackageDetailBean {
 	private List<TaskPackageDetail> model;
 	private boolean success;
 	private String partnerPhone;
+	private String partnerName;
+	
 	private String zonePhone;
 	public String getZonePhone() {
 		return zonePhone;
@@ -19,6 +21,12 @@ public class TaskPackageDetailBean {
 	}
 	public void setPartnerPhone(String partnerPhone) {
 		this.partnerPhone = partnerPhone;
+	}
+	public String getPartnerName() {
+		return partnerName;
+	}
+	public void setPartnerName(String partnerName) {
+		this.partnerName = partnerName;
 	}
 	public boolean isSuccess() {
 		return success;
