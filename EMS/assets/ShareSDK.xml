@@ -29,6 +29,16 @@
     
     <ShareSDK 
         AppKey = "d21147058631"/> <!-- 修改成你在sharesdk后台注册的应用的appkey"-->
+        
+    <!-- ShareByAppClient标识是否使用微博客户端分享，默认是false -->
+    <SinaWeibo
+        Id="1"
+        SortId="1"
+        AppKey="586516315"
+        AppSecret="edd41b5f8003fde54047d967834e1a16"
+        RedirectUrl="http://www.sharesdk.cn"
+        ShareByAppClient="false"
+        Enable="true" />
     <!-- 
     	Wechat微信和WechatMoments微信朋友圈的appid是一样的；
     
@@ -42,34 +52,32 @@
 		默认值为false。此外，微信收藏不支持此字段。
 	-->
     <Wechat
-        Id="1"
+        Id="2"
         SortId="1"
         AppId="wx4868b35061f87885"
         AppSecret="64020361b8ec4c99936c0e3999a9f249"
         BypassApproval="true"
         Enable="true" />
-    
-    <WechatMoments
+    <QQ
         Id="3"
         SortId="3"
-        AppId="wx4868b35061f87885"
-        AppSecret="64020361b8ec4c99936c0e3999a9f249"
-        BypassApproval="true"
-        Enable="true" />
-
-    
-	<!-- ShareByAppClient标识是否使用微博客户端分享，默认是false -->
-	<QQ
-        Id="2"
-        SortId="2"
         AppId="1105102138"
         AppKey="dV82MHxpKMnvbjnr"
         ShareByAppClient="true"
         Enable="true" />
+    
+    
+    <WechatMoments
+        Id="4"
+        SortId="4"
+        AppId="wx4868b35061f87885"
+        AppSecret="64020361b8ec4c99936c0e3999a9f249"
+        BypassApproval="true"
+        Enable="true" />
  
     <ShortMessage
-        Id="4" 
-        SortId="4"
+        Id="5" 
+        SortId="5"
         Enable="true" />
    
 </DevInfor>

@@ -75,13 +75,13 @@ public class PersonalAboutAppActivity extends BaseActivity implements OnClickLis
 		oks.disableSSOWhenAuthorize();
 		oks.setTitle("分享");
 		// titleUrl是标题的网络链接，仅在人人网和QQ空间使用
-		oks.setTitleUrl("http://fir.im/SSDKShareDemo");
+		oks.setTitleUrl("http://120.55.88.138:8080/EMS.apk");
 		// text是分享文本，所有平台都需要这个字段
-		oks.setText("点击http://fir.im/SSDKShareDemo，可以下载App");
+		oks.setText("点击http://120.55.88.138:8080/EMS.apk，可以下载App");
 		// url仅在微信（包括好友和朋友圈）中使用
-		oks.setUrl("http://fir.im/SSDKShareDemo");
+		oks.setUrl("http://120.55.88.138:8080/EMS.apk");
 		// siteUrl是分享此内容的网站地址，仅在QQ空间使用
-		oks.setSiteUrl("http://fir.im/SSDKShareDemo");
+		oks.setSiteUrl("http://120.55.88.138:8080/EMS.apk");
 		oks.setVenueName("24梯");
 		// 启动分享GUI
 		oks.show(this);

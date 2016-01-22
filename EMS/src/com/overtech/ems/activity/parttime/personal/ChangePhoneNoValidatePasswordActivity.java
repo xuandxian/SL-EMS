@@ -17,6 +17,7 @@ import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.Employee;
+import com.overtech.ems.security.MD5Util;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
 import com.squareup.okhttp.Call;
@@ -94,18 +95,22 @@ public class ChangePhoneNoValidatePasswordActivity extends BaseActivity implemen
 		case R.id.btn_next:
 			String phoneNo = mPhone.getHint().toString().trim();
 			String password = mPassword.getText().toString().trim();
-			ValicatePassword(phoneNo, password);
+			valicatePassword(phoneNo, password);
 			break;
 		default:
 			break;
 		}
 	}
 
-	private void ValicatePassword(String phoneNo, String password) {
+	private void valicatePassword(String phoneNo, String password) {
 		startProgressDialog("正在验证...");
 		Employee employee = new Employee();
 		employee.setPhoneNo(phoneNo);
-		employee.setPassword(password);
+		try {
+			employee.setPassword(MD5Util.md5Encode(password));
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
 		Gson gson = new Gson();
 		String person = gson.toJson(employee);
 		Request request = httpEngine.createRequest(ServicesConfig.CHANGE_PHONENO_PASSWORD, person);
