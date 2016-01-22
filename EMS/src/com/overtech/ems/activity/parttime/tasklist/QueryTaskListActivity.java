@@ -1,5 +1,13 @@
 package com.overtech.ems.activity.parttime.tasklist;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -15,8 +23,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
+
 import com.google.gson.Gson;
-import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.TaskListDetailsAdapter;
@@ -24,17 +34,15 @@ import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.bean.WorkTypeBean;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.MaintenanceType;
+import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.utils.AppUtils;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-import java.io.IOException;
-import java.util.ArrayList;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /*
  *维保清单列表
@@ -59,11 +67,14 @@ public class QueryTaskListActivity extends BaseActivity implements
 	private TextView mTaskDetailsTitle;
 	private final String TYPE1 = "CALL_PHONE";
 	private final String TYPE2 = "CONFIRM";
+
+	private Set<String> tagSet;
+	private String TAG = "24梯";
 	/**
 	 * 是否可以完成工作，true代表是当天的任务可以完成，false代表不是维保时间的任务，不可以完成
 	 */
 	private boolean isCanConfirmDone;
-	
+
 	ArrayList<MaintenanceType> list = new ArrayList<MaintenanceType>();
 
 	private Handler handler = new Handler() {
@@ -73,7 +84,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 			switch (msg.what) {
 			case StatusCode.WORK_DETAILS_SUCCESS:
 				String json = (String) msg.obj;
-//				Log.e("==queryTaskList==", json);
+				// Log.e("==queryTaskList==", json);
 				WorkTypeBean bean = gson.fromJson(json, WorkTypeBean.class);
 				ArrayList<String> tempList = bean.getModel();
 				list.add(new MaintenanceType("0", "Title", "content"));
@@ -102,13 +113,19 @@ public class QueryTaskListActivity extends BaseActivity implements
 						currentElevatorIsFinish = false;
 					}
 					if (completeProgress) {
-						Intent intent = new Intent(QueryTaskListActivity.this,
-								QuestionResponseActivity.class);
-						Bundle bundle = new Bundle();
-						bundle.putString(Constant.TASKNO, mTaskNo);
-						intent.putExtras(bundle);
-						startActivity(intent);
-						finish();
+
+						tagSet.remove(mTaskNo);
+						JPushInterface.setAliasAndTags(getApplicationContext(),
+								null, tagSet, mTagsCallback);
+
+						/*
+						 * Intent intent = new
+						 * Intent(QueryTaskListActivity.this,
+						 * QuestionResponseActivity.class); Bundle bundle = new
+						 * Bundle(); bundle.putString(Constant.TASKNO, mTaskNo);
+						 * intent.putExtras(bundle); startActivity(intent);
+						 * finish();
+						 */
 					} else {
 						Utilities.showToast("你还有未完成的电梯", context);
 						finish();
@@ -119,12 +136,17 @@ public class QueryTaskListActivity extends BaseActivity implements
 				break;
 			case StatusCode.VALIDATE_TIME_SUCCESS:
 				String time = (String) msg.obj;
-//				Log.e("==时间==", time);
+				// Log.e("==时间==", time);
 				if (time.equals("0")) {
 					isCanConfirmDone = true;
 				} else {
 					isCanConfirmDone = false;
 				}
+				break;
+			case StatusCode.MSG_SET_TAGS:
+				Log.d("24梯", "Set tags in handler.");
+				JPushInterface.setAliasAndTags(getApplicationContext(), null,
+						(Set<String>) msg.obj, mTagsCallback);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
 				Utilities.showToast((String) msg.obj, context);
@@ -137,10 +159,57 @@ public class QueryTaskListActivity extends BaseActivity implements
 		};
 	};
 
+	private final TagAliasCallback mTagsCallback = new TagAliasCallback() {
+
+		@Override
+		public void gotResult(int code, String alias, Set<String> tags) {
+			String logs;
+			switch (code) {
+			case 0:
+				logs = "Set tag and alias success";
+				Log.d(TAG, logs);
+				mSharedPreferences.edit().putStringSet("tagSet", tags).commit();// 成功保存标签后，将标签放到本地
+				// 当该电梯中所有的电梯都完成后，并且标签也在jpush后台注册成功后，开始问题反馈；
+				Intent intent = new Intent(QueryTaskListActivity.this,
+						QuestionResponseActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putString(Constant.TASKNO, mTaskNo);
+				intent.putExtras(bundle);
+				startActivity(intent);
+				finish();
+
+				break;
+
+			case 6002:
+				logs = "Failed to set alias and tags due to timeout. Try again after 60s.";
+				Log.d(TAG, logs);
+				if (AppUtils.isConnected(getApplicationContext())) {
+					handler.sendMessageDelayed(handler.obtainMessage(
+							StatusCode.MSG_SET_TAGS, tags), 1000 * 60);
+				} else {
+					Log.i(TAG, "No network");
+				}
+				break;
+
+			default:
+				logs = "Failed with errorCode = " + code;
+				Log.d(TAG, logs);
+			}
+
+		}
+
+	};
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_task_details);
+		Set<String> tempSet = mSharedPreferences.getStringSet("tagSet", null);
+		if (tempSet == null) {
+			tagSet = new LinkedHashSet<String>();
+		} else {
+			tagSet = tempSet;
+		}
 		getExtraData();
 		init();
 		initEvent();
@@ -219,9 +288,9 @@ public class QueryTaskListActivity extends BaseActivity implements
 			break;
 		case R.id.btn_login:
 			// 将对应的电梯的完成状态更新到服务器
-			if(isCanConfirmDone){
+			if (isCanConfirmDone) {
 				showDialog(TYPE2, "该电梯维保任务已完成？");
-			}else{
+			} else {
 				Utilities.showToast("维保任务必须在当天完成", context);
 			}
 			break;

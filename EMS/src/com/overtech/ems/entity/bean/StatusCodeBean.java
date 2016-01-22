@@ -3,6 +3,7 @@ package com.overtech.ems.entity.bean;
 public class StatusCodeBean {
 	private String model;
 	private String status;
+	private String taskNo;
 	
 	public String getModel() {
 		return model;
@@ -15,6 +16,12 @@ public class StatusCodeBean {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public String getTaskNo() {
+		return taskNo;
+	}
+	public void setTaskNo(String taskNo) {
+		this.taskNo = taskNo;
 	}
 	public StatusCodeBean(String model, String status) {
 		super();

@@ -1,7 +1,9 @@
 package com.overtech.ems.activity.parttime.tasklist;
 
 import java.io.IOException;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -16,6 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
 
 import com.baidu.location.LocationClient;
 import com.baidu.mapapi.model.LatLng;
@@ -33,6 +37,7 @@ import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.TaskPackage;
 import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.utils.AppUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
@@ -57,6 +62,9 @@ public class TaskListNoneFragment extends BaseFragment {
 	private String mTaskNo;
 	private String loginName;
 	private int mPosition;
+
+	private Set<String> tagSet;
+	private String TAG = "24梯";
 	/**
 	 * 访问任务包详情的请求码
 	 */
@@ -66,7 +74,7 @@ public class TaskListNoneFragment extends BaseFragment {
 			switch (msg.what) {
 			case StatusCode.TASKLIST_NONE_SUCCESS:
 				String json = (String) msg.obj;
-//				Log.e("==未完成任务单==", json);
+				Log.e("==未完成任务单==", json);
 				Gson gson = new Gson();
 				TaskPackageBean bean = gson.fromJson(json,
 						TaskPackageBean.class);
@@ -80,14 +88,14 @@ public class TaskListNoneFragment extends BaseFragment {
 				break;
 			case StatusCode.VALIDATE_TIME_SUCCESS:
 				String time = (String) msg.obj;
-//				Log.e("==未完成时间什么值==", time);
-				if(time.equals("-1")){
+				// Log.e("==未完成时间什么值==", time);
+				if (time.equals("-1")) {
 					Utilities.showToast("已超过退单时间！！！", context);
 					break;
-				}else if(time.equals("0")){
+				} else if (time.equals("0")) {
 					Utilities.showToast("当天的任务不可以退单！！！", context);
 					break;
-				}else if (time.equals("1")) {
+				} else if (time.equals("1")) {
 					dialogBuilder.withMessage("72小时内退单会影响星级评定，你是否要退单？");
 				} else {
 					dialogBuilder.withMessage("你是否要退单");
@@ -152,15 +160,27 @@ public class TaskListNoneFragment extends BaseFragment {
 						}).show();
 				break;
 			case StatusCode.CHARGEBACK_SUCCESS:
-				stopProgressDialog();
+
 				String state = (String) msg.obj;
 				if (state.equals("true")) {
-					Utilities.showToast("退单成功", context);
+
 					list.remove(mPosition);
 					adapter.notifyDataSetChanged();
+
+					tagSet.remove(mTaskNo);
+					JPushInterface.setAliasAndTags(getActivity()
+							.getApplicationContext(), null, tagSet,
+							mTagsCallback);
+
 				} else {
 					Utilities.showToast("退单失败", context);
 				}
+				break;
+			case StatusCode.MSG_SET_TAGS:
+				Log.d("24梯", "Set tags in handler.");
+				JPushInterface.setAliasAndTags(getActivity()
+						.getApplicationContext(), null, (Set<String>) msg.obj,
+						mTagsCallback);
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
 				Utilities.showToast((String) msg.obj, mActivity);
@@ -175,6 +195,40 @@ public class TaskListNoneFragment extends BaseFragment {
 		};
 	};
 
+	private final TagAliasCallback mTagsCallback = new TagAliasCallback() {
+
+		@Override
+		public void gotResult(int code, String alias, Set<String> tags) {
+			String logs;
+			switch (code) {
+			case 0:
+				logs = "Set tag and alias success";
+				Log.d(TAG, logs);
+				Utilities.showToast("退单成功", context);
+				mSharedPreferences.edit().putStringSet("tagSet", tags).commit();// 成功保存标签后，将标签放到本地
+				stopProgressDialog();
+				break;
+
+			case 6002:
+				logs = "Failed to set alias and tags due to timeout. Try again after 60s.";
+				Log.d(TAG, logs);
+				if (AppUtils.isConnected(getActivity().getApplicationContext())) {
+					handler.sendMessageDelayed(handler.obtainMessage(
+							StatusCode.MSG_SET_TAGS, tags), 1000 * 60);
+				} else {
+					Log.i(TAG, "No network");
+				}
+				break;
+
+			default:
+				logs = "Failed with errorCode = " + code;
+				Log.d(TAG, logs);
+			}
+
+		}
+
+	};
+
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -186,6 +240,12 @@ public class TaskListNoneFragment extends BaseFragment {
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_task_list_none,
 				container, false);
+		Set<String> tempSet = mSharedPreferences.getStringSet("tagSet", null);
+		if (tempSet == null) {
+			tagSet = new LinkedHashSet<String>();
+		} else {
+			tagSet = tempSet;
+		}
 		findViewById(view);
 		init();
 		return view;
@@ -221,7 +281,7 @@ public class TaskListNoneFragment extends BaseFragment {
 							TaskPackage data = (TaskPackage) adapter
 									.getItem(position);
 							mTaskNo = data.getTaskNo();
-							mPosition=position;
+							mPosition = position;
 							Param param = new Param(Constant.TASKNO, mTaskNo);
 							startLoading(
 									ServicesConfig.CHARGE_BACK_TASK_VALIDATE_TIME,
@@ -257,7 +317,6 @@ public class TaskListNoneFragment extends BaseFragment {
 						}
 					}
 
-					
 				});
 		mSwipeListView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -375,5 +434,4 @@ public class TaskListNoneFragment extends BaseFragment {
 		mLocationClient.stop();
 	}
 
-	
 }

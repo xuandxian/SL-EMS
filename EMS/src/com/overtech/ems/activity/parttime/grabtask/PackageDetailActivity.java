@@ -2,6 +2,8 @@ package com.overtech.ems.activity.parttime.grabtask;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -9,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -17,6 +20,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
+
 import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
@@ -30,6 +36,7 @@ import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.TaskPackageDetail;
 import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.utils.AppUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
@@ -59,6 +66,9 @@ public class PackageDetailActivity extends BaseActivity {
 	private String mLongitude; // 经度
 	private String mLatitude; // 纬度
 	private TextView mHeadTitleTaskNo;
+	private Set<String> tagSet;
+	private String tagItem;
+	private String TAG = "24梯";
 	private int totalPrice;
 
 	private Handler handler = new Handler() {
@@ -67,38 +77,69 @@ public class PackageDetailActivity extends BaseActivity {
 			switch (msg.what) {
 			case StatusCode.PACKAGE_DETAILS_SUCCESS:
 				String json = (String) msg.obj;
-				TaskPackageDetailBean tasks = gson.fromJson(json,TaskPackageDetailBean.class);
+				TaskPackageDetailBean tasks = gson.fromJson(json,
+						TaskPackageDetailBean.class);
 				list = (ArrayList<TaskPackageDetail>) tasks.getModel();
-				if(null==list||list.size()==0){
+				if (null == list || list.size() == 0) {
 					Utilities.showToast("无数据", context);
-				}else{
+				} else {
 					adapter = new PackageDetailAdapter(context, list);
 					mPackageDetailListView.setAdapter(adapter);
 				}
 				for (int i = 0; i < list.size(); i++) {
-					totalPrice += Integer.valueOf(list.get(i).getMaintainPrice());
+					totalPrice += Integer.valueOf(list.get(i)
+							.getMaintainPrice());
 				}
-				mGrabTaskBtn.setText("抢单(￥" + String.valueOf(totalPrice) + "元)");
+				mGrabTaskBtn
+						.setText("抢单(￥" + String.valueOf(totalPrice) + "元)");
 				break;
 			case StatusCode.GRAG_RESPONSE_SUCCESS:
 				String status = (String) msg.obj;
-				StatusCodeBean bean = gson.fromJson(status,StatusCodeBean.class);
+				StatusCodeBean bean = gson.fromJson(status,
+						StatusCodeBean.class);
 				String content = bean.getModel();
 				if (TextUtils.equals(content, "0")) {
 					Utilities.showToast("请不要重复抢单", context);
 				} else if (TextUtils.equals(content, "1")) {
 					Utilities.showToast("抢单成功，等待第二个人抢", context);
+
+					// 推送业务代码
+					tagItem = bean.getTaskNo();
+					if (!AppUtils.isValidTagAndAlias(tagItem)) {
+						Utilities.showToast("格式不对", context);
+					} else {
+						tagSet.add(tagItem);
+						JPushInterface.setAliasAndTags(getApplicationContext(),
+								null, tagSet, mTagsCallback);
+					}
 					onActivityForResult();
 				} else if (TextUtils.equals(content, "2")) {
 					Utilities.showToast("抢单成功，请到任务中查看", context);
+
+					// 推送业务代码
+					tagItem = bean.getTaskNo();
+					if (!AppUtils.isValidTagAndAlias(tagItem)) {
+						Utilities.showToast("格式不对", context);
+					} else {
+						tagSet.add(tagItem);
+						JPushInterface.setAliasAndTags(getApplicationContext(),
+								null, tagSet, mTagsCallback);
+					}
+
 					onActivityForResult();
 				} else if (TextUtils.equals(content, "3")) {
 					Utilities.showToast("差一点就抢到了", context);
 				}
 				break;
+			case StatusCode.MSG_SET_TAGS:
+				Log.d("24梯", "Set tags in handler.");
+				JPushInterface.setAliasAndTags(getApplicationContext(), null,
+						(Set<String>) msg.obj, mTagsCallback);
+				break;
 			case StatusCode.RESPONSE_NET_FAILED:
 				Utilities.showToast("网络异常", context);
-				mGrabTaskBtn.setText("抢单(￥" + String.valueOf(totalPrice) + "元)");
+				mGrabTaskBtn
+						.setText("抢单(￥" + String.valueOf(totalPrice) + "元)");
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
 				Utilities.showToast("服务端异常", context);
@@ -108,10 +149,48 @@ public class PackageDetailActivity extends BaseActivity {
 		};
 	};
 
+	private final TagAliasCallback mTagsCallback = new TagAliasCallback() {
+
+		@Override
+		public void gotResult(int code, String alias, Set<String> tags) {
+			String logs;
+			switch (code) {
+			case 0:
+				logs = "Set tag and alias success";
+				Log.d(TAG, logs);
+				mSharedPreferences.edit().putStringSet("tagSet", tags).commit();// 成功保存标签后，将标签放到本地
+				break;
+
+			case 6002:
+				logs = "Failed to set alias and tags due to timeout. Try again after 60s.";
+				Log.d(TAG, logs);
+				if (AppUtils.isConnected(getApplicationContext())) {
+					handler.sendMessageDelayed(handler.obtainMessage(
+							StatusCode.MSG_SET_TAGS, tags), 1000 * 60);
+				} else {
+					Log.i(TAG, "No network");
+				}
+				break;
+
+			default:
+				logs = "Failed with errorCode = " + code;
+				Log.d(TAG, logs);
+			}
+
+		}
+
+	};
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_package_detail);
+		Set<String> tempSet = mSharedPreferences.getStringSet("tagSet", null);
+		if (tempSet == null) {
+			tagSet = new LinkedHashSet<String>();
+		} else {
+			tagSet = tempSet;
+		}
 		getExtrasData();
 		findViewById();
 		getDataByTaskNo(ServicesConfig.TASK_PACKAGE_DETAIL);
@@ -171,14 +250,18 @@ public class PackageDetailActivity extends BaseActivity {
 	private void init() {
 		mHeadTitleCommunity.setText(mCommunityName);
 		mHeadTitleTaskNo.setText(mTaskNo);
-		mPackageDetailListView.setOnItemClickListener(new OnItemClickListener() {
+		mPackageDetailListView
+				.setOnItemClickListener(new OnItemClickListener() {
 
 					@Override
-					public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
-						TaskPackageDetail data=(TaskPackageDetail)parent.getItemAtPosition(position);
-						String elevatorNo=data.getElevatorNo();
-						Intent intent = new Intent(PackageDetailActivity.this,ElevatorDetailActivity.class);
-						Bundle bundle=new Bundle();
+					public void onItemClick(AdapterView<?> parent, View view,
+							int position, long id) {
+						TaskPackageDetail data = (TaskPackageDetail) parent
+								.getItemAtPosition(position);
+						String elevatorNo = data.getElevatorNo();
+						Intent intent = new Intent(PackageDetailActivity.this,
+								ElevatorDetailActivity.class);
+						Bundle bundle = new Bundle();
 						bundle.putString(Constant.ELEVATORNO, elevatorNo);
 						intent.putExtras(bundle);
 						startActivity(intent);
@@ -236,7 +319,8 @@ public class PackageDetailActivity extends BaseActivity {
 						startProgressDialog("正在抢单...");
 						String mLoginName = mSharedPreferences.getString(
 								SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
-						Param paramPhone = new Param(Constant.LOGINNAME, mLoginName);
+						Param paramPhone = new Param(Constant.LOGINNAME,
+								mLoginName);
 						Param paramTaskNo = new Param(Constant.TASKNO, mTaskNo);
 						Request request = httpEngine.createRequest(
 								ServicesConfig.Do_GRABTASK, paramPhone,
@@ -267,10 +351,10 @@ public class PackageDetailActivity extends BaseActivity {
 					}
 				}).show();
 	}
-	
-	private void onActivityForResult(){
-		Intent intent=new Intent();
-        setResult(Activity.RESULT_OK, intent);
-        finish();
+
+	private void onActivityForResult() {
+		Intent intent = new Intent();
+		setResult(Activity.RESULT_OK, intent);
+		finish();
 	}
 }

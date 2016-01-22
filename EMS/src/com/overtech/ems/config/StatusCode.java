@@ -161,5 +161,12 @@ public class StatusCode {
 	 * 互相评价成功
 	 */
 	public static final int EVALUATEOTHER=0x70;
-
+	/**
+	 * 别名
+	 */
+	public static final int MSG_SET_ALIAS = 1001;
+	/**
+	 * 标签
+	 */
+	public static final int MSG_SET_TAGS = 1002;
 }

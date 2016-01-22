@@ -2,6 +2,9 @@ package com.overtech.ems.activity.parttime.tasklist;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -26,6 +29,9 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
+
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.route.BaiduMapRoutePlan;
 import com.baidu.mapapi.utils.route.RouteParaOption;
@@ -40,6 +46,7 @@ import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.TaskPackageDetail;
 import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.utils.AppUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
@@ -71,6 +78,9 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	private SwipeRefreshLayout mSwipeLayout;
 	private TaskListPackageDetailAdapter adapter;
 	private ArrayList<TaskPackageDetail> list;
+
+	private Set<String> tagSet;
+	private String TAG = "24梯";
 	/**
 	 * 列表弹窗的间隔
 	 */
@@ -117,16 +127,16 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				break;
 			case StatusCode.VALIDATE_TIME_SUCCESS:
 				String time = (String) msg.obj;
-//				Log.e("==任务单详情时间==", time);
-				if(time.equals("-1")){
+				// Log.e("==任务单详情时间==", time);
+				if (time.equals("-1")) {
 					Utilities.showToast("已超过退单时间！！！", context);
 					break;
-				}else if(time.equals("0")){
+				} else if (time.equals("0")) {
 					Utilities.showToast("当天的任务不可以被退单！！！", context);
 					break;
-				}else if (time.equals("1")) {
+				} else if (time.equals("1")) {
 					dialogBuilder.withMessage("72小时内退单会影响星级评定，你是否要退单？");
-				}else {
+				} else {
 					dialogBuilder.withMessage("你是否要退单");
 				}
 				effect = Effectstype.Slideright;
@@ -191,13 +201,21 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				break;
 			case StatusCode.CHARGEBACK_SUCCESS:
 				String state = (String) msg.obj;
-//				Log.e("==", state);
-				if(state.equals("true")){
-					Utilities.showToast("退单成功",context);
-					finish();
-				}else{
-					Utilities.showToast("退单失败",context);
+				// Log.e("==", state);
+				if (state.equals("true")) {
+
+					tagSet.remove(taskNo);
+					JPushInterface.setAliasAndTags(getApplicationContext(),
+							null, tagSet, mTagsCallback);
+
+				} else {
+					Utilities.showToast("退单失败", context);
 				}
+				break;
+			case StatusCode.MSG_SET_TAGS:
+				Log.d("24梯", "Set tags in handler.");
+				JPushInterface.setAliasAndTags(getApplicationContext(), null,
+						(Set<String>) msg.obj, mTagsCallback);
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
 				Utilities.showToast((String) msg.obj, context);
@@ -212,11 +230,52 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 		};
 	};
 
+	private final TagAliasCallback mTagsCallback = new TagAliasCallback() {
+
+		@Override
+		public void gotResult(int code, String alias, Set<String> tags) {
+			String logs;
+			switch (code) {
+			case 0:
+				logs = "Set tag and alias success";
+				Log.d(TAG, logs);
+				mSharedPreferences.edit().putStringSet("tagSet", tags).commit();// 成功保存标签后，将标签放到本地
+				Utilities.showToast("退单成功", context);
+				finish();
+
+				break;
+
+			case 6002:
+				logs = "Failed to set alias and tags due to timeout. Try again after 60s.";
+				Log.d(TAG, logs);
+				if (AppUtils.isConnected(getApplicationContext())) {
+					handler.sendMessageDelayed(handler.obtainMessage(
+							StatusCode.MSG_SET_TAGS, tags), 1000 * 60);
+				} else {
+					Log.i(TAG, "No network");
+				}
+				break;
+
+			default:
+				logs = "Failed with errorCode = " + code;
+				Log.d(TAG, logs);
+			}
+
+		}
+
+	};
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_tasklist_package_detail);
+		Set<String> tempSet = mSharedPreferences.getStringSet("tagSet", null);
+		if (tempSet == null) {
+			tagSet = new LinkedHashSet<String>();
+		} else {
+			tagSet = tempSet;
+		}
 		initView();
 		initData();
 		initEvent();
@@ -242,7 +301,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				if (adapter.isAllCompleted()) {
 					Intent intent = new Intent(context,
 							QuestionResponseActivity.class);
-					Bundle bundle=new Bundle();
+					Bundle bundle = new Bundle();
 					bundle.putString(Constant.TASKNO, taskNo);
 					intent.putExtras(bundle);
 					startActivity(intent);
@@ -345,32 +404,54 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 
 							@Override
 							public void onClick(View v) {
-								if(mPartnerName==null||mPhone==null){
-									Utilities.showToast("该任务单还没有被其他客户抢单，请耐心等待...", context);
-								}else{
+								if (mPartnerName == null || mPhone == null) {
+									Utilities.showToast(
+											"该任务单还没有被其他客户抢单，请耐心等待...", context);
+								} else {
 									Effectstype effect = Effectstype.Shake;
-									dialogBuilder.withTitle("温馨提示").withTitleColor(R.color.main_primary)
-									.withDividerColor("#11000000").withMessage("您是否要拨打电话给您的搭档："+mPartnerName)
-									.withMessageColor(R.color.main_primary).withDialogColor("#FFFFFFFF")
-									.isCancelableOnTouchOutside(true).withDuration(700)
-									.withEffect(effect).withButtonDrawable(R.color.main_white)
-									.withButton1Text("否").withButton1Color("#DD47BEE9")
-									.withButton2Text("是").withButton2Color("#DD47BEE9")
-									.setButton1Click(new View.OnClickListener() {
-												@Override
-												public void onClick(View v) {
-													dialogBuilder.dismiss();
-												}
-											}).setButton2Click(new View.OnClickListener() {
-												@Override
-												public void onClick(View v) {
-													Intent intent = new Intent(Intent.ACTION_CALL,
-															Uri.parse("tel:" + mPhone));
-													startActivity(intent);
-												}
-											}).show();
+									dialogBuilder
+											.withTitle("温馨提示")
+											.withTitleColor(
+													R.color.main_primary)
+											.withDividerColor("#11000000")
+											.withMessage(
+													"您是否要拨打电话给您的搭档："
+															+ mPartnerName)
+											.withMessageColor(
+													R.color.main_primary)
+											.withDialogColor("#FFFFFFFF")
+											.isCancelableOnTouchOutside(true)
+											.withDuration(700)
+											.withEffect(effect)
+											.withButtonDrawable(
+													R.color.main_white)
+											.withButton1Text("否")
+											.withButton1Color("#DD47BEE9")
+											.withButton2Text("是")
+											.withButton2Color("#DD47BEE9")
+											.setButton1Click(
+													new View.OnClickListener() {
+														@Override
+														public void onClick(
+																View v) {
+															dialogBuilder
+																	.dismiss();
+														}
+													})
+											.setButton2Click(
+													new View.OnClickListener() {
+														@Override
+														public void onClick(
+																View v) {
+															Intent intent = new Intent(
+																	Intent.ACTION_CALL,
+																	Uri.parse("tel:"
+																			+ mPhone));
+															startActivity(intent);
+														}
+													}).show();
 								}
-								
+
 							}
 						});
 	}
@@ -388,12 +469,14 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 
 	public void startNavicate(LatLng startPoint, LatLng endPoint, String endName) {
 		// 构建 route搜索参数
-		RouteParaOption para = new RouteParaOption().startName("我的位置")
+		RouteParaOption para = new RouteParaOption()
+				.startName("我的位置")
 				.startPoint(startPoint)
 				// 路线检索起点
 				.endPoint(endPoint)
 				// 路线检索终点
-				.endName(endName)
+				// .endName(endName)
+				.endName("终点")
 				.busStrategyType(EBusStrategyType.bus_recommend_way);
 		try {
 			BaiduMapRoutePlan.setSupportWebRoute(true);
@@ -414,10 +497,10 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 		mTaskNo.setText(taskNo);
 		mLoginName = mSharedPreferences.getString(
 				SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
-		
+
 		Param param = new Param(Constant.TASKNO, taskNo);
 		Param param2 = new Param(Constant.LOGINNAME, mLoginName);
-		
+
 		startLoading(ServicesConfig.TASK_PACKAGE_DETAIL, new Callback() {
 
 			@Override
@@ -442,6 +525,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			}
 		}, param, param2);
 	}
+
 	private void initView() {
 		mDoBack = (ImageView) findViewById(R.id.iv_grab_headBack);
 		mTask = (ListView) findViewById(R.id.lv_tasklist);
