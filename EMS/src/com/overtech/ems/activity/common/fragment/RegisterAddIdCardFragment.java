@@ -105,17 +105,14 @@ public class RegisterAddIdCardFragment extends Fragment implements OnClickListen
 			showPopupWindow(v);
 			break;
 		case R.id.item_popupwindows_camera:
-			Utilities.showToast("你点击了照相机", mContext);
 			openCamera();
 			mPopupWindow.dismiss();
 			break;
 		case R.id.item_popupwindows_Photo:
-			Utilities.showToast("你点击了相册", mContext);
 			openPhotos();
 			mPopupWindow.dismiss();
 			break;
 		case R.id.item_popupwindows_cancel:
-			Utilities.showToast("你点击了取消", mContext);
 			mPopupWindow.dismiss();
 			break;
 		

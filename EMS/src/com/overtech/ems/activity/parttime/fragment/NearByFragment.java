@@ -24,6 +24,7 @@ import com.baidu.location.LocationClientOption;
 import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
+import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.parttime.nearby.NearByListFragment;
 import com.overtech.ems.activity.parttime.nearby.NearByMapFragment;
 import com.overtech.ems.config.StatusCode;
@@ -49,10 +50,11 @@ public class NearByFragment extends BaseFragment implements OnClickListener {
 	private Fragment mNearByList;
 	private TextView mHeadTitle;
 	private ArrayList<TaskPackage> list;
+	private Bundle bundle;
 	private double mLatitude;
 	private double mLongitude;
 	public LocationClient mLocationClient = null;
-	public BDLocationListener myListener = new MyLocationListener();
+//	public BDLocationListener myListener = new MyLocationListener();
 	
 	private Handler handler = new Handler() {
 
@@ -87,15 +89,26 @@ public class NearByFragment extends BaseFragment implements OnClickListener {
 
 
 	private void initBaiduMapView(View v) {
-		mLocationClient = new LocationClient(activity.getApplicationContext());
-		mLocationClient.registerLocationListener(myListener);
-		LocationClientOption option = new LocationClientOption();
-		option.setOpenGps(true); // 打开GPRS
-		option.setAddrType("all");// 返回的定位结果包含地址信息
-		option.setCoorType("bd09ll");// 返回的定位结果是百度经纬度,默认值gcj02
-		option.setScanSpan(1000); // 设置发起定位请求的间隔时间为1000ms
-		mLocationClient.setLocOption(option); // 设置定位参数
+		mLocationClient=((MyApplication)getActivity().getApplicationContext()).mLocationClient;
+//		mLocationClient = new LocationClient(activity.getApplicationContext());
+//		mLocationClient.registerLocationListener(myListener);
+//		LocationClientOption option = new LocationClientOption();
+//		option.setOpenGps(true); // 打开GPRS
+//		option.setAddrType("all");// 返回的定位结果包含地址信息
+//		option.setCoorType("bd09ll");// 返回的定位结果是百度经纬度,默认值gcj02
+//		option.setScanSpan(1000); // 设置发起定位请求的间隔时间为1000ms
+//		mLocationClient.setLocOption(option); // 设置定位参数
+		mLocationClient.requestLocation();
 		mLocationClient.start();
+		mLatitude=((MyApplication)getActivity().getApplicationContext()).latitude;
+		mLongitude=((MyApplication)getActivity().getApplicationContext()).longitude;
+		if(mLatitude==0||mLongitude==0){
+			Utilities.showToast("定位失败！！！", context);
+		}else{
+			Param latitude = new Param(Constant.LATITUDE, String.valueOf(mLatitude));
+			Param longitude = new Param(Constant.LONGITUDE, String.valueOf(mLongitude));
+			getDataByLocation(ServicesConfig.NEARBY, "0", latitude, longitude); 
+		}
 	}
 
 
@@ -129,14 +142,16 @@ public class NearByFragment extends BaseFragment implements OnClickListener {
 	}
 	
 	private void setExtralData(Fragment fragment){
-		Bundle bundle=new Bundle();
+		if(bundle==null){
+			bundle=new Bundle();
+		}
 		bundle.putSerializable("taskPackage", list);
 		bundle.putDouble(Constant.LONGITUDE, mLongitude);
 		bundle.putDouble(Constant.LATITUDE, mLatitude);
 		fragment.setArguments(bundle);
 	}
 	
-	public class MyLocationListener implements BDLocationListener {
+	/*public class MyLocationListener implements BDLocationListener {
 
 		@Override
 		public void onReceiveLocation(BDLocation location) {
@@ -151,7 +166,7 @@ public class NearByFragment extends BaseFragment implements OnClickListener {
 			Param longitude = new Param(Constant.LONGITUDE, String.valueOf(mLongitude));
 			getDataByLocation(ServicesConfig.NEARBY, "0", latitude, longitude);
 		}
-	}
+	}*/
 	private void getDataByLocation(String url, String flag, Param... params) {
 		if (TextUtils.equals(flag, "0")) {
 			startProgressDialog("正在定位...");

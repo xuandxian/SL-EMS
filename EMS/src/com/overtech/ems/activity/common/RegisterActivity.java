@@ -4,6 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -67,7 +70,21 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 		 public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case StatusCode.REGISTER_SUCCESS:
-				Utilities.showToast((String)msg.obj, context);
+				String json=(String) msg.obj;
+				Log.e("==上传与服务器交互的结果==", json);
+				try {
+					JSONObject jsonObject=new JSONObject(json);
+					String success=jsonObject.getString("success");
+					if(success.equals("true")){
+						Utilities.showToast("恭喜你注册成功，请等待公司为你分配账户和密码！！！", context);
+						finish();
+					}else if(success.equals("false")){
+						Utilities.showToast(jsonObject.getString("msg"), context);
+					}
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				stopProgressDialog();
 				finish();
 				break;
@@ -380,10 +397,10 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 					Message msg=new Message();
 					if(response.isSuccessful()){
 						msg.what=StatusCode.REGISTER_SUCCESS;
-						msg.obj="恭喜你上传成功，请等待公司为你分配用户名和密码";
+						msg.obj=response.body().string();
 					}else{
 						msg.what=StatusCode.REGISTER_FAILED;
-						msg.obj="不好意思出了点意外，请重新试试";
+						msg.obj="服务器异常，请重新上传";
 					}
 					handler.sendMessage(msg);
 					
@@ -412,6 +429,7 @@ public class RegisterActivity extends BaseActivity implements OnClickListener {
 		Employee employee=new Employee();
 		//获取个人信息页面的信息
 		HashMap<String,String> personInfo=mPersonInfoFragment.getPersonInfo();
+		employee.setPhoneNo(personInfo.get("phoneNo"));
 		employee.setName(personInfo.get("nameContent"));
 		employee.setIdcardNo(personInfo.get("idNumContent"));
 		employee.setWorkNo(personInfo.get("workNumContent"));

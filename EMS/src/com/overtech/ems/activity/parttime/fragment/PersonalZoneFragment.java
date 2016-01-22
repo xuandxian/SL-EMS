@@ -94,7 +94,6 @@ public class PersonalZoneFragment extends BaseFragment implements OnClickListene
 						
 					}
 					mName.setText(name);
-					stopProgressDialog();//图片加载完成后停止进度框
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -109,6 +108,7 @@ public class PersonalZoneFragment extends BaseFragment implements OnClickListene
 			default:
 				break;
 			}
+			stopProgressDialog();//图片加载完成后停止进度框
 
 		};
 	};

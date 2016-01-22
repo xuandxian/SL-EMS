@@ -93,15 +93,7 @@ public class RegisterAddPersonInfoFragment extends Fragment {
 		findViewById(view);
 		bundle=((RegisterActivity)this.getActivity()).getBundle();//获得activity公共的临时存储对象
 		mRegisterPhone.setText("验证码已发送到手机" + (CharSequence) bundle.get("phone"));
-		
-		
-		
-		
-//		mGetValicateCode.performClick();//启动时默认执行一次‘60s后获取验证码’点击事件，让后台发送验证码
-		phoneNo=bundle.getString("phone");
-		
-		
-		
+		mGetValicateCode.performClick();//启动时默认执行一次‘60s后获取验证码’点击事件，让后台发送验证码
 		return view;
 	}
 	Handler handler = new Handler() {
@@ -117,7 +109,7 @@ public class RegisterAddPersonInfoFragment extends Fragment {
 				}else if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
 					isCorrect=true;
 					Utilities.showToast("验证码正确", mContext);
-					phoneNo=bundle.getString("phone");
+					phoneNo=bundle.getString("phone");//如果提交验证码正确则获取该手机号用于提交给后台
 				}
 			} else {
 				try {
