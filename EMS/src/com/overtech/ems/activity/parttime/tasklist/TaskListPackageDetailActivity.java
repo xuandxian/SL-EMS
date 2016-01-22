@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -98,10 +97,8 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			switch (msg.what) {
 			case StatusCode.PACKAGE_DETAILS_SUCCESS:
 				String json = (String) msg.obj;
-				Log.e("未完成任务包详情", json);
 				Gson gson = new Gson();
-				TaskPackageDetailBean bean = gson.fromJson(json,
-						TaskPackageDetailBean.class);
+				TaskPackageDetailBean bean = gson.fromJson(json,TaskPackageDetailBean.class);
 				list = (ArrayList<TaskPackageDetail>) bean.getModel();
 				mPhone = bean.getPartnerPhone();
 				mZonePhone = bean.getZonePhone();
@@ -117,7 +114,6 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				break;
 			case StatusCode.VALIDATE_TIME_SUCCESS:
 				String time = (String) msg.obj;
-//				Log.e("==任务单详情时间==", time);
 				if(time.equals("-1")){
 					Utilities.showToast("已超过退单时间！！！", context);
 					break;
@@ -191,7 +187,6 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				break;
 			case StatusCode.CHARGEBACK_SUCCESS:
 				String state = (String) msg.obj;
-//				Log.e("==", state);
 				if(state.equals("true")){
 					Utilities.showToast("退单成功",context);
 					finish();
@@ -269,7 +264,6 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			}
 		});
 		mCancle.setOnClickListener(new OnClickListener() {
-			// TODO
 			@Override
 			public void onClick(View v) {
 				Param param = new Param(Constant.TASKNO, taskNo);
@@ -279,7 +273,6 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 							@Override
 							public void onResponse(Response response)
 									throws IOException {
-								// TODO Auto-generated method stub
 								Message msg = new Message();
 								if (response.isSuccessful()) {
 									msg.what = StatusCode.VALIDATE_TIME_SUCCESS;
@@ -293,7 +286,6 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 
 							@Override
 							public void onFailure(Request arg0, IOException arg1) {
-								// TODO Auto-generated method stub
 								Message msg = new Message();
 								msg.what = StatusCode.RESPONSE_NET_FAILED;
 								msg.obj = "网络异常";
@@ -322,8 +314,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 		popupWindow.setTouchable(true);
 		popupWindow.setOutsideTouchable(true);
 		popupWindow.setBackgroundDrawable(new BitmapDrawable());
-		popupWindow.setContentView(LayoutInflater.from(activity).inflate(
-				R.layout.layout_tasklist_pop, null));
+		popupWindow.setContentView(LayoutInflater.from(activity).inflate(R.layout.layout_tasklist_pop, null));
 		initUI();
 	}
 
@@ -335,8 +326,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 
 							@Override
 							public void onClick(View v) {
-								startNavicate(mStartPoint, destination,
-										mDesName);
+								startNavicate(mStartPoint, destination,"终点");
 							}
 						});
 		popupWindow.getContentView().findViewById(R.id.ll_pop_2)
@@ -350,7 +340,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 								}else{
 									Effectstype effect = Effectstype.Shake;
 									dialogBuilder.withTitle("温馨提示").withTitleColor(R.color.main_primary)
-									.withDividerColor("#11000000").withMessage("您是否要拨打电话给您的搭档："+mPartnerName)
+									.withDividerColor("#11000000").withMessage("您是否要拨打搭档（"+mPartnerName+"）的电话？")
 									.withMessageColor(R.color.main_primary).withDialogColor("#FFFFFFFF")
 									.isCancelableOnTouchOutside(true).withDuration(700)
 									.withEffect(effect).withButtonDrawable(R.color.main_white)
