@@ -108,7 +108,6 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			switch (msg.what) {
 			case StatusCode.PACKAGE_DETAILS_SUCCESS:
 				String json = (String) msg.obj;
-				Log.e("未完成任务包详情", json);
 				Gson gson = new Gson();
 				TaskPackageDetailBean bean = gson.fromJson(json,
 						TaskPackageDetailBean.class);
@@ -207,7 +206,6 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 					tagSet.remove(taskNo);
 					JPushInterface.setAliasAndTags(getApplicationContext(),
 							null, tagSet, mTagsCallback);
-
 				} else {
 					Utilities.showToast("退单失败", context);
 				}
@@ -219,13 +217,15 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
 				Utilities.showToast((String) msg.obj, context);
+				stopProgressDialog();
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
 				Utilities.showToast((String) msg.obj, context);
+				stopProgressDialog();
 			default:
 				break;
 			}
-			stopProgressDialog();
+			
 			mSwipeLayout.setRefreshing(false);
 		};
 	};
@@ -241,6 +241,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				Log.d(TAG, logs);
 				mSharedPreferences.edit().putStringSet("tagSet", tags).commit();// 成功保存标签后，将标签放到本地
 				Utilities.showToast("退单成功", context);
+				stopProgressDialog();
 				finish();
 
 				break;
@@ -328,7 +329,6 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			}
 		});
 		mCancle.setOnClickListener(new OnClickListener() {
-			// TODO
 			@Override
 			public void onClick(View v) {
 				Param param = new Param(Constant.TASKNO, taskNo);
@@ -338,7 +338,6 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 							@Override
 							public void onResponse(Response response)
 									throws IOException {
-								// TODO Auto-generated method stub
 								Message msg = new Message();
 								if (response.isSuccessful()) {
 									msg.what = StatusCode.VALIDATE_TIME_SUCCESS;
@@ -352,7 +351,6 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 
 							@Override
 							public void onFailure(Request arg0, IOException arg1) {
-								// TODO Auto-generated method stub
 								Message msg = new Message();
 								msg.what = StatusCode.RESPONSE_NET_FAILED;
 								msg.obj = "网络异常";
@@ -394,8 +392,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 
 							@Override
 							public void onClick(View v) {
-								startNavicate(mStartPoint, destination,
-										mDesName);
+								startNavicate(mStartPoint, destination, "终点");
 							}
 						});
 		popupWindow.getContentView().findViewById(R.id.ll_pop_2)

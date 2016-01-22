@@ -75,8 +75,13 @@ public class BaseActivity extends Activity {
 		progressDialog.setCanceledOnTouchOutside(false);
 		mSharedPreferences = application.getSharePreference();
 	}
-
 	
+	/*
+	 * 返回
+	 */
+	public void onBackPressed() {
+		super.onBackPressed();
+	}
 
 	@Override
 	protected void onResume() {

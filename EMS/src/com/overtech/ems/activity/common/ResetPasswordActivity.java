@@ -6,6 +6,7 @@ import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.Employee;
+import com.overtech.ems.security.MD5Util;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
 import com.squareup.okhttp.Call;
@@ -93,7 +94,11 @@ public class ResetPasswordActivity extends BaseActivity {
 							startProgressDialog("正在更新...");
 							Employee employee = new Employee();
 							employee.setPhoneNo(mPhoneNo);
-							employee.setPassword(sPasswordNew);
+							try {
+								employee.setPassword(MD5Util.md5Encode(sPasswordNew));
+							} catch (Exception e1) {
+								e1.printStackTrace();
+							}
 							Gson gson = new Gson();
 							String person = gson.toJson(employee);
 							Request request = httpEngine.createRequest(ServicesConfig.UPDATE_PASSWORD, person);

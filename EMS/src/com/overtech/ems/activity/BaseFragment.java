@@ -60,7 +60,7 @@ public class BaseFragment extends Fragment {
         mSharedPreferences = application.getSharePreference();
         mLocationClient=application.mLocationClient;
     }
-    
+	
 	@Override
     public void onDestroy() {
         super.onDestroy();
