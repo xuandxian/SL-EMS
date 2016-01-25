@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -57,6 +58,8 @@ public class TaskListPackageDetailAdapter extends BaseAdapter {
 					.findViewById(R.id.tv_grab_task_package_eveltor_no);
 			holder.mElevtorType = (TextView) convertView
 					.findViewById(R.id.tv_grab_task_package_type);
+			holder.mElevatorComplete=(ImageView) convertView
+					.findViewById(R.id.iv_complete_state);
 			convertView.setTag(holder);
 
 		} else {
@@ -85,9 +88,11 @@ public class TaskListPackageDetailAdapter extends BaseAdapter {
 		holder.mElevtorNo.setText(data.getElevatorNo());
 		holder.mElevtorType.setText(data.getElevatorFloor());
 		if(data.getIsFinish().equalsIgnoreCase("1")){
-			holder.mRelativeLayout.setBackgroundResource(R.color.package_detail);
+//			holder.mRelativeLayout.setBackgroundResource(R.color.package_detail);
+			holder.mElevatorComplete.setImageResource(R.drawable.icon_elevator_complete);
 		}else{
-			holder.mRelativeLayout.setBackgroundDrawable(null);
+//			holder.mRelativeLayout.setBackgroundDrawable(null);
+			holder.mElevatorComplete.setImageBitmap(null);
 		}
 		return convertView;
 	}
@@ -110,5 +115,6 @@ public class TaskListPackageDetailAdapter extends BaseAdapter {
 		public TextView mElevtorProductor;
 		public TextView mElevtorNo;
 		public TextView mElevtorType;
+		public ImageView mElevatorComplete;
 	}
 }

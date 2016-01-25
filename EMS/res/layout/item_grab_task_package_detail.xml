@@ -49,5 +49,12 @@
         android:layout_alignBottom="@+id/tv_grab_task_package_eveltor_no"
         android:layout_alignRight="@+id/tv_grab_task_package_productor"
         android:text="20层/20站" />
+    <ImageView 
+        android:id="@+id/iv_complete_state"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        />
 
 </RelativeLayout>

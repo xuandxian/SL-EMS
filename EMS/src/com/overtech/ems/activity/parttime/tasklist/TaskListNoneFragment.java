@@ -398,12 +398,12 @@ public class TaskListNoneFragment extends BaseFragment {
 		};
 	}
 
-	public void startNavicate(LatLng startPoint, LatLng endPoint, String endName) {
+	public void startNavicate(LatLng startPoint, LatLng endPoint, String endName) {//endName暂时不使用
 		// 构建 route搜索参数
 		RouteParaOption para = new RouteParaOption().startName("我的位置")
 				.startPoint(startPoint)
 				// 路线检索起点
-				.endPoint(endPoint).endName(endName)
+				.endPoint(endPoint).endName("终点")
 				.busStrategyType(EBusStrategyType.bus_recommend_way);
 		try {
 			BaiduMapRoutePlan.setSupportWebRoute(true);
