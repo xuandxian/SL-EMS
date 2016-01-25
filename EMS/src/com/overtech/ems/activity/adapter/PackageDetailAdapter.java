@@ -76,7 +76,13 @@ public class PackageDetailAdapter extends BaseAdapter {
 		}
 		holder.mElevtorProductor.setText(data.getElevatorBrand());
 		holder.mElevtorNo.setText(data.getElevatorNo());
-		holder.mElevtorType.setText(data.getElevatorFloor());
+		String contentFloor=data.getElevatorFloor();
+		if (contentFloor.contains("/")) {
+			String []floor=data.getElevatorFloor().split("/");
+			holder.mElevtorType.setText(floor[0]+"层/"+floor[1]+"站");
+		}else {
+			holder.mElevtorType.setText(contentFloor);
+		}
 		return convertView;
 	}
 
