@@ -98,8 +98,7 @@ public class GrabTaskFragment extends BaseFragment implements
 			switch (msg.what) {
 			case StatusCode.GRAB_GET_DATA_SUCCESS:
 				String json = (String) msg.obj;
-				TaskPackageBean tasks = gson.fromJson(json,
-						TaskPackageBean.class);
+				TaskPackageBean tasks = gson.fromJson(json,TaskPackageBean.class);
 				list = (ArrayList<TaskPackage>) tasks.getModel();
 				if (null == myLocation) {
 					Utilities.showToast("定位失败", context);
@@ -114,53 +113,42 @@ public class GrabTaskFragment extends BaseFragment implements
 				break;
 			case StatusCode.GRAG_RESPONSE_SUCCESS:
 				String status = (String) msg.obj;
-				Log.e("==抢单返回结果==", status);
-				StatusCodeBean bean = gson.fromJson(status,
-						StatusCodeBean.class);
+				StatusCodeBean bean = gson.fromJson(status,StatusCodeBean.class);
 				String content = bean.getModel();
 				if (TextUtils.equals(content, "0")) {
 					Utilities.showToast("请不要重复抢单", context);
 				} else if (TextUtils.equals(content, "1")) {
 					Utilities.showToast("抢单成功，等待第二个人抢", context);
-
 					// 推送业务代码
 					tagItem = bean.getTaskNo();
 					if (!AppUtils.isValidTagAndAlias(tagItem)) {
 						Utilities.showToast("格式不对", context);
 					} else {
 						tagSet.add(tagItem);
-						JPushInterface.setAliasAndTags(getActivity()
-								.getApplicationContext(), null, tagSet,
-								mTagsCallback);
+						JPushInterface.setAliasAndTags(getActivity().getApplicationContext(), null, tagSet,mTagsCallback);
 					}
-
 					onRefresh();
 				} else if (TextUtils.equals(content, "2")) {
 					Utilities.showToast("抢单成功，请到任务中查看", context);
-
 					// 推送业务代码
 					tagItem = bean.getTaskNo();
 					if (!AppUtils.isValidTagAndAlias(tagItem)) {
 						Utilities.showToast("格式不对", context);
 					} else {
 						tagSet.add(tagItem);
-						JPushInterface.setAliasAndTags(getActivity()
-								.getApplicationContext(), null, tagSet,
-								mTagsCallback);
+						JPushInterface.setAliasAndTags(getActivity().getApplicationContext(), null, tagSet,mTagsCallback);
 					}
 
 					onRefresh();
 				} else if (TextUtils.equals(content, "3")) {
 					Utilities.showToast("差一点就抢到了", context);
 				} else if(TextUtils.equals(content, "4")){
-					Utilities.showToast("你今天抢到的电梯数量已经超过10台！！！", context);
+					Utilities.showToast("维保日期的电梯数量已经超过10台，不能够再抢单。", context);
 				}
 				break;
 			case StatusCode.MSG_SET_TAGS:
 				Log.d("24梯", "Set tags in handler.");
-				JPushInterface.setAliasAndTags(getActivity()
-						.getApplicationContext(), null, (Set<String>) msg.obj,
-						mTagsCallback);
+				JPushInterface.setAliasAndTags(getActivity().getApplicationContext(), null, (Set<String>) msg.obj,mTagsCallback);
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
 				Utilities.showToast("服务器异常", context);
@@ -183,16 +171,13 @@ public class GrabTaskFragment extends BaseFragment implements
 			case 0:
 				logs = "Set tag and alias success";
 				Log.d(TAG, logs);
-
 				mSharedPreferences.edit().putStringSet("tagSet", tags).commit();// 成功保存标签后，将标签放到本地
 				break;
-
 			case 6002:
 				logs = "Failed to set alias and tags due to timeout. Try again after 60s.";
 				Log.d(TAG, logs);
 				if (AppUtils.isConnected(getActivity().getApplicationContext())) {
-					handler.sendMessageDelayed(handler.obtainMessage(
-							StatusCode.MSG_SET_TAGS, tags), 1000 * 60);
+					handler.sendMessageDelayed(handler.obtainMessage(StatusCode.MSG_SET_TAGS, tags), 1000 * 60);
 				} else {
 					Log.i(TAG, "No network");
 				}
@@ -216,8 +201,7 @@ public class GrabTaskFragment extends BaseFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_grab_task, container,
-				false);
+		View view = inflater.inflate(R.layout.fragment_grab_task, container,false);
 		// 读取保存在本地的标签
 		Set<String> tempSet = mSharedPreferences.getStringSet("tagSet", null);
 		if (tempSet == null) {
@@ -244,8 +228,7 @@ public class GrabTaskFragment extends BaseFragment implements
 	}
 
 	private void findViewById(View view) {
-		mSwipeListView = (PullToRefreshSwipeMenuListView) view
-				.findViewById(R.id.sl_qiandan_listview);
+		mSwipeListView = (PullToRefreshSwipeMenuListView) view.findViewById(R.id.sl_qiandan_listview);
 		mHeadTitle = (TextView) view.findViewById(R.id.tv_headTitle);
 	}
 
@@ -257,10 +240,8 @@ public class GrabTaskFragment extends BaseFragment implements
 				Log.e("GrabTaskFragment", "定位失败");
 				return;
 			}
-			myLocation = new LatLng(location.getLatitude(),
-					location.getLongitude());
-			Log.e("GrabTaskFragment", "location:" + "(" + myLocation.latitude
-					+ "," + myLocation.longitude + ")");
+			myLocation = new LatLng(location.getLatitude(),location.getLongitude());
+			Log.e("GrabTaskFragment", "location:" + "(" + myLocation.latitude+ "," + myLocation.longitude + ")");
 			initData(ServicesConfig.GRABTASK, REFRESH_TYPE_DEFAULT);
 		}
 	}
@@ -307,16 +288,12 @@ public class GrabTaskFragment extends BaseFragment implements
 		mSwipeListView.setPullRefreshEnable(true);
 		mSwipeListView.setPullLoadEnable(true);
 		mSwipeListView.setXListViewListener(this);
-		mHeadView = LayoutInflater.from(mActivity).inflate(
-				R.layout.listview_header_filter, null);
+		mHeadView = LayoutInflater.from(mActivity).inflate(R.layout.listview_header_filter, null);
 		mHeadView.setOnClickListener(null);
 		mSwipeListView.addHeaderView(mHeadView);
-		mPartTimeDoFifter = (LinearLayout) mHeadView
-				.findViewById(R.id.ll_grab_task);
-		mKeyWordSearch = (TextView) mHeadView
-				.findViewById(R.id.et_do_parttime_search);
-		mSwipeListView
-				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+		mPartTimeDoFifter = (LinearLayout) mHeadView.findViewById(R.id.ll_grab_task);
+		mKeyWordSearch = (TextView) mHeadView.findViewById(R.id.et_do_parttime_search);
+		mSwipeListView.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
 					@Override
 					public void onMenuItemClick(int position, SwipeMenu menu,
@@ -327,19 +304,15 @@ public class GrabTaskFragment extends BaseFragment implements
 		mSwipeListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				TaskPackage data = (TaskPackage) parent
-						.getItemAtPosition(position);
-				Intent intent = new Intent(mActivity,
-						PackageDetailActivity.class);
+			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+				TaskPackage data = (TaskPackage) parent.getItemAtPosition(position);
+				Intent intent = new Intent(mActivity,PackageDetailActivity.class);
 				Bundle bundle = new Bundle();
 				bundle.putString("CommunityName", data.getTaskPackageName());
 				bundle.putString("TaskNo", data.getTaskNo());
 				bundle.putString("Longitude", data.getLongitude());
 				bundle.putString("Latitude", data.getLatitude());
 				intent.putExtras(bundle);
-				// startActivity(intent);
 				startActivityForResult(intent, StatusCode.RESULT_GRAB_DO_GRAB);
 			}
 		});
@@ -347,8 +320,7 @@ public class GrabTaskFragment extends BaseFragment implements
 
 			@Override
 			public void onClick(View arg0) {
-				Intent intent = new Intent(mActivity,
-						GrabTaskDoFilterActivity.class);
+				Intent intent = new Intent(mActivity,GrabTaskDoFilterActivity.class);
 				startActivityForResult(intent, StatusCode.RESULT_GRAB_DO_FILTER);
 			}
 		});
@@ -357,12 +329,10 @@ public class GrabTaskFragment extends BaseFragment implements
 
 			@Override
 			public void onClick(View arg0) {
-				Intent intent = new Intent(mActivity,
-						KeyWordSerachActivity.class);
+				Intent intent = new Intent(mActivity,KeyWordSerachActivity.class);
 				startActivityForResult(intent, StatusCode.RESULT_GRAB_DO_SEARCH);
 			}
 		});
-
 	}
 
 	@Override
@@ -380,10 +350,8 @@ public class GrabTaskFragment extends BaseFragment implements
 			if (mAdapter != null) {
 				mAdapter.notifyDataSetChanged();
 			}
-			initData(ServicesConfig.DO_FILTER, REFRESH_TYPE_FILTER, zoneParam,
-					timeParam);
-		} else if (requestCode == StatusCode.RESULT_GRAB_DO_SEARCH
-				&& resultCode == Activity.RESULT_OK) {
+			initData(ServicesConfig.DO_FILTER, REFRESH_TYPE_FILTER, zoneParam,timeParam);
+		} else if (requestCode == StatusCode.RESULT_GRAB_DO_SEARCH && resultCode == Activity.RESULT_OK) {
 			String keyWord = data.getStringExtra("mKeyWord");
 			Param keyWordParam = new Param(Constant.KEYWORD, keyWord);
 			if (list != null) {
@@ -393,8 +361,7 @@ public class GrabTaskFragment extends BaseFragment implements
 				mAdapter.notifyDataSetChanged();
 			}
 			initData(ServicesConfig.GRABTASK, REFRESH_TYPE_FILTER, keyWordParam);
-		} else if (requestCode == StatusCode.RESULT_GRAB_DO_GRAB
-				&& resultCode == Activity.RESULT_OK) {
+		} else if (requestCode == StatusCode.RESULT_GRAB_DO_GRAB && resultCode == Activity.RESULT_OK) {
 			onRefresh();
 		}
 	}
@@ -404,8 +371,7 @@ public class GrabTaskFragment extends BaseFragment implements
 			@Override
 			public void create(SwipeMenu menu) {
 				SwipeMenuItem openItem = new SwipeMenuItem(mActivity);
-				openItem.setBackground(new ColorDrawable(Color.rgb(0xFF, 0x3A,
-						0x30)));
+				openItem.setBackground(new ColorDrawable(Color.rgb(0xFF, 0x3A,0x30)));
 				openItem.setWidth(dp2px(90));
 				openItem.setTitle("抢");
 				openItem.setTitleSize(18);
@@ -416,20 +382,17 @@ public class GrabTaskFragment extends BaseFragment implements
 	}
 
 	public void onRefresh() {
-		Utilities.showToast("刷新", mActivity);
 		initData(ServicesConfig.GRABTASK, REFRESH_TYPE_LOADING);
 		mAdapter.notifyDataSetChanged();
 	}
 
 	public void onLoadMore() {
 		// 此处暂时关闭，等待后台分页数据
-		Utilities.showToast("上拉加载-->直接关闭", mActivity);
 		mSwipeListView.stopLoadMore();
 	}
 
 	public void onLoad() {
-		SimpleDateFormat df = new SimpleDateFormat("MM-dd HH:mm",
-				Locale.getDefault());
+		SimpleDateFormat df = new SimpleDateFormat("MM-dd HH:mm",Locale.getDefault());
 		RefreshTime.setRefreshTime(mActivity, df.format(new Date()));
 		mSwipeListView.setRefreshTime(RefreshTime.getRefreshTime(mActivity));
 		mSwipeListView.stopRefresh();
@@ -446,8 +409,7 @@ public class GrabTaskFragment extends BaseFragment implements
 			double mLatitude = location.getLatitude();
 			double mLongitude = location.getLongitude();
 			Log.e("经纬度", "经纬度：" + "(" + mLongitude + "," + mLatitude + ")");
-			myLocation = new LatLng(location.getLatitude(),
-					location.getLongitude());
+			myLocation = new LatLng(location.getLatitude(),location.getLongitude());
 		}
 	}
 
@@ -471,15 +433,11 @@ public class GrabTaskFragment extends BaseFragment implements
 					public void onClick(View v) {
 						dialogBuilder.dismiss();
 						startProgressDialog("正在抢单...");
-						String mLoginName = mSharedPreferences.getString(
-								SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
+						String mLoginName = mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
 						String mTaskNo = list.get(position).getTaskNo();
-						Param paramPhone = new Param(Constant.LOGINNAME,
-								mLoginName);
+						Param paramPhone = new Param(Constant.LOGINNAME,mLoginName);
 						Param paramTaskNo = new Param(Constant.TASKNO, mTaskNo);
-						Request request = httpEngine.createRequest(
-								ServicesConfig.Do_GRABTASK, paramPhone,
-								paramTaskNo);
+						Request request = httpEngine.createRequest(ServicesConfig.Do_GRABTASK, paramPhone,paramTaskNo);
 						Call call = httpEngine.createRequestCall(request);
 						call.enqueue(new Callback() {
 
@@ -491,8 +449,7 @@ public class GrabTaskFragment extends BaseFragment implements
 							}
 
 							@Override
-							public void onResponse(Response response)
-									throws IOException {
+							public void onResponse(Response response)throws IOException {
 								Message msg = new Message();
 								if (response.isSuccessful()) {
 									msg.what = StatusCode.GRAG_RESPONSE_SUCCESS;
