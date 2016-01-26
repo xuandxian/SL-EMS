@@ -130,7 +130,7 @@ public class PackageDetailActivity extends BaseActivity {
 				} else if (TextUtils.equals(content, "3")) {
 					Utilities.showToast("差一点就抢到了", context);
 				} else if(TextUtils.equals(content, "4")){
-					Utilities.showToast("你今天抢到的电梯数量已经超过10台！！！", context);
+					Utilities.showToast("维保日期的电梯数量已经超过10台，不能够再抢单。", context);
 				}
 				break;
 			case StatusCode.MSG_SET_TAGS:

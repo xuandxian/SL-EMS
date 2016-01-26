@@ -114,7 +114,6 @@ public class GrabTaskFragment extends BaseFragment implements
 				break;
 			case StatusCode.GRAG_RESPONSE_SUCCESS:
 				String status = (String) msg.obj;
-				Log.e("==抢单返回结果==", status);
 				StatusCodeBean bean = gson.fromJson(status,
 						StatusCodeBean.class);
 				String content = bean.getModel();
@@ -123,7 +122,7 @@ public class GrabTaskFragment extends BaseFragment implements
 				} else if (TextUtils.equals(content, "1")) {
 					Utilities.showToast("抢单成功，等待第二个人抢", context);
 
-					//TODO
+					// TODO
 					/*// 推送业务代码
 					tagItem = bean.getTaskNo();
 					if (!AppUtils.isValidTagAndAlias(tagItem)) {
@@ -149,17 +148,16 @@ public class GrabTaskFragment extends BaseFragment implements
 								.getApplicationContext(), null, tagSet,
 								mTagsCallback);
 					}*/
-
 					onRefresh();
 				} else if (TextUtils.equals(content, "3")) {
 					Utilities.showToast("差一点就抢到了", context);
-				} else if(TextUtils.equals(content, "4")){
-					Utilities.showToast("你今天抢到的电梯数量已经超过10台！！！", context);
+				} else if (TextUtils.equals(content, "4")) {
+					Utilities.showToast("维保日期的电梯数量已经超过10台，不能够再抢单。", context);
 				}
 				break;
 			case StatusCode.MSG_SET_TAGS:
 				Log.d("24梯", "Set tags in handler.");
-				//TODO
+				// TODO
 				/*JPushInterface.setAliasAndTags(getActivity()
 						.getApplicationContext(), null, (Set<String>) msg.obj,
 						mTagsCallback);*/
@@ -185,10 +183,8 @@ public class GrabTaskFragment extends BaseFragment implements
 			case 0:
 				logs = "Set tag and alias success";
 				Log.d(TAG, logs);
-
 				mSharedPreferences.edit().putStringSet("tagSet", tags).commit();// 成功保存标签后，将标签放到本地
 				break;
-
 			case 6002:
 				logs = "Failed to set alias and tags due to timeout. Try again after 60s.";
 				Log.d(TAG, logs);
@@ -341,7 +337,6 @@ public class GrabTaskFragment extends BaseFragment implements
 				bundle.putString("Longitude", data.getLongitude());
 				bundle.putString("Latitude", data.getLatitude());
 				intent.putExtras(bundle);
-				// startActivity(intent);
 				startActivityForResult(intent, StatusCode.RESULT_GRAB_DO_GRAB);
 			}
 		});
@@ -364,7 +359,6 @@ public class GrabTaskFragment extends BaseFragment implements
 				startActivityForResult(intent, StatusCode.RESULT_GRAB_DO_SEARCH);
 			}
 		});
-
 	}
 
 	@Override
@@ -418,14 +412,12 @@ public class GrabTaskFragment extends BaseFragment implements
 	}
 
 	public void onRefresh() {
-		Utilities.showToast("刷新", mActivity);
 		initData(ServicesConfig.GRABTASK, REFRESH_TYPE_LOADING);
 		mAdapter.notifyDataSetChanged();
 	}
 
 	public void onLoadMore() {
 		// 此处暂时关闭，等待后台分页数据
-		Utilities.showToast("上拉加载-->直接关闭", mActivity);
 		mSwipeListView.stopLoadMore();
 	}
 

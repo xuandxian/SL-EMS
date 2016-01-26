@@ -65,23 +65,19 @@ public class PersonalAboutAppActivity extends BaseActivity implements OnClickLis
 		case R.id.rl_share:
 			showShare();
 			break;
-		default:
-			break;
 		}
 	}
 	private void showShare() {
 		ShareSDK.initSDK(this);
 		OnekeyShare oks = new OnekeyShare();
 		oks.disableSSOWhenAuthorize();
-		oks.setTitle("分享");
+		oks.setTitle("上海润利电梯配件技术开发有限公司");
 		// titleUrl是标题的网络链接，仅在人人网和QQ空间使用
-		oks.setTitleUrl("http://120.55.88.138:8080/EMS.apk");
+		oks.setTitleUrl("http://app.mi.com/detail/92547?ref=search");
 		// text是分享文本，所有平台都需要这个字段
-		oks.setText("点击http://120.55.88.138:8080/EMS.apk，可以下载App");
+		oks.setText("一款基于手机移动端的电梯维保App，欢迎下载，链接地址：http://app.mi.com/detail/92547?ref=search");
 		// url仅在微信（包括好友和朋友圈）中使用
-		oks.setUrl("http://120.55.88.138:8080/EMS.apk");
-		// siteUrl是分享此内容的网站地址，仅在QQ空间使用
-		oks.setSiteUrl("http://120.55.88.138:8080/EMS.apk");
+		oks.setUrl("http://app.mi.com/detail/92547?ref=search");
 		oks.setVenueName("24梯");
 		// 启动分享GUI
 		oks.show(this);

@@ -86,7 +86,13 @@ public class TaskListPackageDetailAdapter extends BaseAdapter {
 		}
 		holder.mElevtorProductor.setText(data.getElevatorBrand());
 		holder.mElevtorNo.setText(data.getElevatorNo());
-		holder.mElevtorType.setText(data.getElevatorFloor());
+		String contentFloor=data.getElevatorFloor();
+		if (contentFloor.contains("/")) {
+			String []floor=data.getElevatorFloor().split("/");
+			holder.mElevtorType.setText(floor[0]+"层/"+floor[1]+"站");
+		}else {
+			holder.mElevtorType.setText(contentFloor);
+		}
 		if(data.getIsFinish().equalsIgnoreCase("1")){
 //			holder.mRelativeLayout.setBackgroundResource(R.color.package_detail);
 			holder.mElevatorComplete.setImageResource(R.drawable.icon_elevator_complete);
