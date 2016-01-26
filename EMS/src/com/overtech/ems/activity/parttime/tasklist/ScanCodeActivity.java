@@ -33,6 +33,7 @@ import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.ScanResultBean;
 import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.zxing.camera.CameraManager;
 import com.overtech.ems.widget.zxing.decoding.CaptureActivityHandler;
@@ -79,9 +80,17 @@ public class ScanCodeActivity extends BaseActivity implements Callback {
 					Intent intent = new Intent(ScanCodeActivity.this,
 							QueryTaskListActivity.class);
 					Bundle bundle = new Bundle();
-					bundle.putString(Constant.WORKTYPE, tempList.get(1));
-					bundle.putString(Constant.ZONEPHONE, tempList.get(2));
-					bundle.putString(Constant.TASKNO, tempList.get(0));
+					for (int i = 0; i < tempList.size(); i++) {
+						if(i==0){
+							bundle.putString(Constant.TASKNO, tempList.get(0));
+						}
+						if(i==1){
+							bundle.putString(Constant.WORKTYPE, tempList.get(1));
+						}
+						if(i==2){
+							bundle.putString(Constant.ZONEPHONE, tempList.get(2));
+						}
+					}
 					bundle.putString(Constant.ELEVATORNO, mElevatorNo);
 					intent.putExtras(bundle);
 					startActivity(intent);
@@ -174,8 +183,9 @@ public class ScanCodeActivity extends BaseActivity implements Callback {
 			Utilities.showToast("扫描失败", mContext);
 		} else {
 			Param param = new Param(Constant.ELEVATORNO, mElevatorNo);
+			Param param2 = new Param(Constant.LOGINNAME,mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME,""));
 			Request request = httpEngine.createRequest(
-					ServicesConfig.QUERY_TASK_PACKAGE_ELEVATOR, param);
+					ServicesConfig.QUERY_TASK_PACKAGE_ELEVATOR, param,param2);
 			Call call = httpEngine.createRequestCall(request);
 			call.enqueue(new com.squareup.okhttp.Callback() {
 

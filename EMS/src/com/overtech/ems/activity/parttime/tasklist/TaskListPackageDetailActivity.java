@@ -313,7 +313,9 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 					if (detail.getIsFinish().equals("1")) {
 						Utilities.showToast("你好，该电梯已经完成", mActivity);
 					} else {
-						Intent intent = new Intent(context,
+						Utilities.showToast("请通过扫描二维码开启工作或者完成工作", context);
+						//暂时不适用该功能
+						/*Intent intent = new Intent(context,
 								QueryTaskListActivity.class);
 						Bundle bundle = new Bundle();
 						bundle.putString(Constant.WORKTYPE, workType);
@@ -323,7 +325,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 								detail.getElevatorNo());
 						intent.putExtras(bundle);
 						startActivityForResult(intent,
-								StatusCode.RESULT_TASKLIST_PACKAGEDETAIL);
+								StatusCode.RESULT_TASKLIST_PACKAGEDETAIL);*/
 					}
 				}
 			}
