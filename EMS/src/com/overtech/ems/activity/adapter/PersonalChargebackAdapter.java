@@ -55,8 +55,8 @@ public class PersonalChargebackAdapter extends BaseAdapter {
 		Date chargebackDate=new Date(data.getChargeBackTime());
 		vh.mTaskNo.setText(data.getTaskNo());
 		vh.mTaskPackageTime.setText(data.getTaskPackageName());
-		vh.mChargebackTime.setText("抢单时间:"+format.format(chargebackDate));
-		vh.mGrabTime.setText("退单时间:"+format.format(grabDate));
+		vh.mChargebackTime.setText("退单时间:"+format.format(chargebackDate));
+		vh.mGrabTime.setText("抢单时间:"+format.format(grabDate));
 		
 		return convertView;
 	}
