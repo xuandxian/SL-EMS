@@ -73,11 +73,12 @@ public class PersonalAboutAppActivity extends BaseActivity implements OnClickLis
 		oks.disableSSOWhenAuthorize();
 		oks.setTitle("上海润利电梯配件技术开发有限公司");
 		// titleUrl是标题的网络链接，仅在人人网和QQ空间使用
-		oks.setTitleUrl("http://app.mi.com/detail/92547?ref=search");
+		oks.setTitleUrl("http://www.wandoujia.com/apps/com.overtech.ems");
+		oks.setImageUrl("http://img.wdjimg.com/mms/icon/v1/c/66/b6e84a3e811e6e84f64496d7d438866c_256_256.png");
 		// text是分享文本，所有平台都需要这个字段
-		oks.setText("一款基于手机移动端的电梯维保App，欢迎下载，链接地址：http://app.mi.com/detail/92547?ref=search");
+		oks.setText("一款基于手机移动端的电梯维保App，欢迎下载。");
 		// url仅在微信（包括好友和朋友圈）中使用
-		oks.setUrl("http://app.mi.com/detail/92547?ref=search");
+		oks.setUrl("http://www.wandoujia.com/apps/com.overtech.ems");
 		oks.setVenueName("24梯");
 		// 启动分享GUI
 		oks.show(this);
