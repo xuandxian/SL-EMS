@@ -54,9 +54,8 @@
     <Wechat
         Id="2"
         SortId="1"
-        AppId="wx4868b35061f87885"
-        AppSecret="64020361b8ec4c99936c0e3999a9f249"
-        BypassApproval="true"
+        AppId="wx0f21fc9a89ca7e17"
+        BypassApproval="false"
         Enable="true" />
     <QQ
         Id="3"
@@ -70,9 +69,8 @@
     <WechatMoments
         Id="4"
         SortId="4"
-        AppId="wx4868b35061f87885"
-        AppSecret="64020361b8ec4c99936c0e3999a9f249"
-        BypassApproval="true"
+        AppId="wx0f21fc9a89ca7e17"
+        BypassApproval="false"
         Enable="true" />
  
     <ShortMessage
