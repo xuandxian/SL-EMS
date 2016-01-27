@@ -135,7 +135,7 @@ public class BusinessConfig {
 	/**
 	 * 30.退单纪录
 	 */
-	public static final String URL_PERSONAL_CHARGEBACK_LIST = "/employee/personalChargeBackList.action";
+	public static final String URL_PERSONAL_CHARGEBACK_LIST = "/task/chargeBackList.action";
 	/**
 	 * 31.公告
 	 */

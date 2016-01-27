@@ -6,7 +6,7 @@
 
     <uses-sdk
         android:minSdkVersion="14"
-        android:targetSdkVersion="21" />
+        android:targetSdkVersion="20" />
 
     <permission
         android:name="com.overtech.ems.permission.JPUSH_MESSAGE"

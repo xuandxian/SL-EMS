@@ -75,7 +75,7 @@ public class PersonalZoneFragment extends BaseFragment implements
 			switch (msg.what) {
 			case StatusCode.PERSONAL_ZONE_SUCCESS:
 				String info = (String) msg.obj;
-				Log.e("==personZone==", info);
+//				Log.e("==personZone==", info);
 				try {
 					JSONObject json = new JSONObject(info);
 					JSONObject model = (JSONObject) json.get("model");

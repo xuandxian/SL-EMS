@@ -1,6 +1,11 @@
 package com.overtech.ems.activity.parttime.personal;
 
 import java.io.IOException;
+import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,10 +18,14 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.MyApplication;
+import com.overtech.ems.activity.adapter.PersonalChargebackAdapter;
 import com.overtech.ems.config.StatusCode;
+import com.overtech.ems.entity.bean.ChargebackBean;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
@@ -30,13 +39,22 @@ import com.squareup.okhttp.Response;
 public class PersonalCancleListActivity extends BaseActivity {
 	private ImageView mDoBack;
 	private TextView mHeadTitle;
-	private ListView mCancleTaskRecord;
+	private ListView mChargeback;
+	private List<ChargebackBean> list;
+	private PersonalChargebackAdapter adapter;
 	private Handler handler=new Handler(){
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case StatusCode.PERSONAL_CHARGEBACK_SUCCESS:
 				String info=(String) msg.obj;
-				Log.e("===", info);
+				Gson gson=new Gson();
+				list=gson.fromJson(info, new TypeToken<List<ChargebackBean>>(){}.getType());
+				if(list.size()==0){
+					Utilities.showToast("无数据", context);
+				}else{
+					adapter=new PersonalChargebackAdapter(context, list);
+					mChargeback.setAdapter(adapter);
+				}
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
 				String exception=(String) msg.obj;
@@ -103,6 +121,6 @@ public class PersonalCancleListActivity extends BaseActivity {
 	private void initView() {
 		mDoBack=(ImageView) findViewById(R.id.iv_headBack);
 		mHeadTitle=(TextView) findViewById(R.id.tv_headTitle);
-		mCancleTaskRecord=(ListView) findViewById(R.id.lv_cancle_task_record);
+		mChargeback=(ListView) findViewById(R.id.lv_cancle_task_record);
 	}
 }
