@@ -25,6 +25,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.MyApplication;
@@ -37,10 +38,15 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements OnCl
 	private View view;
 	private Context mContext;
 	private ImageView mWorkCertificate;
+	private ImageView mDoBack;
+	private TextView mHeadTitle;
+	private Button mNext;
 	private DimPopupWindow mPopupWindow;
 	private Button mCamera;
 	private Button mPhoto;
 	private Button mCancle;
+	private RegAddWorkCerFrgClickListener listener;
+	public String workCertificatePath=null;
 	
     public static final int OPEN_PHOTO_REQUESTCODE =  0x1;  
     private static final int PHOTO_CAPTURE = 0x2;
@@ -49,8 +55,6 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements OnCl
      */
     private static final int target = 400;  
     private Uri certificateUri=null;
-    private SharedPreferences sp;
-    private Editor editor;
     @Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
@@ -61,11 +65,21 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements OnCl
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		view=inflater.inflate(R.layout.fragment_register_add_work_certificate, null);
-		mWorkCertificate=(ImageView) view.findViewById(R.id.id_work_certificate);
-		mWorkCertificate.setOnClickListener(this);
-		sp=((MyApplication)getActivity().getApplication()).getSharePreference();
-		editor=sp.edit();
+		findViewById(view);
 		return view;
+	}
+	private void findViewById(View v) {
+		// TODO Auto-generated method stub
+		mWorkCertificate=(ImageView) v.findViewById(R.id.id_work_certificate);
+		mDoBack=(ImageView)v.findViewById(R.id.iv_headBack);
+		mHeadTitle=(TextView)v.findViewById(R.id.tv_headTitle);
+		mNext=(Button)v.findViewById(R.id.btn_next_fragment);
+		
+		mDoBack.setVisibility(View.VISIBLE);
+		mHeadTitle.setText("上岗证确认");
+		mDoBack.setOnClickListener(this);
+		mWorkCertificate.setOnClickListener(this);
+		mNext.setOnClickListener(this);
 	}
 	protected void showPopupWindow() {
 		mPopupWindow=new DimPopupWindow(mContext);
@@ -100,6 +114,14 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements OnCl
 		case R.id.item_popupwindows_cancel:
 			mPopupWindow.dismiss();
 			break;
+		case R.id.iv_headBack:
+			getActivity().onBackPressed();
+			break;
+		case R.id.btn_next_fragment:
+			if(listener!=null){
+				listener.onRegAddWorkCerFrgClick();
+			}
+			break;
 		default:
 			break;
 		}
@@ -112,6 +134,7 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements OnCl
 	}
 	private File outFile;
 	private Uri cameraUri;
+	
 	/**
 	 * 打开相机
 	 */
@@ -155,9 +178,7 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements OnCl
                         mContext, data.getData(), target, false);  
                 mWorkCertificate.setImageBitmap(bm);
                 certificateUri=data.getData();
-                String path =getPhotoPath(certificateUri);
-                editor.putString(Constant.WORKCERTIFICATE, path);
-                editor.commit();
+                workCertificatePath =getPhotoPath(certificateUri);
             }
 			break;
 		case PHOTO_CAPTURE:
@@ -187,9 +208,8 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements OnCl
 				Bitmap pic = null;
 				pic = BitmapFactory.decodeFile(outFile.getAbsolutePath(), op);
 				mWorkCertificate.setImageBitmap(pic);
-				editor.putString(Constant.WORKCERTIFICATE, outFile.getAbsolutePath());
+				workCertificatePath=outFile.getAbsolutePath();
 				certificateUri = cameraUri;
-				editor.commit();
 			}
 			break;
 
@@ -205,5 +225,11 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements OnCl
 			Utilities.showToast("你还没有选择证件", mContext);
 			return false;
 		}
+	}
+	public void setRegAddWorkCerFrgClickListener(RegAddWorkCerFrgClickListener listener){
+		this.listener=listener;
+	}
+	public interface RegAddWorkCerFrgClickListener{
+		void onRegAddWorkCerFrgClick();
 	}
 }

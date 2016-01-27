@@ -25,12 +25,12 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.ImageCacheUtils;
-import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.popwindow.DimPopupWindow;
 
 public class RegisterOtherCertificateFragment extends Fragment implements OnClickListener {
@@ -41,8 +41,11 @@ public class RegisterOtherCertificateFragment extends Fragment implements OnClic
 	private Button mCamera;
 	private Button mPhoto;
 	private Button mCancle;
-	private SharedPreferences sp;
-	private Editor editor;
+	private ImageView mDoback;
+	private TextView mHeadTitle;
+	private Button mNext;
+	private RegOthCerFrgListener listener;
+	public String otherCertificatePath=null;
 	public static final int OPEN_PHOTO_REQUESTCODE =  0x1;  
     private static final int PHOTO_CAPTURE = 0x2;
     private Uri otherCertificateUri = null;
@@ -57,11 +60,21 @@ public class RegisterOtherCertificateFragment extends Fragment implements OnClic
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		view=inflater.inflate(R.layout.fragment_register_add_other_certificate, null);
-		mOtherCertificate=(ImageView) view.findViewById(R.id.id_card_1);
-		mOtherCertificate.setOnClickListener(this);
-		sp=((MyApplication)getActivity().getApplication()).getSharePreference();
-		editor=sp.edit();
+		findViewById(view);
 		return view;
+	}
+	private void findViewById(View v) {
+		// TODO Auto-generated method stub
+		mDoback=(ImageView)v.findViewById(R.id.iv_headBack);
+		mHeadTitle=(TextView)v.findViewById(R.id.tv_headTitle);
+		mNext=(Button)v.findViewById(R.id.btn_next_fragment);
+		mOtherCertificate=(ImageView) view.findViewById(R.id.id_card_1);
+		
+		mDoback.setVisibility(View.VISIBLE);
+		mDoback.setOnClickListener(this);
+		mHeadTitle.setText("其他信息");
+		mOtherCertificate.setOnClickListener(this);
+		mNext.setOnClickListener(this);
 	}
 	@Override
 	public void onClick(View v) {
@@ -80,6 +93,14 @@ public class RegisterOtherCertificateFragment extends Fragment implements OnClic
 		case R.id.item_popupwindows_cancel:
 			mPopupWindow.dismiss();
 			break;
+		case R.id.iv_headBack:
+			getActivity().onBackPressed();
+			break;
+		case R.id.btn_next_fragment:
+			if(listener!=null){
+				listener.onRegOthCerFrgClick();
+			}
+			break;
 		default:
 			break;
 		}
@@ -95,6 +116,7 @@ public class RegisterOtherCertificateFragment extends Fragment implements OnClic
 	}
 	private File outFile;
 	private Uri cameraUri;
+	
 	/**
 	 * 打开相机
 	 */
@@ -144,10 +166,8 @@ public class RegisterOtherCertificateFragment extends Fragment implements OnClic
                         mContext, data.getData(), target, false);  
                 mOtherCertificate.setImageBitmap(bm);
                 otherCertificateUri=data.getData();
-                String path=getPhotoPath(otherCertificateUri);
-                editor.putString(Constant.OTHERCERTIFICATE, path);
+                otherCertificatePath=getPhotoPath(otherCertificateUri);
             }
-			editor.commit();
 			break;
 		case PHOTO_CAPTURE:
 			if(resultCode==Activity.RESULT_CANCELED){
@@ -177,8 +197,7 @@ public class RegisterOtherCertificateFragment extends Fragment implements OnClic
 				pic = BitmapFactory.decodeFile(outFile.getAbsolutePath(), op);
 				mOtherCertificate.setImageBitmap(pic);
 				otherCertificateUri=cameraUri;
-				editor.putString(Constant.OTHERCERTIFICATE, outFile.getAbsolutePath());
-				editor.commit();
+				otherCertificatePath=outFile.getAbsolutePath();
 			}
 			break;
 
@@ -208,5 +227,10 @@ public class RegisterOtherCertificateFragment extends Fragment implements OnClic
 	}
 	不需要这个，其他证书可有可无
 	*/
-	
+	public void setRegOthFrgListener(RegOthCerFrgListener listener){
+		this.listener=listener;
+	}
+	public interface RegOthCerFrgListener{
+		void onRegOthCerFrgClick();
+	}
 }

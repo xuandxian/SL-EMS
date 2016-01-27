@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.common.RegisterActivity;
@@ -19,7 +20,7 @@ import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
 import com.overtech.ems.widget.ValicateCode;
 
-public class RegisterFragment extends Fragment {
+public class RegisterFragment extends Fragment implements OnClickListener {
 	private Context mContext;
 	private View view;
 	private ImageView mValicateCodeImage;
@@ -27,7 +28,11 @@ public class RegisterFragment extends Fragment {
 	private Button mGetValicateCode;
 	private EditTextWithDelete mRegisterPhone;
 	private EditText mValicateCode;
-	
+	private TextView mHeadTitle;
+	private ImageView mDoBack;
+	private Button mNext;
+	public String mPhoneNo;
+	private RegFraBtnClickListener listener;
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -63,11 +68,7 @@ public class RegisterFragment extends Fragment {
 		} else {
 			if (Utilities.isMobileNO(phoneNo)) {
 				if (isCorrectCode) {
-					// 网络部分逻辑应该添加在此处，目前直接跳轉到下一個界面
-					Bundle bundle=new Bundle();
-					bundle.putString("phone", phoneNo);
-					((RegisterActivity)this.getActivity()).setBundle(bundle);
-					
+					mPhoneNo=phoneNo;
 					return true;
 				} else {
 					Utilities.showToast("验证码输入错误", mContext);
@@ -82,11 +83,40 @@ public class RegisterFragment extends Fragment {
 	private void init() {
 		instance = ValicateCode.getInstance();
 		mValicateCodeImage.setImageBitmap(instance.getBitmap());
+		mHeadTitle.setText("注册");
+		mDoBack.setVisibility(View.VISIBLE);
+		mDoBack.setOnClickListener(this);
+		mNext.setOnClickListener(this);
 	}
 	private void findViewById(View v) {
+		mHeadTitle=(TextView) v.findViewById(R.id.tv_headTitle);
+		mDoBack=(ImageView) v.findViewById(R.id.iv_headBack);
+		mNext=(Button)v.findViewById(R.id.btn_next_fragment);
 		mValicateCodeImage = (ImageView) v.findViewById(R.id.iv_register_valicate_code);
 		mGetValicateCode = (Button) v.findViewById(R.id.btn_get_valicate_code);
 		mRegisterPhone = (EditTextWithDelete) v.findViewById(R.id.et_register_phone);
 		mValicateCode = (EditText) v.findViewById(R.id.et_valicate_code);
+	}
+	public void setRegFraBtnClickListener(RegFraBtnClickListener listener){
+		this.listener=listener;
+	}
+	@Override
+	public void onClick(View arg0) {
+		switch (arg0.getId()) {
+		case R.id.iv_headBack:
+			getActivity().onBackPressed();
+			break;
+		case R.id.btn_next_fragment:
+			if(listener!=null){
+				listener.onRegFraBtnClick();
+			}
+			break;
+
+		default:
+			break;
+		}
+	}
+	public interface RegFraBtnClickListener{
+		void onRegFraBtnClick();
 	}
 }

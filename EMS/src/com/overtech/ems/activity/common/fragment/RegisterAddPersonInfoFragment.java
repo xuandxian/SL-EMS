@@ -8,14 +8,10 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,50 +19,48 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.common.RegisterActivity;
-import com.overtech.ems.activity.common.ResetPasswordActivity;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
 import com.overtech.ems.widget.TimeButton;
 
-import static cn.smssdk.framework.utils.R.getStringRes;
-
-public class RegisterAddPersonInfoFragment extends Fragment {
+public class RegisterAddPersonInfoFragment extends Fragment implements OnClickListener {
 	private View view;
 	private Context mContext;
 	private TextView mRegisterPhone;
+	private TextView mHeadTitle;
+	private ImageView mDoBack;
 	private EditTextWithDelete mValicateCode;
 	private TimeButton mGetValicateCode;
 	private Button mSubmitCode;
+	private Button mNext;
 	private EditTextWithDelete mName;
 	private EditTextWithDelete mIdNum;
 	private EditTextWithDelete mWorkNum;
 	private Spinner mCity;
 	private Spinner mZone;
 	private String codeContent=null;
-	private String nameContent=null;
-	private String idNumContent=null;
-	private String workNumContent=null;
-	private String cityContent=null;
-	private String zoneContent=null;
-	private String phoneNo=null;
-	private Bundle bundle;
+	private String mPhoneNo=null;
+	
+	public String nameContent=null;
+	public String idNumContent=null;
+	public String workNumContent=null;
+	public String cityContent=null;
+	public String zoneContent=null;
+	
 	private EventHandler eh;
+	private RegAddPerInfoFrgClickListener listener;
 	/**
 	 * 判断验证码是否正确
 	 */
 	private boolean isCorrect=false;
-	/**
-	 * 是否开始验证验证码
-	 */
-	private boolean isStartValidate=false;
 	@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
@@ -78,6 +72,7 @@ public class RegisterAddPersonInfoFragment extends Fragment {
 			Bundle savedInstanceState) {
 		
 		view=inflater.inflate(R.layout.fragment_register_add_person_info, null);
+		mPhoneNo=((RegisterActivity)getActivity()).mPhoneNo;
 		eh= new EventHandler() {
 			@Override
 			public void afterEvent(int event, int result, Object data) {
@@ -91,9 +86,7 @@ public class RegisterAddPersonInfoFragment extends Fragment {
 		};
 		SMSSDK.registerEventHandler(eh);//注册短信回调
 		findViewById(view);
-		bundle=((RegisterActivity)this.getActivity()).getBundle();//获得activity公共的临时存储对象
-		mRegisterPhone.setText("验证码已发送到手机" + (CharSequence) bundle.get("phone"));
-		mGetValicateCode.performClick();//启动时默认执行一次‘60s后获取验证码’点击事件，让后台发送验证码
+		
 		return view;
 	}
 	Handler handler = new Handler() {
@@ -105,11 +98,11 @@ public class RegisterAddPersonInfoFragment extends Fragment {
 			Object data = msg.obj;
 			if (result == SMSSDK.RESULT_COMPLETE) {
 				if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE){
+					mRegisterPhone.setText("验证码已发送到手机" + mPhoneNo);
 					Utilities.showToast("验证码已发送", mContext);
 				}else if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
 					isCorrect=true;
 					Utilities.showToast("验证码正确", mContext);
-					phoneNo=bundle.getString("phone");//如果提交验证码正确则获取该手机号用于提交给后台
 				}
 			} else {
 				try {
@@ -126,19 +119,6 @@ public class RegisterAddPersonInfoFragment extends Fragment {
 			}
 		}
 	};
-	/*@Override//将此处注释，因为之前的设计是考虑用户输入信息后又回退了，需要再次请求后台发送验证码，但现在认为如果在第一次用户已经验证正确后就不要再验证了
-	public void onHiddenChanged(boolean hidden) {
-		// TODO Auto-generated method stub
-		super.onHiddenChanged(hidden);
-		if(hidden){
-			
-		}else{
-			bundle=((RegisterActivity)this.getActivity()).getBundle();
-			mRegisterPhone.setText("验证码已发送到手机"+(CharSequence) bundle.get("phone"));
-			SMSSDK.getVerificationCode("86", (String)bundle.get("phone"));//当再次显示时请求发送验证码
-			isCorrect=false;//再次请求验证码时，将结果置为false;
-		}
-	}*/
 	/**
 	 * 对所有输入的信息进行检查
 	 * @return
@@ -158,27 +138,16 @@ public class RegisterAddPersonInfoFragment extends Fragment {
 				return false;
 			}
 		}else{
-			if(isStartValidate){
-				Utilities.showToast("正在验证验证码或验证码错误", mContext);
-			}else{
-				Utilities.showToast("您还没有提交验证码", mContext);
-			}
+			Utilities.showToast("验证码错误", mContext);
 			return false;
 
 		}
 	}
-	public HashMap getPersonInfo(){
-		HashMap<String,String> map=new HashMap<String, String>();
-		map.put("nameContent", nameContent);
-		map.put("idNumContent", idNumContent);
-		map.put("workNumContent", workNumContent);
-		map.put("cityContent", cityContent);
-		map.put("zoneContent", zoneContent);
-		map.put("phoneNo", phoneNo);
-		return map;
-	}
 	
 	private void findViewById(View v) {
+		mHeadTitle=(TextView)v.findViewById(R.id.tv_headTitle);
+		mDoBack=(ImageView)v.findViewById(R.id.iv_headBack);
+		mNext=(Button)v.findViewById(R.id.btn_next_fragment);
 		mRegisterPhone=(TextView) v.findViewById(R.id.register_send_phone);
 		mValicateCode=(EditTextWithDelete) v.findViewById(R.id.et_valicate_code);
 		mGetValicateCode=(TimeButton) v.findViewById(R.id.btn_get_valicate_code);
@@ -188,14 +157,18 @@ public class RegisterAddPersonInfoFragment extends Fragment {
 		mWorkNum=(EditTextWithDelete) v.findViewById(R.id.et_register_add_workno);
 		mCity=(Spinner) v.findViewById(R.id.sp_add_city);
 		mZone=(Spinner) v.findViewById(R.id.sp_add_zone);
+		
+		mHeadTitle.setText("基本信息");
+		mDoBack.setVisibility(View.VISIBLE);
+		mDoBack.setOnClickListener(this);
+		mNext.setOnClickListener(this);
 		mGetValicateCode.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				mGetValicateCode.setTextAfter("秒后重新获取").setTextBefore("重新获取验证码").setLenght(60*1000);//为TimeButton设置点击前后的显示以及时间
-				SMSSDK.getVerificationCode("86", (String)bundle.get("phone"));//获取短信验证码
+				SMSSDK.getVerificationCode("86", mPhoneNo);//获取短信验证码
 				isCorrect=false;//将验证结果置为false，需要再次判断
-				isStartValidate=false;
 			}
 		});
 		mSubmitCode.setOnClickListener(new OnClickListener() {
@@ -203,9 +176,8 @@ public class RegisterAddPersonInfoFragment extends Fragment {
 			@Override
 			public void onClick(View v) {
 				codeContent=mValicateCode.getText().toString().trim();
-				SMSSDK.submitVerificationCode("86", (String) bundle.get("phone"), codeContent);
+				SMSSDK.submitVerificationCode("86", mPhoneNo, codeContent);
 				Utilities.showToast("验证码有三次有效次数", mContext);
-				isStartValidate=true;
 			}
 		});
 		mCity.setOnItemSelectedListener(new OnItemSelectedListener() {
@@ -234,5 +206,28 @@ public class RegisterAddPersonInfoFragment extends Fragment {
 				zoneContent=null;
 			}
 		});
+	}
+	@Override
+	public void onClick(View arg0) {
+		// TODO Auto-generated method stub
+		switch (arg0.getId()) {
+		case R.id.iv_headBack:
+			getActivity().onBackPressed();
+			break;
+		case R.id.btn_next_fragment:
+			if(listener!=null){
+				listener.onRegAddPerInfoFrgClick();
+			}
+			break;
+
+		default:
+			break;
+		}
+	}
+	public void setRegAddPerInfoFrgClickListener(RegAddPerInfoFrgClickListener listener){
+		this.listener=listener;
+	}
+	public interface RegAddPerInfoFrgClickListener{
+		void onRegAddPerInfoFrgClick();
 	}
 }

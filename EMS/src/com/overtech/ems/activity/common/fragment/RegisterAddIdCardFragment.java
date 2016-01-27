@@ -25,6 +25,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.MyApplication;
@@ -36,13 +37,18 @@ import com.overtech.ems.widget.popwindow.DimPopupWindow;
 public class RegisterAddIdCardFragment extends Fragment implements OnClickListener {
 	private Context mContext;
 	private View view;
+	private TextView mHeadTitle;
+	private ImageView mDoBack;
+	private Button mNext;
 	private ImageView mIdCardFront;
 	private ImageView mIdCardOpposite;
 	private DimPopupWindow mPopupWindow;
 	private Button mCamera;
 	private Button mPhoto;
 	private Button mCancle;
-	
+	private RegAddIdCardFrgClickListener listener;
+	public String idCardFrontPath=null;
+	public String idCardOppositePath=null;
 	/** 
      * 打开本地相册的requestcode. 
      */  
@@ -61,9 +67,6 @@ public class RegisterAddIdCardFragment extends Fragment implements OnClickListen
      * 图片的target大小. 
      */
     private static final int target = 400;  
-    
-    private SharedPreferences sp;
-    private Editor editor;
     @Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
@@ -76,16 +79,20 @@ public class RegisterAddIdCardFragment extends Fragment implements OnClickListen
 		view=inflater.inflate(R.layout.fragment_register_add_id_card, null);
 		findViewById(view);
 		init();
-		sp=((MyApplication)getActivity().getApplication()).getSharePreference();
-		editor=sp.edit();
 		return view;
 	}
 	private void init() {
+		mHeadTitle.setText("身份证确认");
+		mDoBack.setVisibility(View.VISIBLE);
+		mDoBack.setOnClickListener(this);
 		mIdCardFront.setOnClickListener(this);
 		mIdCardOpposite.setOnClickListener(this);
-		
+		mNext.setOnClickListener(this);
 	}
 	private void findViewById(View v) {
+		mHeadTitle=(TextView) v.findViewById(R.id.tv_headTitle);
+		mDoBack=(ImageView) v.findViewById(R.id.iv_headBack);
+		mNext=(Button)v.findViewById(R.id.btn_next_fragment);
 		mIdCardFront=(ImageView)v. findViewById(R.id.iv_idcard_front);
 		mIdCardOpposite=(ImageView) v.findViewById(R.id.iv_idcard_opposite);
 	}
@@ -115,8 +122,14 @@ public class RegisterAddIdCardFragment extends Fragment implements OnClickListen
 		case R.id.item_popupwindows_cancel:
 			mPopupWindow.dismiss();
 			break;
-		
-		
+		case R.id.iv_headBack:
+			getActivity().onBackPressed();
+			break;
+		case R.id.btn_next_fragment:
+			if(listener!=null){
+				listener.onRegAddIdCardFrgClick();
+			}
+			break;
 		default:
 			break;
 		}
@@ -184,15 +197,12 @@ public class RegisterAddIdCardFragment extends Fragment implements OnClickListen
                 	mIdCardFront.setImageBitmap(bm);  
                 	//记录打开相册获取的图片的uri，赋给
                 	frontUri=data.getData();
-                	String path=getPhotoPath(frontUri);
-                	editor.putString(Constant.IDCARDFRONT, path);
+                	idCardFrontPath=getPhotoPath(frontUri);
                 }else if(currentState==1){
                 	mIdCardOpposite.setImageBitmap(bm);
                 	oppositeUri=data.getData();
-                	String path=getPhotoPath(oppositeUri);
-                	editor.putString(Constant.IDCARDOPPOSITE, path);
+                	idCardOppositePath=getPhotoPath(oppositeUri);
                 }
-                editor.commit();
                 
             }
 			break;
@@ -200,7 +210,6 @@ public class RegisterAddIdCardFragment extends Fragment implements OnClickListen
 			if(resultCode==Activity.RESULT_CANCELED){
 				//调用相机后，如果没有拍照就返回了，就把相应位置的uri置为null,原因：调用相机拍照后生成的照片我指定有位置，所以不能用那个uri来确定当前图片的uri;
 				//调用相机没有拍照返回后，清空
-				
 			}
 			if(resultCode == Activity.RESULT_OK){
 				BitmapFactory.Options op = new BitmapFactory.Options();
@@ -227,13 +236,12 @@ public class RegisterAddIdCardFragment extends Fragment implements OnClickListen
 				if(currentState==0){
 					frontUri=cameraUri;
 	            	mIdCardFront.setImageBitmap(pic);  
-	            	editor.putString(Constant.IDCARDFRONT, outFile.getAbsolutePath());
+	            	idCardFrontPath=outFile.getAbsolutePath();
 	            }else if(currentState==1){
 	            	mIdCardOpposite.setImageBitmap(pic);
 	            	oppositeUri=cameraUri;
-	            	editor.putString(Constant.IDCARDOPPOSITE, outFile.getAbsolutePath());
+	            	idCardOppositePath=outFile.getAbsolutePath();
 	            }
-				editor.commit();
 			}
 			break;
 
@@ -265,5 +273,11 @@ public class RegisterAddIdCardFragment extends Fragment implements OnClickListen
 			Utilities.showToast("您还没有选择证件", mContext);
 			return false;
 		}
+	}
+	public void setRegAddIdCardClickListener(RegAddIdCardFrgClickListener listener){
+		this.listener=listener;
+	}
+	public interface RegAddIdCardFrgClickListener{
+		void onRegAddIdCardFrgClick();
 	}
 }

@@ -34,6 +34,7 @@ import com.overtech.ems.activity.parttime.personal.PersonalCancleListActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalDeatilsActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalHelpDocActivity;
 import com.overtech.ems.config.StatusCode;
+import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
@@ -84,6 +85,7 @@ public class PersonalZoneFragment extends BaseFragment implements
 						mAvator.setScaleType(ScaleType.FIT_XY);
 						mAvator.setImageResource(STUB_ID);
 					} else {
+						Log.e("==图片路径==", imageUrl);
 						// 调用从网络中加载过来的图片
 						Picasso.with(context).load(imageUrl)
 								.placeholder(STUB_ID).error(STUB_ID)

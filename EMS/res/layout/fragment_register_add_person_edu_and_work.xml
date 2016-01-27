@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include layout="@layout/headview" />
 
     <ScrollView
         android:id="@+id/scrollView1"
@@ -89,8 +92,8 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:focusable="false"
                     android:background="@drawable/shape_input"
+                    android:focusable="false"
                     android:hint="入行时间" />
 
                 <ImageView
@@ -111,18 +114,18 @@
                 android:layout_marginTop="1px"
                 android:background="@color/main_white" >
 
-                <TextView 
+                <TextView
                     android:id="@+id/et_register_add_workno"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentRight="true"
-                    android:layout_marginTop="20dp"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
+                    android:layout_marginTop="20dp"
                     android:background="@drawable/shape_input"
-                    android:textSize="@dimen/text_size_title"
-                    android:text="工作年限" />
+                    android:text="工作年限"
+                    android:textSize="@dimen/text_size_title" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -137,15 +140,29 @@
                     android:id="@+id/tv_elevator_message"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-					android:text="电梯品牌"  
-					android:layout_marginLeft="20dp"
-					android:layout_marginTop="20dp"
-					android:singleLine="true"
-					android:background="@drawable/shape_input"
-					android:textSize="18dp"          
-                    />
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/shape_input"
+                    android:singleLine="true"
+                    android:text="电梯品牌"
+                    android:textSize="18dp" />
             </RelativeLayout>
+
+            <Button
+                android:id="@+id/btn_next_fragment"
+                android:layout_below="@id/rl_register_add_info_4"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="25dp"
+                android:background="@drawable/shape_button_visiable"
+                android:textColor="@color/main_white"
+                android:textSize="17sp"
+                android:text="下一步"
+                 />
         </RelativeLayout>
     </ScrollView>
 
-</RelativeLayout>
+</LinearLayout>

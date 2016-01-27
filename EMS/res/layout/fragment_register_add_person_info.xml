@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include layout="@layout/headview" />
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -22,7 +26,7 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="10dp"
-                android:text="验证码已发送到手机15021565127" />
+                 />
 
             <RelativeLayout
                 android:id="@+id/rl_register_add_phone"
@@ -51,9 +55,10 @@
                     android:layout_marginRight="15dp"
                     android:layout_marginTop="20dp"
                     android:background="@drawable/shape_button_visiable"
-                    android:text="重新获取验证码" />
+                    android:text="获取验证码" />
             </RelativeLayout>
-			<RelativeLayout
+
+            <RelativeLayout
                 android:id="@+id/rl_register_velidate"
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
@@ -62,16 +67,15 @@
                 android:layout_marginTop="1px"
                 android:background="@color/main_white" >
 
-                <TextView 
+                <TextView
                     android:id="@+id/tv_valicate_code"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_alignParentLeft="true"
                     android:layout_marginLeft="20dp"
                     android:layout_toLeftOf="@+id/btn_valicate_code"
-                    android:gravity="center_vertical"
                     android:background="@drawable/shape_input"
-                     />
+                    android:gravity="center_vertical" />
 
                 <Button
                     android:id="@+id/btn_valicate_code"
@@ -84,6 +88,7 @@
                     android:background="@drawable/shape_button_visiable"
                     android:text="提交验证码" />
             </RelativeLayout>
+
             <TextView
                 android:id="@+id/tv_register_person_info"
                 style="@style/tv_info_secondary_style"
@@ -187,7 +192,20 @@
                 </Spinner>
             </RelativeLayout>
 
+            <Button
+                android:id="@+id/btn_next_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_below="@id/rl_register_add_info_5"
+                android:layout_marginBottom="10dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="25dp"
+                android:background="@drawable/shape_button_visiable"
+                android:text="下一步"
+                android:textColor="@color/main_white"
+                android:textSize="17sp" />
         </RelativeLayout>
     </ScrollView>
 
-</RelativeLayout>
+</LinearLayout>

@@ -36,9 +36,12 @@ import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
 import com.overtech.ems.widget.popwindow.DimPopupWindow;
 
-public class RegisterAddPersonEduAndWorkFragment extends Fragment {
+public class RegisterAddPersonEduAndWorkFragment extends Fragment implements OnClickListener {
 	private View view;
 	private Context mContext;
+	private TextView mHeadTitle;
+	private ImageView mDoBack;
+	private Button mNext;
 	private ImageView mCalendar;
 	private RelativeLayout mElevatorBrand;
 	/**
@@ -54,6 +57,7 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment {
 	private Button mConfirm;
 	private Button mCancle;
 	private TextView mWorkTime;
+	private RegAddPerEduWorkFrgClickListener listener;
 	private HashMap<Integer, Boolean> isSelected;
 	private StringBuilder mCheckedMessage;
 	private String[] data = { "日立", "广日", "上海三菱", "日本三菱", "通力", "巨人通力", "奥的斯",
@@ -65,11 +69,11 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment {
 	private Dialog dialog;
 	private Calendar c = null;
 
-	private String eduContent = null;
-	private String currWorkContent = null;
-	private String enterWorkTimeContent = null;
-	private String elevatorContent = null;
-
+	public String eduLevel = null;
+	public String workUnit = null;
+	public String enterTime = null;
+	public String elevatorBrand = null;
+	public String workYears=null;
 	@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
@@ -111,49 +115,29 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment {
 	 * @return
 	 */
 	public boolean isAllNotNull() {
-		currWorkContent = mCurrWork.getText().toString().trim();
-		enterWorkTimeContent = mEnterWorkTime.getText().toString().trim();
-		elevatorContent = mElevator.getText().toString().trim();
+		workUnit = mCurrWork.getText().toString().trim();
+		enterTime = mEnterWorkTime.getText().toString().trim();
+		workYears=mWorkTime.getText().toString();
+		elevatorBrand = mElevator.getText().toString().trim();
 
-		Log.e("Fragment", currWorkContent + ":" + enterWorkTimeContent + ":"
-				+ elevatorContent);
-		if (!eduContent.equals("学历") && !TextUtils.isEmpty(currWorkContent)
-				&& !TextUtils.isEmpty(enterWorkTimeContent)
-				&& !elevatorContent.equals("电梯品牌")) {
+		Log.e("Fragment", workUnit + ":" + enterTime + ":"
+				+ elevatorBrand);
+		if (!eduLevel.equals("学历") && !TextUtils.isEmpty(workUnit)
+				&& !TextUtils.isEmpty(enterTime)
+				&& !elevatorBrand.equals("电梯品牌")) {
 			return true;
 		} else {
 			Utilities.showToast("您还有信息没有输入", mContext);
 			return false;
 		}
 	}
-	public HashMap getEduWorkInfo(){
-		HashMap<String,String> eduworkInfo=new HashMap<String,String>();
-		eduworkInfo.put("eduContent", eduContent);
-		eduworkInfo.put("currWorkContent", currWorkContent);
-		eduworkInfo.put("enterWorkTime",enterWorkTimeContent);
-		eduworkInfo.put("workTime", mWorkTime.getText().toString());
-		eduworkInfo.put("elevatorContent",elevatorContent);
-		return eduworkInfo;
-	}
-
 	private void init() {
-		mElevator.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				showPopupWindow();
-			}
-		});
-
-		mCalendar.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				// 打开日历选择器
-				showDialog();
-
-			}
-		});
+		mDoBack.setOnClickListener(this);
+		mNext.setOnClickListener(this);
+		mElevator.setOnClickListener(this);
+		mCalendar.setOnClickListener(this);
+		mDoBack.setVisibility(View.VISIBLE);
+		mHeadTitle.setText("学历/工作信息");
 	}
 
 	// 记录选择的时间
@@ -258,6 +242,9 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment {
 
 	private void findViewById(View v) {
 		c = Calendar.getInstance();
+		mHeadTitle=(TextView)v.findViewById(R.id.tv_headTitle);
+		mDoBack=(ImageView)v.findViewById(R.id.iv_headBack);
+		mNext=(Button)v.findViewById(R.id.btn_next_fragment);
 		mEdu = (Spinner) v.findViewById(R.id.sp_add_education);
 		mCurrWork = (EditTextWithDelete) v
 				.findViewById(R.id.et_register_add_name);
@@ -274,13 +261,42 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment {
 			@Override
 			public void onItemSelected(AdapterView<?> parent, View view,
 					int position, long id) {
-				eduContent = (String) mEdu.getSelectedItem();
+				eduLevel = (String) mEdu.getSelectedItem();
 			}
 
 			@Override
 			public void onNothingSelected(AdapterView<?> parent) {
-				eduContent = null;
+				eduLevel = null;
 			}
 		});
+	}
+
+	@Override
+	public void onClick(View arg0) {
+		// TODO Auto-generated method stub
+		switch (arg0.getId()) {
+		case R.id.tv_elevator_message:
+			showPopupWindow();
+			break;
+		case R.id.imageView1:
+			showDialog();
+			break;
+		case R.id.iv_headBack:
+			getActivity().onBackPressed();
+			break;
+		case R.id.btn_next_fragment:
+			if(listener!=null){
+				listener.onRegAddPerEduWorkFrgClick();
+			}
+			break;
+		default:
+			break;
+		}
+	}
+	public void setRegAddPerEduWorkFrgClickListener(RegAddPerEduWorkFrgClickListener listener){
+		this.listener=listener;
+	}
+	public interface RegAddPerEduWorkFrgClickListener{
+		void onRegAddPerEduWorkFrgClick();
 	}
 }
