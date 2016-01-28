@@ -70,7 +70,7 @@ public class PersonalAboutAppActivity extends BaseActivity implements OnClickLis
 	private void showShare() {
 		ShareSDK.initSDK(this);
 		OnekeyShare oks = new OnekeyShare();
-		oks.disableSSOWhenAuthorize();
+//		oks.disableSSOWhenAuthorize();
 		oks.setTitle("上海润利电梯配件技术开发有限公司");
 		// titleUrl是标题的网络链接，仅在人人网和QQ空间使用
 		oks.setTitleUrl("http://www.wandoujia.com/apps/com.overtech.ems");

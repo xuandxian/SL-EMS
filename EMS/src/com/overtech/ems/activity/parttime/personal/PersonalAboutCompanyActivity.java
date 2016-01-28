@@ -5,10 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.DownloadListener;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.R;
@@ -18,11 +16,8 @@ public class PersonalAboutCompanyActivity extends BaseActivity {
 	private TextView mHeadContent;
 	private ImageView mDoBack;
 	private WebView mWebView;
-	private WebSettings mSetting;
-	private ProgressBar mProgressBar;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_personal_aboutcompany);
 		initView();
