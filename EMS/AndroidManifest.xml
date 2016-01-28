@@ -11,7 +11,6 @@
     <permission
         android:name="com.overtech.ems.permission.JPUSH_MESSAGE"
         android:protectionLevel="signature" />
-
     <uses-permission android:name="com.overtech.ems.permission.JPUSH_MESSAGE" />
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -41,7 +40,6 @@
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
-
     <application
         android:name="com.overtech.ems.activity.MyApplication"
         android:allowBackup="true"

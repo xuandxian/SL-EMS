@@ -114,6 +114,7 @@ public class GrabTaskFragment extends BaseFragment implements
 				break;
 			case StatusCode.GRAG_RESPONSE_SUCCESS:
 				String status = (String) msg.obj;
+//				Log.e("status", status);
 				StatusCodeBean bean = gson.fromJson(status,
 						StatusCodeBean.class);
 				String content = bean.getModel();

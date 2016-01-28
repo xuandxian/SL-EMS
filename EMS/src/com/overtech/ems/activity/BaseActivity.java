@@ -16,6 +16,7 @@ import com.baidu.mapapi.SDKInitializer;
 import com.overtech.ems.R;
 import com.overtech.ems.http.HttpEngine;
 import com.overtech.ems.http.OkHttpClientManager;
+import com.overtech.ems.utils.StackManager;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.bitmap.ImageLoader;
@@ -50,6 +51,8 @@ public class BaseActivity extends Activity {
 	public NiftyDialogBuilder dialogBuilder;
 
 	public SharedPreferences mSharedPreferences;
+	
+	public StackManager statckInstance;
 
 	private InputMethodManager imm;
 
@@ -74,6 +77,7 @@ public class BaseActivity extends Activity {
 		progressDialog.setMessage(context.getString(R.string.loading_public_default));
 		progressDialog.setCanceledOnTouchOutside(false);
 		mSharedPreferences = application.getSharePreference();
+		statckInstance=StackManager.getStackManager();
 	}
 	
 

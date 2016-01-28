@@ -129,6 +129,7 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+		statckInstance.pushActivity(this);
 		setContentView(R.layout.activity_personal_details);
 		initViews();
 		initEvents();
@@ -205,9 +206,9 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 			break;
 		case R.id.btn_exit:
 			Intent intent2 = new Intent(PersonalDeatilsActivity.this,LoginActivity.class);
-			intent2.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent2);
-			finish();
+			statckInstance.popAllActivitys();
+			
 			break;
 		}
 	}

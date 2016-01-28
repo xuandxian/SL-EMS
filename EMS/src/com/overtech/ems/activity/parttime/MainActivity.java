@@ -1,7 +1,9 @@
 package com.overtech.ems.activity.parttime;
 
+import android.app.ActivityManager;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -37,6 +39,7 @@ public class MainActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		statckInstance.pushActivity(this);
 		setContentView(R.layout.activity_main);
 		findViewById();
 		setDefaultView();
@@ -120,8 +123,7 @@ public class MainActivity extends BaseActivity {
 					}).setButton2Click(new View.OnClickListener() {
 						@Override
 						public void onClick(View v) {
-							finish();
-							System.exit(0);
+							statckInstance.popAllActivitys();
 						}
 					}).show();
 			return true;
