@@ -40,8 +40,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                     />
+                    android:layout_centerVertical="true" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -59,8 +58,7 @@
                 <TextView
                     android:id="@+id/tv_id"
                     style="@style/tv_list_primary_style"
-                    android:layout_alignParentRight="true"
-                     />
+                    android:layout_alignParentRight="true" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -78,8 +76,7 @@
                 <TextView
                     android:id="@+id/tv_username"
                     style="@style/tv_list_primary_style"
-                    android:layout_alignParentRight="true"
-                    />
+                    android:layout_alignParentRight="true" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -107,9 +104,7 @@
                     android:id="@+id/tv_personal_phone"
                     style="@style/tv_list_primary_style"
                     android:layout_alignTop="@+id/imageView1"
-                    android:layout_toLeftOf="@+id/imageView1"
-                    />
-
+                    android:layout_toLeftOf="@+id/imageView1" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -127,8 +122,7 @@
                 <TextView
                     android:id="@+id/tv_certificate_no"
                     style="@style/tv_list_primary_style"
-                    android:layout_alignParentRight="true"
-                     />
+                    android:layout_alignParentRight="true" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -146,39 +140,38 @@
                 <TextView
                     android:id="@+id/tv_register_time"
                     style="@style/tv_list_primary_style"
-                    android:layout_alignParentRight="true"
-                     />
+                    android:layout_alignParentRight="true" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dip"
-                android:background="@color/main_white" >
-
-                <RatingBar
-                    android:id="@+id/ratingBar1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginRight="15dp"
-                    android:isIndicator="true"
-                     />
+                android:background="@color/main_white"
+                android:padding="15dip" >
 
                 <TextView
+                    android:id="@+id/tv_ratingbar"
                     style="@style/tv_title_primary_style"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="15dp"
                     android:text="星级" />
+
+                <RatingBar
+                    android:id="@+id/ratingBar1"
+                    style="@style/CommonRatingBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_alignParentRight="true"
+                    android:isIndicator="true" />
             </RelativeLayout>
 
             <Button
                 android:id="@+id/btn_exit"
                 style="@style/btn_title_white_style"
-                android:background="@drawable/shape_button_delete"
                 android:layout_marginTop="15dp"
+                android:background="@drawable/shape_button_delete"
                 android:text="退 出" />
         </LinearLayout>
     </ScrollView>

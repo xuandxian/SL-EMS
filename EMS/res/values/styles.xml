@@ -187,5 +187,12 @@
         <item name="android:windowBackground">@color/bg_mask</item>
         <item name="android:windowNoTitle">true</item>
     </style>
+    
+    <!-- Rating Bar -->
+     <style name="CommonRatingBar" parent="@android:style/Widget.RatingBar">
+       <item name="android:progressDrawable">@drawable/common_ratingbar</item>
+       <item name="android:minHeight">40dip</item>
+       <item name="android:maxHeight">40dip</item>
+    </style>
 
 </resources>
