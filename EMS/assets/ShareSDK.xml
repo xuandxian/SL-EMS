@@ -15,7 +15,7 @@
    
     <Wechat
         Id="2"
-        SortId="1"
+        SortId="2"
         AppId="wx0f21fc9a89ca7e17"
         BypassApproval="false"
         Enable="true" />
