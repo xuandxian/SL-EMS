@@ -67,12 +67,12 @@
     <!-- 橙色 -->
     <color name="home_search_hint">#ffaaaaaa</color>
     <!-- 按钮颜色(可点击) -->
-    <color name="btn_visiable_bg">#ff00dfce</color>
+    <color name="btn_visiable_bg">#ff00b9ef</color>
     <!-- 按钮颜色(不可点击) -->
     <color name="btn_disable_bg">#ffcccccc</color>
     
     <color name="line_blue_color">#7FBDED</color>
-    <color name="bg_title_red">#00dfce</color>
+    <color name="bg_title_red">#00b9ef</color>
     <color name="bg_titile_black">#4D4D4D</color>
     <!-- nifity dialog -->
     <color name="divider_color">#11000000</color>
@@ -85,4 +85,6 @@
     <color name="possible_result_points">#c0ffff00</color>
     <!-- 任务包详情中电梯完成状态的背景色 -->
 	<color name="package_detail">#72d97d</color>
+	
+	<color name="rating_bar">#fcec7e</color>
 </resources>
