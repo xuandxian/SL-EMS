@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -102,42 +103,42 @@ public class PackageDetailActivity extends BaseActivity {
 					Utilities.showToast("请不要重复抢单", context);
 				} else if (TextUtils.equals(content, "1")) {
 					Utilities.showToast("抢单成功，等待第二个人抢", context);
-					//TODO
-					/*// 推送业务代码
-					tagItem = bean.getTaskNo();
-					if (!AppUtils.isValidTagAndAlias(tagItem)) {
-						Utilities.showToast("格式不对", context);
-					} else {
-						tagSet.add(tagItem);
-						JPushInterface.setAliasAndTags(getApplicationContext(),
-								null, tagSet, mTagsCallback);
-					}*/
+					// TODO
+					/*
+					 * // 推送业务代码 tagItem = bean.getTaskNo(); if
+					 * (!AppUtils.isValidTagAndAlias(tagItem)) {
+					 * Utilities.showToast("格式不对", context); } else {
+					 * tagSet.add(tagItem);
+					 * JPushInterface.setAliasAndTags(getApplicationContext(),
+					 * null, tagSet, mTagsCallback); }
+					 */
 					onActivityForResult();
 				} else if (TextUtils.equals(content, "2")) {
 					Utilities.showToast("抢单成功，请到任务中查看", context);
-					//TODO
-					/*// 推送业务代码
-					tagItem = bean.getTaskNo();
-					if (!AppUtils.isValidTagAndAlias(tagItem)) {
-						Utilities.showToast("格式不对", context);
-					} else {
-						tagSet.add(tagItem);
-						JPushInterface.setAliasAndTags(getApplicationContext(),
-								null, tagSet, mTagsCallback);
-					}*/
+					// TODO
+					/*
+					 * // 推送业务代码 tagItem = bean.getTaskNo(); if
+					 * (!AppUtils.isValidTagAndAlias(tagItem)) {
+					 * Utilities.showToast("格式不对", context); } else {
+					 * tagSet.add(tagItem);
+					 * JPushInterface.setAliasAndTags(getApplicationContext(),
+					 * null, tagSet, mTagsCallback); }
+					 */
 
 					onActivityForResult();
 				} else if (TextUtils.equals(content, "3")) {
 					Utilities.showToast("差一点就抢到了", context);
-				} else if(TextUtils.equals(content, "4")){
+				} else if (TextUtils.equals(content, "4")) {
 					Utilities.showToast("维保日期的电梯数量已经超过10台，不能够再抢单。", context);
 				}
 				break;
 			case StatusCode.MSG_SET_TAGS:
 				Log.d("24梯", "Set tags in handler.");
-					//TODO
-				/*JPushInterface.setAliasAndTags(getApplicationContext(), null,
-						(Set<String>) msg.obj, mTagsCallback);*/
+				// TODO
+				/*
+				 * JPushInterface.setAliasAndTags(getApplicationContext(), null,
+				 * (Set<String>) msg.obj, mTagsCallback);
+				 */
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
 				Utilities.showToast("网络异常", context);
