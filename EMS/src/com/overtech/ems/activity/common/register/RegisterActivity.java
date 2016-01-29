@@ -2,6 +2,8 @@ package com.overtech.ems.activity.common.register;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import android.app.AlertDialog;
@@ -11,6 +13,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 import com.google.gson.Gson;
 import com.overtech.ems.R;
@@ -21,6 +24,7 @@ import com.overtech.ems.activity.common.register.RegisterAddPersonInfoFragment.R
 import com.overtech.ems.activity.common.register.RegisterAddWorkCertificateFragment.RegAddWorkCerFrgClickListener;
 import com.overtech.ems.activity.common.register.RegisterFragment.RegFraBtnClickListener;
 import com.overtech.ems.activity.common.register.RegisterOtherCertificateFragment.RegOthCerFrgListener;
+import com.overtech.ems.activity.parttime.personal.PersonalAboutAppActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.Employee;
@@ -47,7 +51,6 @@ public class RegisterActivity extends BaseActivity implements RegFraBtnClickList
 			switch (msg.what) {
 			case StatusCode.REGISTER_SUCCESS:
 				String json = (String) msg.obj;
-				Log.e("==上传与服务器交互的结果==", json);
 				try {
 					JSONObject jsonObject = new JSONObject(json);
 					String success = jsonObject.getString("success");

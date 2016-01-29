@@ -1,20 +1,18 @@
 package com.overtech.ems.activity.parttime;
 
-import android.app.ActivityManager;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.parttime.fragment.GrabTaskFragment;
 import com.overtech.ems.activity.parttime.fragment.NearByFragment;
 import com.overtech.ems.activity.parttime.fragment.TaskListFragment;
 import com.overtech.ems.activity.parttime.fragment.PersonalZoneFragment;
-import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -106,16 +104,29 @@ public class MainActivity extends BaseActivity {
 	private long exitTime=0;
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if(keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN){   
-	        if((System.currentTimeMillis()-exitTime) > 2000){  
-	            Utilities.showToast("再按一次退出程序", context);
-	            exitTime = System.currentTimeMillis();   
-	        } else {
-	            statckInstance.popAllActivitys();
-	        }
-	        return true;   
-	    }
-	    return super.onKeyDown(keyCode, event);
+		if (keyCode == KeyEvent.KEYCODE_BACK&& event.getAction() == KeyEvent.ACTION_DOWN) {
+			Effectstype effect = Effectstype.Shake;
+			dialogBuilder.withTitle("温馨提示").withTitleColor(R.color.main_primary)
+			.withDividerColor("#11000000").withMessage("您是否要退出？")
+			.withMessageColor(R.color.main_primary).withDialogColor("#FFFFFFFF")
+			.isCancelableOnTouchOutside(true).withDuration(700)
+			.withEffect(effect).withButtonDrawable(R.color.main_white)
+			.withButton1Text("否").withButton1Color("#DD47BEE9")
+			.withButton2Text("是").withButton2Color("#DD47BEE9")
+			.setButton1Click(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							dialogBuilder.dismiss();
+						}
+					}).setButton2Click(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							statckInstance.popAllActivitys();
+						}
+					}).show();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 	@Override

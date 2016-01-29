@@ -1,10 +1,7 @@
 package com.overtech.ems.activity.common.register;
 
-import java.util.HashMap;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
@@ -62,7 +59,6 @@ public class RegisterAddPersonInfoFragment extends Fragment implements OnClickLi
 	private boolean isCorrect=false;
 	@Override
 	public void onAttach(Activity activity) {
-		// TODO Auto-generated method stub
 		super.onAttach(activity);
 		mContext=activity;
 	}
@@ -111,7 +107,6 @@ public class RegisterAddPersonInfoFragment extends Fragment implements OnClickLi
 					int status=object.optInt("status");
 					Utilities.showToast("验证码错误："+status, mContext);
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				

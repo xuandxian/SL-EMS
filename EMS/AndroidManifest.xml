@@ -200,7 +200,7 @@
             android:value="developer-default" />
         <meta-data
             android:name="JPUSH_APPKEY"
-            android:value="47e3c96e973c115a5d204187" />
+            android:value="66ffa055bab2d3d9086bd56a" />
  <!-- </>值来自开发者平台取得的AppKey -->
         <activity
             android:name="com.mob.tools.MobUIShell"
