@@ -1,46 +1,26 @@
-package com.overtech.ems.activity.common;
+package com.overtech.ems.activity.common.register;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.TextView;
-
 import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
-import com.overtech.ems.activity.MyApplication;
-import com.overtech.ems.activity.common.fragment.RegisterAddIdCardFragment;
-import com.overtech.ems.activity.common.fragment.RegisterAddIdCardFragment.RegAddIdCardFrgClickListener;
-import com.overtech.ems.activity.common.fragment.RegisterAddPersonEduAndWorkFragment;
-import com.overtech.ems.activity.common.fragment.RegisterAddPersonEduAndWorkFragment.RegAddPerEduWorkFrgClickListener;
-import com.overtech.ems.activity.common.fragment.RegisterAddPersonInfoFragment;
-import com.overtech.ems.activity.common.fragment.RegisterAddPersonInfoFragment.RegAddPerInfoFrgClickListener;
-import com.overtech.ems.activity.common.fragment.RegisterAddWorkCertificateFragment;
-import com.overtech.ems.activity.common.fragment.RegisterAddWorkCertificateFragment.RegAddWorkCerFrgClickListener;
-import com.overtech.ems.activity.common.fragment.RegisterFragment;
-import com.overtech.ems.activity.common.fragment.RegisterFragment.RegFraBtnClickListener;
-import com.overtech.ems.activity.common.fragment.RegisterOtherCertificateFragment;
-import com.overtech.ems.activity.common.fragment.RegisterOtherCertificateFragment.RegOthCerFrgListener;
+import com.overtech.ems.activity.common.register.RegisterAddIdCardFragment.RegAddIdCardFrgClickListener;
+import com.overtech.ems.activity.common.register.RegisterAddPersonEduAndWorkFragment.RegAddPerEduWorkFrgClickListener;
+import com.overtech.ems.activity.common.register.RegisterAddPersonInfoFragment.RegAddPerInfoFrgClickListener;
+import com.overtech.ems.activity.common.register.RegisterAddWorkCertificateFragment.RegAddWorkCerFrgClickListener;
+import com.overtech.ems.activity.common.register.RegisterFragment.RegFraBtnClickListener;
+import com.overtech.ems.activity.common.register.RegisterOtherCertificateFragment.RegOthCerFrgListener;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.Employee;
@@ -52,10 +32,7 @@ import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-public class RegisterActivity extends BaseActivity implements
-		RegFraBtnClickListener, RegAddPerInfoFrgClickListener,
-		RegAddPerEduWorkFrgClickListener, RegAddIdCardFrgClickListener,
-		RegAddWorkCerFrgClickListener, RegOthCerFrgListener {
+public class RegisterActivity extends BaseActivity implements RegFraBtnClickListener, RegAddPerInfoFrgClickListener,RegAddPerEduWorkFrgClickListener, RegAddIdCardFrgClickListener,RegAddWorkCerFrgClickListener, RegOthCerFrgListener {
 	private FragmentManager manager;
 	private RegisterFragment mRegisterFragment;
 	private RegisterAddPersonInfoFragment mPersonInfoFragment;
@@ -63,9 +40,8 @@ public class RegisterActivity extends BaseActivity implements
 	private RegisterAddIdCardFragment mIdCardFragment;
 	private RegisterAddWorkCertificateFragment mWorkCertificateFragment;
 	private RegisterOtherCertificateFragment mOtherCertificateFragment;
-	private final String TAG = "Fragment";
-
 	public String mPhoneNo;
+	
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -76,15 +52,12 @@ public class RegisterActivity extends BaseActivity implements
 					JSONObject jsonObject = new JSONObject(json);
 					String success = jsonObject.getString("success");
 					if (success.equals("true")) {
-						Utilities.showToast("恭喜你注册成功，请等待公司为你分配账户和密码！！！",
-								context);
+						Utilities.showToast("恭喜你注册成功，请等待公司为你分配账户和密码！！！",context);
 						finish();
 					} else if (success.equals("false")) {
-						Utilities.showToast(jsonObject.getString("msg"),
-								context);
+						Utilities.showToast(jsonObject.getString("msg"),context);
 					}
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				stopProgressDialog();
@@ -94,11 +67,7 @@ public class RegisterActivity extends BaseActivity implements
 				Utilities.showToast((String) msg.obj, context);
 				stopProgressDialog();
 				break;
-
-			default:
-				break;
 			}
-
 		};
 	};
 
@@ -106,15 +75,13 @@ public class RegisterActivity extends BaseActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_register);
-
 		manager = getFragmentManager();
 		FragmentTransaction transaction = manager.beginTransaction();
 		if (mRegisterFragment == null) {
 			mRegisterFragment = new RegisterFragment();
 		}
 		mRegisterFragment.setRegFraBtnClickListener(this);
-		transaction.add(R.id.fl_register_container, mRegisterFragment,
-				"REGISTER");// 将当前fragment添加进栈
+		transaction.add(R.id.fl_register_container, mRegisterFragment,"REGISTER");// 将当前fragment添加进栈
 		transaction.commit();
 	}
 
@@ -176,7 +143,6 @@ public class RegisterActivity extends BaseActivity implements
 				}
 			});
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -209,7 +175,6 @@ public class RegisterActivity extends BaseActivity implements
 
 	@Override
 	public void onRegOthCerFrgClick() {
-		// TODO Auto-generated method stub
 		new AlertDialog.Builder(this).setTitle("提醒").setMessage("确认提交以上信息")
 				.setPositiveButton("确认", new DialogInterface.OnClickListener() {
 
@@ -231,7 +196,6 @@ public class RegisterActivity extends BaseActivity implements
 
 	@Override
 	public void onRegAddWorkCerFrgClick() {
-		// TODO Auto-generated method stub
 		if (mWorkCertificateFragment.isAllNotNull()) {
 			// if(true){
 			FragmentTransaction transaction = manager.beginTransaction();
@@ -248,7 +212,6 @@ public class RegisterActivity extends BaseActivity implements
 
 	@Override
 	public void onRegAddIdCardFrgClick() {
-		// TODO Auto-generated method stub
 		if (mIdCardFragment.isAllNotNull()) {
 			// if(true){
 			FragmentTransaction transaction = manager.beginTransaction();
@@ -265,7 +228,6 @@ public class RegisterActivity extends BaseActivity implements
 
 	@Override
 	public void onRegAddPerEduWorkFrgClick() {
-		// TODO Auto-generated method stub
 		if (mPersonEduWorkFragment.isAllNotNull()) {
 			// if(true){
 			FragmentTransaction transaction = manager.beginTransaction();
@@ -281,7 +243,6 @@ public class RegisterActivity extends BaseActivity implements
 
 	@Override
 	public void onRegAddPerInfoFrgClick() {
-		// TODO Auto-generated method stub
 		if (mPersonInfoFragment.isAllNotNull()) {
 			// if(true){
 			FragmentTransaction transaction = manager.beginTransaction();
@@ -297,7 +258,6 @@ public class RegisterActivity extends BaseActivity implements
 
 	@Override
 	public void onRegFraBtnClick() {
-		// TODO Auto-generated method stub
 		if (mRegisterFragment.isCorrect()) {
 			// if(true){
 			mPhoneNo = mRegisterFragment.mPhoneNo;

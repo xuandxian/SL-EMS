@@ -1,4 +1,4 @@
-package com.overtech.ems.activity.common.fragment;
+package com.overtech.ems.activity.common.register;
 
 import java.util.HashMap;
 
@@ -26,7 +26,6 @@ import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 
 import com.overtech.ems.R;
-import com.overtech.ems.activity.common.RegisterActivity;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
 import com.overtech.ems.widget.TimeButton;

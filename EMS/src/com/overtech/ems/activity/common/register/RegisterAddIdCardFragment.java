@@ -1,4 +1,4 @@
-package com.overtech.ems.activity.common.fragment;
+package com.overtech.ems.activity.common.register;
 
 import java.io.File;
 

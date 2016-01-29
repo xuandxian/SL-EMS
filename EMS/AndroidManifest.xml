@@ -68,10 +68,11 @@
         <activity
             android:name="com.overtech.ems.activity.parttime.MainActivity"
             android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity android:name="com.overtech.ems.activity.common.LostPasswordActivity" />
-        <activity android:name="com.overtech.ems.activity.common.ResetPasswordActivity" />
-        <activity android:name="com.overtech.ems.activity.common.ResetPasswordSuccessActivity" />
-        <activity android:name="com.overtech.ems.activity.common.RegisterActivity" />
+        <activity android:name="com.overtech.ems.activity.common.password.LostPasswordActivity" />
+        <activity android:name="com.overtech.ems.activity.common.password.ResetPasswordActivity" />
+        <activity android:name="com.overtech.ems.activity.common.password.ResetPasswordSuccessActivity" />
+        <activity android:name="com.overtech.ems.activity.common.register.RegisterActivity" />
+        <activity android:name="com.overtech.ems.activity.common.register.RegisterSuccessActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalDeatilsActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.grabtask.GrabTaskDoFilterActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.grabtask.KeyWordSerachActivity" />
@@ -98,7 +99,6 @@
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAboutAppActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAboutCompanyActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAboutDeveloperActivity" />
-        <activity android:name="com.overtech.ems.activity.common.RegisterSuccessActivity" />
 
         <!-- Required SDK核心功能 -->
         <activity

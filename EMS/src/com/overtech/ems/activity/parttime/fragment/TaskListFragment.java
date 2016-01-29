@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.overtech.ems.R;
 import com.overtech.ems.activity.parttime.tasklist.ScanCodeActivity;
 import com.overtech.ems.activity.parttime.tasklist.TaskListDonetFragment;
@@ -37,15 +36,10 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-
-		View view = inflater.inflate(R.layout.fragment_task_list, container,
-				false);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.fragment_task_list, container,false);
 		initView(view);
-		
 		setDefaultView();
-		
 		return view;
 	}
 
@@ -73,7 +67,6 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-
 		case R.id.tv_tasklist_none:
 			switchContent(mTaskDonet,mTaskNone);
 			mNone.setBackgroundResource(R.drawable.horizontal_line);
@@ -93,8 +86,6 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 			intent.setClass(mActivity, ScanCodeActivity.class);
 			startActivity(intent);
 			break;
-		default:
-			break;
 		}
 	}
 
@@ -106,5 +97,4 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 			transaction.hide(from).show(to).commit();
 		}
 	}
-	
 }

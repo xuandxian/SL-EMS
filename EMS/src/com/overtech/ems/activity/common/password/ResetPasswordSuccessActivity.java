@@ -1,6 +1,7 @@
-package com.overtech.ems.activity.common;
+package com.overtech.ems.activity.common.password;
 
 import com.overtech.ems.R;
+import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.widget.CustomProgressDialog;
 import android.app.Activity;
 import android.content.Intent;

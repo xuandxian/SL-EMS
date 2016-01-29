@@ -1,4 +1,4 @@
-package com.overtech.ems.activity.common;
+package com.overtech.ems.activity.common.register;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
+import com.overtech.ems.activity.common.LoginActivity;
 
 public class RegisterSuccessActivity extends BaseActivity {
 	private ImageView mDoBack;

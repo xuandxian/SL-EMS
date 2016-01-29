@@ -17,6 +17,8 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
+import com.overtech.ems.activity.common.password.LostPasswordActivity;
+import com.overtech.ems.activity.common.register.RegisterActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.common.ServicesConfig;

@@ -1,4 +1,4 @@
-package com.overtech.ems.activity.common;
+package com.overtech.ems.activity.common.password;
 
 import static cn.smssdk.framework.utils.R.getStringRes;
 

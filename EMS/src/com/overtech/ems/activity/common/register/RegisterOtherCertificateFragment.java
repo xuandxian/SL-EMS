@@ -1,4 +1,4 @@
-package com.overtech.ems.activity.common.fragment;
+package com.overtech.ems.activity.common.register;
 
 import java.io.File;
 
@@ -31,30 +31,25 @@ import com.overtech.ems.R;
 import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.ImageCacheUtils;
-import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.popwindow.DimPopupWindow;
 
-public class RegisterAddWorkCertificateFragment extends Fragment implements OnClickListener {
+public class RegisterOtherCertificateFragment extends Fragment implements OnClickListener {
 	private View view;
 	private Context mContext;
-	private ImageView mWorkCertificate;
-	private ImageView mDoBack;
-	private TextView mHeadTitle;
-	private Button mNext;
+	private ImageView mOtherCertificate;
 	private DimPopupWindow mPopupWindow;
 	private Button mCamera;
 	private Button mPhoto;
 	private Button mCancle;
-	private RegAddWorkCerFrgClickListener listener;
-	public String workCertificatePath=null;
-	
-    public static final int OPEN_PHOTO_REQUESTCODE =  0x1;  
+	private ImageView mDoback;
+	private TextView mHeadTitle;
+	private Button mNext;
+	private RegOthCerFrgListener listener;
+	public String otherCertificatePath=null;
+	public static final int OPEN_PHOTO_REQUESTCODE =  0x1;  
     private static final int PHOTO_CAPTURE = 0x2;
-    /** 
-     * 图片的target大小. 
-     */
+    private Uri otherCertificateUri = null;
     private static final int target = 400;  
-    private Uri certificateUri=null;
     @Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
@@ -64,43 +59,27 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements OnCl
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		view=inflater.inflate(R.layout.fragment_register_add_work_certificate, null);
+		view=inflater.inflate(R.layout.fragment_register_add_other_certificate, null);
 		findViewById(view);
 		return view;
 	}
 	private void findViewById(View v) {
 		// TODO Auto-generated method stub
-		mWorkCertificate=(ImageView) v.findViewById(R.id.id_work_certificate);
-		mDoBack=(ImageView)v.findViewById(R.id.iv_headBack);
+		mDoback=(ImageView)v.findViewById(R.id.iv_headBack);
 		mHeadTitle=(TextView)v.findViewById(R.id.tv_headTitle);
 		mNext=(Button)v.findViewById(R.id.btn_next_fragment);
+		mOtherCertificate=(ImageView) view.findViewById(R.id.id_card_1);
 		
-		mDoBack.setVisibility(View.VISIBLE);
-		mHeadTitle.setText("上岗证确认");
-		mDoBack.setOnClickListener(this);
-		mWorkCertificate.setOnClickListener(this);
+		mDoback.setVisibility(View.VISIBLE);
+		mDoback.setOnClickListener(this);
+		mHeadTitle.setText("其他信息");
+		mOtherCertificate.setOnClickListener(this);
 		mNext.setOnClickListener(this);
-	}
-	protected void showPopupWindow() {
-		mPopupWindow=new DimPopupWindow(mContext);
-		View contentView=LayoutInflater.from(mContext).inflate(R.layout.layout_dim_pop_add_idcard, null);
-		initView(contentView);
-		mPopupWindow.setContentView(contentView);
-		mPopupWindow.setInAnimation(R.anim.register_add_idcard_in);
-		mPopupWindow.showAtLocation(((Activity) mContext).getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, 0);
-	}
-	private void initView(View contentView) {
-		mCamera=(Button) contentView.findViewById(R.id.item_popupwindows_camera);
-		mPhoto=(Button) contentView.findViewById(R.id.item_popupwindows_Photo);
-		mCancle=(Button) contentView.findViewById(R.id.item_popupwindows_cancel);
-		mCamera.setOnClickListener(this);
-		mPhoto.setOnClickListener(this);
-		mCancle.setOnClickListener(this);
 	}
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.id_work_certificate:
+		case R.id.id_card_1:
 			showPopupWindow();
 			break;
 		case R.id.item_popupwindows_camera:
@@ -119,13 +98,16 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements OnCl
 			break;
 		case R.id.btn_next_fragment:
 			if(listener!=null){
-				listener.onRegAddWorkCerFrgClick();
+				listener.onRegOthCerFrgClick();
 			}
 			break;
 		default:
 			break;
 		}
 	}
+	/**
+	 * 打开相册
+	 */
 	private void openPhoto() {
 		Intent intent = new Intent(Intent.ACTION_PICK, null);  
         intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,  
@@ -144,20 +126,26 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements OnCl
 		if(!dir.exists()){
 			dir.mkdirs();
 		}
-		outFile=new File(dir,"workcitificate"+".jpg");
+		outFile=new File(dir,"otherCertificate"+".jpg");
 		cameraUri=Uri.fromFile(outFile);
-		intent.putExtra(MediaStore.EXTRA_OUTPUT,cameraUri); // 这样就将文件的存储方式和uri指定到了Camera应用中
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraUri); // 这样就将文件的存储方式和uri指定到了Camera应用中
 		startActivityForResult(intent, PHOTO_CAPTURE);
 	}
-	private String getPhotoPath(Uri imageUri){
-		ContentResolver resolver=mContext.getContentResolver();
-		String[] proj={MediaStore.Images.Media.DATA};
-		Cursor cursor=resolver.query(imageUri, proj, null, null, null);
-		int columIndex=cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-		if(cursor.moveToNext()){
-			return cursor.getString(columIndex);
-		}
-		return null;
+	private void showPopupWindow() {
+		mPopupWindow=new DimPopupWindow(mContext);
+		View contentView=LayoutInflater.from(mContext).inflate(R.layout.layout_dim_pop_add_idcard, null);
+		initView(contentView);
+		mPopupWindow.setContentView(contentView);
+		mPopupWindow.setInAnimation(R.anim.register_add_idcard_in);
+		mPopupWindow.showAtLocation(((Activity) mContext).getWindow().getDecorView().getRootView(), Gravity.BOTTOM, 0, 0);
+	}
+	private void initView(View contentView) {
+		mCamera=(Button) contentView.findViewById(R.id.item_popupwindows_camera);
+		mPhoto=(Button) contentView.findViewById(R.id.item_popupwindows_Photo);
+		mCancle=(Button) contentView.findViewById(R.id.item_popupwindows_cancel);
+		mCamera.setOnClickListener(this);
+		mPhoto.setOnClickListener(this);
+		mCancle.setOnClickListener(this);
 	}
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -176,13 +164,13 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements OnCl
                 //这里调用这个方法就不会oom.屌丝们就用这个方法吧.  
                 Bitmap bm = ImageCacheUtils.getResizedBitmap(null, null,   
                         mContext, data.getData(), target, false);  
-                mWorkCertificate.setImageBitmap(bm);
-                certificateUri=data.getData();
-                workCertificatePath =getPhotoPath(certificateUri);
+                mOtherCertificate.setImageBitmap(bm);
+                otherCertificateUri=data.getData();
+                otherCertificatePath=getPhotoPath(otherCertificateUri);
             }
 			break;
 		case PHOTO_CAPTURE:
-			if(resultCode == Activity.RESULT_CANCELED){
+			if(resultCode==Activity.RESULT_CANCELED){
 				
 			}
 			if(resultCode == Activity.RESULT_OK){
@@ -207,9 +195,9 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements OnCl
 				op.inSampleSize = 4; // 这个数字越大,图片大小越小.
 				Bitmap pic = null;
 				pic = BitmapFactory.decodeFile(outFile.getAbsolutePath(), op);
-				mWorkCertificate.setImageBitmap(pic);
-				workCertificatePath=outFile.getAbsolutePath();
-				certificateUri = cameraUri;
+				mOtherCertificate.setImageBitmap(pic);
+				otherCertificateUri=cameraUri;
+				otherCertificatePath=outFile.getAbsolutePath();
 			}
 			break;
 
@@ -218,18 +206,31 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements OnCl
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-	public boolean isAllNotNull(){
-		if(certificateUri!=null){
+	private String getPhotoPath(Uri imageUri){
+		ContentResolver resolver=mContext.getContentResolver();
+		String[] proj={MediaStore.Images.Media.DATA};
+		Cursor cursor=resolver.query(imageUri, proj, null, null, null);
+		int columIndex=cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+		if(cursor.moveToNext()){
+			return cursor.getString(columIndex);
+		}
+		return null;
+	}
+	/*public boolean isAllNotNull(){
+		
+		if(otherCertificateUri!=null){
 			return true;
 		}else{
 			Utilities.showToast("你还没有选择证件", mContext);
 			return false;
 		}
 	}
-	public void setRegAddWorkCerFrgClickListener(RegAddWorkCerFrgClickListener listener){
+	不需要这个，其他证书可有可无
+	*/
+	public void setRegOthFrgListener(RegOthCerFrgListener listener){
 		this.listener=listener;
 	}
-	public interface RegAddWorkCerFrgClickListener{
-		void onRegAddWorkCerFrgClick();
+	public interface RegOthCerFrgListener{
+		void onRegOthCerFrgClick();
 	}
 }

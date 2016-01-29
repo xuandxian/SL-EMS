@@ -1,4 +1,4 @@
-package com.overtech.ems.activity.common.fragment;
+package com.overtech.ems.activity.common.register;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.overtech.ems.R;
-import com.overtech.ems.activity.common.RegisterActivity;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
 import com.overtech.ems.widget.ValicateCode;

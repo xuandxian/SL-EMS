@@ -1,4 +1,4 @@
-package com.overtech.ems.activity.common;
+package com.overtech.ems.activity.common.password;
 
 import com.google.gson.Gson;
 import com.overtech.ems.R;

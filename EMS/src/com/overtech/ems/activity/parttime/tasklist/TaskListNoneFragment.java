@@ -269,7 +269,6 @@ public class TaskListNoneFragment extends BaseFragment {
 					@Override
 					public void onMenuItemClick(int position, SwipeMenu menu,
 							int index) {
-						// TODO Auto-generated method stub
 						switch (index) {
 						case 0:// 导航
 							LatLng startPoint = adapter.getCurrentLocation();
@@ -290,7 +289,6 @@ public class TaskListNoneFragment extends BaseFragment {
 										@Override
 										public void onResponse(Response response)
 												throws IOException {
-											// TODO Auto-generated method stub
 											Message msg = new Message();
 											if (response.isSuccessful()) {
 												msg.what = StatusCode.VALIDATE_TIME_SUCCESS;
@@ -306,7 +304,6 @@ public class TaskListNoneFragment extends BaseFragment {
 										@Override
 										public void onFailure(Request arg0,
 												IOException arg1) {
-											// TODO Auto-generated method stub
 											Message msg = new Message();
 											msg.what = StatusCode.RESPONSE_NET_FAILED;
 											msg.obj = "网络异常";
@@ -337,12 +334,10 @@ public class TaskListNoneFragment extends BaseFragment {
 				bundle.putParcelable(Constant.DESTINATION,
 						adapter.getDestination(position));
 				intent.putExtras(bundle);
-				// startActivity(intent);
 				startActivityForResult(intent, REQUESTCODE);
 			}
 		});
-		loginName = mSharedPreferences.getString(
-				SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
+		loginName = mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
 		startLoading();
 	}
 
@@ -379,16 +374,14 @@ public class TaskListNoneFragment extends BaseFragment {
 			@Override
 			public void create(SwipeMenu menu) {
 				SwipeMenuItem navicateItem = new SwipeMenuItem(mActivity);
-				navicateItem.setBackground(new ColorDrawable(Color.rgb(0xFF,
-						0x9D, 0x00)));
+				navicateItem.setBackground(new ColorDrawable(Color.rgb(0xFF,0x9D, 0x00)));
 				navicateItem.setWidth(dp2px(90));
 				navicateItem.setTitle("导航");
 				navicateItem.setTitleSize(18);
 				navicateItem.setTitleColor(Color.WHITE);
 				menu.addMenuItem(navicateItem);
 				SwipeMenuItem deleteItem = new SwipeMenuItem(mActivity);
-				deleteItem.setBackground(new ColorDrawable(Color.rgb(0xFF,
-						0x3A, 0x30)));
+				deleteItem.setBackground(new ColorDrawable(Color.rgb(0xFF,0x3A, 0x30)));
 				deleteItem.setWidth(dp2px(90));
 				deleteItem.setTitle("退单");
 				deleteItem.setTitleSize(18);
@@ -400,11 +393,9 @@ public class TaskListNoneFragment extends BaseFragment {
 
 	public void startNavicate(LatLng startPoint, LatLng endPoint, String endName) {//endName暂时不使用
 		// 构建 route搜索参数
-		RouteParaOption para = new RouteParaOption().startName("我的位置")
-				.startPoint(startPoint)
-				// 路线检索起点
+		RouteParaOption para = new RouteParaOption().startName("起点").startPoint(startPoint)
 				.endPoint(endPoint).endName("终点")
-				.busStrategyType(EBusStrategyType.bus_recommend_way);
+				.busStrategyType(EBusStrategyType.bus_time_first);
 		try {
 			BaiduMapRoutePlan.setSupportWebRoute(true);
 			BaiduMapRoutePlan.openBaiduMapTransitRoute(para, mActivity);
@@ -415,7 +406,6 @@ public class TaskListNoneFragment extends BaseFragment {
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == REQUESTCODE) {
 			startLoading();
@@ -427,11 +417,10 @@ public class TaskListNoneFragment extends BaseFragment {
 		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(callback);
 	}
-
+	
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		mLocationClient.stop();
 	}
-
 }
