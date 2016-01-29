@@ -27,24 +27,24 @@ public class GrabTaskAdapter extends BaseAdapter {
 	public void setData(List<TaskPackage> data) {
 		this.list = data;
 	}
-	
+
 	public GrabTaskAdapter(List<TaskPackage> list, Context context) {
 		super();
 		this.list = list;
 		this.context = context;
 	}
-	
-	public GrabTaskAdapter(List<TaskPackage> list,LatLng myLocation, Context context) {
+
+	public GrabTaskAdapter(List<TaskPackage> list, LatLng myLocation,
+			Context context) {
 		super();
 		this.list = list;
 		this.context = context;
-		this.mLocation=myLocation;
+		this.mLocation = myLocation;
 	}
-
 
 	@Override
 	public int getCount() {
-		return list.size();
+		return list.size() == 0 ? 0 : list.size();
 	}
 
 	@Override
@@ -68,17 +68,23 @@ public class GrabTaskAdapter extends BaseAdapter {
 		holder.tv_name.setText(data.getTaskPackageName());
 		holder.elevtorNum.setText(data.getElevatorAmounts() + "");
 		holder.addressName.setText(data.getMaintenanceAddress());
-		LatLng latlng = new LatLng(Double.valueOf(data.getLatitude()),Double.valueOf(data.getLongitude()));
-		NumberFormat numberFormat=NumberFormat.getNumberInstance();//保留两位小数
-		numberFormat.setMaximumFractionDigits(2);
-		holder.distance.setText(numberFormat.format(DistanceUtil.getDistance(mLocation, latlng)/1000.0)+ "km");
+		String latitude=data.getLatitude().trim();
+		String longitude=data.getLongitude().trim();
+		if (null==latitude || TextUtils.equals("", latitude) ||null==longitude||TextUtils.equals("", longitude) ) {
+			holder.distance.setText("距离计算错误");
+		}else {
+			NumberFormat numberFormat = NumberFormat.getNumberInstance();// 保留两位小数
+			numberFormat.setMaximumFractionDigits(2);
+			LatLng latlng = new LatLng(Double.valueOf(data.getLatitude()),Double.valueOf(data.getLongitude()));
+			holder.distance.setText(numberFormat.format(DistanceUtil.getDistance(mLocation, latlng) / 1000.0) + "km");
+		}
 		holder.date.setText(data.getMaintenanceDate());
 		if (TextUtils.equals(data.getIsFinish(), "0")) {
 			holder.iv_icon.setImageResource(R.drawable.icon_task_none);
 		} else if (TextUtils.equals(data.getIsFinish(), "1")) {
 			holder.iv_icon.setImageResource(R.drawable.icon_task_done);
 		}
-		if (TextUtils.equals(data.getTopState(),"1")) {
+		if (TextUtils.equals(data.getTopState(), "1")) {
 			holder.hot.setVisibility(View.VISIBLE);
 		} else {
 			holder.hot.setVisibility(View.GONE);
