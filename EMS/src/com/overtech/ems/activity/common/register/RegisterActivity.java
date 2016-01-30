@@ -5,16 +5,13 @@ import java.io.IOException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
-
+import android.view.View;
 import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
@@ -30,6 +27,7 @@ import com.overtech.ems.entity.parttime.Employee;
 import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.Utilities;
+import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
@@ -183,21 +181,26 @@ public class RegisterActivity extends BaseActivity implements
 
 	@Override
 	public void onRegOthCerFrgClick() {
-		new AlertDialog.Builder(this).setTitle("提醒").setMessage("确认提交以上信息")
-				.setPositiveButton("确认", new DialogInterface.OnClickListener() {
-
+		Effectstype effect = Effectstype.Shake;
+		dialogBuilder.withTitle("温馨提示").withTitleColor(R.color.main_primary)
+				.withDividerColor("#11000000").withMessage("确认提交以上信息？")
+				.withMessageColor(R.color.main_primary)
+				.withDialogColor("#FFFFFFFF").isCancelableOnTouchOutside(true)
+				.withDuration(700).withEffect(effect)
+				.withButtonDrawable(R.color.main_white).withButton1Text("否")
+				.withButton1Color("#DD47BEE9").withButton2Text("是")
+				.withButton2Color("#DD47BEE9")
+				.setButton1Click(new View.OnClickListener() {
 					@Override
-					public void onClick(DialogInterface dialog, int which) {
+					public void onClick(View v) {
+						dialogBuilder.dismiss();
+					}
+				}).setButton2Click(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
 						startProgressDialog("正在上传...");
 						String personJson = getAllMessage();
 						startUpLoading(personJson);
-					}
-				})
-				.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
 					}
 				}).show();
 	}
@@ -266,20 +269,20 @@ public class RegisterActivity extends BaseActivity implements
 
 	@Override
 	public void onRegFraBtnClick() {
-//		if (mRegisterFragment.isCorrect) {
-//			 if(true){
-			mPhoneNo = mRegisterFragment.mPhoneNo;
-			FragmentTransaction transaction = manager.beginTransaction();
-			if (mPersonInfoFragment == null) {
-				mPersonInfoFragment = new RegisterAddPersonInfoFragment();
-			}
-			mPersonInfoFragment.setRegAddPerInfoFrgClickListener(this);
-			transaction.add(R.id.fl_register_container, mPersonInfoFragment);
-			transaction.addToBackStack(null);
-			transaction.commit();
-//		} else {
-//			Utilities.showToast("验证码没有验证成功", context);
-//		}
+		// if (mRegisterFragment.isCorrect) {
+		// if(true){
+		mPhoneNo = mRegisterFragment.mPhoneNo;
+		FragmentTransaction transaction = manager.beginTransaction();
+		if (mPersonInfoFragment == null) {
+			mPersonInfoFragment = new RegisterAddPersonInfoFragment();
+		}
+		mPersonInfoFragment.setRegAddPerInfoFrgClickListener(this);
+		transaction.add(R.id.fl_register_container, mPersonInfoFragment);
+		transaction.addToBackStack(null);
+		transaction.commit();
+		// } else {
+		// Utilities.showToast("验证码没有验证成功", context);
+		// }
 	}
 
 }
