@@ -98,7 +98,6 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 			break;
 		case R.id.bt_confirm:
 			upLoading();
-			startLoading();
 			break;
 		default:
 			break;
@@ -171,6 +170,7 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 			evaluateLevel = "-2";
 			break;
 		}
+		startLoading();
 	}
 
 }

@@ -5,6 +5,7 @@ import java.util.Iterator;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.overtech.ems.activity.common.SplashActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
 
 import cn.jpush.android.api.JPushInterface;
@@ -39,7 +40,7 @@ public class MyPushReceiver extends BroadcastReceiver {
             Log.d(TAG, "[MyPushReceiver] 用户点击打开了通知");
             
         	//打开自定义的Activity
-        	Intent i = new Intent(context, MainActivity.class);
+        	Intent i = new Intent(context, SplashActivity.class);
         	i.putExtras(bundle);
         	//i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         	i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP );

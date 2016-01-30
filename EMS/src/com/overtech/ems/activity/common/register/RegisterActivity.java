@@ -2,10 +2,10 @@ package com.overtech.ems.activity.common.register;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -13,8 +13,8 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.TextUtils;
 import android.util.Log;
+
 import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
@@ -24,7 +24,6 @@ import com.overtech.ems.activity.common.register.RegisterAddPersonInfoFragment.R
 import com.overtech.ems.activity.common.register.RegisterAddWorkCertificateFragment.RegAddWorkCerFrgClickListener;
 import com.overtech.ems.activity.common.register.RegisterFragment.RegFraBtnClickListener;
 import com.overtech.ems.activity.common.register.RegisterOtherCertificateFragment.RegOthCerFrgListener;
-import com.overtech.ems.activity.parttime.personal.PersonalAboutAppActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.Employee;
@@ -36,7 +35,10 @@ import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-public class RegisterActivity extends BaseActivity implements RegFraBtnClickListener, RegAddPerInfoFrgClickListener,RegAddPerEduWorkFrgClickListener, RegAddIdCardFrgClickListener,RegAddWorkCerFrgClickListener, RegOthCerFrgListener {
+public class RegisterActivity extends BaseActivity implements
+		RegFraBtnClickListener, RegAddPerInfoFrgClickListener,
+		RegAddPerEduWorkFrgClickListener, RegAddIdCardFrgClickListener,
+		RegAddWorkCerFrgClickListener, RegOthCerFrgListener {
 	private FragmentManager manager;
 	private RegisterFragment mRegisterFragment;
 	private RegisterAddPersonInfoFragment mPersonInfoFragment;
@@ -45,7 +47,7 @@ public class RegisterActivity extends BaseActivity implements RegFraBtnClickList
 	private RegisterAddWorkCertificateFragment mWorkCertificateFragment;
 	private RegisterOtherCertificateFragment mOtherCertificateFragment;
 	public String mPhoneNo;
-	
+
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -55,10 +57,12 @@ public class RegisterActivity extends BaseActivity implements RegFraBtnClickList
 					JSONObject jsonObject = new JSONObject(json);
 					String success = jsonObject.getString("success");
 					if (success.equals("true")) {
-						Utilities.showToast("恭喜你注册成功，请等待公司为你分配账户和密码！！！",context);
+						Utilities.showToast("恭喜你注册成功，请等待公司为你分配账户和密码！！！",
+								context);
 						finish();
 					} else if (success.equals("false")) {
-						Utilities.showToast(jsonObject.getString("msg"),context);
+						Utilities.showToast(jsonObject.getString("msg"),
+								context);
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
@@ -84,7 +88,8 @@ public class RegisterActivity extends BaseActivity implements RegFraBtnClickList
 			mRegisterFragment = new RegisterFragment();
 		}
 		mRegisterFragment.setRegFraBtnClickListener(this);
-		transaction.add(R.id.fl_register_container, mRegisterFragment,"REGISTER");// 将当前fragment添加进栈
+		transaction.add(R.id.fl_register_container, mRegisterFragment,
+				"REGISTER");// 将当前fragment添加进栈
 		transaction.commit();
 	}
 
@@ -261,7 +266,7 @@ public class RegisterActivity extends BaseActivity implements RegFraBtnClickList
 
 	@Override
 	public void onRegFraBtnClick() {
-		if (mRegisterFragment.isCorrect()) {
+		if (mRegisterFragment.isCorrect) {
 			// if(true){
 			mPhoneNo = mRegisterFragment.mPhoneNo;
 			FragmentTransaction transaction = manager.beginTransaction();
@@ -272,6 +277,8 @@ public class RegisterActivity extends BaseActivity implements RegFraBtnClickList
 			transaction.add(R.id.fl_register_container, mPersonInfoFragment);
 			transaction.addToBackStack(null);
 			transaction.commit();
+		} else {
+			Utilities.showToast("验证码没有验证成功", context);
 		}
 	}
 

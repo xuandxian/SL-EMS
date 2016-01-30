@@ -38,8 +38,8 @@ public class TimeButton extends Button implements OnClickListener {
   
     @SuppressLint("HandlerLeak")  
     Handler han = new Handler() {  
-        public void handleMessage(android.os.Message msg) {  
-            TimeButton.this.setText(time / 1000 + textafter);  
+        public void handleMessage(android.os.Message msg) {
+        	TimeButton.this.setText(time / 1000 + textafter);
             time -= 1000;  
             if (time < 0) {  
                 TimeButton.this.setEnabled(true);  
@@ -81,11 +81,16 @@ public class TimeButton extends Button implements OnClickListener {
   
     @Override  
     public void onClick(View v) {  
-        if (mOnclickListener != null)  
-            mOnclickListener.onClick(v);  
-        initTimer();  
-        this.setText(time / 1000 + textafter);  
-        this.setEnabled(false);  
+        if (mOnclickListener != null) {
+        	mOnclickListener.onClick(v);  
+        }
+        initTimer(); 
+        if(time==0){
+        	this.setText(textafter);  
+        }else{
+        	this.setText(time / 1000 + textafter);  
+        }
+//        this.setEnabled(false);  //因为注册时的实际需要，将此处
         t.schedule(tt, 0, 1000);  
         // t.scheduleAtFixedRate(task, delay, period);  
     }  

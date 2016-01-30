@@ -29,6 +29,17 @@
                 android:hint="手机号"
                 android:inputType="phone"
                 android:maxLength="11" />
+
+            <com.overtech.ems.widget.TimeButton
+                android:id="@+id/btn_get_valicate_code"
+                style="@style/tv_hint_white_style"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="15dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/shape_button_visiable"
+                android:text="获取验证码" />
         </RelativeLayout>
 
         <TextView
@@ -48,7 +59,7 @@
 
             <EditText
                 android:id="@+id/et_valicate_code"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="20dp"
@@ -56,24 +67,16 @@
                 android:background="@drawable/shape_input"
                 android:hint="请输入验证码" />
 
-            <ImageView
-                android:id="@+id/iv_register_valicate_code"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="9dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="9dp"
-                android:layout_toLeftOf="@+id/btn_get_valicate_code" />
-
             <Button
-                android:id="@+id/btn_get_valicate_code"
-                style="@style/tv_hint_white_style"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="18dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/shape_button_visiable"
-                android:text="点击更换" />
+                    android:id="@+id/btn_valicate_code"
+                    style="@style/tv_hint_white_style"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="15dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@drawable/shape_button_visiable"
+                    android:text="提交验证码" />
         </RelativeLayout>
     </RelativeLayout>
 
@@ -86,9 +89,8 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="25dp"
         android:background="@drawable/shape_button_visiable"
-        android:textColor="@color/main_white"
-        android:textSize="17sp" 
         android:text="下一步"
-        />
+        android:textColor="@color/main_white"
+        android:textSize="17sp" />
 
 </LinearLayout>
