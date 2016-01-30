@@ -266,7 +266,7 @@ public class RegisterActivity extends BaseActivity implements
 
 	@Override
 	public void onRegFraBtnClick() {
-		if (mRegisterFragment.isCorrect) {
+//		if (mRegisterFragment.isCorrect) {
 			// if(true){
 			mPhoneNo = mRegisterFragment.mPhoneNo;
 			FragmentTransaction transaction = manager.beginTransaction();
@@ -277,9 +277,9 @@ public class RegisterActivity extends BaseActivity implements
 			transaction.add(R.id.fl_register_container, mPersonInfoFragment);
 			transaction.addToBackStack(null);
 			transaction.commit();
-		} else {
-			Utilities.showToast("验证码没有验证成功", context);
-		}
+//		} else {
+//			Utilities.showToast("验证码没有验证成功", context);
+//		}
 	}
 
 }
