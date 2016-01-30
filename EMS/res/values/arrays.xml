@@ -2,7 +2,10 @@
 <resources>
     <string-array name="city">
         <item>城市选择</item>
+        <item>北京</item>
         <item>上海</item>
+        <item>广州</item>
+        <item>江苏</item>
     </string-array>
     <string-array name="sh_zone">
         <item>区域选择</item>
@@ -10,7 +13,6 @@
         <item>徐汇区</item>
         <item>长宁区</item>
         <item>静安区</item>
-        <item>闸北区</item>
         <item>普陀区</item>
         <item>虹口区</item>
         <item>杨浦区</item>

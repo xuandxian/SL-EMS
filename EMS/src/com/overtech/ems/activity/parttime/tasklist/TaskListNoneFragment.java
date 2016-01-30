@@ -272,17 +272,17 @@ public class TaskListNoneFragment extends BaseFragment {
 					public void onMenuItemClick(int position, SwipeMenu menu,
 							int index) {
 						switch (index) {
-						case 0:// 分享
-							Utilities.showToast("点击分享", context);
-							showShare();
-							break;
-						case 1:// 导航
+//						case 0:// 分享
+//							Utilities.showToast("点击分享", context);
+//							showShare();
+//							break;
+						case 0:// 导航
 							LatLng startPoint = adapter.getCurrentLocation();
 							LatLng endPoint = adapter.getDestination(position);
 							String endName = adapter.getDesName(position);
 							startNavicate(startPoint, endPoint, endName);
 							break;
-						case 2:// t退单
+						case 1:// t退单
 							TaskPackage data = (TaskPackage) adapter
 									.getItem(position);
 							mTaskNo = data.getTaskNo();
@@ -379,13 +379,13 @@ public class TaskListNoneFragment extends BaseFragment {
 		creator = new SwipeMenuCreator() {
 			@Override
 			public void create(SwipeMenu menu) {
-				SwipeMenuItem shareItem = new SwipeMenuItem(mActivity);
-				shareItem.setBackground(new ColorDrawable(Color.rgb(0x00,0xCD, 0x00)));
-				shareItem.setWidth(dp2px(90));
-				shareItem.setTitle("分享");
-				shareItem.setTitleSize(18);
-				shareItem.setTitleColor(Color.WHITE);
-				menu.addMenuItem(shareItem);
+//				SwipeMenuItem shareItem = new SwipeMenuItem(mActivity);
+//				shareItem.setBackground(new ColorDrawable(Color.rgb(0x00,0xCD, 0x00)));
+//				shareItem.setWidth(dp2px(90));
+//				shareItem.setTitle("分享");
+//				shareItem.setTitleSize(18);
+//				shareItem.setTitleColor(Color.WHITE);
+//				menu.addMenuItem(shareItem);
 				SwipeMenuItem navicateItem = new SwipeMenuItem(mActivity);
 				navicateItem.setBackground(new ColorDrawable(Color.rgb(0xFF,0x9D, 0x00)));
 				navicateItem.setWidth(dp2px(90));
@@ -431,23 +431,23 @@ public class TaskListNoneFragment extends BaseFragment {
 		call.enqueue(callback);
 	}
 	
-	private void showShare() {
-		ShareSDK.initSDK(mActivity);
-		OnekeyShare oks = new OnekeyShare();
-//		oks.disableSSOWhenAuthorize();
-		oks.setTitle("上海乐配信息科技有限公司");
-		// titleUrl是标题的网络链接，仅在人人网和QQ空间使用
-		oks.setTitleUrl("http://www.wandoujia.com/apps/com.overtech.ems");
-		//暂时使用云端服务器上面的logo,豌豆荚审核通过后使用豌豆荚中的logo
-		oks.setImageUrl("http://120.55.162.181:8080/test/icon.png");
-		// text是分享文本，所有平台都需要这个字段
-		oks.setText("一款基于手机移动端的电梯维保App，欢迎下载。");
-		// url仅在微信（包括好友和朋友圈）中使用
-		oks.setUrl("http://www.wandoujia.com/apps/com.overtech.ems");
-		oks.setVenueName("24梯");
-		// 启动分享GUI
-		oks.show(mActivity);
-	}
+//	private void showShare() {
+//		ShareSDK.initSDK(mActivity);
+//		OnekeyShare oks = new OnekeyShare();
+////		oks.disableSSOWhenAuthorize();
+//		oks.setTitle("上海乐配信息科技有限公司");
+//		// titleUrl是标题的网络链接，仅在人人网和QQ空间使用
+//		oks.setTitleUrl("http://www.wandoujia.com/apps/com.overtech.ems");
+//		//暂时使用云端服务器上面的logo,豌豆荚审核通过后使用豌豆荚中的logo
+//		oks.setImageUrl("http://120.55.162.181:8080/test/icon.png");
+//		// text是分享文本，所有平台都需要这个字段
+//		oks.setText("一款基于手机移动端的电梯维保App，欢迎下载。");
+//		// url仅在微信（包括好友和朋友圈）中使用
+//		oks.setUrl("http://www.wandoujia.com/apps/com.overtech.ems");
+//		oks.setVenueName("24梯");
+//		// 启动分享GUI
+//		oks.show(mActivity);
+//	}
 	
 	@Override
 	public void onDestroy() {
