@@ -38,17 +38,7 @@ public class RegisterFragment extends Fragment{
 	private Button mNext;
 	public String mPhoneNo;
 	private RegFraBtnClickListener listener;
-	private EventHandler eh = new EventHandler() {
-		@Override
-		public void afterEvent(int event, int result, Object data) {
-			super.afterEvent(event, result, data);
-			Message msg = new Message();
-			msg.arg1 = event;
-			msg.arg2 = result;
-			msg.obj = data;
-			handler.sendMessage(msg);
-		}
-	};
+	private EventHandler eh;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			int event = msg.arg1;
@@ -87,6 +77,17 @@ public class RegisterFragment extends Fragment{
 		view = inflater.inflate(R.layout.fragment_register, null);
 		findViewById(view);
 		init();
+		eh = new EventHandler() {
+			@Override
+			public void afterEvent(int event, int result, Object data) {
+				super.afterEvent(event, result, data);
+				Message msg = new Message();
+				msg.arg1 = event;
+				msg.arg2 = result;
+				msg.obj = data;
+				handler.sendMessage(msg);
+			}
+		};
 		SMSSDK.registerEventHandler(eh);
 		return view;
 	}
