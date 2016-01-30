@@ -6,6 +6,8 @@
     <string name="action_settings">Settings</string>
     <!-- zxing -->
     <string name="scan_text">将二维码放入框内, 即可自动扫描</string>
+    <string name="common_search_noresult">木有结果，再找找看</string>
+    <string name="common_no_network_msg">网络不给力，再试试</string>
     
     <string name="xlistview_header_hint_normal">下拉刷新</string>
     <string name="xlistview_header_hint_ready">松开刷新数据</string>

@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -23,6 +22,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import cn.jpush.android.api.JPushInterface;
@@ -76,6 +76,9 @@ public class GrabTaskFragment extends BaseFragment implements
 	private GrabTaskAdapter mAdapter;
 	private ArrayList<TaskPackage> list;
 	private TextView mHeadTitle;
+	private LinearLayout mNoResultPage;
+	private LinearLayout mNoWifi;
+	private Button mRetrySearch;
 	/**
 	 * 存放用于推送的标签
 	 */
@@ -97,33 +100,32 @@ public class GrabTaskFragment extends BaseFragment implements
 			Gson gson = new Gson();
 			switch (msg.what) {
 			case StatusCode.GRAB_GET_DATA_SUCCESS:
-				String json = (String) msg.obj;
-				TaskPackageBean tasks = gson.fromJson(json,
-						TaskPackageBean.class);
-				list = (ArrayList<TaskPackage>) tasks.getModel();
 				if (null == myLocation) {
 					Utilities.showToast("定位失败", context);
 					return;
 				}
+				String json = (String) msg.obj;
+				TaskPackageBean tasks = gson.fromJson(json,TaskPackageBean.class);
+				list = (ArrayList<TaskPackage>) tasks.getModel();
 				if (null == list || list.isEmpty()) {
-					Utilities.showToast("无数据", context);
+					mNoWifi.setVisibility(View.GONE);
+					mNoResultPage.setVisibility(View.VISIBLE);
 				} else {
+					mNoWifi.setVisibility(View.GONE);
+					mNoResultPage.setVisibility(View.GONE);
 					mAdapter = new GrabTaskAdapter(list, myLocation, mActivity);
 					mSwipeListView.setAdapter(mAdapter);
 				}
 				break;
 			case StatusCode.GRAG_RESPONSE_SUCCESS:
 				String status = (String) msg.obj;
-//				Log.e("status", status);
-				StatusCodeBean bean = gson.fromJson(status,
-						StatusCodeBean.class);
+				StatusCodeBean bean = gson.fromJson(status,StatusCodeBean.class);
 				String content = bean.getModel();
 				if (TextUtils.equals(content, "0")) {
 					Utilities.showToast("请不要重复抢单", context);
 				} else if (TextUtils.equals(content, "1")) {
 					Utilities.showToast("抢单成功，等待第二个人抢", context);
 
-					// TODO
 					/*// 推送业务代码
 					tagItem = bean.getTaskNo();
 					if (!AppUtils.isValidTagAndAlias(tagItem)) {
@@ -138,7 +140,6 @@ public class GrabTaskFragment extends BaseFragment implements
 					onRefresh();
 				} else if (TextUtils.equals(content, "2")) {
 					Utilities.showToast("抢单成功，请到任务中查看", context);
-					//TODO
 					/*// 推送业务代码
 					tagItem = bean.getTaskNo();
 					if (!AppUtils.isValidTagAndAlias(tagItem)) {
@@ -158,15 +159,18 @@ public class GrabTaskFragment extends BaseFragment implements
 				break;
 			case StatusCode.MSG_SET_TAGS:
 				Log.d("24梯", "Set tags in handler.");
-				// TODO
 				/*JPushInterface.setAliasAndTags(getActivity()
 						.getApplicationContext(), null, (Set<String>) msg.obj,
 						mTagsCallback);*/
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
+				mNoWifi.setVisibility(View.VISIBLE);
+				mNoResultPage.setVisibility(View.GONE);
 				Utilities.showToast("服务器异常", context);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
+				mNoWifi.setVisibility(View.VISIBLE);
+				mNoResultPage.setVisibility(View.GONE);
 				Utilities.showToast("网络异常", context);
 				break;
 			}
@@ -246,6 +250,9 @@ public class GrabTaskFragment extends BaseFragment implements
 		mSwipeListView = (PullToRefreshSwipeMenuListView) view
 				.findViewById(R.id.sl_qiandan_listview);
 		mHeadTitle = (TextView) view.findViewById(R.id.tv_headTitle);
+		mNoResultPage=(LinearLayout)view.findViewById(R.id.page_no_result);
+		mNoWifi=(LinearLayout)view.findViewById(R.id.page_no_wifi);
+		mRetrySearch=(Button)view.findViewById(R.id.load_btn_retry);
 	}
 
 	public class MyLocationListener implements BDLocationListener {
@@ -254,7 +261,7 @@ public class GrabTaskFragment extends BaseFragment implements
 		public void onReceiveLocation(BDLocation location) {
 			if (null == location) {
 				Log.e("GrabTaskFragment", "定位失败");
-				return;
+				Utilities.showToast("定位失败", context);
 			}
 			myLocation = new LatLng(location.getLatitude(),
 					location.getLongitude());
@@ -306,14 +313,11 @@ public class GrabTaskFragment extends BaseFragment implements
 		mSwipeListView.setPullRefreshEnable(true);
 		mSwipeListView.setPullLoadEnable(true);
 		mSwipeListView.setXListViewListener(this);
-		mHeadView = LayoutInflater.from(mActivity).inflate(
-				R.layout.listview_header_filter, null);
+		mHeadView = LayoutInflater.from(mActivity).inflate(R.layout.listview_header_filter, null);
 		mHeadView.setOnClickListener(null);
 		mSwipeListView.addHeaderView(mHeadView);
-		mPartTimeDoFifter = (LinearLayout) mHeadView
-				.findViewById(R.id.ll_grab_task);
-		mKeyWordSearch = (TextView) mHeadView
-				.findViewById(R.id.et_do_parttime_search);
+		mPartTimeDoFifter = (LinearLayout) mHeadView.findViewById(R.id.ll_grab_task);
+		mKeyWordSearch = (TextView) mHeadView.findViewById(R.id.et_do_parttime_search);
 		mSwipeListView
 				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
@@ -358,6 +362,13 @@ public class GrabTaskFragment extends BaseFragment implements
 				Intent intent = new Intent(mActivity,
 						KeyWordSerachActivity.class);
 				startActivityForResult(intent, StatusCode.RESULT_GRAB_DO_SEARCH);
+			}
+		});
+		mRetrySearch.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View view) {
+				initData(ServicesConfig.GRABTASK, REFRESH_TYPE_DEFAULT);
 			}
 		});
 	}
@@ -413,6 +424,9 @@ public class GrabTaskFragment extends BaseFragment implements
 	}
 
 	public void onRefresh() {
+		if (list != null) {
+			list.clear();
+		}
 		initData(ServicesConfig.GRABTASK, REFRESH_TYPE_LOADING);
 		mAdapter.notifyDataSetChanged();
 	}
@@ -431,20 +445,6 @@ public class GrabTaskFragment extends BaseFragment implements
 		mSwipeListView.stopLoadMore();
 	}
 
-	public class BDLocationListenerImpl implements BDLocationListener {
-
-		@Override
-		public void onReceiveLocation(BDLocation location) {
-			if (location == null) {
-				return;
-			}
-			double mLatitude = location.getLatitude();
-			double mLongitude = location.getLongitude();
-			Log.e("经纬度", "经纬度：" + "(" + mLongitude + "," + mLatitude + ")");
-			myLocation = new LatLng(location.getLatitude(),
-					location.getLongitude());
-		}
-	}
 
 	private void showDialog(final int position) {
 		effect = Effectstype.Slideright;
