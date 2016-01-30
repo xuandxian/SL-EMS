@@ -220,8 +220,7 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment implements OnC
 		mGridView.setAdapter(adapter);
 		mPopupWindow.setOutsideTouchable(false);
 		mPopupWindow.setContentView(view);
-		mPopupWindow.showAtLocation(mElevatorBrand, Gravity.RIGHT
-				| Gravity.BOTTOM, 0, 0);
+		mPopupWindow.showAtLocation(mElevatorBrand, Gravity.CENTER, 0, 0);
 
 		mConfirm.setOnClickListener(new OnClickListener() {
 

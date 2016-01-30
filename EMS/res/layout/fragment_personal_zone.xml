@@ -54,7 +54,6 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="8dp"
                         android:layout_toRightOf="@+id/imageView1"
-                        android:text="Relevator001"
                         android:textSize="17sp" />
 
                     <TextView

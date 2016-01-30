@@ -267,7 +267,7 @@ public class RegisterActivity extends BaseActivity implements
 	@Override
 	public void onRegFraBtnClick() {
 		if (mRegisterFragment.isCorrect) {
-			// if(true){
+//			 if(true){
 			mPhoneNo = mRegisterFragment.mPhoneNo;
 			FragmentTransaction transaction = manager.beginTransaction();
 			if (mPersonInfoFragment == null) {

@@ -75,37 +75,39 @@ public class PersonalZoneFragment extends BaseFragment implements
 			switch (msg.what) {
 			case StatusCode.PERSONAL_ZONE_SUCCESS:
 				String info = (String) msg.obj;
-//				Log.e("==personZone==", info);
+				Log.e("==personZone==", info);
 				try {
 					JSONObject json = new JSONObject(info);
-					JSONObject model = (JSONObject) json.get("model");
-					String imageUrl = model.getString("path");
-					String name = model.getString("name");
-					if (imageUrl == null || "".equals(imageUrl)) {
-						mAvator.setScaleType(ScaleType.FIT_XY);
-						mAvator.setImageResource(STUB_ID);
-					} else {
-						Log.e("==图片路径==", imageUrl);
-						// 调用从网络中加载过来的图片
-						Picasso.with(context).load(imageUrl)
-								.placeholder(STUB_ID).error(STUB_ID)
-								.config(DEFAULT_CONFIG)
-								.transform(new Transformation() {
-									// 圆角图片的实现
-									@Override
-									public Bitmap transform(Bitmap source) {
-										return ImageCacheUtils
-												.toRoundBitmap(source);
-									}
-
-									@Override
-									public String key() {
-										return null;
-									}
-								}).into(mAvator);
-
+					if(!json.isNull("model")){
+						JSONObject model = (JSONObject) json.get("model");
+						String imageUrl = model.getString("path");
+						String name = model.getString("name");
+						if (imageUrl == null || "".equals(imageUrl)) {
+							mAvator.setScaleType(ScaleType.FIT_XY);
+							mAvator.setImageResource(STUB_ID);
+						} else {
+							Log.e("==图片路径==", imageUrl);
+							// 调用从网络中加载过来的图片
+							Picasso.with(context).load(imageUrl)
+							.placeholder(STUB_ID).error(STUB_ID)
+							.config(DEFAULT_CONFIG)
+							.transform(new Transformation() {
+								// 圆角图片的实现
+								@Override
+								public Bitmap transform(Bitmap source) {
+									return ImageCacheUtils
+											.toRoundBitmap(source);
+								}
+								
+								@Override
+								public String key() {
+									return null;
+								}
+							}).into(mAvator);
+							
+						}
+						mName.setText(name);
 					}
-					mName.setText(name);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
