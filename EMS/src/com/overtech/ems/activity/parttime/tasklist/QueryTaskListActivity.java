@@ -118,14 +118,13 @@ public class QueryTaskListActivity extends BaseActivity implements
 						JPushInterface.setAliasAndTags(getApplicationContext(),
 								null, tagSet, mTagsCallback);
 
-						/*
-						 * Intent intent = new
-						 * Intent(QueryTaskListActivity.this,
-						 * QuestionResponseActivity.class); Bundle bundle = new
-						 * Bundle(); bundle.putString(Constant.TASKNO, mTaskNo);
-						 * intent.putExtras(bundle); startActivity(intent);
-						 * finish();
-						 */
+						 Intent intent = new
+						 Intent(QueryTaskListActivity.this,
+						 QuestionResponseActivity.class); Bundle bundle = new
+						 Bundle(); bundle.putString(Constant.TASKNO, mTaskNo);
+						 intent.putExtras(bundle); startActivity(intent);
+						 finish();
+						 
 					} else {
 						Utilities.showToast("你还有未完成的电梯", context);
 						finish();
@@ -169,14 +168,14 @@ public class QueryTaskListActivity extends BaseActivity implements
 				logs = "Set tag and alias success";
 				Log.d(TAG, logs);
 				mSharedPreferences.edit().putStringSet("tagSet", tags).commit();// 成功保存标签后，将标签放到本地
-				// 当该电梯中所有的电梯都完成后，并且标签也在jpush后台注册成功后，开始问题反馈；
+				/*// 当该电梯中所有的电梯都完成后，并且标签也在jpush后台注册成功后，开始问题反馈；
 				Intent intent = new Intent(QueryTaskListActivity.this,
 						QuestionResponseActivity.class);
 				Bundle bundle = new Bundle();
 				bundle.putString(Constant.TASKNO, mTaskNo);
 				intent.putExtras(bundle);
 				startActivity(intent);
-				finish();
+				finish();*/
 
 				break;
 
