@@ -39,7 +39,7 @@
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="20dp"
                 android:background="@drawable/shape_button_visiable"
-                android:text="获取验证码" />
+                android:text="点击获取验证码" />
         </RelativeLayout>
 
         <TextView
