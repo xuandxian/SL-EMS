@@ -93,7 +93,7 @@ public class TaskListPackageDetailAdapter extends BaseAdapter {
 		}else {
 			holder.mElevtorType.setText(contentFloor);
 		}
-		if(data.getIsFinish().equalsIgnoreCase("1")){
+		if(data.getIsFinish().equals("2")){
 //			holder.mRelativeLayout.setBackgroundResource(R.color.package_detail);
 			holder.mElevatorComplete.setImageResource(R.drawable.icon_elevator_complete);
 		}else{

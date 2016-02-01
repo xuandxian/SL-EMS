@@ -310,9 +310,11 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 					TaskPackageDetail detail = (TaskPackageDetail) parent
 							.getItemAtPosition(position);
 					String workType = detail.getWorkType();
-					if (detail.getIsFinish().equals("1")) {
+					if (detail.getIsFinish().equals("2")) {
 						Utilities.showToast("你好，该电梯已经完成", mActivity);
-					} else {
+					} else if(detail.getIsFinish().equals("1")){
+						Utilities.showToast("请和搭档确认工作的进度", context);
+					}else{
 						Utilities.showToast("请通过扫描二维码开启工作或者完成工作", context);
 						//暂时不适用该功能
 						/*Intent intent = new Intent(context,
