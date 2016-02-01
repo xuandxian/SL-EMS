@@ -1,10 +1,8 @@
 package com.overtech.ems.activity.parttime.fragment;
 
 import java.io.IOException;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -23,7 +21,6 @@ import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
 import com.overtech.ems.activity.parttime.personal.PersonalAboutAppActivity;
@@ -34,7 +31,6 @@ import com.overtech.ems.activity.parttime.personal.PersonalCancleListActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalDeatilsActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalHelpDocActivity;
 import com.overtech.ems.config.StatusCode;
-import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
@@ -75,7 +71,6 @@ public class PersonalZoneFragment extends BaseFragment implements
 			switch (msg.what) {
 			case StatusCode.PERSONAL_ZONE_SUCCESS:
 				String info = (String) msg.obj;
-				Log.e("==personZone==", info);
 				try {
 					JSONObject json = new JSONObject(info);
 					if(!json.isNull("model")){
@@ -86,7 +81,6 @@ public class PersonalZoneFragment extends BaseFragment implements
 							mAvator.setScaleType(ScaleType.FIT_XY);
 							mAvator.setImageResource(STUB_ID);
 						} else {
-							Log.e("==图片路径==", imageUrl);
 							// 调用从网络中加载过来的图片
 							Picasso.with(context).load(imageUrl)
 							.placeholder(STUB_ID).error(STUB_ID)
@@ -119,11 +113,8 @@ public class PersonalZoneFragment extends BaseFragment implements
 			case StatusCode.RESPONSE_NET_FAILED:
 				Utilities.showToast("网络异常", mActivity);
 				break;
-			default:
-				break;
 			}
 			stopProgressDialog();// 图片加载完成后停止进度框
-
 		};
 	};
 
@@ -147,11 +138,9 @@ public class PersonalZoneFragment extends BaseFragment implements
 
 	private void onLoading() {
 		startProgressDialog("请稍后...");
-		String mLoginName = mSharedPreferences.getString(
-				SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
+		String mLoginName = mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
 		Param param = new Param(Constant.LOGINNAME, mLoginName);
-		Request request = httpEngine.createRequest(
-				ServicesConfig.PERSONAL_AVATOR, param);
+		Request request = httpEngine.createRequest(ServicesConfig.PERSONAL_AVATOR, param);
 		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {
 
@@ -177,19 +166,13 @@ public class PersonalZoneFragment extends BaseFragment implements
 	}
 
 	private void initViews() {
-		mBackgroundImageView = (ImageView) view
-				.findViewById(R.id.personal_background_image);
+		mBackgroundImageView = (ImageView) view.findViewById(R.id.personal_background_image);
 		mAvator = (ImageView) view.findViewById(R.id.imageView1);
-		mScrollView = (CustomScrollView) view
-				.findViewById(R.id.personal_scrollView);
-		mPersonalDetail = (RelativeLayout) view
-				.findViewById(R.id.rl_personal_details);
-		mPersonalAccountList = (RelativeLayout) view
-				.findViewById(R.id.rl_personal_account_list);
-		mPersonalBounds = (RelativeLayout) view
-				.findViewById(R.id.rl_personal_bounds);
-		mCompanyNotice = (RelativeLayout) view
-				.findViewById(R.id.rl_personal_notice);
+		mScrollView = (CustomScrollView) view.findViewById(R.id.personal_scrollView);
+		mPersonalDetail = (RelativeLayout) view.findViewById(R.id.rl_personal_details);
+		mPersonalAccountList = (RelativeLayout) view.findViewById(R.id.rl_personal_account_list);
+		mPersonalBounds = (RelativeLayout) view.findViewById(R.id.rl_personal_bounds);
+		mCompanyNotice = (RelativeLayout) view.findViewById(R.id.rl_personal_notice);
 		mCancleList = (RelativeLayout) view.findViewById(R.id.rl_cancle_list);
 		mHelpDoc = (RelativeLayout) view.findViewById(R.id.rl_help_doc);
 		mHeadContent = (TextView) view.findViewById(R.id.tv_headTitle);
@@ -197,8 +180,7 @@ public class PersonalZoneFragment extends BaseFragment implements
 		mPhone = (TextView) view.findViewById(R.id.textViewPhone);
 		mApp = (RelativeLayout) view.findViewById(R.id.rl_about_app);
 		mHeadContent.setText("我的");
-		mPhone.setText(mSharedPreferences.getString(
-				SharedPreferencesKeys.CURRENT_LOGIN_NAME, null));// 设置登陆时的个人手机号
+		mPhone.setText(mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null));// 设置登陆时的个人手机号
 	}
 
 	private void initEvents() {
@@ -214,7 +196,6 @@ public class PersonalZoneFragment extends BaseFragment implements
 
 	@Override
 	public void onClick(View v) {
-
 		Intent intent = new Intent();
 		switch (v.getId()) {
 		case R.id.rl_personal_details:// 我的账户
@@ -230,7 +211,6 @@ public class PersonalZoneFragment extends BaseFragment implements
 			startActivity(intent);
 			break;
 		case R.id.rl_personal_notice:// 公告
-			// Utilities.showToast("你点击了公告", mActivity);
 			intent.setClass(mActivity, PersonalAnnouncementActivity.class);
 			startActivity(intent);
 			break;
@@ -257,9 +237,6 @@ public class PersonalZoneFragment extends BaseFragment implements
 			if (event.getAction() == MotionEvent.ACTION_UP) {
 				v.getParent().requestDisallowInterceptTouchEvent(true);
 			}
-			break;
-
-		default:
 			break;
 		}
 		return false;
