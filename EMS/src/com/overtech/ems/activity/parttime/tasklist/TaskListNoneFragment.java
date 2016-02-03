@@ -15,13 +15,14 @@ import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
-import cn.sharesdk.framework.ShareSDK;
-import cn.sharesdk.onekeyshare.OnekeyShare;
 
 import com.baidu.location.LocationClient;
 import com.baidu.mapapi.model.LatLng;
@@ -61,6 +62,9 @@ public class TaskListNoneFragment extends BaseFragment {
 	private LocationClient mLocationClient;
 	private TaskListAdapter adapter;
 	private List<TaskPackage> list;
+	private LinearLayout mNoPage;
+	private LinearLayout mNoWifi;
+	private Button reLoad;
 	private String mTaskNo;
 	private String loginName;
 	private int mPosition;
@@ -83,7 +87,14 @@ public class TaskListNoneFragment extends BaseFragment {
 				list = bean.getModel();
 				if (null == list || list.size() == 0) {
 					Utilities.showToast("无数据", mActivity);
+					mNoPage.setVisibility(View.VISIBLE);
+					mNoWifi.setVisibility(View.GONE);
+					if(adapter!=null){
+						adapter.clearAdapter();
+					}
 				} else {
+					mNoPage.setVisibility(View.GONE);
+					mNoWifi.setVisibility(View.GONE);
 					adapter = new TaskListAdapter(list, mActivity);
 					mSwipeListView.setAdapter(adapter);
 				}
@@ -186,9 +197,19 @@ public class TaskListNoneFragment extends BaseFragment {
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
 				Utilities.showToast((String) msg.obj, mActivity);
+				mNoPage.setVisibility(View.VISIBLE);
+				mNoWifi.setVisibility(View.GONE);
+				if(adapter!=null){
+					adapter.clearAdapter();
+				}
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
 				Utilities.showToast((String) msg.obj, mActivity);
+				mNoPage.setVisibility(View.GONE);
+				mNoWifi.setVisibility(View.VISIBLE);
+				if(adapter!=null){
+					adapter.clearAdapter();
+				}
 				break;
 			default:
 				break;
@@ -257,6 +278,9 @@ public class TaskListNoneFragment extends BaseFragment {
 	private void findViewById(View view) {
 		mSwipeListView = (SwipeMenuListView) view
 				.findViewById(R.id.sl_task_list_listview);
+		mNoPage=(LinearLayout) view.findViewById(R.id.page_no_result);
+		mNoWifi=(LinearLayout) view.findViewById(R.id.page_no_wifi);
+		reLoad=(Button) view.findViewById(R.id.load_btn_retry);
 	}
 
 	private void init() {
@@ -341,6 +365,14 @@ public class TaskListNoneFragment extends BaseFragment {
 						adapter.getDestination(position));
 				intent.putExtras(bundle);
 				startActivityForResult(intent, REQUESTCODE);
+			}
+		});
+		reLoad.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				startLoading();
 			}
 		});
 		loginName = mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);

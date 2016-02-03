@@ -1,20 +1,14 @@
 package com.overtech.ems.entity.parttime;
 
-import java.util.ArrayList;
+import com.overtech.ems.entity.bean.BeginWorkResult;
 
 public class ScanResultBean {
-	private ArrayList<String> model;
+	private BeginWorkResult model;
 	private boolean success;
-	
-	public ScanResultBean(ArrayList<String> model, boolean success) {
-		super();
-		this.model = model;
-		this.success = success;
-	}
-	public ArrayList<String> getModel() {
+	public BeginWorkResult getModel() {
 		return model;
 	}
-	public void setModel(ArrayList<String> model) {
+	public void setModel(BeginWorkResult model) {
 		this.model = model;
 	}
 	public boolean isSuccess() {
@@ -23,6 +17,5 @@ public class ScanResultBean {
 	public void setSuccess(boolean success) {
 		this.success = success;
 	}
-	
 	
 }

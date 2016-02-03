@@ -1,8 +1,8 @@
 package com.overtech.ems.activity.parttime.tasklist;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Vector;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
@@ -23,12 +23,14 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.config.StatusCode;
+import com.overtech.ems.entity.bean.BeginWorkResult;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.ScanResultBean;
 import com.overtech.ems.http.HttpEngine.Param;
@@ -76,27 +78,31 @@ public class ScanCodeActivity extends BaseActivity implements Callback {
 				ScanResultBean bean = gson.fromJson(json, ScanResultBean.class);
 				boolean isTrue = bean.isSuccess();
 				if (isTrue) {
-					ArrayList<String> tempList = bean.getModel();
+					BeginWorkResult result = bean.getModel();
 					Intent intent = new Intent(ScanCodeActivity.this,
 							QueryTaskListActivity.class);
-					Bundle bundle = new Bundle();
-					for (int i = 0; i < tempList.size(); i++) {
-						if(i==0){
-							bundle.putString(Constant.TASKNO, tempList.get(0));
-						}
-						if(i==1){
-							bundle.putString(Constant.WORKTYPE, tempList.get(1));
-						}
-						if(i==2){
-							bundle.putString(Constant.ZONEPHONE, tempList.get(2));
-						}
+					String isStart=result.getIsStart();
+					if(isStart.equals("0")){
+						Utilities.showToast("维保计时开始", mContext);
+					}else{
+						Utilities.showToast("维保已经开始", mContext);
 					}
+					Bundle bundle = new Bundle();
+					bundle.putString(Constant.TASKNO, result.getTaskNo());
+					bundle.putString(Constant.WORKTYPE, result.getWorkType());
+					bundle.putString(Constant.ZONEPHONE, result.getZonePhone());
 					bundle.putString(Constant.ELEVATORNO, mElevatorNo);
 					intent.putExtras(bundle);
 					startActivity(intent);
 				} else {
-					Utilities.showToast("请查看维保电梯或者维保时间是否正确", context);
+					BeginWorkResult result=bean.getModel();
+					if(result.getIsFinish()!=null&&result.getIsFinish().equals("2")){
+						Utilities.showToast("您已经完成了该电梯", context);
+					}else{
+						Utilities.showToast("您尚未满足维保要求", context);//维保要求包括，维保时间正确，有维保搭档，维保电梯正确
+					}
 				}
+				ScanCodeActivity.this.finish();
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
 				Utilities.showToast("服务端异常", context);
@@ -183,9 +189,11 @@ public class ScanCodeActivity extends BaseActivity implements Callback {
 			Utilities.showToast("扫描失败", mContext);
 		} else {
 			Param param = new Param(Constant.ELEVATORNO, mElevatorNo);
-			Param param2 = new Param(Constant.LOGINNAME,mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME,""));
+			Param param2 = new Param(Constant.LOGINNAME,
+					mSharedPreferences.getString(
+							SharedPreferencesKeys.CURRENT_LOGIN_NAME, ""));
 			Request request = httpEngine.createRequest(
-					ServicesConfig.QUERY_TASK_PACKAGE_ELEVATOR, param,param2);
+					ServicesConfig.QUERY_TASK_PACKAGE_ELEVATOR, param, param2);
 			Call call = httpEngine.createRequestCall(request);
 			call.enqueue(new com.squareup.okhttp.Callback() {
 
@@ -209,7 +217,7 @@ public class ScanCodeActivity extends BaseActivity implements Callback {
 				}
 			});
 		}
-		ScanCodeActivity.this.finish();
+
 	}
 
 	private void initCamera(SurfaceHolder surfaceHolder) {

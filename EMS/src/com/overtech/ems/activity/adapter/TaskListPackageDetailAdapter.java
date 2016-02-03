@@ -93,7 +93,7 @@ public class TaskListPackageDetailAdapter extends BaseAdapter {
 		}else {
 			holder.mElevtorType.setText(contentFloor);
 		}
-		if(data.getIsFinish().equals("2")){
+		if(data.getIsFinish().equals("2")){//isFinish 的值等于1表示有一人完成，等于2表示两人都已完成 等于0 是默认值，都没有完成
 //			holder.mRelativeLayout.setBackgroundResource(R.color.package_detail);
 			holder.mElevatorComplete.setImageResource(R.drawable.icon_elevator_complete);
 		}else{
@@ -108,7 +108,8 @@ public class TaskListPackageDetailAdapter extends BaseAdapter {
 	 */
 	public boolean isAllCompleted(){
 		for(int i=0;i<getCount();i++){
-			if("0".equals(list.get(i).getIsFinish())){
+			TaskPackageDetail item=list.get(i);
+			if("0".equals(item.getIsFinish())||"1".equals(item.getIsFinish())){
 				return false;
 			}
 		}

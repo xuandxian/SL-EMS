@@ -313,7 +313,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 					if (detail.getIsFinish().equals("2")) {
 						Utilities.showToast("你好，该电梯已经完成", mActivity);
 					} else if(detail.getIsFinish().equals("1")){
-						Utilities.showToast("请和搭档确认工作的进度", context);
+						Utilities.showToast("仍有人未完成该电梯的维保工作", context);
 					}else{
 						Utilities.showToast("请通过扫描二维码开启工作或者完成工作", context);
 						//暂时不适用该功能

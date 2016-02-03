@@ -37,6 +37,7 @@ import com.overtech.ems.entity.parttime.MaintenanceType;
 import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.AppUtils;
+import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.squareup.okhttp.Call;
@@ -103,10 +104,11 @@ public class QueryTaskListActivity extends BaseActivity implements
 			case StatusCode.MAINTENANCE_COMPLETE_SUCCESS:
 
 				String maintenanceJson = (String) msg.obj;// 提交电梯完成状态后，后台返回的信息
+				Log.e("==完成信息==", maintenanceJson);
 				try {
 					JSONObject jsonObject = new JSONObject(maintenanceJson);
 					String updateMsg = jsonObject.getString("msg");// 该电梯完成状态是否已经更新，0，表示更新失败，1表示更新成功
-					boolean completeProgress = jsonObject.getBoolean("success");// 该电梯所在的任务包中，是否还有未完成的电梯，true代表全部完成，false代表还有未完成的
+					boolean completeProgress = jsonObject.getBoolean("success");// 对于维保的单台电梯，true代表该电梯两人都完成，false代表尚未完成或者有一人完成
 					if (updateMsg.equals("1")) {
 						currentElevatorIsFinish = true;
 					} else {
@@ -117,16 +119,32 @@ public class QueryTaskListActivity extends BaseActivity implements
 						tagSet.remove(mTaskNo);
 						JPushInterface.setAliasAndTags(getApplicationContext(),
 								null, tagSet, mTagsCallback);
+						if (!jsonObject.isNull("taskState")) {
 
-						 Intent intent = new
-						 Intent(QueryTaskListActivity.this,
-						 QuestionResponseActivity.class); Bundle bundle = new
-						 Bundle(); bundle.putString(Constant.TASKNO, mTaskNo);
-						 intent.putExtras(bundle); startActivity(intent);
-						 finish();
-						 
+							String taskState = jsonObject
+									.getString("taskState");
+							if (taskState.equals("0")) {
+								// 任务包中还有未完成的
+								Utilities.showToast("您还有未完成的电梯", context);
+								finish();
+							} else {
+								// 任务包中全部都完成了
+								Intent intent = new Intent(
+										QueryTaskListActivity.this,
+										QuestionResponseActivity.class);
+								Bundle bundle = new Bundle();
+								bundle.putString(Constant.TASKNO, mTaskNo);
+								intent.putExtras(bundle);
+								startActivity(intent);
+								finish();
+
+							}
+						} else {
+							Utilities.showToast("查询其他电梯状态失败", context);
+						}
+
 					} else {
-						Utilities.showToast("你还有未完成的电梯", context);
+						Utilities.showToast("请和搭档确认电梯的完成状态", context);
 						finish();
 					}
 				} catch (JSONException e) {
@@ -168,14 +186,13 @@ public class QueryTaskListActivity extends BaseActivity implements
 				logs = "Set tag and alias success";
 				Log.d(TAG, logs);
 				mSharedPreferences.edit().putStringSet("tagSet", tags).commit();// 成功保存标签后，将标签放到本地
-				/*// 当该电梯中所有的电梯都完成后，并且标签也在jpush后台注册成功后，开始问题反馈；
-				Intent intent = new Intent(QueryTaskListActivity.this,
-						QuestionResponseActivity.class);
-				Bundle bundle = new Bundle();
-				bundle.putString(Constant.TASKNO, mTaskNo);
-				intent.putExtras(bundle);
-				startActivity(intent);
-				finish();*/
+				/*
+				 * // 当该电梯中所有的电梯都完成后，并且标签也在jpush后台注册成功后，开始问题反馈； Intent intent =
+				 * new Intent(QueryTaskListActivity.this,
+				 * QuestionResponseActivity.class); Bundle bundle = new
+				 * Bundle(); bundle.putString(Constant.TASKNO, mTaskNo);
+				 * intent.putExtras(bundle); startActivity(intent); finish();
+				 */
 
 				break;
 
@@ -325,6 +342,12 @@ public class QueryTaskListActivity extends BaseActivity implements
 										mTaskNo);
 								Param elevatorNoParam = new Param(
 										Constant.ELEVATORNO, mElevatorNo);
+								Param loginNameParam = new Param(
+										Constant.LOGINNAME,
+										mSharedPreferences
+												.getString(
+														SharedPreferencesKeys.CURRENT_LOGIN_NAME,
+														""));
 								startLoading(
 										ServicesConfig.MAINTENCE_LIST_COMPLETE,
 										new Callback() {
@@ -353,7 +376,8 @@ public class QueryTaskListActivity extends BaseActivity implements
 												msg.obj = "网络异常";
 												handler.sendMessage(msg);
 											}
-										}, taskNoParam, elevatorNoParam);
+										}, taskNoParam, elevatorNoParam,
+										loginNameParam);
 							} else {
 								Utilities.showToast("该电梯已经完成", context);
 							}

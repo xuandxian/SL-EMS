@@ -39,7 +39,13 @@ public class TaskListAdapter extends BaseAdapter {
 		super();
 		this.context = context;
 	}
-
+	/**
+	 * 解决目前的设计缺陷，当数据为空之后，之前的adapter没有被清空，而新加载的数据如果为空的话，之前的数据依然显示在那里，所有手动清空一下
+	 */
+	public void clearAdapter(){
+		list.clear();
+		this.notifyDataSetChanged();
+	}
 	@Override
 	public int getCount() {
 		return list.size();
