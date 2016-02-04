@@ -24,6 +24,8 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.utils.DistanceUtil;
 import com.google.gson.Gson;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
@@ -66,7 +68,9 @@ public class ScanCodeActivity extends BaseActivity implements Callback {
 	private TextView mHeadContent;
 	private Context mContext;
 	private String mElevatorNo;
-
+	private double mLatitude;
+	private double mLongitude;
+	private LatLng mCurrentLocation;
 	private Handler handler2 = new Handler() {
 		Gson gson = new Gson();
 
@@ -74,11 +78,22 @@ public class ScanCodeActivity extends BaseActivity implements Callback {
 			switch (msg.what) {
 			case StatusCode.QUERY_TASK_PACKAGE_ELEVATOR_SUCCESS:
 				String json = (String) msg.obj;
-				Log.e("==扫描结果==", json);
+//				Log.e("==扫描结果==", json);
 				ScanResultBean bean = gson.fromJson(json, ScanResultBean.class);
 				boolean isTrue = bean.isSuccess();
 				if (isTrue) {
 					BeginWorkResult result = bean.getModel();
+					
+					double latitude=Double.parseDouble(result.getLatitude());
+					double longitude=Double.parseDouble(result.getLongitude());
+					LatLng latlng=new LatLng(latitude,longitude);
+					double distance=DistanceUtil.getDistance(mCurrentLocation, latlng);
+//					Log.e("==电梯与当前的距离==", distance+"");
+					if(distance>1000.0){
+						Utilities.showToast("您距离维保电梯的距离超出范围", mContext);
+						break;
+					}
+					
 					Intent intent = new Intent(ScanCodeActivity.this,
 							QueryTaskListActivity.class);
 					String isStart=result.getIsStart();
@@ -120,6 +135,9 @@ public class ScanCodeActivity extends BaseActivity implements Callback {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_task_list_capture);
 		mContext = ScanCodeActivity.this;
+		mLatitude=application.latitude;
+		mLongitude=application.longitude;
+		mCurrentLocation=new LatLng(mLatitude, mLongitude);
 		CameraManager.init(getApplication());
 		viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
@@ -134,6 +152,7 @@ public class ScanCodeActivity extends BaseActivity implements Callback {
 		});
 		hasSurface = false;
 		inactivityTimer = new InactivityTimer(this);
+		
 	}
 
 	@Override

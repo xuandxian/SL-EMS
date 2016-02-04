@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -43,8 +44,10 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case StatusCode.EVALUATEOTHER:
-				String state=(String) msg.obj;
-				if(state.equals(state)){
+//				String state=(String) msg.obj;
+				boolean state=Boolean.parseBoolean((String) msg.obj);
+				Log.e("==评价原因==", state+"");
+				if(state){
 					Intent intent =new Intent(context,MainActivity.class);
 					startActivity(intent);
 					finish();
