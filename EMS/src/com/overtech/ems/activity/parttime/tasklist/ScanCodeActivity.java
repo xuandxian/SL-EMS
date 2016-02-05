@@ -89,7 +89,7 @@ public class ScanCodeActivity extends BaseActivity implements Callback {
 					LatLng latlng=new LatLng(latitude,longitude);
 					double distance=DistanceUtil.getDistance(mCurrentLocation, latlng);
 //					Log.e("==电梯与当前的距离==", distance+"");
-					if(distance>1000.0){
+					if(distance>500.0){
 						Utilities.showToast("您距离维保电梯的距离超出范围", mContext);
 						break;
 					}

@@ -42,7 +42,7 @@ public class MyApplication extends Application {
 		mLocationClient.requestLocation();
 		JPushInterface.setDebugMode(true); // 设置开启日志,发布时请关闭日志
 		JPushInterface.init(this); // 初始化 JPush
-		Log.e("==application==", "执行到这了");
+		Log.e("==application==", "=======onCreate======");
 	}
 
 	public SharedPreferences getSharePreference() {
