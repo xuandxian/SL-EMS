@@ -56,7 +56,7 @@ public class NearByMapFragment extends BaseFragment {
 	private Marker mMarker;
 	private View view;
 	private TaskPackage data;
-	private LatLng myLocation, clickLocation;
+	private LatLng myLocation, longPressLocation;
 	
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
@@ -164,13 +164,13 @@ public class NearByMapFragment extends BaseFragment {
 		if (null == dataList || dataList.size() == 0) {
 			Utilities.showToast("无数据", context);
 		} else {
-			if (null != clickLocation) {
+			if (null != longPressLocation) {
 				OverlayOptions ooCircle = new CircleOptions()
-						.fillColor(0x6663B8FF).center(clickLocation)
+						.fillColor(0x6663B8FF).center(longPressLocation)
 						.stroke(new Stroke(1, 0x330000ff)).radius(10000);
 				mBaiduMap.addOverlay(ooCircle);
 				MapStatusUpdate u = MapStatusUpdateFactory
-						.newLatLng(clickLocation);
+						.newLatLng(longPressLocation);
 				mBaiduMap.animateMapStatus(u);
 			}
 			for (int i = 0; i < dataList.size(); i++) {
@@ -228,7 +228,7 @@ public class NearByMapFragment extends BaseFragment {
 			@Override
 			public void onMapLongClick(LatLng point) {
 				mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(12.0f));
-				clickLocation = point;
+				longPressLocation = point;
 				Param latitude = new Param(Constant.LATITUDE, String
 						.valueOf(point.latitude));
 				Param longitude = new Param(Constant.LONGITUDE, String
