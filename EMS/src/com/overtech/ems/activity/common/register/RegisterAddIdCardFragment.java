@@ -52,11 +52,11 @@ public class RegisterAddIdCardFragment extends Fragment implements OnClickListen
 	/** 
      * 打开本地相册的requestcode. 
      */  
-    public static final int OPEN_PHOTO_REQUESTCODE =  0x1;  
+    public final int OPEN_PHOTO_REQUESTCODE =  0x1;  
     /**
      * 打开照相机的requestcode.
      */
-    private static final int PHOTO_CAPTURE = 0x2;
+    private final int PHOTO_CAPTURE = 0x2;
       
 	/**
 	 * 打开相册或者图册返回的图片的地址

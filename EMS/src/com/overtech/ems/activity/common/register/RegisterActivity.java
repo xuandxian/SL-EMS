@@ -198,6 +198,7 @@ public class RegisterActivity extends BaseActivity implements
 				}).setButton2Click(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
+						dialogBuilder.dismiss();
 						startProgressDialog("正在上传...");
 						String personJson = getAllMessage();
 						startUpLoading(personJson);

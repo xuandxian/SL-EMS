@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -56,6 +57,7 @@ public class RegisterFragment extends Fragment{
 				try {
 					Throwable throwable = (Throwable) data;
 					throwable.printStackTrace();
+					Log.e("==短信异常==",throwable.getMessage());
 					JSONObject object = new JSONObject(throwable.getMessage());
 					int status = object.optInt("status");
 					Utilities.showToast("验证码错误：" + status, mContext);

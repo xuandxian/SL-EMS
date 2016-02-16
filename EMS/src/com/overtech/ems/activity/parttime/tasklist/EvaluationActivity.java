@@ -49,6 +49,7 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 				Log.e("==评价原因==", state+"");
 				if(state){
 					Intent intent =new Intent(context,MainActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					startActivity(intent);
 					finish();
 				}else{

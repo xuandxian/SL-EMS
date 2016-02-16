@@ -126,7 +126,7 @@ public class GrabTaskFragment extends BaseFragment implements
 				} else if (TextUtils.equals(content, "1")) {
 					Utilities.showToast("抢单成功，等待第二个人抢", context);
 
-					/*// 推送业务代码
+					// 推送业务代码
 					tagItem = bean.getTaskNo();
 					if (!AppUtils.isValidTagAndAlias(tagItem)) {
 						Utilities.showToast("格式不对", context);
@@ -135,12 +135,12 @@ public class GrabTaskFragment extends BaseFragment implements
 						JPushInterface.setAliasAndTags(getActivity()
 								.getApplicationContext(), null, tagSet,
 								mTagsCallback);
-					}*/
+					}
 
 					onRefresh();
 				} else if (TextUtils.equals(content, "2")) {
 					Utilities.showToast("抢单成功，请到任务中查看", context);
-					/*// 推送业务代码
+					// 推送业务代码
 					tagItem = bean.getTaskNo();
 					if (!AppUtils.isValidTagAndAlias(tagItem)) {
 						Utilities.showToast("格式不对", context);
@@ -149,7 +149,7 @@ public class GrabTaskFragment extends BaseFragment implements
 						JPushInterface.setAliasAndTags(getActivity()
 								.getApplicationContext(), null, tagSet,
 								mTagsCallback);
-					}*/
+					}
 					onRefresh();
 				} else if (TextUtils.equals(content, "3")) {
 					Utilities.showToast("差一点就抢到了", context);
@@ -159,9 +159,9 @@ public class GrabTaskFragment extends BaseFragment implements
 				break;
 			case StatusCode.MSG_SET_TAGS:
 				Log.d("24梯", "Set tags in handler.");
-				/*JPushInterface.setAliasAndTags(getActivity()
+				JPushInterface.setAliasAndTags(getActivity()
 						.getApplicationContext(), null, (Set<String>) msg.obj,
-						mTagsCallback);*/
+						mTagsCallback);
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
 				mNoWifi.setVisibility(View.VISIBLE);
