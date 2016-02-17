@@ -205,18 +205,17 @@ public class NearByMapFragment extends BaseFragment {
 
 			@Override
 			public boolean onMarkerClick(final Marker marker) {
-				TaskPackage taskPackage = (TaskPackage) marker.getExtraInfo()
-						.get("taskPackage");
-				Intent intent = new Intent(activity,
-						PackageDetailActivity.class);
-				Bundle bundle = new Bundle();
-				bundle.putString("CommunityName",
-						taskPackage.getTaskPackageName());
-				bundle.putString("TaskNo", taskPackage.getTaskNo());
-				bundle.putString("Longitude", taskPackage.getLongitude());
-				bundle.putString("Latitude", taskPackage.getLatitude());
-				intent.putExtras(bundle);
-				startActivity(intent);
+				if (marker.getExtraInfo()!=null) {
+					TaskPackage taskPackage = (TaskPackage) marker.getExtraInfo().get("taskPackage");
+					Intent intent = new Intent(activity,PackageDetailActivity.class);
+					Bundle bundle = new Bundle();
+					bundle.putString("CommunityName",taskPackage.getTaskPackageName());
+					bundle.putString("TaskNo", taskPackage.getTaskNo());
+					bundle.putString("Longitude", taskPackage.getLongitude());
+					bundle.putString("Latitude", taskPackage.getLatitude());
+					intent.putExtras(bundle);
+					startActivity(intent);
+				}
 				return true;
 			}
 		});

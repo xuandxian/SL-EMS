@@ -82,7 +82,7 @@ public class ShowCommunityLocationActivity extends BaseActivity {
 		option.setOpenGps(true); // 打开GPRS
 		option.setAddrType("all");// 返回的定位结果包含地址信息
 		option.setCoorType("bd09ll");// 返回的定位结果是百度经纬度,默认值gcj02
-		option.setScanSpan(1000); // 设置发起定位请求的间隔时间为1000ms
+		option.setScanSpan(0); // 设置发起定位请求的间隔时间为1000ms
 		mLocationClient.setLocOption(option); // 设置定位参数
 		mLocationClient.start();
 	}
