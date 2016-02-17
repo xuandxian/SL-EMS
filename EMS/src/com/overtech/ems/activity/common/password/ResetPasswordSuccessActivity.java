@@ -5,14 +5,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.view.View;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.common.LoginActivity;
-import com.overtech.ems.widget.CustomProgressDialog;
 
 public class ResetPasswordSuccessActivity extends BaseActivity {
 	private TextView mHeadContent;

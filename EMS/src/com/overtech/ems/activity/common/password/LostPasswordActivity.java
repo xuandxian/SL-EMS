@@ -1,18 +1,14 @@
 package com.overtech.ems.activity.common.password;
 
 import static cn.smssdk.framework.utils.R.getStringRes;
-
 import java.io.IOException;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -20,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
-
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.config.StatusCode;
@@ -152,7 +147,6 @@ public class LostPasswordActivity extends BaseActivity {
 						Utilities.showToast("该手机号已经被禁用", context);
 					}
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				break;
@@ -161,8 +155,6 @@ public class LostPasswordActivity extends BaseActivity {
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
 				Utilities.showToast("服务器异常", context);
-				break;
-			default:
 				break;
 			}
 			stopProgressDialog();
@@ -195,7 +187,6 @@ public class LostPasswordActivity extends BaseActivity {
 				handler.sendMessage(msg);
 			}
 		});
-
 	}
 
 	@Override
