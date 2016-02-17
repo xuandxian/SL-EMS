@@ -87,6 +87,13 @@ public class LostPasswordActivity extends BaseActivity {
 	private void init() {
 		mHeadContent.setText("密码重置");
 		mHeadBack.setVisibility(View.VISIBLE);
+		mHeadBack.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				finish();
+			}
+		});
 		eh = new EventHandler() {
 			@Override
 			public void afterEvent(int event, int result, Object data) {

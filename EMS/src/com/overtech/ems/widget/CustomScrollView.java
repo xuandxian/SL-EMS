@@ -49,10 +49,16 @@ public class CustomScrollView extends ScrollView {
 	/** touch 事件处理 **/
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
-		if (inner != null) {
-			commOnTouchEvent(ev);
+		try {
+			if (inner != null) {
+				commOnTouchEvent(ev);
+			}
+			return super.onTouchEvent(ev);
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		return super.onTouchEvent(ev);
+		return false;
 	}
 	
 	/***
@@ -211,29 +217,35 @@ public class CustomScrollView extends ScrollView {
 	
 	@Override
 	public boolean onInterceptTouchEvent(MotionEvent ev) {
-		boolean result=false;
-		int action = ev.getAction();
-		switch (action) {
-		case MotionEvent.ACTION_DOWN:
-			top = initTop = imageView.getTop();
-			bottom = initbottom = imageView.getBottom();
-			downX=(int) ev.getX();
-			downY=(int) ev.getY();
-		case MotionEvent.ACTION_MOVE:
-			//当发生move事件时就中断事件，让CustomScrollView自身来消费事件
-			int disX=(int) Math.abs(ev.getX()-downX);
-			int disY=(int) Math.abs(ev.getY()-downY);
-			if(disX>3||disY>3){
-				result=true;
+		try {
+			boolean result=false;
+			int action = ev.getAction();
+			switch (action) {
+			case MotionEvent.ACTION_DOWN:
+				top = initTop = imageView.getTop();
+				bottom = initbottom = imageView.getBottom();
+				downX=(int) ev.getX();
+				downY=(int) ev.getY();
+			case MotionEvent.ACTION_MOVE:
+				//当发生move事件时就中断事件，让CustomScrollView自身来消费事件
+				int disX=(int) Math.abs(ev.getX()-downX);
+				int disY=(int) Math.abs(ev.getY()-downY);
+				if(disX>3||disY>3){
+					result=true;
+				}
+				break;
+			case MotionEvent.ACTION_UP:
+				
+				break;
+			default:
+				break;
 			}
-			break;
-		case MotionEvent.ACTION_UP:
-			
-			break;
-		default:
-			break;
+			 return result;
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		 return result;
+		return false;
 	}
 	
 }
