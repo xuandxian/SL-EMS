@@ -71,6 +71,7 @@ public class PersonalZoneFragment extends BaseFragment implements
 			switch (msg.what) {
 			case StatusCode.PERSONAL_ZONE_SUCCESS:
 				String info = (String) msg.obj;
+				Log.e("====", info);
 				try {
 					JSONObject json = new JSONObject(info);
 					if(!json.isNull("model")){
@@ -101,6 +102,8 @@ public class PersonalZoneFragment extends BaseFragment implements
 							
 						}
 						mName.setText(name);
+					}else{
+						mAvator.setImageResource(STUB_ID);
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();

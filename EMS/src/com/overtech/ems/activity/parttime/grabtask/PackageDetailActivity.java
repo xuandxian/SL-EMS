@@ -105,7 +105,8 @@ public class PackageDetailActivity extends BaseActivity {
 					Utilities.showToast("抢单成功，等待第二个人抢", context);
 					// TODO
 
-					// 推送业务代码 tagItem = bean.getTaskNo();
+					// 推送业务代码 
+					tagItem = bean.getTaskNo();
 					if (!AppUtils.isValidTagAndAlias(tagItem)) {
 						Utilities.showToast("格式不对", context);
 					} else {
@@ -119,7 +120,8 @@ public class PackageDetailActivity extends BaseActivity {
 					Utilities.showToast("抢单成功，请到任务中查看", context);
 					// TODO
 
-					// 推送业务代码 tagItem = bean.getTaskNo();
+					// 推送业务代码 
+					tagItem = bean.getTaskNo();
 					if (!AppUtils.isValidTagAndAlias(tagItem)) {
 						Utilities.showToast("格式不对", context);
 					} else {

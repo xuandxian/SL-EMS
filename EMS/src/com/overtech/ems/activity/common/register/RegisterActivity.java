@@ -51,6 +51,7 @@ public class RegisterActivity extends BaseActivity implements
 			switch (msg.what) {
 			case StatusCode.REGISTER_SUCCESS:
 				String json = (String) msg.obj;
+				Log.e("==注册==", json);
 				try {
 					JSONObject jsonObject = new JSONObject(json);
 					String success = jsonObject.getString("success");

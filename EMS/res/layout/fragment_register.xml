@@ -65,6 +65,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/shape_input"
+                android:inputType="number"
                 android:hint="请输入验证码" />
         </RelativeLayout>
     </RelativeLayout>

@@ -3,6 +3,7 @@ package com.overtech.ems.activity.common.password;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
@@ -33,11 +34,12 @@ public class ResetPasswordSuccessActivity extends BaseActivity {
 	private void init() {
 		mHeadContent.setText("密码重置");
 		mHeadBack.setVisibility(View.VISIBLE);
-		progressDialog.setMessage("正在重新登录...");
-		progressDialog.show();
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
+				progressDialog.setMessage("正在重新登录...");
+				progressDialog.show();
+				SystemClock.sleep(1000);
 				Intent intent=new Intent(ResetPasswordSuccessActivity.this,LoginActivity.class);
 				startActivity(intent);
 				progressDialog.dismiss();
