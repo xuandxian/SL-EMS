@@ -73,7 +73,12 @@ public class RegisterFragment extends Fragment{
 		super.onAttach(activity);
 		mContext = activity;
 	}
-
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		SMSSDK.unregisterEventHandler(eh);
+	}
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.fragment_register, null);
