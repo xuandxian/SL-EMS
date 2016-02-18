@@ -12,10 +12,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
@@ -39,14 +37,13 @@ import com.overtech.ems.picasso.Transformation;
 import com.overtech.ems.utils.ImageCacheUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
-import com.overtech.ems.widget.CustomScrollView;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 public class PersonalZoneFragment extends BaseFragment implements
-		OnClickListener, OnTouchListener {
+		OnClickListener{
 
 	private final int STUB_ID = R.drawable.icon_personal_my;// 此处为了将ImageLoader里面的方法抽出来单独使用，而将里面的字段提出来
 	private final Config DEFAULT_CONFIG = Config.RGB_565;// 同上
@@ -62,8 +59,6 @@ public class PersonalZoneFragment extends BaseFragment implements
 	private TextView mName;
 	private TextView mPhone;
 	private Activity mActivity;
-	private CustomScrollView mScrollView;
-	private ImageView mBackgroundImageView;
 	private ImageView mAvator;
 
 	private Handler handler = new Handler() {
@@ -131,8 +126,7 @@ public class PersonalZoneFragment extends BaseFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		view = inflater.inflate(R.layout.fragment_personal_zone, container,
-				false);
+		view = inflater.inflate(R.layout.fragment_personal_zone, container,false);
 		initViews();
 		initEvents();
 		onLoading();
@@ -169,9 +163,7 @@ public class PersonalZoneFragment extends BaseFragment implements
 	}
 
 	private void initViews() {
-		mBackgroundImageView = (ImageView) view.findViewById(R.id.personal_background_image);
 		mAvator = (ImageView) view.findViewById(R.id.imageView1);
-		mScrollView = (CustomScrollView) view.findViewById(R.id.personal_scrollView);
 		mPersonalDetail = (RelativeLayout) view.findViewById(R.id.rl_personal_details);
 		mPersonalAccountList = (RelativeLayout) view.findViewById(R.id.rl_personal_account_list);
 		mPersonalBounds = (RelativeLayout) view.findViewById(R.id.rl_personal_bounds);
@@ -187,7 +179,7 @@ public class PersonalZoneFragment extends BaseFragment implements
 	}
 
 	private void initEvents() {
-		mScrollView.setImageView(mBackgroundImageView);
+//		mScrollView.setImageView(mBackgroundImageView);
 		mPersonalDetail.setOnClickListener(this);
 		mPersonalAccountList.setOnClickListener(this);
 		mPersonalBounds.setOnClickListener(this);
@@ -230,18 +222,5 @@ public class PersonalZoneFragment extends BaseFragment implements
 			startActivity(intent);
 			break;
 		}
-	}
-
-	@Override
-	public boolean onTouch(View v, MotionEvent event) {
-
-		switch (v.getId()) {
-		case R.id.rl_personal_details:
-			if (event.getAction() == MotionEvent.ACTION_UP) {
-				v.getParent().requestDisallowInterceptTouchEvent(true);
-			}
-			break;
-		}
-		return false;
 	}
 }

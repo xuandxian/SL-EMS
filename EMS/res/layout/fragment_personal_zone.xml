@@ -9,23 +9,11 @@
         android:id="@+id/personal_zone_header"
         layout="@layout/headview" />
 
-    <RelativeLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/personal_zone_header" >
 
-        <ImageView
-            android:id="@+id/personal_background_image"
-            android:layout_width="match_parent"
-            android:layout_height="260dp"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="-100dp"
-            android:background="@drawable/icon_personal_scrollview_bg" />
-
-        <com.overtech.ems.widget.CustomScrollView
-            android:id="@+id/personal_scrollView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" >
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -36,6 +24,8 @@
                     android:id="@+id/rl_personal_details"
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
+                    android:layout_marginTop="20dip"
+                    android:background="@color/main_white"
                     android:padding="15dip" >
 
                     <ImageView
@@ -44,6 +34,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_alignParentLeft="true"
+                        android:src="@drawable/icon_personal_my"
                          />
 
                     <TextView
@@ -54,6 +45,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="8dp"
                         android:layout_toRightOf="@+id/imageView1"
+                        android:text="吴栋"
                         android:textSize="17sp" />
 
                     <TextView
@@ -158,13 +150,6 @@
                         android:text="搭档收藏"
                         android:textSize="17sp" />
                     
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="15dp"
-                        android:src="@drawable/icon_arrow_right" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -202,6 +187,13 @@
                         android:padding="10dip"
                         android:text="公告"
                         android:textSize="17sp" />
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="15dp"
+                        android:src="@drawable/icon_arrow_right" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -227,7 +219,6 @@
                         android:src="@drawable/icon_arrow_right" />
                 </RelativeLayout>
             </LinearLayout>
-        </com.overtech.ems.widget.CustomScrollView>
-    </RelativeLayout>
+    </ScrollView>
 
 </RelativeLayout>
