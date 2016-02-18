@@ -249,8 +249,7 @@ public class GrabTaskFragment extends BaseFragment implements
 	}
 
 	private void findViewById(View view) {
-		mSwipeListView = (PullToRefreshSwipeMenuListView) view
-				.findViewById(R.id.sl_qiandan_listview);
+		mSwipeListView = (PullToRefreshSwipeMenuListView) view.findViewById(R.id.sl_qiandan_listview);
 		mHeadTitle = (TextView) view.findViewById(R.id.tv_headTitle);
 		mNoResultPage=(LinearLayout)view.findViewById(R.id.page_no_result);
 		mNoWifi=(LinearLayout)view.findViewById(R.id.page_no_wifi);

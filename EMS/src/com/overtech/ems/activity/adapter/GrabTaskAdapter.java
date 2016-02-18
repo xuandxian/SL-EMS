@@ -104,11 +104,11 @@ public class GrabTaskAdapter extends BaseAdapter {
 		public ViewHolder(View view) {
 			iv_icon = (ImageView) view.findViewById(R.id.iv_icon);
 			tv_name = (TextView) view.findViewById(R.id.tv_name);
-			elevtorNum = (TextView) view.findViewById(R.id.textView2);
-			addressName = (TextView) view.findViewById(R.id.textView1);
-			distance = (TextView) view.findViewById(R.id.textView3);
-			date = (TextView) view.findViewById(R.id.textView4);
-			hot = (ImageView) view.findViewById(R.id.imageView1);
+			elevtorNum = (TextView) view.findViewById(R.id.tv_relevator_num);
+			addressName = (TextView) view.findViewById(R.id.tv_address);
+			distance = (TextView) view.findViewById(R.id.tv_distance);
+			date = (TextView) view.findViewById(R.id.tv_maintence_date);
+			hot = (ImageView) view.findViewById(R.id.iv_hot);
 			view.setTag(this);
 		}
 	}
