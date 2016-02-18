@@ -9,7 +9,7 @@
         android:id="@+id/personal_zone_header"
         layout="@layout/headview" />
 
-    <ScrollView
+    <com.overtech.ems.widget.ReboundScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/personal_zone_header" >
@@ -219,6 +219,6 @@
                         android:src="@drawable/icon_arrow_right" />
                 </RelativeLayout>
             </LinearLayout>
-    </ScrollView>
+   	</com.overtech.ems.widget.ReboundScrollView>
 
 </RelativeLayout>
