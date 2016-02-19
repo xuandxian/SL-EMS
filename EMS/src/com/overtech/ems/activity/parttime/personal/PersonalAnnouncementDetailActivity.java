@@ -1,18 +1,14 @@
 package com.overtech.ems.activity.parttime.personal;
 
 import java.io.IOException;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.config.StatusCode;
