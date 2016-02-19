@@ -31,6 +31,8 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.onekeyshare.OnekeyShare;
 
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.route.BaiduMapRoutePlan;
@@ -468,8 +470,20 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	}
 
 	protected void shareToFriends() {//分享给好友
-		// TODO Auto-generated method stub
-		
+		ShareSDK.initSDK(this);
+		OnekeyShare oks = new OnekeyShare();
+//		oks.setTitle("上海乐配信息科技有限公司");
+		// titleUrl是标题的网络链接，仅在人人网和QQ空间使用
+		oks.setTitleUrl("myapp://24t.app/openwith");
+		//暂时使用云端服务器上面的logo,豌豆荚审核通过后使用豌豆荚中的logo
+//		oks.setImageUrl("http://120.55.162.181:8080/test/icon.png");
+		// text是分享文本，所有平台都需要这个字段
+		oks.setText("我在24梯App中抢到一个维保单，请速度去抢哦！");
+		// url仅在微信（包括好友和朋友圈）中使用
+//		oks.setUrl("http://www.wandoujia.com/apps/com.overtech.ems");
+//		oks.setVenueName("24梯");
+		// 启动分享GUI
+		oks.show(this);
 	}
 
 	// 弹出popupWindow
