@@ -400,6 +400,16 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 							}
 						});
 		popupWindow.getContentView().findViewById(R.id.ll_pop_2)
+				.setOnClickListener(
+						new OnClickListener() {
+							
+							@Override
+							public void onClick(View arg0) {
+								// TODO Auto-generated method stub
+								shareToFriends();
+							}
+						});
+		popupWindow.getContentView().findViewById(R.id.ll_pop_3)
 				.setOnClickListener(// 拨打搭档电话
 						new OnClickListener() {
 
@@ -455,6 +465,11 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 
 							}
 						});
+	}
+
+	protected void shareToFriends() {//分享给好友
+		// TODO Auto-generated method stub
+		
 	}
 
 	// 弹出popupWindow
