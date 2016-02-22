@@ -28,7 +28,7 @@
                 android:padding="15dip" >
 
                 <ImageView
-                    android:id="@+id/imageView1"
+                    android:id="@+id/iv_headview"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
@@ -36,24 +36,23 @@
                     android:src="@drawable/icon_personal_my" />
 
                 <TextView
-                    android:id="@+id/textView1"
+                    android:id="@+id/tv_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignTop="@id/imageView1"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="8dp"
-                    android:layout_toRightOf="@+id/imageView1"
-                    android:text="吴栋"
+                    android:layout_toRightOf="@+id/iv_headview"
                     android:textSize="17sp" />
 
                 <TextView
                     android:id="@+id/textViewPhone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignBottom="@+id/imageView1"
-                    android:layout_alignLeft="@+id/textView1"
+                    android:layout_alignBottom="@+id/iv_headview"
+                    android:layout_alignLeft="@+id/tv_name"
                     android:layout_marginBottom="8dp"
-                    android:text="150****2727" />
+                     />
 
                 <ImageView
                     android:id="@+id/imageView2"

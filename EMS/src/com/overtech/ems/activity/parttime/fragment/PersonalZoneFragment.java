@@ -73,6 +73,7 @@ public class PersonalZoneFragment extends BaseFragment implements
 						JSONObject model = (JSONObject) json.get("model");
 						String imageUrl = model.getString("path");
 						String name = model.getString("name");
+						String phone = model.getString("phoneNo");
 						if (imageUrl == null || "".equals(imageUrl)) {
 							mAvator.setScaleType(ScaleType.FIT_XY);
 							mAvator.setImageResource(STUB_ID);
@@ -97,6 +98,7 @@ public class PersonalZoneFragment extends BaseFragment implements
 							
 						}
 						mName.setText(name);
+						mPhone.setText(phone);
 					}else{
 						mAvator.setImageResource(STUB_ID);
 					}
@@ -163,7 +165,7 @@ public class PersonalZoneFragment extends BaseFragment implements
 	}
 
 	private void initViews() {
-		mAvator = (ImageView) view.findViewById(R.id.imageView1);
+		mAvator = (ImageView) view.findViewById(R.id.iv_headview);
 		mPersonalDetail = (RelativeLayout) view.findViewById(R.id.rl_personal_details);
 		mPersonalAccountList = (RelativeLayout) view.findViewById(R.id.rl_personal_account_list);
 		mPersonalBounds = (RelativeLayout) view.findViewById(R.id.rl_personal_bounds);
@@ -171,11 +173,11 @@ public class PersonalZoneFragment extends BaseFragment implements
 		mCancleList = (RelativeLayout) view.findViewById(R.id.rl_cancle_list);
 		mHelpDoc = (RelativeLayout) view.findViewById(R.id.rl_help_doc);
 		mHeadContent = (TextView) view.findViewById(R.id.tv_headTitle);
-		mName = (TextView) view.findViewById(R.id.textView1);
+		mName = (TextView) view.findViewById(R.id.tv_name);
 		mPhone = (TextView) view.findViewById(R.id.textViewPhone);
 		mApp = (RelativeLayout) view.findViewById(R.id.rl_about_app);
 		mHeadContent.setText("我的");
-		mPhone.setText(mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null));// 设置登陆时的个人手机号
+//		mPhone.setText(mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null));// 设置登陆时的个人手机号
 	}
 
 	private void initEvents() {
