@@ -474,13 +474,13 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 		OnekeyShare oks = new OnekeyShare();
 		oks.setTitle("哥们，分享给你一个维保单");
 		// titleUrl是标题的网络链接，仅在人人网和QQ空间使用
-		oks.setTitleUrl("myapp://24t.app/openwith");
+		oks.setTitleUrl("http://120.55.162.181:8080/slems/upload/haha.html");
 		//暂时使用云端服务器上面的logo,豌豆荚审核通过后使用豌豆荚中的logo
 		oks.setImageUrl("http://120.55.162.181:8080/test/icon.png");
 		// text是分享文本，所有平台都需要这个字段
 		oks.setText("我在24梯App中抢到一个维保单，请速度去抢哦！");
 		// url仅在微信（包括好友和朋友圈）中使用
-		oks.setUrl("myapp://24t.app/openwith");
+		oks.setUrl("http://120.55.162.181:8080/slems/upload/haha.html");
 		oks.setVenueName("24梯");
 		// 启动分享GUI
 		oks.show(this);
