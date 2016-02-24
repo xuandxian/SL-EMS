@@ -277,6 +277,7 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment implements OnC
 				Utilities.showToast("入行时间不能为空", mContext);
 				return;
 			}
+			elevatorBrand=mElevator.getText().toString().trim();
 			if(elevatorBrand.equals("电梯品牌")){
 				Utilities.showToast("您还没有选择电梯品牌", mContext);
 				return;
