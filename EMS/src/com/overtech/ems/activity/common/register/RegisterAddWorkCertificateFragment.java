@@ -118,6 +118,10 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements OnCl
 			getActivity().onBackPressed();
 			break;
 		case R.id.btn_next_fragment:
+			if(certificateUri==null){
+				Utilities.showToast("您还没有选择证件", mContext);
+				return;
+			}
 			if(listener!=null){
 				listener.onRegAddWorkCerFrgClick();
 			}
@@ -218,14 +222,7 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements OnCl
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
-	public boolean isAllNotNull(){
-		if(certificateUri!=null){
-			return true;
-		}else{
-			Utilities.showToast("你还没有选择证件", mContext);
-			return false;
-		}
-	}
+	
 	public void setRegAddWorkCerFrgClickListener(RegAddWorkCerFrgClickListener listener){
 		this.listener=listener;
 	}

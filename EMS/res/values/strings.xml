@@ -4,6 +4,15 @@
     <string name="app_name">24梯</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="item_privacy">一、总则\n
+
+    1.1、 用户在使用24T服务前，应当仔细阅读《24T用户协议》（以下简称“本协议”）的全部内容，对于本协议中的加重字体、斜体、下划线、颜色标记等条款需重点阅读、理解。\n
+    1.2、 用户应当同意本协议的全部条款并按照页面上的提示完成全部的注册程序。用户在进行注册程序过程中点击\n
+    一、总则\n
+
+    1.1、 用户在使用24T服务前，应当仔细阅读《24T用户协议》（以下简称“本协议”）的全部内容，对于本协议中的加重字体、斜体、下划线、颜色标记等条款需重点阅读、理解。\n
+    1.2、 用户应当同意本协议的全部条款并按照页面上的提示完成全部的注册程序。用户在进行注册程序过程中点击
+    </string>
     <!-- zxing -->
     <string name="scan_text">将二维码放入框内, 即可自动扫描</string>
     <string name="common_search_noresult">木有结果，再找找看</string>

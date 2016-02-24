@@ -11,11 +11,13 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,6 +28,7 @@ import com.overtech.ems.R;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
 import com.overtech.ems.widget.TimeButton;
+import com.overtech.ems.widget.popwindow.DimPopupWindow;
 
 public class RegisterFragment extends Fragment{
 	private Context mContext;
@@ -37,6 +40,9 @@ public class RegisterFragment extends Fragment{
 	private TextView mHeadTitle;
 	private ImageView mDoBack;
 	private Button mNext;
+	private CheckBox mCBItemPrivacy;
+	private TextView mTVItemPrivacy;
+	private DimPopupWindow mPopupWindow;
 	public String mPhoneNo;
 	private RegFraBtnClickListener listener;
 	private EventHandler eh;
@@ -128,12 +134,28 @@ public class RegisterFragment extends Fragment{
 
 			@Override
 			public void onClick(View view) {
-				validateCode = mEtValidateCode.getText().toString().trim();
-				if (TextUtils.isEmpty(validateCode)) {
-					Utilities.showToast("验证码不能为空", mContext);
-				} else {
-					SMSSDK.submitVerificationCode("86", mPhoneNo, validateCode);
+				if(mCBItemPrivacy.isChecked()){
+					validateCode = mEtValidateCode.getText().toString().trim();
+					if (TextUtils.isEmpty(validateCode)) {
+						Utilities.showToast("验证码不能为空", mContext);
+					} else {
+						SMSSDK.submitVerificationCode("86", mPhoneNo, validateCode);
+					}
+				}else{
+					Utilities.showToast("请勾选服务条款", mContext);
 				}
+			}
+		});
+		mTVItemPrivacy.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				// TODO Auto-generated method stub
+				mPopupWindow=new DimPopupWindow(mContext);
+				View view = View.inflate(mContext, R.layout.fragment_register_item_privacy, null);
+				mPopupWindow.setOutsideTouchable(false);
+				mPopupWindow.setContentView(view);
+				mPopupWindow.showAtLocation(mTVItemPrivacy, Gravity.CENTER, 0, 0);
 			}
 		});
 	}
@@ -145,6 +167,8 @@ public class RegisterFragment extends Fragment{
 		mRegisterPhone = (EditTextWithDelete) view.findViewById(R.id.et_register_phone);
 		mGetValidate = (TimeButton) view.findViewById(R.id.btn_get_valicate_code);
 		mEtValidateCode = (EditText) view.findViewById(R.id.et_valicate_code);
+		mCBItemPrivacy=(CheckBox)view.findViewById(R.id.cb_item_privacy);
+		mTVItemPrivacy=(TextView)view.findViewById(R.id.tv_item_privacy);
 	}
 
 	public void setRegFraBtnClickListener(RegFraBtnClickListener listener) {

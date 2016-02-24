@@ -17,6 +17,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.overtech.ems.R;
+import com.overtech.ems.utils.AppUtils;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
 
@@ -55,26 +56,7 @@ public class RegisterAddPersonInfoFragment extends Fragment implements
 		return view;
 	}
 
-	/**
-	 * 对所有输入的信息进行检查
-	 * 
-	 * @return
-	 */
-
-	public boolean isAllNotNull() {
-		nameContent = mName.getText().toString().trim();
-		idNumContent = mIdNum.getText().toString().trim();
-		workNumContent = mWorkNum.getText().toString().trim();
-
-		if (!TextUtils.isEmpty(nameContent) && !TextUtils.isEmpty(idNumContent)
-				&& !TextUtils.isEmpty(workNumContent)
-				&& !cityContent.equals("城市选择") && !zoneContent.equals("区域选择")) {
-			return true;
-		} else {
-			Utilities.showToast("您还有信息没有输入，请检查后再试!", mContext);
-			return false;
-		}
-	}
+	
 
 	private void findViewById(View v) {
 		mHeadTitle = (TextView) v.findViewById(R.id.tv_headTitle);
@@ -120,7 +102,6 @@ public class RegisterAddPersonInfoFragment extends Fragment implements
 			}
 		});
 	}
-
 	@Override
 	public void onClick(View arg0) {
 		// TODO Auto-generated method stub
@@ -129,6 +110,37 @@ public class RegisterAddPersonInfoFragment extends Fragment implements
 			getActivity().onBackPressed();
 			break;
 		case R.id.btn_next_fragment:
+			nameContent=mName.getText().toString().trim();
+			if(TextUtils.isEmpty(nameContent)){
+				Utilities.showToast("姓名不能为空", mContext);
+				return;
+			}
+			if(!AppUtils.isValidString(nameContent)){
+				Utilities.showToast("姓名格式不对", mContext);
+				return;
+			}
+			idNumContent=mIdNum.getText().toString().trim();
+			if(TextUtils.isEmpty(idNumContent)){
+				Utilities.showToast("身份证不能为空", mContext);
+				return;
+			}
+			if(!AppUtils.IDCardValidate(idNumContent)){
+				Utilities.showToast("身份证格式不对", mContext);
+				return;
+			}
+			workNumContent = mWorkNum.getText().toString().trim();
+			if(TextUtils.isEmpty(workNumContent)){
+				Utilities.showToast("上岗证编号不能为空", mContext);
+				return;
+			}
+			if(cityContent.equals("城市选择")){
+				Utilities.showToast("您还没有选择城市", mContext);
+				return;
+			}
+			if(zoneContent.equals("区域选择")){
+				Utilities.showToast("您还没有选择区域", mContext);
+				return;
+			}
 			if (listener != null) {
 				listener.onRegAddPerInfoFrgClick();
 			}

@@ -20,7 +20,7 @@
         android:layout_alignBottom="@+id/tv_personal_village_name"
         android:layout_alignParentRight="true"
         android:layout_marginRight="15dp"
-        android:text="2015-10-10" />
+        android:text="" />
 
     <TextView
         android:id="@+id/tv_personal_account"
@@ -37,6 +37,6 @@
         android:layout_alignBaseline="@+id/tv_personal_account"
         android:layout_alignBottom="@+id/tv_personal_account"
         android:layout_alignRight="@+id/tv_personal_maintenance_time"
-        android:text="2015-10-15" />
+        android:text="" />
 
 </RelativeLayout>

@@ -209,70 +209,54 @@ public class RegisterActivity extends BaseActivity implements
 
 	@Override
 	public void onRegAddWorkCerFrgClick() {
-		if (mWorkCertificateFragment.isAllNotNull()) {
-			// if(true){
-			FragmentTransaction transaction = manager.beginTransaction();
-			if (mOtherCertificateFragment == null) {
-				mOtherCertificateFragment = new RegisterOtherCertificateFragment();
-			}
-			mOtherCertificateFragment.setRegOthFrgListener(this);
-			transaction.add(R.id.fl_register_container,
-					mOtherCertificateFragment);
-			transaction.addToBackStack(null);
-			transaction.commit();
+		FragmentTransaction transaction = manager.beginTransaction();
+		if (mOtherCertificateFragment == null) {
+			mOtherCertificateFragment = new RegisterOtherCertificateFragment();
 		}
+		mOtherCertificateFragment.setRegOthFrgListener(this);
+		transaction.add(R.id.fl_register_container, mOtherCertificateFragment);
+		transaction.addToBackStack(null);
+		transaction.commit();
 	}
 
 	@Override
 	public void onRegAddIdCardFrgClick() {
-		if (mIdCardFragment.isAllNotNull()) {
-			// if(true){
-			FragmentTransaction transaction = manager.beginTransaction();
-			if (mWorkCertificateFragment == null) {
-				mWorkCertificateFragment = new RegisterAddWorkCertificateFragment();
-			}
-			mWorkCertificateFragment.setRegAddWorkCerFrgClickListener(this);
-			transaction.add(R.id.fl_register_container,
-					mWorkCertificateFragment);
-			transaction.addToBackStack(null);
-			transaction.commit();
+		FragmentTransaction transaction = manager.beginTransaction();
+		if (mWorkCertificateFragment == null) {
+			mWorkCertificateFragment = new RegisterAddWorkCertificateFragment();
 		}
+		mWorkCertificateFragment.setRegAddWorkCerFrgClickListener(this);
+		transaction.add(R.id.fl_register_container, mWorkCertificateFragment);
+		transaction.addToBackStack(null);
+		transaction.commit();
 	}
 
 	@Override
 	public void onRegAddPerEduWorkFrgClick() {
-		if (mPersonEduWorkFragment.isAllNotNull()) {
-			// if(true){
-			FragmentTransaction transaction = manager.beginTransaction();
-			if (mIdCardFragment == null) {
-				mIdCardFragment = new RegisterAddIdCardFragment();
-			}
-			mIdCardFragment.setRegAddIdCardClickListener(this);
-			transaction.add(R.id.fl_register_container, mIdCardFragment);
-			transaction.addToBackStack(null);
-			transaction.commit();
+		FragmentTransaction transaction = manager.beginTransaction();
+		if (mIdCardFragment == null) {
+			mIdCardFragment = new RegisterAddIdCardFragment();
 		}
+		mIdCardFragment.setRegAddIdCardClickListener(this);
+		transaction.add(R.id.fl_register_container, mIdCardFragment);
+		transaction.addToBackStack(null);
+		transaction.commit();
 	}
 
 	@Override
 	public void onRegAddPerInfoFrgClick() {
-		if (mPersonInfoFragment.isAllNotNull()) {
-			// if(true){
-			FragmentTransaction transaction = manager.beginTransaction();
-			if (mPersonEduWorkFragment == null) {
-				mPersonEduWorkFragment = new RegisterAddPersonEduAndWorkFragment();
-			}
-			mPersonEduWorkFragment.setRegAddPerEduWorkFrgClickListener(this);
-			transaction.add(R.id.fl_register_container, mPersonEduWorkFragment);
-			transaction.addToBackStack(null);
-			transaction.commit();
+		FragmentTransaction transaction = manager.beginTransaction();
+		if (mPersonEduWorkFragment == null) {
+			mPersonEduWorkFragment = new RegisterAddPersonEduAndWorkFragment();
 		}
+		mPersonEduWorkFragment.setRegAddPerEduWorkFrgClickListener(this);
+		transaction.add(R.id.fl_register_container, mPersonEduWorkFragment);
+		transaction.addToBackStack(null);
+		transaction.commit();
 	}
 
 	@Override
 	public void onRegFraBtnClick() {
-		// if (mRegisterFragment.isCorrect) {
-		// if(true){
 		mPhoneNo = mRegisterFragment.mPhoneNo;
 		FragmentTransaction transaction = manager.beginTransaction();
 		if (mPersonInfoFragment == null) {
@@ -282,9 +266,6 @@ public class RegisterActivity extends BaseActivity implements
 		transaction.add(R.id.fl_register_container, mPersonInfoFragment);
 		transaction.addToBackStack(null);
 		transaction.commit();
-		// } else {
-		// Utilities.showToast("验证码没有验证成功", context);
-		// }
 	}
 
 }

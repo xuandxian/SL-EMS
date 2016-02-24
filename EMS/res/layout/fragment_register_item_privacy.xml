@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center" >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@color/main_white" >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:text="@string/item_privacy">
+          </TextView>
+       
+    </ScrollView>
+
+</RelativeLayout>

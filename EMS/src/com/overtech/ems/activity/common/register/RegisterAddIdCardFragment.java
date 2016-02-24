@@ -126,6 +126,14 @@ public class RegisterAddIdCardFragment extends Fragment implements OnClickListen
 			getActivity().onBackPressed();
 			break;
 		case R.id.btn_next_fragment:
+			if(frontUri==null){
+				Utilities.showToast("您还没有选择照片", mContext);
+				return;
+			}
+			if(oppositeUri==null){
+				Utilities.showToast("您还没有选择照片", mContext);
+				return;
+			}
 			if(listener!=null){
 				listener.onRegAddIdCardFrgClick();
 			}
@@ -266,14 +274,7 @@ public class RegisterAddIdCardFragment extends Fragment implements OnClickListen
 		mPhoto.setOnClickListener(this);
 		mCancle.setOnClickListener(this);
 	}
-	public boolean isAllNotNull(){
-		if(frontUri!=null&&oppositeUri!=null){
-			return true;
-		}else{
-			Utilities.showToast("您还没有选择证件", mContext);
-			return false;
-		}
-	}
+	
 	public void setRegAddIdCardClickListener(RegAddIdCardFrgClickListener listener){
 		this.listener=listener;
 	}

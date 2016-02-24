@@ -109,28 +109,7 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment implements OnC
 		}
 	}
 
-	/**
-	 * 用于依赖的activity进行当前fragment进行内容判断
-	 * 
-	 * @return
-	 */
-	public boolean isAllNotNull() {
-		workUnit = mCurrWork.getText().toString().trim();
-		enterTime = mEnterWorkTime.getText().toString().trim();
-		workYears=mWorkTime.getText().toString();
-		elevatorBrand = mElevator.getText().toString().trim();
-
-		Log.e("Fragment", workUnit + ":" + enterTime + ":"
-				+ elevatorBrand);
-		if (!eduLevel.equals("学历") && !TextUtils.isEmpty(workUnit)
-				&& !TextUtils.isEmpty(enterTime)
-				&& !elevatorBrand.equals("电梯品牌")) {
-			return true;
-		} else {
-			Utilities.showToast("您还有信息没有输入", mContext);
-			return false;
-		}
-	}
+	
 	private void init() {
 		mDoBack.setOnClickListener(this);
 		mNext.setOnClickListener(this);
@@ -284,6 +263,25 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment implements OnC
 			getActivity().onBackPressed();
 			break;
 		case R.id.btn_next_fragment:
+			if(eduLevel.equals("学历")){
+				Utilities.showToast("你还没有选择学历", mContext);
+				return;
+			}
+			workUnit=mCurrWork.getText().toString().trim();
+			if(TextUtils.isEmpty(workUnit)){
+				Utilities.showToast("工作单位不能为空", mContext);
+				return;
+			}
+			enterTime=mEnterWorkTime.getText().toString().trim();
+			if(TextUtils.isEmpty(enterTime)){
+				Utilities.showToast("入行时间不能为空", mContext);
+				return;
+			}
+			if(elevatorBrand.equals("电梯品牌")){
+				Utilities.showToast("您还没有选择电梯品牌", mContext);
+				return;
+			}
+			
 			if(listener!=null){
 				listener.onRegAddPerEduWorkFrgClick();
 			}
