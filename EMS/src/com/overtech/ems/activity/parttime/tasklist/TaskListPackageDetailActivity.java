@@ -42,6 +42,7 @@ import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.TaskListPackageDetailAdapter;
+import com.overtech.ems.activity.parttime.common.ElevatorDetailActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.bean.TaskPackageDetailBean;
 import com.overtech.ems.entity.common.ServicesConfig;
@@ -318,19 +319,14 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 						Utilities.showToast("仍有人未完成该电梯的维保工作", context);
 					}else{
 						Utilities.showToast("请通过扫描二维码开启工作或者完成工作", context);
-						//暂时不适用该功能
-						/*Intent intent = new Intent(context,
-								QueryTaskListActivity.class);
-						Bundle bundle = new Bundle();
-						bundle.putString(Constant.WORKTYPE, workType);
-						bundle.putString(Constant.ZONEPHONE, mZonePhone);
-						bundle.putString(Constant.TASKNO, taskNo);
-						bundle.putString(Constant.ELEVATORNO,
-								detail.getElevatorNo());
-						intent.putExtras(bundle);
-						startActivityForResult(intent,
-								StatusCode.RESULT_TASKLIST_PACKAGEDETAIL);*/
 					}
+					Intent intent = new Intent(context,
+							ElevatorDetailActivity.class);
+					Bundle bundle = new Bundle();
+					bundle.putString(Constant.ELEVATORNO,
+							detail.getElevatorNo());
+					intent.putExtras(bundle);
+					startActivity(intent);
 				}
 			}
 		});

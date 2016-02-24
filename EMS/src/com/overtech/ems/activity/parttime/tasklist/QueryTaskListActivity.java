@@ -8,7 +8,10 @@ import java.util.Set;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -111,6 +114,16 @@ public class QueryTaskListActivity extends BaseActivity implements
 					boolean completeProgress = jsonObject.getBoolean("success");// 对于维保的单台电梯，true代表该电梯两人都完成，false代表尚未完成或者有一人完成
 					if (updateMsg.equals("1")) {
 						currentElevatorIsFinish = true;
+						/*new AlertDialog.Builder(context)
+								.setMessage("请将设备按钮调至正常状态").show()
+								.setOnDismissListener(new OnDismissListener() {
+
+									@Override
+									public void onDismiss(DialogInterface arg0) {
+										// TODO Auto-generated method stub
+										finish();
+									}
+								});*/
 					} else {
 						currentElevatorIsFinish = false;
 					}
@@ -265,6 +278,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 
 	private void getData() {
 		startProgressDialog("正在加载...");
+		validateDate();
 		Param param = new Param(Constant.WORKTYPE, mWorktype);
 		startLoading(ServicesConfig.WORK_TYPE, new Callback() {
 			@Override
@@ -288,7 +302,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 				handler.sendMessage(msg);
 			}
 		}, param);
-		validateDate();
+		
 	}
 
 	@Override
@@ -305,7 +319,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 		case R.id.btn_login:
 			// 将对应的电梯的完成状态更新到服务器
 			if (isCanConfirmDone) {
-				showDialog(TYPE2, "该电梯维保任务已完成？");
+				showDialog(TYPE2, "请确认维保工作是否完成并将设备按钮调至正常状态");
 			} else {
 				Utilities.showToast("维保任务必须在当天完成", context);
 			}

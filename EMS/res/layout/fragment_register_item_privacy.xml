@@ -9,14 +9,13 @@
         android:layout_height="250dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:background="@color/main_white" >
+        android:background="@drawable/shape_input" >
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            android:text="@string/item_privacy">
-          </TextView>
-       
+            android:text="@string/item_privacy" >
+        </TextView>
     </ScrollView>
 
 </RelativeLayout>
