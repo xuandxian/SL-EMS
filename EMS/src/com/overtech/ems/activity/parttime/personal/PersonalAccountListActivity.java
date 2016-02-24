@@ -28,25 +28,27 @@ import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-public class PersonalAccountListActivity extends BaseActivity implements OnClickListener {
+public class PersonalAccountListActivity extends BaseActivity implements
+		OnClickListener {
 	private ImageView mDoBack;
 	private TextView mHeadContent;
 	private ListView mPersonalAccountListView;
 	private TextView mHasCount;
 	private TextView mNoCount;
 	private PersonalAccountListAdapter adapter;
-	private static final String HASCOUNT="1";
-	private static final String NOCOUNT="0";
-	
-	private Handler handler=new Handler(){
+	private static final String HASCOUNT = "1";
+	private static final String NOCOUNT = "0";
+
+	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case StatusCode.ACCOUNT_LIST_SUCCESS:
-				String json=(String) msg.obj;
+				String json = (String) msg.obj;
 				Log.e("==w我的账单==", json);
-				Gson gson=new Gson();
-				BillBean datas=gson.fromJson(json, BillBean.class);
-				adapter=new PersonalAccountListAdapter(context, datas.getModel());
+				Gson gson = new Gson();
+				BillBean datas = gson.fromJson(json, BillBean.class);
+				adapter = new PersonalAccountListAdapter(context,
+						datas.getModel());
 				mPersonalAccountListView.setAdapter(adapter);
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
@@ -59,6 +61,7 @@ public class PersonalAccountListActivity extends BaseActivity implements OnClick
 			stopProgressDialog();
 		};
 	};
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -66,51 +69,53 @@ public class PersonalAccountListActivity extends BaseActivity implements OnClick
 		setContentView(R.layout.activity_personal_account_list);
 		findViewById();
 		initData();
-		startLoading(HASCOUNT);//默认已结算
+		startLoading(HASCOUNT);// 默认已结算
 	}
 
 	private void startLoading(String billState) {
 		startProgressDialog("正在加载...");
-		Param phoneParam =new Param(Constant.LOGINNAME, mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null));
-		Param flagParam = new Param(Constant.CLOSINGSTATE,billState);
-		Request requst=httpEngine.createRequest(ServicesConfig.PERSONAL_BILL, phoneParam,flagParam);
-		Call call=httpEngine.createRequestCall(requst);
+		Param phoneParam = new Param(Constant.LOGINNAME,
+				mSharedPreferences.getString(
+						SharedPreferencesKeys.CURRENT_LOGIN_NAME, null));
+		Param flagParam = new Param(Constant.CLOSINGSTATE, billState);
+		Request requst = httpEngine.createRequest(ServicesConfig.PERSONAL_BILL,
+				phoneParam, flagParam);
+		Call call = httpEngine.createRequestCall(requst);
 		call.enqueue(new Callback() {
-			
+
 			@Override
 			public void onResponse(Response response) throws IOException {
-				Message msg=new Message();
-				if(response.isSuccessful()){
-					msg.what=StatusCode.ACCOUNT_LIST_SUCCESS;
-					msg.obj=response.body().string();
-				}else{
-					msg.what=StatusCode.RESPONSE_SERVER_EXCEPTION;
+				Message msg = new Message();
+				if (response.isSuccessful()) {
+					msg.what = StatusCode.ACCOUNT_LIST_SUCCESS;
+					msg.obj = response.body().string();
+				} else {
+					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
 				}
 				handler.sendMessage(msg);
 			}
-			
+
 			@Override
 			public void onFailure(Request response, IOException arg1) {
 				Message msg = new Message();
-				msg.what=StatusCode.RESPONSE_NET_FAILED;
+				msg.what = StatusCode.RESPONSE_NET_FAILED;
 				handler.sendMessage(msg);
 			}
 		});
 	}
 
 	private void findViewById() {
-		mDoBack=(ImageView)findViewById(R.id.iv_headBack);
-		mHeadContent=(TextView)findViewById(R.id.tv_headTitle);
-		mPersonalAccountListView=(ListView)findViewById(R.id.lv_personal_account_list);
-		mHasCount=(TextView) findViewById(R.id.tv_account_donet);
-		mNoCount = (TextView)findViewById(R.id.tv_account_none);
+		mDoBack = (ImageView) findViewById(R.id.iv_headBack);
+		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
+		mPersonalAccountListView = (ListView) findViewById(R.id.lv_personal_account_list);
+		mHasCount = (TextView) findViewById(R.id.tv_account_donet);
+		mNoCount = (TextView) findViewById(R.id.tv_account_none);
 	}
-	
-	
+
 	private void initData() {
 		mDoBack.setVisibility(View.VISIBLE);
 		mHeadContent.setText("我的账单");
-		context=PersonalAccountListActivity.this;
+		context = PersonalAccountListActivity.this;
 		mDoBack.setOnClickListener(this);
 		mHasCount.setOnClickListener(this);
 		mNoCount.setOnClickListener(this);
@@ -127,13 +132,15 @@ public class PersonalAccountListActivity extends BaseActivity implements OnClick
 			mHasCount.setBackgroundResource(R.drawable.horizontal_line);
 			mNoCount.setBackgroundResource(R.color.main_white);
 			mHasCount.setTextColor(Color.rgb(0, 163, 233));
-			mNoCount.setTextColor(getResources().getColor(R.color.main_secondary));
+			mNoCount.setTextColor(getResources().getColor(
+					R.color.main_secondary));
 			break;
 		case R.id.tv_account_none:
 			startLoading(NOCOUNT);
 			mHasCount.setBackgroundResource(R.color.main_white);
 			mNoCount.setBackgroundResource(R.drawable.horizontal_line);
-			mHasCount.setTextColor(getResources().getColor(R.color.main_secondary));
+			mHasCount.setTextColor(getResources().getColor(
+					R.color.main_secondary));
 			mNoCount.setTextColor(Color.rgb(0, 163, 233));
 			break;
 		default:

@@ -67,7 +67,9 @@ public class PersonalAccountListAdapter extends BaseAdapter {
 		
 		holder.mMaintenanceTime.setText(data.getMaintenanceDate());
 		holder.mPersonalAccount.setText(data.getTotalPrice());
-		
+		if(data.getClosingDate()!=null){
+			holder.mMaintenanceEndTime.setText(data.getClosingDate());
+		}
 		return convertView;
 	}
 
