@@ -11,7 +11,6 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
-import cn.smssdk.SMSSDK;
 import com.baidu.mapapi.SDKInitializer;
 import com.overtech.ems.R;
 import com.overtech.ems.http.HttpEngine;
@@ -61,7 +60,6 @@ public class BaseActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		SMSSDK.initSDK(this, "b731c30880f4", "1c3e262449b1c77498f37c78586b8cf1");
 		SDKInitializer.initialize(getApplicationContext());
 		application=(MyApplication)this.getApplication();
 		activity = this;

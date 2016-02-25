@@ -1,10 +1,8 @@
 package com.overtech.ems.activity.common.register;
 
 import java.io.IOException;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -21,9 +19,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cn.smssdk.EventHandler;
-import cn.smssdk.SMSSDK;
-
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
 import com.overtech.ems.config.StatusCode;
@@ -54,44 +49,42 @@ public class RegisterFragment extends BaseFragment {
 	private DimPopupWindow mPopupWindow;
 	public String mPhoneNo;
 	private RegFraBtnClickListener listener;
-	private EventHandler eh;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case StatusCode.SUBMIT_PHONENO_SUCCESS:
-				String json=(String) msg.obj;
+				String json = (String) msg.obj;
 				try {
-					JSONObject jsonObj= new JSONObject(json);
-					String model=jsonObj.getString("model");
+					JSONObject jsonObj = new JSONObject(json);
+					String model = jsonObj.getString("model");
 					if (model.equals("0")) {
 						Utilities.showToast("手机号被占用", context);
-					}else if (model.equals("1")) {
+					} else if (model.equals("1")) {
 						Utilities.showToast("验证码发送成功", context);
-					}else if (model.equals("2")) {
+					} else if (model.equals("2")) {
 						Utilities.showToast("验证码发送失败", context);
 					}
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				break;
 			case StatusCode.COMMOM_SUBMIT_SMS_CODE:
-				String result=(String)msg.obj;
+				String result = (String) msg.obj;
 				try {
-					JSONObject jsonObject2=new JSONObject(result);
-					String model=jsonObject2.getString("model");
+					JSONObject jsonObject2 = new JSONObject(result);
+					String model = jsonObject2.getString("model");
 					if (model.equals("3")) {
 						Utilities.showToast("验证成功", context);
 						if (listener != null) {
 							listener.onRegFraBtnClick();
 						}
-					}else if (model.equals("4")) {
+					} else if (model.equals("4")) {
 						Utilities.showToast("验证失败", context);
-					}else if (model.equals("5")) {
+					} else if (model.equals("5")) {
 						Utilities.showToast("验证码失效", context);
 					}
 				} catch (Exception e) {
-					// TODO: handle exception
+					e.printStackTrace();
 				}
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
@@ -103,7 +96,6 @@ public class RegisterFragment extends BaseFragment {
 			default:
 				break;
 			}
-			
 		};
 	};
 
@@ -113,14 +105,12 @@ public class RegisterFragment extends BaseFragment {
 		mContext = activity;
 	}
 
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.fragment_register, null);
 		findViewById(view);
 		init();
-		
 		return view;
 	}
 
@@ -138,43 +128,36 @@ public class RegisterFragment extends BaseFragment {
 			@Override
 			public void onClick(View v) {
 				mPhoneNo = mRegisterPhone.getText().toString().trim();
-				if (!TextUtils.isEmpty(mPhoneNo)
-						&& Utilities.isMobileNO(mPhoneNo)) {
-					mGetValidate.setTextAfter("秒后重试").setTextBefore("重新获取验证码")
-							.setLenght(60 * 1000).setEnabled(false);
+				if (!TextUtils.isEmpty(mPhoneNo)&& Utilities.isMobileNO(mPhoneNo)) {
+					mGetValidate.setTextAfter("秒后重试").setTextBefore("重新获取验证码").setLenght(60 * 1000).setEnabled(false);
 					Param param = new Param(Constant.PHONENO, mPhoneNo);
 					Param flag = new Param(Constant.FLAG, "0");// 告诉服务器需要验证该手机是否已经注册
-					Request request = httpEngine.createRequest(
-							ServicesConfig.COMMON_GET_SMS_CODE, param, flag);
+					Request request = httpEngine.createRequest(ServicesConfig.COMMON_GET_SMS_CODE, param, flag);
 					Call call = httpEngine.createRequestCall(request);
 					call.enqueue(new Callback() {
 
 						@Override
-						public void onResponse(Response response)
-								throws IOException {
-							// TODO Auto-generated method stub
-							Message msg=new Message();
-							if(response.isSuccessful()){
-								msg.what=StatusCode.SUBMIT_PHONENO_SUCCESS;
-								msg.obj=response.body().string();
-							}else{
-								msg.what=StatusCode.RESPONSE_SERVER_EXCEPTION;
+						public void onResponse(Response response)throws IOException {
+							Message msg = new Message();
+							if (response.isSuccessful()) {
+								msg.what = StatusCode.SUBMIT_PHONENO_SUCCESS;
+								msg.obj = response.body().string();
+							} else {
+								msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
 							}
 							handler.sendMessage(msg);
 						}
 
 						@Override
 						public void onFailure(Request request, IOException ioe) {
-							// TODO Auto-generated method stub
-							Message msg=new Message();
-							msg.what=StatusCode.RESPONSE_NET_FAILED;
+							Message msg = new Message();
+							msg.what = StatusCode.RESPONSE_NET_FAILED;
 							handler.sendMessage(msg);
 						}
 					});
 				} else {
 					Utilities.showToast("请输入正确的手机号", mContext);
-					mGetValidate.setTextAfter("获取验证码").setTextBefore("获取验证码")
-							.setLenght(0).setEnabled(true);
+					mGetValidate.setTextAfter("获取验证码").setTextBefore("获取验证码").setLenght(0).setEnabled(true);
 				}
 			}
 		});
@@ -187,37 +170,32 @@ public class RegisterFragment extends BaseFragment {
 					if (TextUtils.isEmpty(validateCode)) {
 						Utilities.showToast("验证码不能为空", mContext);
 					} else {
-						// SMSSDK.submitVerificationCode("86", mPhoneNo,
-						// validateCode);
-						Param param = new Param(Constant.PHONENO,mPhoneNo);
-						Param smsCode= new Param(Constant.SMSCODE,validateCode);
-						Request request=httpEngine.createRequest(ServicesConfig.COMMON_VARLICATE_SMS_CODE, param,smsCode);
-						Call call=httpEngine.createRequestCall(request);
+						Param param = new Param(Constant.PHONENO, mPhoneNo);
+						Param smsCode = new Param(Constant.SMSCODE,validateCode);
+						Request request = httpEngine.createRequest(ServicesConfig.COMMON_VARLICATE_SMS_CODE,param, smsCode);
+						Call call = httpEngine.createRequestCall(request);
 						call.enqueue(new Callback() {
-							
+
 							@Override
-							public void onResponse(Response response) throws IOException {
-								// TODO Auto-generated method stub
-								Message msg=new Message();
-								if(response.isSuccessful()){
-									msg.what=StatusCode.COMMOM_SUBMIT_SMS_CODE;
-									msg.obj=response.body().string();
-								}else{
-									msg.what=StatusCode.RESPONSE_SERVER_EXCEPTION;
+							public void onResponse(Response response)throws IOException {
+								Message msg = new Message();
+								if (response.isSuccessful()) {
+									msg.what = StatusCode.COMMOM_SUBMIT_SMS_CODE;
+									msg.obj = response.body().string();
+								} else {
+									msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
 								}
 								handler.sendMessage(msg);
-								
+
 							}
-							
+
 							@Override
-							public void onFailure(Request request, IOException ioe) {
-								// TODO Auto-generated method stub
-								Message msg=new Message();
-								msg.what=StatusCode.RESPONSE_NET_FAILED;
+							public void onFailure(Request request,IOException ioe) {
+								Message msg = new Message();
+								msg.what = StatusCode.RESPONSE_NET_FAILED;
 								handler.sendMessage(msg);
 							}
 						});
-						
 					}
 				} else {
 					Utilities.showToast("请勾选服务条款", mContext);
@@ -228,14 +206,11 @@ public class RegisterFragment extends BaseFragment {
 
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
 				mPopupWindow = new DimPopupWindow(mContext);
-				View view = View.inflate(mContext,
-						R.layout.fragment_register_item_privacy, null);
+				View view = View.inflate(mContext,R.layout.fragment_register_item_privacy, null);
 				mPopupWindow.setOutsideTouchable(false);
 				mPopupWindow.setContentView(view);
-				mPopupWindow.showAtLocation(mTVItemPrivacy, Gravity.CENTER, 0,
-						0);
+				mPopupWindow.showAtLocation(mTVItemPrivacy, Gravity.CENTER, 0,0);
 			}
 		});
 	}
@@ -244,10 +219,8 @@ public class RegisterFragment extends BaseFragment {
 		mHeadTitle = (TextView) view.findViewById(R.id.tv_headTitle);
 		mDoBack = (ImageView) view.findViewById(R.id.iv_headBack);
 		mNext = (Button) view.findViewById(R.id.btn_next_fragment);
-		mRegisterPhone = (EditTextWithDelete) view
-				.findViewById(R.id.et_register_phone);
-		mGetValidate = (TimeButton) view
-				.findViewById(R.id.btn_get_valicate_code);
+		mRegisterPhone = (EditTextWithDelete) view.findViewById(R.id.et_register_phone);
+		mGetValidate = (TimeButton) view.findViewById(R.id.btn_get_valicate_code);
 		mEtValidateCode = (EditText) view.findViewById(R.id.et_valicate_code);
 		mCBItemPrivacy = (CheckBox) view.findViewById(R.id.cb_item_privacy);
 		mTVItemPrivacy = (TextView) view.findViewById(R.id.tv_item_privacy);
