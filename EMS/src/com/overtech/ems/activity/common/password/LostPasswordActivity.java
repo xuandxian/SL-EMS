@@ -150,7 +150,7 @@ public class LostPasswordActivity extends BaseActivity {
 						
 					}else if(model.equals("3")){
 						Utilities.showToast("员工已经离职，不能使用该功能", context);
-					}else{
+					}else if(model.equals("4")){
 						Utilities.showToast("该手机号已经被禁用", context);
 					}
 				} catch (JSONException e) {

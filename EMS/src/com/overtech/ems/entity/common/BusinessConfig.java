@@ -144,4 +144,12 @@ public class BusinessConfig {
 	 * 32.公告详情
 	 */
 	public static final String URL_PERSONAL_ANNOUNCEMENT_DETAIL="/task/personalAnnouncementDetail.action";
+	/**
+	 * 33.获取短信验证码
+	 */
+	public static final String URL_COMMON_GET_SMS_CODE="/employee/generateSmsCode.action";
+	/**
+	 * 34.获取短信验证码
+	 */
+	public static final String URL_COMMON_VARLICATE_SMS_CODE="/employee/validateSmsCode.action";
 }

@@ -109,8 +109,8 @@ public class StatusCode {
 	 */
 	public static final int RESPONSE_VALICATE_PASSWORD_SUCCESS=0x43;
 	public static final int RESPONSE_VALICATE_PASSWORD_FAILURE=0x44;
-	public static final int GET_PHONENO_NOT_EXIST=0x45;
-	public static final int GET_PHONENO_EXIST=0x46;
+	public static final int SUBMIT_PHONENO_SUCCESS=0x45;
+	public static final int SUBMIT_SMS_CODE_SUCCESS = 0x46;
 	public static final int UPDATE_PHONENO_SUCCESS=0x47;
 	public static final int UPDATE_PHONENO_FAILURE=0x48;
 	/**
@@ -152,7 +152,7 @@ public class StatusCode {
 	/**
 	 * 公告加载成功
 	 */
-	public static final int ANNOUNCEMENT_SUCCESS=0x52;
+	public static final int ANNOUNCEMENT_SUCCESS=0x59;
 	/**
 	 * 问题反馈成功
 	 */

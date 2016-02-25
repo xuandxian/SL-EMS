@@ -6,6 +6,10 @@ package com.overtech.ems.http.constant;
  */
 public class Constant {
 	/**
+	 * flag标志
+	 */
+	public static final String FLAG="flag";
+	/**
 	 * 自动登录标志
 	 */
 	public static final String AUTO_LOGIN="auto_login";
@@ -42,6 +46,10 @@ public class Constant {
 	 * 更新手机号
 	 */
 	public static final String PHONENO="phoneNo";
+	/**
+	 * 短信验证码
+	 */
+	public static final String SMSCODE="smsCode";
 	/**
 	 * 纬度
 	 */

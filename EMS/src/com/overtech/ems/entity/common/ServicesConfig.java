@@ -140,4 +140,13 @@ public class ServicesConfig {
 	 * 32.公告详情
 	 */
 	public static final String PERSONAL_ANNOUNCEMENT_DETAIL=SystemConfig.IP+BusinessConfig.URL_PERSONAL_ANNOUNCEMENT_DETAIL;
+	/**
+	 * 33.获取短信验证码
+	 */
+	public static final String COMMON_GET_SMS_CODE=SystemConfig.IP+BusinessConfig.URL_COMMON_GET_SMS_CODE;
+	/**
+	 * 34.验证短信验证码
+	 */
+	public static final String COMMON_VARLICATE_SMS_CODE=SystemConfig.IP+BusinessConfig.URL_COMMON_VARLICATE_SMS_CODE;
+	
 }
