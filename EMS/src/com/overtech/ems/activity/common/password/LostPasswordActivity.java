@@ -3,6 +3,7 @@ package com.overtech.ems.activity.common.password;
 import java.io.IOException;
 import org.json.JSONException;
 import org.json.JSONObject;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,7 +13,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import cn.smssdk.SMSSDK;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.config.StatusCode;
@@ -42,26 +42,6 @@ public class LostPasswordActivity extends BaseActivity {
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 			switch (msg.what) {
-//			case 0x23:
-//				int event = msg.arg1;
-//				int result = msg.arg2;
-//				Object data = msg.obj;
-//				if (result == SMSSDK.RESULT_COMPLETE) {
-//					if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
-//						Utilities.showToast("验证码已发送", context);
-//					} else if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
-//						Intent intent = new Intent(LostPasswordActivity.this,ResetPasswordActivity.class);
-//						intent.putExtra("mPhoneNo", mPhoneNo);
-//						startActivity(intent);
-//					}
-//				} else {
-//					((Throwable) data).printStackTrace();
-//					int resId = getStringRes(LostPasswordActivity.this,"smssdk_network_error");
-//					if (resId > 0) {
-//						Utilities.showToast("错误码：" + resId, context);
-//					}
-//				}
-//				break;
 			case StatusCode.SUBMIT_PHONENO_SUCCESS://首先请求服务器对该手机号进行验证，根据结果确定要不要进行下一步的验证
 				String json=(String)msg.obj;
 				try {
@@ -72,9 +52,7 @@ public class LostPasswordActivity extends BaseActivity {
 					}else if(model.equals("1")){
 						Utilities.showToast("该手机号尚未通过审核,请等待结果", context);
 					}else if(model.equals("2")){
-						
-						SMSSDK.getVerificationCode("86", mPhoneNo);//该手机号是在职的，然后调用第三方的短信验证
-						
+						getVerificationCode(ServicesConfig.COMMON_GET_SMS_CODE);
 					}else if(model.equals("3")){
 						Utilities.showToast("员工已经离职，不能使用该功能", context);
 					}else if(model.equals("4")){
@@ -84,6 +62,39 @@ public class LostPasswordActivity extends BaseActivity {
 					e.printStackTrace();
 				}
 				break;
+			case StatusCode.COMMON_GET_SMS_CODE:
+				String json2=(String)msg.obj;
+				try {
+					JSONObject jsonObj=new JSONObject(json2);
+					String model=jsonObj.getString("model");
+					if(model.equals("1")){
+						Utilities.showToast("验证码发送成功",context);
+					}else if(model.equals("2")){
+						Utilities.showToast("获取验证码失败", context);
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+				break;
+				case StatusCode.COMMOM_SUBMIT_SMS_CODE:
+					String json3=(String)msg.obj;
+					try {
+						JSONObject jsonObj=new JSONObject(json3);
+						String model=jsonObj.getString("model");
+						if (model.equals("3")) {
+							Utilities.showToast("验证成功", context);
+							Intent intent = new Intent(LostPasswordActivity.this,ResetPasswordActivity.class);
+						    intent.putExtra("mPhoneNo", mPhoneNo);
+						    startActivity(intent);
+						}else if (model.equals("4")) {
+							Utilities.showToast("验证失败", context);
+						}else if (model.equals("5")) {
+							Utilities.showToast("验证码失效", context);
+						}
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					break;
 			case StatusCode.RESPONSE_NET_FAILED:
 				Utilities.showToast("网络异常", context);
 				break;
@@ -123,8 +134,9 @@ public class LostPasswordActivity extends BaseActivity {
 				if (TextUtils.isEmpty(mSMSCode)) {
 					Utilities.showToast("输入不能为空", context);
 				} else {
-					SMSSDK.submitVerificationCode("86", mPhoneNo, mSMSCode);
-					startProgressDialog("正在验证...");
+					Param phoneParam=new Param(Constant.PHONENO,mPhoneNo);
+					Param smsParam=new Param(Constant.SMSCODE,mSMSCode);
+					submitVerificationCode(ServicesConfig.COMMON_VARLICATE_SMS_CODE, phoneParam, smsParam);
 				}
 			}
 		});
@@ -161,8 +173,62 @@ public class LostPasswordActivity extends BaseActivity {
 				Message msg = new Message();
 				if (response.isSuccessful()) {
 					String result = response.body().string();
-					msg.what=StatusCode.SUBMIT_PHONENO_SUCCESS;
-					msg.obj=result;
+					msg.what = StatusCode.SUBMIT_PHONENO_SUCCESS;
+					msg.obj = result;
+				} else {
+					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
+				}
+				handler.sendMessage(msg);
+			}
+
+			@Override
+			public void onFailure(Request request, IOException e) {
+				Message msg = new Message();
+				msg.what = StatusCode.RESPONSE_NET_FAILED;
+				handler.sendMessage(msg);
+			}
+		});
+	}
+	public void getVerificationCode(String url, Param... params){
+		startProgressDialog("正在验证...");
+		Request request = httpEngine.createRequest(url, params);
+		Call call = httpEngine.createRequestCall(request);
+		call.enqueue(new Callback() {
+
+			@Override
+			public void onResponse(Response response) throws IOException {
+				Message msg = new Message();
+				if (response.isSuccessful()) {
+					String result = response.body().string();
+					msg.what = StatusCode.COMMON_GET_SMS_CODE;
+					msg.obj = result;
+				} else {
+					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
+				}
+				handler.sendMessage(msg);
+			}
+
+			@Override
+			public void onFailure(Request request, IOException e) {
+				Message msg = new Message();
+				msg.what = StatusCode.RESPONSE_NET_FAILED;
+				handler.sendMessage(msg);
+			}
+		});
+	}
+	public void submitVerificationCode(String url, Param... params){
+		startProgressDialog("正在验证...");
+		Request request = httpEngine.createRequest(url, params);
+		Call call = httpEngine.createRequestCall(request);
+		call.enqueue(new Callback() {
+
+			@Override
+			public void onResponse(Response response) throws IOException {
+				Message msg = new Message();
+				if (response.isSuccessful()) {
+					String result = response.body().string();
+					msg.what = StatusCode.COMMOM_SUBMIT_SMS_CODE;
+					msg.obj = result;
 				} else {
 					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
 				}

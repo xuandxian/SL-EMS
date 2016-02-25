@@ -1,13 +1,15 @@
 package com.overtech.ems.config;
 
 public class StatusCode {
-	//初始化RSA
-	public static final int INIT_RSA_SUCCESS = 0x100;
-	
+
 	//网络异常
 	public static final int RESPONSE_NET_FAILED = 0x01;
 	//服务端异常
     public static final int RESPONSE_SERVER_EXCEPTION = 0x99;
+	//公共模块
+	public static final int COMMON_GET_SMS_CODE = 0x98;
+	public static final int SUBMIT_PHONENO_SUCCESS=0x97;
+	public static final int COMMOM_SUBMIT_SMS_CODE = 0x96;
 	
 	//登录
 	public static final int LOGIN_FAILED = 0x02;
@@ -30,11 +32,6 @@ public class StatusCode {
 	public static final int REGISTER_SUCCESS=0x15;
 	public static final int REGISTER_FAILED=0x16;
 	
-
-
-	// 忘记密码
-	public static final int GET_PHONENO_SUCCESS_EXIST = 0x17;
-//	public static final int GET_SERVER_SUCCESS = 0x18;
 	// 忘记密码
 	public static final int RESET_PASSWORD_SUCCESS = 0x19;
 	public static final int RESET_PASSWORD_FAILED = 0x20;
@@ -109,8 +106,6 @@ public class StatusCode {
 	 */
 	public static final int RESPONSE_VALICATE_PASSWORD_SUCCESS=0x43;
 	public static final int RESPONSE_VALICATE_PASSWORD_FAILURE=0x44;
-	public static final int SUBMIT_PHONENO_SUCCESS=0x45;
-	public static final int SUBMIT_SMS_CODE_SUCCESS = 0x46;
 	public static final int UPDATE_PHONENO_SUCCESS=0x47;
 	public static final int UPDATE_PHONENO_FAILURE=0x48;
 	/**

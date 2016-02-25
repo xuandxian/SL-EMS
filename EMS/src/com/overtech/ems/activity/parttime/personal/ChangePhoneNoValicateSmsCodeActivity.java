@@ -66,7 +66,7 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 					e.printStackTrace();
 				}
 				break;
-			case StatusCode.SUBMIT_SMS_CODE_SUCCESS:
+			case StatusCode.COMMOM_SUBMIT_SMS_CODE:
 				String json2=(String)msg.obj;
 				try {
 					JSONObject jsonObj=new JSONObject(json2);
@@ -194,7 +194,7 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 				Message msg = new Message();
 				if (response.isSuccessful()) {
 					String result = response.body().string();
-					msg.what = StatusCode.SUBMIT_SMS_CODE_SUCCESS;
+					msg.what = StatusCode.COMMOM_SUBMIT_SMS_CODE;
 					msg.obj=result;
 				} else {
 					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
