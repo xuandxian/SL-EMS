@@ -42,6 +42,6 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:singleLine="true"
-        android:text="小区名称、所属区域" />
+        android:text="@string/grabtask_search_info"/>
 
 </RelativeLayout>

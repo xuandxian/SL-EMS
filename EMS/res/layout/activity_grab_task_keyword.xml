@@ -13,7 +13,7 @@
         android:layout_toLeftOf="@+id/tv_parttime_do_cancel"
         android:background="@drawable/shape_input"
         android:drawableLeft="@drawable/icon_search"
-        android:hint="小区名称、所属区域"
+        android:hint="@string/grabtask_search_info"
         android:imeOptions="actionDone"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"

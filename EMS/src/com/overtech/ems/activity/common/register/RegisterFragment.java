@@ -1,16 +1,16 @@
 package com.overtech.ems.activity.common.register;
 
+import java.io.IOException;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,12 +25,21 @@ import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 
 import com.overtech.ems.R;
+import com.overtech.ems.activity.BaseFragment;
+import com.overtech.ems.config.StatusCode;
+import com.overtech.ems.entity.common.ServicesConfig;
+import com.overtech.ems.http.HttpEngine.Param;
+import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
 import com.overtech.ems.widget.TimeButton;
 import com.overtech.ems.widget.popwindow.DimPopupWindow;
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
-public class RegisterFragment extends Fragment{
+public class RegisterFragment extends BaseFragment {
 	private Context mContext;
 	private View view;
 	private TimeButton mGetValidate;
@@ -48,29 +57,53 @@ public class RegisterFragment extends Fragment{
 	private EventHandler eh;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
-			int event = msg.arg1;
-			int result = msg.arg2;
-			Object data = msg.obj;
-			if (result == SMSSDK.RESULT_COMPLETE) {
-				if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
-					Utilities.showToast("验证码已发送", mContext);
-				} else if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
-					if (listener != null) {
-						listener.onRegFraBtnClick();
-					}
-				}
-			} else {
+			switch (msg.what) {
+			case StatusCode.SUBMIT_PHONENO_SUCCESS:
+				String json=(String) msg.obj;
 				try {
-					Throwable throwable = (Throwable) data;
-					throwable.printStackTrace();
-					Log.e("==短信异常==",throwable.getMessage());
-					JSONObject object = new JSONObject(throwable.getMessage());
-					int status = object.optInt("status");
-					Utilities.showToast("验证码错误：" + status, mContext);
+					JSONObject jsonObj= new JSONObject(json);
+					String model=jsonObj.getString("model");
+					if (model.equals("0")) {
+						Utilities.showToast("手机号被占用", context);
+					}else if (model.equals("1")) {
+						Utilities.showToast("验证码发送成功", context);
+					}else if (model.equals("2")) {
+						Utilities.showToast("验证码发送失败", context);
+					}
 				} catch (JSONException e) {
+					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				break;
+			case StatusCode.COMMOM_SUBMIT_SMS_CODE:
+				String result=(String)msg.obj;
+				try {
+					JSONObject jsonObject2=new JSONObject(result);
+					String model=jsonObject2.getString("model");
+					if (model.equals("3")) {
+						Utilities.showToast("验证成功", context);
+						if (listener != null) {
+							listener.onRegFraBtnClick();
+						}
+					}else if (model.equals("4")) {
+						Utilities.showToast("验证失败", context);
+					}else if (model.equals("5")) {
+						Utilities.showToast("验证码失效", context);
+					}
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+				break;
+			case StatusCode.RESPONSE_SERVER_EXCEPTION:
+				Utilities.showToast("服务器异常", mContext);
+				break;
+			case StatusCode.RESPONSE_NET_FAILED:
+				Utilities.showToast("网络异常", mContext);
+				break;
+			default:
+				break;
 			}
+			
 		};
 	};
 
@@ -79,29 +112,15 @@ public class RegisterFragment extends Fragment{
 		super.onAttach(activity);
 		mContext = activity;
 	}
+
+
 	@Override
-	public void onDestroy() {
-		// TODO Auto-generated method stub
-		super.onDestroy();
-		SMSSDK.unregisterEventHandler(eh);
-	}
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.fragment_register, null);
 		findViewById(view);
 		init();
-		eh = new EventHandler() {
-			@Override
-			public void afterEvent(int event, int result, Object data) {
-				super.afterEvent(event, result, data);
-				Message msg = new Message();
-				msg.arg1 = event;
-				msg.arg2 = result;
-				msg.obj = data;
-				handler.sendMessage(msg);
-			}
-		};
-		SMSSDK.registerEventHandler(eh);
+		
 		return view;
 	}
 
@@ -119,10 +138,39 @@ public class RegisterFragment extends Fragment{
 			@Override
 			public void onClick(View v) {
 				mPhoneNo = mRegisterPhone.getText().toString().trim();
-				if (!TextUtils.isEmpty(mPhoneNo) && Utilities.isMobileNO(mPhoneNo)) {
+				if (!TextUtils.isEmpty(mPhoneNo)
+						&& Utilities.isMobileNO(mPhoneNo)) {
 					mGetValidate.setTextAfter("秒后重试").setTextBefore("重新获取验证码")
 							.setLenght(60 * 1000).setEnabled(false);
-					SMSSDK.getVerificationCode("86", mPhoneNo);
+					Param param = new Param(Constant.PHONENO, mPhoneNo);
+					Param flag = new Param(Constant.FLAG, "0");// 告诉服务器需要验证该手机是否已经注册
+					Request request = httpEngine.createRequest(
+							ServicesConfig.COMMON_GET_SMS_CODE, param, flag);
+					Call call = httpEngine.createRequestCall(request);
+					call.enqueue(new Callback() {
+
+						@Override
+						public void onResponse(Response response)
+								throws IOException {
+							// TODO Auto-generated method stub
+							Message msg=new Message();
+							if(response.isSuccessful()){
+								msg.what=StatusCode.SUBMIT_PHONENO_SUCCESS;
+								msg.obj=response.body().string();
+							}else{
+								msg.what=StatusCode.RESPONSE_SERVER_EXCEPTION;
+							}
+							handler.sendMessage(msg);
+						}
+
+						@Override
+						public void onFailure(Request request, IOException ioe) {
+							// TODO Auto-generated method stub
+							Message msg=new Message();
+							msg.what=StatusCode.RESPONSE_NET_FAILED;
+							handler.sendMessage(msg);
+						}
+					});
 				} else {
 					Utilities.showToast("请输入正确的手机号", mContext);
 					mGetValidate.setTextAfter("获取验证码").setTextBefore("获取验证码")
@@ -134,28 +182,60 @@ public class RegisterFragment extends Fragment{
 
 			@Override
 			public void onClick(View view) {
-				if(mCBItemPrivacy.isChecked()){
+				if (mCBItemPrivacy.isChecked()) {
 					validateCode = mEtValidateCode.getText().toString().trim();
 					if (TextUtils.isEmpty(validateCode)) {
 						Utilities.showToast("验证码不能为空", mContext);
 					} else {
-						SMSSDK.submitVerificationCode("86", mPhoneNo, validateCode);
+						// SMSSDK.submitVerificationCode("86", mPhoneNo,
+						// validateCode);
+						Param param = new Param(Constant.PHONENO,mPhoneNo);
+						Param smsCode= new Param(Constant.SMSCODE,validateCode);
+						Request request=httpEngine.createRequest(ServicesConfig.COMMON_VARLICATE_SMS_CODE, param,smsCode);
+						Call call=httpEngine.createRequestCall(request);
+						call.enqueue(new Callback() {
+							
+							@Override
+							public void onResponse(Response response) throws IOException {
+								// TODO Auto-generated method stub
+								Message msg=new Message();
+								if(response.isSuccessful()){
+									msg.what=StatusCode.COMMOM_SUBMIT_SMS_CODE;
+									msg.obj=response.body().string();
+								}else{
+									msg.what=StatusCode.RESPONSE_SERVER_EXCEPTION;
+								}
+								handler.sendMessage(msg);
+								
+							}
+							
+							@Override
+							public void onFailure(Request request, IOException ioe) {
+								// TODO Auto-generated method stub
+								Message msg=new Message();
+								msg.what=StatusCode.RESPONSE_NET_FAILED;
+								handler.sendMessage(msg);
+							}
+						});
+						
 					}
-				}else{
+				} else {
 					Utilities.showToast("请勾选服务条款", mContext);
 				}
 			}
 		});
 		mTVItemPrivacy.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				// TODO Auto-generated method stub
-				mPopupWindow=new DimPopupWindow(mContext);
-				View view = View.inflate(mContext, R.layout.fragment_register_item_privacy, null);
+				mPopupWindow = new DimPopupWindow(mContext);
+				View view = View.inflate(mContext,
+						R.layout.fragment_register_item_privacy, null);
 				mPopupWindow.setOutsideTouchable(false);
 				mPopupWindow.setContentView(view);
-				mPopupWindow.showAtLocation(mTVItemPrivacy, Gravity.CENTER, 0, 0);
+				mPopupWindow.showAtLocation(mTVItemPrivacy, Gravity.CENTER, 0,
+						0);
 			}
 		});
 	}
@@ -164,11 +244,13 @@ public class RegisterFragment extends Fragment{
 		mHeadTitle = (TextView) view.findViewById(R.id.tv_headTitle);
 		mDoBack = (ImageView) view.findViewById(R.id.iv_headBack);
 		mNext = (Button) view.findViewById(R.id.btn_next_fragment);
-		mRegisterPhone = (EditTextWithDelete) view.findViewById(R.id.et_register_phone);
-		mGetValidate = (TimeButton) view.findViewById(R.id.btn_get_valicate_code);
+		mRegisterPhone = (EditTextWithDelete) view
+				.findViewById(R.id.et_register_phone);
+		mGetValidate = (TimeButton) view
+				.findViewById(R.id.btn_get_valicate_code);
 		mEtValidateCode = (EditText) view.findViewById(R.id.et_valicate_code);
-		mCBItemPrivacy=(CheckBox)view.findViewById(R.id.cb_item_privacy);
-		mTVItemPrivacy=(TextView)view.findViewById(R.id.tv_item_privacy);
+		mCBItemPrivacy = (CheckBox) view.findViewById(R.id.cb_item_privacy);
+		mTVItemPrivacy = (TextView) view.findViewById(R.id.tv_item_privacy);
 	}
 
 	public void setRegFraBtnClickListener(RegFraBtnClickListener listener) {
