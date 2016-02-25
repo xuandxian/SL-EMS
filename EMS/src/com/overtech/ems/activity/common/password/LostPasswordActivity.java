@@ -52,7 +52,10 @@ public class LostPasswordActivity extends BaseActivity {
 					}else if(model.equals("1")){
 						Utilities.showToast("该手机号尚未通过审核,请等待结果", context);
 					}else if(model.equals("2")){
-						getVerificationCode(ServicesConfig.COMMON_GET_SMS_CODE);
+						Utilities.showToast("该手机号已可以使用",context);
+						Param param = new Param(Constant.PHONENO, mPhoneNo);
+						Param flag = new Param(Constant.FLAG, "0");
+						getVerificationCode(ServicesConfig.COMMON_GET_SMS_CODE,param,flag);
 					}else if(model.equals("3")){
 						Utilities.showToast("员工已经离职，不能使用该功能", context);
 					}else if(model.equals("4")){
