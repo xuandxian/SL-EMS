@@ -34,7 +34,7 @@ public class StatusCode {
 
 	// 忘记密码
 	public static final int GET_PHONENO_SUCCESS_EXIST = 0x17;
-	public static final int GET_SERVER_SUCCESS = 0x18;
+//	public static final int GET_SERVER_SUCCESS = 0x18;
 	// 忘记密码
 	public static final int RESET_PASSWORD_SUCCESS = 0x19;
 	public static final int RESET_PASSWORD_FAILED = 0x20;
