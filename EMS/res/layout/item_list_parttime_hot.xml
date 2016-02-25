@@ -26,16 +26,19 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginTop="10dp"
+            android:layout_toLeftOf="@+id/tv_relevator_num"
             android:singleLine="true"
             android:text="徐家汇景园" />
 
         <TextView
-            android:maxLength="8"
             android:id="@+id/tv_address"
             style="@style/tv_info_secondary_style"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
             android:layout_marginBottom="15dp"
+            android:layout_toLeftOf="@+id/tv_distance"
+            android:ellipsize="end"
+            android:singleLine="true"
             android:text="徐汇区广元西路" />
 
         <TextView
@@ -51,8 +54,8 @@
             android:id="@+id/tv_distance"
             style="@style/tv_info_secondary_style"
             android:layout_alignBottom="@+id/tv_address"
-            android:layout_marginLeft="8dp"
-            android:layout_toRightOf="@+id/tv_address"
+            android:layout_marginRight="5dp"
+            android:layout_toLeftOf="@+id/tv_maintence_date"
             android:text="13.5km" />
 
         <TextView
@@ -69,7 +72,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:src="@drawable/icon_bg_hot" />
+            android:src="@drawable/icon_bg_hot"
+            android:visibility="gone" />
     </RelativeLayout>
 
 </LinearLayout>
