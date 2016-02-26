@@ -23,6 +23,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
+            android:singleLine="true"
             android:background="@drawable/shape_input"
             android:hint="手机号/ID号" />
     </RelativeLayout>
@@ -48,6 +49,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="20dp"
+            android:singleLine="true"
             android:layout_toLeftOf="@+id/tb_change_password"
             android:background="@drawable/shape_input"
             android:hint="密码"

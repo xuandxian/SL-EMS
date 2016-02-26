@@ -67,6 +67,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	private TextView mTaskNo;
 	private String mPhone;
 	private String mZonePhone;
+	private String mZone;
 	private String mPartnerName;
 	private String taskNo;
 	private String mLoginName;
@@ -107,6 +108,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	 */
 	private int mScreenHeight;
 	private Handler handler = new Handler() {
+
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case StatusCode.PACKAGE_DETAILS_SUCCESS:
@@ -118,6 +120,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				mPhone = bean.getPartnerPhone();
 				mZonePhone = bean.getZonePhone();
 				mPartnerName = bean.getPartnerName();
+				mZone=bean.getZone();
 				if (null == list || list.size() == 0) {
 					Utilities.showToast("无数据", mActivity);
 					mCancle.setVisibility(View.GONE);
@@ -381,8 +384,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 		popupWindow.setTouchable(true);
 		popupWindow.setOutsideTouchable(true);
 		popupWindow.setBackgroundDrawable(new BitmapDrawable());
-		popupWindow.setContentView(LayoutInflater.from(activity).inflate(
-				R.layout.layout_tasklist_pop, null));
+		popupWindow.setContentView(LayoutInflater.from(activity).inflate(R.layout.layout_tasklist_pop, null));
 		initUI();
 	}
 
@@ -403,7 +405,6 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 							
 							@Override
 							public void onClick(View arg0) {
-								// TODO Auto-generated method stub
 								shareToFriends();
 							}
 						});
@@ -468,17 +469,17 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	protected void shareToFriends() {//分享给好友
 		ShareSDK.initSDK(this);
 		OnekeyShare oks = new OnekeyShare();
-		oks.setTitle("哥们，分享给你一个维保单");
+//		oks.setTitle("哥们，分享给你一个维保单");
 		// titleUrl是标题的网络链接，仅在人人网和QQ空间使用
-		oks.setTitleUrl("http://120.55.162.181:8080/slems/upload/haha.html");
+//		oks.setTitleUrl("http://120.55.162.181:8080/slems/upload/haha.html");
 		//暂时使用云端服务器上面的logo,豌豆荚审核通过后使用豌豆荚中的logo
-		oks.setImageUrl("http://120.55.162.181:8080/test/icon.png");
+//		oks.setImageUrl("http://120.55.162.181:8080/test/icon.png");
 		// text是分享文本，所有平台都需要这个字段
-		oks.setText("我在24梯App中抢到一个维保单，请速度去抢哦！");
+		oks.setText("我在24梯中抢到"+mZone+"的一个维保单，单号为:"+taskNo+",请速度去抢哦！");
 		// url仅在微信（包括好友和朋友圈）中使用
-		oks.setUrl("http://120.55.162.181:8080/slems/upload/haha.html");
-		oks.setVenueName("24梯");
-		// 启动分享GUI
+//		oks.setUrl("http://120.55.162.181:8080/slems/upload/haha.html");
+//		oks.setVenueName("24梯");
+		// 启动分享GUI 
 		oks.show(this);
 	}
 
