@@ -44,9 +44,6 @@ public class RegisterFragment extends BaseFragment {
 	private TextView mHeadTitle;
 	private ImageView mDoBack;
 	private Button mNext;
-	private CheckBox mCBItemPrivacy;
-	private TextView mTVItemPrivacy;
-	private DimPopupWindow mPopupWindow;
 	public String mPhoneNo;
 	private RegFraBtnClickListener listener;
 	private Handler handler = new Handler() {
@@ -165,7 +162,6 @@ public class RegisterFragment extends BaseFragment {
 
 			@Override
 			public void onClick(View view) {
-				if (mCBItemPrivacy.isChecked()) {
 					validateCode = mEtValidateCode.getText().toString().trim();
 					if (TextUtils.isEmpty(validateCode)) {
 						Utilities.showToast("验证码不能为空", mContext);
@@ -197,20 +193,6 @@ public class RegisterFragment extends BaseFragment {
 							}
 						});
 					}
-				} else {
-					Utilities.showToast("请勾选服务条款", mContext);
-				}
-			}
-		});
-		mTVItemPrivacy.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				mPopupWindow = new DimPopupWindow(mContext);
-				View view = View.inflate(mContext,R.layout.fragment_register_item_privacy, null);
-				mPopupWindow.setOutsideTouchable(false);
-				mPopupWindow.setContentView(view);
-				mPopupWindow.showAtLocation(mTVItemPrivacy, Gravity.CENTER, 0,0);
 			}
 		});
 	}
@@ -222,8 +204,6 @@ public class RegisterFragment extends BaseFragment {
 		mRegisterPhone = (EditTextWithDelete) view.findViewById(R.id.et_register_phone);
 		mGetValidate = (TimeButton) view.findViewById(R.id.btn_get_valicate_code);
 		mEtValidateCode = (EditText) view.findViewById(R.id.et_valicate_code);
-		mCBItemPrivacy = (CheckBox) view.findViewById(R.id.cb_item_privacy);
-		mTVItemPrivacy = (TextView) view.findViewById(R.id.tv_item_privacy);
 	}
 
 	public void setRegFraBtnClickListener(RegFraBtnClickListener listener) {
