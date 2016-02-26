@@ -1,24 +1,27 @@
 package com.overtech.ems.activity.common.register;
 
 import java.io.IOException;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
 import android.text.TextUtils;
-import android.view.Gravity;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
 import com.overtech.ems.config.StatusCode;
@@ -28,7 +31,6 @@ import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
 import com.overtech.ems.widget.TimeButton;
-import com.overtech.ems.widget.popwindow.DimPopupWindow;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
@@ -120,13 +122,37 @@ public class RegisterFragment extends BaseFragment {
 				getActivity().onBackPressed();
 			}
 		});
+		mRegisterPhone.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+				// TODO Auto-generated method stub
+				if(!TextUtils.isEmpty(arg0)&&Utilities.isMobileNO(arg0.toString())){
+					mGetValidate.setEnabled(true);
+				}else{
+					mGetValidate.setEnabled(false);
+				}
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+					int arg3) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		mGetValidate.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				mPhoneNo = mRegisterPhone.getText().toString().trim();
 				if (!TextUtils.isEmpty(mPhoneNo)&& Utilities.isMobileNO(mPhoneNo)) {
-					mGetValidate.setTextAfter("秒后重试").setTextBefore("重新获取验证码").setLenght(60 * 1000).setEnabled(false);
 					Param param = new Param(Constant.PHONENO, mPhoneNo);
 					Param flag = new Param(Constant.FLAG, "0");// 告诉服务器需要验证该手机是否已经注册
 					Request request = httpEngine.createRequest(ServicesConfig.COMMON_GET_SMS_CODE, param, flag);
@@ -154,7 +180,6 @@ public class RegisterFragment extends BaseFragment {
 					});
 				} else {
 					Utilities.showToast("请输入正确的手机号", mContext);
-					mGetValidate.setTextAfter("获取验证码").setTextBefore("获取验证码").setLenght(0).setEnabled(true);
 				}
 			}
 		});

@@ -1,19 +1,18 @@
 package com.overtech.ems.widget;
 
-import java.util.HashMap;  
-import java.util.Map;  
-import java.util.Timer;  
-import java.util.TimerTask;  
-import com.overtech.ems.activity.MyApplication;
-import android.annotation.SuppressLint;  
-import android.content.Context;  
-import android.os.Bundle;  
-import android.os.Handler;  
-import android.util.AttributeSet;  
-import android.view.View;  
-import android.view.View.OnClickListener;  
-import android.widget.Button;  
-    
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.os.Bundle;
+import android.os.Handler;
+import android.util.AttributeSet;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+
 public class TimeButton extends Button implements OnClickListener {
 	private long lenght = 60 * 1000;// 倒计时长度,这里给了默认60秒
 	private String textafter = "秒后重新获取";
@@ -82,12 +81,19 @@ public class TimeButton extends Button implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		if (mOnclickListener != null)
+		if (mOnclickListener != null) {
 			mOnclickListener.onClick(v);
+		}
+		clearTimer();
 		initTimer();
-		this.setText(time / 1000 + textafter);
-		this.setEnabled(false);
+		if (time == 0) {
+			this.setText(textafter);
+		} else {
+			this.setText(time / 1000 + textafter);
+		}
+		this.setEnabled(false); // 因为注册时的实际需要，将此处
 		t.schedule(tt, 0, 1000);
+		
 		// t.scheduleAtFixedRate(task, delay, period);
 	}
 
@@ -95,10 +101,10 @@ public class TimeButton extends Button implements OnClickListener {
 	 * 和activity的onDestroy()方法同步
 	 */
 	public void onDestroy() {
-		if (MyApplication.map == null)
-			MyApplication.map = new HashMap<String, Long>();
-		MyApplication.map.put(TIME, time);
-		MyApplication.map.put(CTIME, System.currentTimeMillis());
+		if (map == null)
+			map = new HashMap<String, Long>();
+		map.put(TIME, time);
+		map.put(CTIME, System.currentTimeMillis());
 		clearTimer();
 	}
 
@@ -106,13 +112,12 @@ public class TimeButton extends Button implements OnClickListener {
 	 * 和activity的onCreate()方法同步
 	 */
 	public void onCreate(Bundle bundle) {
-		if (MyApplication.map == null)
+		if (map == null)
 			return;
-		if (MyApplication.map.size() <= 0)// 这里表示没有上次未完成的计时
+		if (map.size() <= 0)// 这里表示没有上次未完成的计时
 			return;
-		long time = System.currentTimeMillis() - MyApplication.map.get(CTIME)
-				- MyApplication.map.get(TIME);
-		MyApplication.map.clear();
+		long time = System.currentTimeMillis() - map.get(CTIME) - map.get(TIME);
+		map.clear();
 		if (time > 0)
 			return;
 		else {
@@ -148,8 +153,8 @@ public class TimeButton extends Button implements OnClickListener {
 		this.lenght = lenght;
 		return this;
 	}
-	/*
-
-*
+	/* 
+ 
+* 
 */
 }

@@ -9,7 +9,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -113,6 +115,32 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 		mDoBack.setOnClickListener(this);
 		mNextContent.setOnClickListener(this);
 		mGetMessageCode.setOnClickListener(this);
+		mPhoneNoEditText.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
+				// TODO Auto-generated method stub
+				if(!TextUtils.isEmpty(arg0)&&Utilities.isMobileNO(arg0.toString())){
+					mGetMessageCode.setEnabled(true);
+				}else{
+					mGetMessageCode.setEnabled(false);
+				}
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
+					int arg3) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
 	}
 
 	private void initView() {
