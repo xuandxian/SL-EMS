@@ -21,6 +21,7 @@ import com.overtech.ems.activity.common.register.RegisterAddPersonInfoFragment.R
 import com.overtech.ems.activity.common.register.RegisterAddWorkCertificateFragment.RegAddWorkCerFrgClickListener;
 import com.overtech.ems.activity.common.register.RegisterFragment.RegFraBtnClickListener;
 import com.overtech.ems.activity.common.register.RegisterOtherCertificateFragment.RegOthCerFrgListener;
+import com.overtech.ems.activity.common.register.RegisterPrivacyItemFragment.RegPriItemFrgBtnClickListener;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.Employee;
@@ -34,10 +35,12 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 public class RegisterActivity extends BaseActivity implements
-		RegFraBtnClickListener, RegAddPerInfoFrgClickListener,
-		RegAddPerEduWorkFrgClickListener, RegAddIdCardFrgClickListener,
-		RegAddWorkCerFrgClickListener, RegOthCerFrgListener {
+		RegPriItemFrgBtnClickListener, RegFraBtnClickListener,
+		RegAddPerInfoFrgClickListener, RegAddPerEduWorkFrgClickListener,
+		RegAddIdCardFrgClickListener, RegAddWorkCerFrgClickListener,
+		RegOthCerFrgListener {
 	private FragmentManager manager;
+	private RegisterPrivacyItemFragment mPrivacyItemFragment;
 	private RegisterFragment mRegisterFragment;
 	private RegisterAddPersonInfoFragment mPersonInfoFragment;
 	private RegisterAddPersonEduAndWorkFragment mPersonEduWorkFragment;
@@ -83,12 +86,11 @@ public class RegisterActivity extends BaseActivity implements
 		setContentView(R.layout.activity_register);
 		manager = getFragmentManager();
 		FragmentTransaction transaction = manager.beginTransaction();
-		if (mRegisterFragment == null) {
-			mRegisterFragment = new RegisterFragment();
+		if (mPrivacyItemFragment == null) {
+			mPrivacyItemFragment = new RegisterPrivacyItemFragment();
 		}
-		mRegisterFragment.setRegFraBtnClickListener(this);
-		transaction.add(R.id.fl_register_container, mRegisterFragment,
-				"REGISTER");// 将当前fragment添加进栈
+		mPrivacyItemFragment.setRegPriItemFrgBtnClickListener(this);
+		transaction.add(R.id.fl_register_container, mPrivacyItemFragment);
 		transaction.commit();
 	}
 
@@ -264,6 +266,19 @@ public class RegisterActivity extends BaseActivity implements
 		}
 		mPersonInfoFragment.setRegAddPerInfoFrgClickListener(this);
 		transaction.add(R.id.fl_register_container, mPersonInfoFragment);
+		transaction.addToBackStack(null);
+		transaction.commit();
+	}
+
+	@Override
+	public void onRegPriClick() {
+		// TODO Auto-generated method stub
+		FragmentTransaction transaction = manager.beginTransaction();
+		if (mRegisterFragment == null) {
+			mRegisterFragment = new RegisterFragment();
+		}
+		mRegisterFragment.setRegFraBtnClickListener(this);
+		transaction.add(R.id.fl_register_container, mRegisterFragment);
 		transaction.addToBackStack(null);
 		transaction.commit();
 	}

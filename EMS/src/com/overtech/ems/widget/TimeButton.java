@@ -16,8 +16,8 @@ import android.widget.Button;
     
 public class TimeButton extends Button implements OnClickListener {
 	private long lenght = 60 * 1000;// 倒计时长度,这里给了默认60秒
-	private String textafter = "秒后重新获取~";
-	private String textbefore = "点击获取验证码~";
+	private String textafter = "秒后重新获取";
+	private String textbefore = "点击获取验证码";
 	private final String TIME = "time";
 	private final String CTIME = "ctime";
 	private OnClickListener mOnclickListener;

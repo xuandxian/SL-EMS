@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bg_main"
     android:orientation="vertical" >
 
     <include layout="@layout/headview" />
@@ -82,30 +83,5 @@
         android:text="下一步"
         android:textColor="@color/main_white"
         android:textSize="17sp" />
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
-        android:orientation="horizontal" >
-
-        <CheckBox
-            android:id="@+id/cb_item_privacy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="我已阅读并同意" />
-
-        <TextView
-            android:id="@+id/tv_item_privacy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="使用条款和隐私政策"
-            android:textColor="@color/btn_visiable_bg" />
-    </LinearLayout>
 
 </LinearLayout>
