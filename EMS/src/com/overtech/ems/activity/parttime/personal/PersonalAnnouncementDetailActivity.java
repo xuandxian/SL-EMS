@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.overtech.ems.R;
@@ -108,5 +109,12 @@ public class PersonalAnnouncementDetailActivity extends BaseActivity {
 		mAnnouncementSummary=(TextView) findViewById(R.id.tv_announcement_summary);
 		mHeadContent.setText("详情");
 		mDoBack.setVisibility(View.VISIBLE);
+		mDoBack.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View arg0) {
+				finish();
+			}
+		});
 	}
 }
