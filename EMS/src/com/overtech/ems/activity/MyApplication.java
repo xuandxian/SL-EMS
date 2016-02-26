@@ -1,5 +1,7 @@
 package com.overtech.ems.activity;
 
+import java.util.Map;
+
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -22,6 +24,8 @@ public class MyApplication extends Application {
 	public MyLocationListener mMyLocationClient;
 	public double latitude;
 	public double longitude;
+	// 用于存放倒计时时间
+	public static Map<String, Long> map;
 
 	@Override
 	public void onCreate() {

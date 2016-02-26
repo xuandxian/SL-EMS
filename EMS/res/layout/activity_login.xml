@@ -9,7 +9,7 @@
         layout="@layout/headview" />
 
     <RelativeLayout
-        android:id="@+id/rl_register_1 "
+        android:id="@+id/rl_register_username"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_below="@+id/include_register"
@@ -24,25 +24,22 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:background="@drawable/shape_input"
-            android:ems="10"
-            android:hint="手机号/ID号"
-            android:inputType="phone"
-            android:maxLength="11" />
+            android:hint="手机号/ID号" />
     </RelativeLayout>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
-        android:layout_above="@+id/rl_register_2"
+        android:layout_above="@+id/rl_register_password"
         android:layout_centerHorizontal="true"
         android:background="#c1c1c1" />
 
     <RelativeLayout
-        android:id="@+id/rl_register_2"
+        android:id="@+id/rl_register_password"
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/rl_register_1 "
+        android:layout_below="@+id/rl_register_username"
         android:background="@color/main_white" >
 
         <com.overtech.ems.widget.EditTextWithDelete
@@ -74,10 +71,10 @@
 
     <Button
         android:id="@+id/btn_login"
-        android:layout_below="@+id/rl_register_2"
-        android:background="@drawable/shape_button_visiable"
-        android:layout_marginTop="25dp"
         style="@style/btn_title_white_style"
+        android:layout_below="@+id/rl_register_password"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/shape_button_visiable"
         android:text="登录" />
 
     <TextView
