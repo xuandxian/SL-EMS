@@ -1,8 +1,6 @@
 package com.overtech.ems.activity.parttime.personal;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,17 +12,16 @@ import android.graphics.Bitmap.Config;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.ImageView.ScaleType;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
@@ -39,8 +36,6 @@ import com.overtech.ems.picasso.Transformation;
 import com.overtech.ems.utils.ImageCacheUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
-import com.overtech.ems.widget.dialogeffects.Effectstype;
-import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
@@ -54,8 +49,6 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 	private ImageView mDoBack;
 	private RelativeLayout mChangePhoneNo;
 	private Button mDoExit;
-	private Effectstype effect;
-	private NiftyDialogBuilder dialogBuilder;
 	private TextView mPhone;
 	private ImageView avator;
 	private TextView mId;
@@ -168,7 +161,6 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 	}
 
 	private void initViews() {
-		dialogBuilder = NiftyDialogBuilder.getInstance(this);
 		sp=((MyApplication)getApplication()).getSharePreference();
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
 		mDoBack = (ImageView) findViewById(R.id.iv_headBack);

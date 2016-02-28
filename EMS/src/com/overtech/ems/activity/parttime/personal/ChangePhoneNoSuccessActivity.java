@@ -23,6 +23,7 @@ public class ChangePhoneNoSuccessActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_change_phoneno_success);
+		statckInstance.pushActivity(this);
 		initView();
 	}
 
@@ -38,7 +39,7 @@ public class ChangePhoneNoSuccessActivity extends BaseActivity {
 				startProgressDialog("跳转中...");
 				Intent intent = new Intent(ChangePhoneNoSuccessActivity.this,LoginActivity.class);
 				startActivity(intent);
-				finish();
+//				finish();
 			}
 		}, 2000);
 		stopProgressDialog();

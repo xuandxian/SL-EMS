@@ -96,7 +96,6 @@ public class TimeButton extends Button implements OnClickListener {
 		
 		// t.scheduleAtFixedRate(task, delay, period);
 	}
-
 	/**
 	 * 和activity的onDestroy()方法同步
 	 */

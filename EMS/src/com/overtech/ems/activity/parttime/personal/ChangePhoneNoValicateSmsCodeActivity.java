@@ -107,6 +107,7 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_change_phoneno_in_vc);
+		statckInstance.pushActivity(this);
 		initView();
 		initEvent();
 	}
@@ -161,7 +162,7 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 			mPhoneNo = mPhoneNoEditText.getText().toString().trim();
 			if (Utilities.isMobileNO(mPhoneNo)) {
 				Param param = new Param(Constant.PHONENO, mPhoneNo);
-				Param flag = new Param(Constant.FLAG, "0");
+				Param flag = new Param(Constant.FLAG, "1");
 				verifyPhoneNoAndGetSmsCode(ServicesConfig.COMMON_GET_SMS_CODE, param,flag);
 			} else {
 				Utilities.showToast("请输入正确的手机号", context);

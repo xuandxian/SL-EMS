@@ -38,7 +38,7 @@ public class ResetPasswordSuccessActivity extends BaseActivity {
 				Intent intent=new Intent(ResetPasswordSuccessActivity.this,LoginActivity.class);
 				startActivity(intent);
 				progressDialog.dismiss();
-				finish();
+//				finish();
 			}
 		}, 2000);
 	}

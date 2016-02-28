@@ -150,6 +150,7 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment implements OnC
 				int info = dealTime();
 				if (info != -1) {
 					mWorkTime.setText(info + "年");
+					workYears=info+"";//工作年限 用于提交给后台
 				} else {
 					mWorkTime.setText("工作年限");
 					showDialog();

@@ -65,6 +65,7 @@ public class ChangePhoneNoValidatePasswordActivity extends BaseActivity implemen
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_change_phoneno_vc);
+		statckInstance.pushActivity(this);
 		phone = getIntent().getStringExtra("phone");
 		initView();
 		initEvent();

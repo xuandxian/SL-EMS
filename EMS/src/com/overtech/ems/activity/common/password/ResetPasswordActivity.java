@@ -44,7 +44,7 @@ public class ResetPasswordActivity extends BaseActivity {
 			case StatusCode.RESET_PASSWORD_SUCCESS:
 				Intent intent = new Intent(ResetPasswordActivity.this,ResetPasswordSuccessActivity.class);
 				startActivity(intent);
-				finish();
+//				finish();
 				break;
 			case StatusCode.RESET_PASSWORD_FAILED:
 				Utilities.showToast("重置密码失败", context);

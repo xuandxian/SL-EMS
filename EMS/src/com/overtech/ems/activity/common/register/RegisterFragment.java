@@ -154,7 +154,7 @@ public class RegisterFragment extends BaseFragment {
 				mPhoneNo = mRegisterPhone.getText().toString().trim();
 				if (!TextUtils.isEmpty(mPhoneNo)&& Utilities.isMobileNO(mPhoneNo)) {
 					Param param = new Param(Constant.PHONENO, mPhoneNo);
-					Param flag = new Param(Constant.FLAG, "0");// 告诉服务器需要验证该手机是否已经注册
+					Param flag = new Param(Constant.FLAG, "1");// 告诉服务器需要验证该手机是否已经注册
 					Request request = httpEngine.createRequest(ServicesConfig.COMMON_GET_SMS_CODE, param, flag);
 					Call call = httpEngine.createRequestCall(request);
 					call.enqueue(new Callback() {

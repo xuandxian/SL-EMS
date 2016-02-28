@@ -54,7 +54,7 @@ public class LostPasswordActivity extends BaseActivity {
 					}else if(model.equals("1")){
 						Utilities.showToast("该手机号尚未通过审核,请等待结果", context);
 					}else if(model.equals("2")){
-						Utilities.showToast("该手机号已可以使用",context);
+//						Utilities.showToast("该手机号已可以使用",context);
 						Param param = new Param(Constant.PHONENO, mPhoneNo);
 						Param flag = new Param(Constant.FLAG, "0");
 						getVerificationCode(ServicesConfig.COMMON_GET_SMS_CODE,param,flag);
