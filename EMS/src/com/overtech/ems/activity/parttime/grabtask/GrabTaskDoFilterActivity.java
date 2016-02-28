@@ -118,7 +118,7 @@ public class GrabTaskDoFilterActivity extends BaseActivity implements OnClickLis
                     int temp = Integer.valueOf(list.get(i));
                     switch (temp) {
                         case 0:
-                            mZone += "黄埔区|";
+                            mZone += "黄浦区|";
                         break;
                         case 1:
                             mZone += "徐汇区|";

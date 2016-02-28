@@ -1,17 +1,18 @@
 package com.overtech.ems.activity.parttime.personal;
 
 import java.io.IOException;
+
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
@@ -44,7 +45,7 @@ public class PersonalAccountListActivity extends BaseActivity implements
 			switch (msg.what) {
 			case StatusCode.ACCOUNT_LIST_SUCCESS:
 				String json = (String) msg.obj;
-				Log.e("==w我的账单==", json);
+//				Log.e("==w我的账单==", json);
 				Gson gson = new Gson();
 				BillBean datas = gson.fromJson(json, BillBean.class);
 				adapter = new PersonalAccountListAdapter(context,

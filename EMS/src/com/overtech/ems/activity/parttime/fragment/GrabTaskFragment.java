@@ -105,6 +105,7 @@ public class GrabTaskFragment extends BaseFragment implements
 					return;
 				}
 				String json = (String) msg.obj;
+//				Log.e("抢单数据", json);
 				TaskPackageBean tasks = gson.fromJson(json,TaskPackageBean.class);
 				list = (ArrayList<TaskPackage>) tasks.getModel();
 				if (null == list || list.isEmpty()) {

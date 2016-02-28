@@ -19,7 +19,7 @@ public class PersonalAccountListAdapter extends BaseAdapter {
 	
 	private Context context;
 	private List<Bill> list ;
-	
+	private SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd"); 
 	public PersonalAccountListAdapter(Context context, List<Bill> list) {
 		super();
 		this.context = context;
@@ -33,7 +33,7 @@ public class PersonalAccountListAdapter extends BaseAdapter {
 
 	@Override
 	public Object getItem(int position) {
-		return position;
+		return list.get(position);
 	}
 
 	@Override
@@ -67,8 +67,10 @@ public class PersonalAccountListAdapter extends BaseAdapter {
 		
 		holder.mMaintenanceTime.setText(data.getMaintenanceDate());
 		holder.mPersonalAccount.setText(data.getTotalPrice());
-		if(data.getClosingDate()!=null){
-			holder.mMaintenanceEndTime.setText(data.getClosingDate());
+		if(data.getClosingDate()!=0){
+			holder.mMaintenanceEndTime.setText(sdf.format((new Date(data.getClosingDate()))));
+		}else{
+			holder.mMaintenanceEndTime.setText("未结算");
 		}
 		return convertView;
 	}

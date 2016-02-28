@@ -43,7 +43,7 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 public class PersonalZoneFragment extends BaseFragment implements
-		OnClickListener{
+		OnClickListener {
 
 	private final int STUB_ID = R.drawable.icon_personal_my;// 此处为了将ImageLoader里面的方法抽出来单独使用，而将里面的字段提出来
 	private final Config DEFAULT_CONFIG = Config.RGB_565;// 同上
@@ -69,37 +69,43 @@ public class PersonalZoneFragment extends BaseFragment implements
 				Log.e("====", info);
 				try {
 					JSONObject json = new JSONObject(info);
-					if(!json.isNull("model")){
+					if (!json.isNull("model")) {
 						JSONObject model = (JSONObject) json.get("model");
-						String imageUrl = model.getString("path");
-						String name = model.getString("name");
-						String phone = model.getString("phoneNo");
-						if (imageUrl == null || "".equals(imageUrl)) {
-							mAvator.setScaleType(ScaleType.FIT_XY);
-							mAvator.setImageResource(STUB_ID);
-						} else {
-							// 调用从网络中加载过来的图片
-							Picasso.with(context).load(imageUrl)
-							.placeholder(STUB_ID).error(STUB_ID)
-							.config(DEFAULT_CONFIG)
-							.transform(new Transformation() {
-								// 圆角图片的实现
-								@Override
-								public Bitmap transform(Bitmap source) {
-									return ImageCacheUtils
-											.toRoundBitmap(source);
-								}
-								
-								@Override
-								public String key() {
-									return null;
-								}
-							}).into(mAvator);
-							
+						if (!model.isNull("name")) {
+							String name = model.getString("name");
+							mName.setText(name);
 						}
-						mName.setText(name);
-						mPhone.setText(phone);
-					}else{
+						if (!model.isNull("phoneNo")) {
+							String phone = model.getString("phoneNo");
+							mPhone.setText(phone);
+						}
+						if (!model.isNull("path")) {
+							String imageUrl = model.getString("path");
+							if (imageUrl == null || "".equals(imageUrl)) {
+								mAvator.setScaleType(ScaleType.FIT_XY);
+								mAvator.setImageResource(STUB_ID);
+							} else {
+								// 调用从网络中加载过来的图片
+								Picasso.with(context).load(imageUrl)
+										.placeholder(STUB_ID).error(STUB_ID)
+										.config(DEFAULT_CONFIG)
+										.transform(new Transformation() {
+											// 圆角图片的实现
+											@Override
+											public Bitmap transform(
+													Bitmap source) {
+												return ImageCacheUtils
+														.toRoundBitmap(source);
+											}
+
+											@Override
+											public String key() {
+												return null;
+											}
+										}).into(mAvator);
+							}
+						}
+					} else {
 						mAvator.setImageResource(STUB_ID);
 					}
 				} catch (JSONException e) {
@@ -128,7 +134,8 @@ public class PersonalZoneFragment extends BaseFragment implements
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 
-		view = inflater.inflate(R.layout.fragment_personal_zone, container,false);
+		view = inflater.inflate(R.layout.fragment_personal_zone, container,
+				false);
 		initViews();
 		initEvents();
 		onLoading();
@@ -137,9 +144,11 @@ public class PersonalZoneFragment extends BaseFragment implements
 
 	private void onLoading() {
 		startProgressDialog("请稍后...");
-		String mLoginName = mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
+		String mLoginName = mSharedPreferences.getString(
+				SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
 		Param param = new Param(Constant.LOGINNAME, mLoginName);
-		Request request = httpEngine.createRequest(ServicesConfig.PERSONAL_AVATOR, param);
+		Request request = httpEngine.createRequest(
+				ServicesConfig.PERSONAL_AVATOR, param);
 		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {
 
@@ -166,10 +175,14 @@ public class PersonalZoneFragment extends BaseFragment implements
 
 	private void initViews() {
 		mAvator = (ImageView) view.findViewById(R.id.iv_headview);
-		mPersonalDetail = (RelativeLayout) view.findViewById(R.id.rl_personal_details);
-		mPersonalAccountList = (RelativeLayout) view.findViewById(R.id.rl_personal_account_list);
-		mPersonalBounds = (RelativeLayout) view.findViewById(R.id.rl_personal_bounds);
-		mCompanyNotice = (RelativeLayout) view.findViewById(R.id.rl_personal_notice);
+		mPersonalDetail = (RelativeLayout) view
+				.findViewById(R.id.rl_personal_details);
+		mPersonalAccountList = (RelativeLayout) view
+				.findViewById(R.id.rl_personal_account_list);
+		mPersonalBounds = (RelativeLayout) view
+				.findViewById(R.id.rl_personal_bounds);
+		mCompanyNotice = (RelativeLayout) view
+				.findViewById(R.id.rl_personal_notice);
 		mCancleList = (RelativeLayout) view.findViewById(R.id.rl_cancle_list);
 		mHelpDoc = (RelativeLayout) view.findViewById(R.id.rl_help_doc);
 		mHeadContent = (TextView) view.findViewById(R.id.tv_headTitle);
@@ -177,11 +190,12 @@ public class PersonalZoneFragment extends BaseFragment implements
 		mPhone = (TextView) view.findViewById(R.id.textViewPhone);
 		mApp = (RelativeLayout) view.findViewById(R.id.rl_about_app);
 		mHeadContent.setText("我的");
-//		mPhone.setText(mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null));// 设置登陆时的个人手机号
+		// mPhone.setText(mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME,
+		// null));// 设置登陆时的个人手机号
 	}
 
 	private void initEvents() {
-//		mScrollView.setImageView(mBackgroundImageView);
+		// mScrollView.setImageView(mBackgroundImageView);
 		mPersonalDetail.setOnClickListener(this);
 		mPersonalAccountList.setOnClickListener(this);
 		mPersonalBounds.setOnClickListener(this);

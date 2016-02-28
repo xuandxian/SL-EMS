@@ -9,7 +9,7 @@ public class Bill {
     private String taskPackageName;
     private String taskNo;
     private String totalPrice;
-    private String closingDate;
+    private long closingDate;
 	public String getTaskNo() {
 		return taskNo;
 	}
@@ -34,10 +34,10 @@ public class Bill {
 	public void setTaskPackageName(String taskPackageName) {
 		this.taskPackageName = taskPackageName;
 	}
-	public String getClosingDate() {
+	public long getClosingDate() {
 		return closingDate;
 	}
-	public void setClosingDate(String closingDate) {
+	public void setClosingDate(long closingDate) {
 		this.closingDate = closingDate;
 	}
 	
