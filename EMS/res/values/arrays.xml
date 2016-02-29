@@ -25,6 +25,9 @@
         <item>青浦区</item>
         <item>奉贤区</item>
         <item>崇明县</item>
+        <item>闸北区</item>
+        <item>卢湾区</item>
+        <item>南汇区</item>
     </string-array>
     <string-array name="type_evelator">
         <item>电梯品牌</item>

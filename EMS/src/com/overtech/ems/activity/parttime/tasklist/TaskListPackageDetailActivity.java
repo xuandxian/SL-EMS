@@ -26,6 +26,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -65,6 +66,8 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	private Button mCancle;
 	private TextView mTaskPackageName;
 	private TextView mTaskNo;
+	private LinearLayout shareToFriends;
+	private LinearLayout dialToPartner;
 	private String mPhone;
 	private String mZonePhone;
 	private String mZone;
@@ -120,7 +123,14 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				mPhone = bean.getPartnerPhone();
 				mZonePhone = bean.getZonePhone();
 				mPartnerName = bean.getPartnerName();
-				mZone=bean.getZone();
+				mZone = bean.getZone();
+				if (mPartnerName == null || mPhone == null) {
+					shareToFriends.setVisibility(View.VISIBLE);
+					dialToPartner.setVisibility(View.GONE);
+				} else {
+					shareToFriends.setVisibility(View.GONE);
+					dialToPartner.setVisibility(View.VISIBLE);
+				}
 				if (null == list || list.size() == 0) {
 					Utilities.showToast("无数据", mActivity);
 					mCancle.setVisibility(View.GONE);
@@ -231,7 +241,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			default:
 				break;
 			}
-			
+
 			mSwipeLayout.setRefreshing(false);
 		};
 	};
@@ -318,9 +328,9 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 					String workType = detail.getWorkType();
 					if (detail.getIsFinish().equals("2")) {
 						Utilities.showToast("你好，该电梯已经完成", mActivity);
-					} else if(detail.getIsFinish().equals("1")){
+					} else if (detail.getIsFinish().equals("1")) {
 						Utilities.showToast("仍有人未完成该电梯的维保工作", context);
-					}else{
+					} else {
 						Utilities.showToast("请通过扫描二维码开启工作或者完成工作", context);
 					}
 					Intent intent = new Intent(context,
@@ -384,7 +394,8 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 		popupWindow.setTouchable(true);
 		popupWindow.setOutsideTouchable(true);
 		popupWindow.setBackgroundDrawable(new BitmapDrawable());
-		popupWindow.setContentView(LayoutInflater.from(activity).inflate(R.layout.layout_tasklist_pop, null));
+		popupWindow.setContentView(LayoutInflater.from(activity).inflate(
+				R.layout.layout_tasklist_pop, null));
 		initUI();
 	}
 
@@ -399,87 +410,68 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 								startNavicate(mStartPoint, destination, "终点");
 							}
 						});
-		popupWindow.getContentView().findViewById(R.id.ll_pop_2)
-				.setOnClickListener(
-						new OnClickListener() {
-							
-							@Override
-							public void onClick(View arg0) {
-								shareToFriends();
-							}
-						});
-		popupWindow.getContentView().findViewById(R.id.ll_pop_3)
-				.setOnClickListener(// 拨打搭档电话
-						new OnClickListener() {
+		shareToFriends = (LinearLayout) popupWindow.getContentView()
+				.findViewById(R.id.ll_pop_2);
+		shareToFriends.setOnClickListener(new OnClickListener() {
 
-							@Override
-							public void onClick(View v) {
-								if (mPartnerName == null || mPhone == null) {
-									Utilities.showToast(
-											"该任务单还没有被其他客户抢单，请耐心等待...", context);
-								} else {
-									Effectstype effect = Effectstype.Shake;
-									dialogBuilder
-											.withTitle("温馨提示")
-											.withTitleColor(
-													R.color.main_primary)
-											.withDividerColor("#11000000")
-											.withMessage(
-													"您是否要拨打电话给您的搭档："
-															+ mPartnerName)
-											.withMessageColor(
-													R.color.main_primary)
-											.withDialogColor("#FFFFFFFF")
-											.isCancelableOnTouchOutside(true)
-											.withDuration(700)
-											.withEffect(effect)
-											.withButtonDrawable(
-													R.color.main_white)
-											.withButton1Text("否")
-											.withButton1Color("#DD47BEE9")
-											.withButton2Text("是")
-											.withButton2Color("#DD47BEE9")
-											.setButton1Click(
-													new View.OnClickListener() {
-														@Override
-														public void onClick(
-																View v) {
-															dialogBuilder
-																	.dismiss();
-														}
-													})
-											.setButton2Click(
-													new View.OnClickListener() {
-														@Override
-														public void onClick(
-																View v) {
-															Intent intent = new Intent(
-																	Intent.ACTION_CALL,
-																	Uri.parse("tel:"
-																			+ mPhone));
-															startActivity(intent);
-														}
-													}).show();
-								}
+			@Override
+			public void onClick(View arg0) {
+				shareToFriends();
+			}
+		});
+		dialToPartner = (LinearLayout) popupWindow.getContentView()
+				.findViewById(R.id.ll_pop_3);
+		dialToPartner.setOnClickListener(// 拨打搭档电话
+				new OnClickListener() {
 
-							}
-						});
+					@Override
+					public void onClick(View v) {
+						Effectstype effect = Effectstype.Shake;
+						dialogBuilder.withTitle("温馨提示")
+								.withTitleColor(R.color.main_primary)
+								.withDividerColor("#11000000")
+								.withMessage("您是否要拨打电话给您的搭档：" + mPartnerName)
+								.withMessageColor(R.color.main_primary)
+								.withDialogColor("#FFFFFFFF")
+								.isCancelableOnTouchOutside(true)
+								.withDuration(700).withEffect(effect)
+								.withButtonDrawable(R.color.main_white)
+								.withButton1Text("否")
+								.withButton1Color("#DD47BEE9")
+								.withButton2Text("是")
+								.withButton2Color("#DD47BEE9")
+								.setButton1Click(new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										dialogBuilder.dismiss();
+									}
+								}).setButton2Click(new View.OnClickListener() {
+									@Override
+									public void onClick(View v) {
+										Intent intent = new Intent(
+												Intent.ACTION_CALL, Uri
+														.parse("tel:" + mPhone));
+										startActivity(intent);
+									}
+								}).show();
+					}
+				});
 	}
 
-	protected void shareToFriends() {//分享给好友
+	protected void shareToFriends() {// 分享给好友
 		ShareSDK.initSDK(this);
 		OnekeyShare oks = new OnekeyShare();
-//		oks.setTitle("哥们，分享给你一个维保单");
+		// oks.setTitle("哥们，分享给你一个维保单");
 		// titleUrl是标题的网络链接，仅在人人网和QQ空间使用
-//		oks.setTitleUrl("http://120.55.162.181:8080/slems/upload/haha.html");
-		//暂时使用云端服务器上面的logo,豌豆荚审核通过后使用豌豆荚中的logo
-//		oks.setImageUrl("http://120.55.162.181:8080/test/icon.png");
+		// oks.setTitleUrl("http://120.55.162.181:8080/slems/upload/haha.html");
+		// 暂时使用云端服务器上面的logo,豌豆荚审核通过后使用豌豆荚中的logo
+		// oks.setImageUrl("http://120.55.162.181:8080/test/icon.png");
 		// text是分享文本，所有平台都需要这个字段
-		oks.setText("我在24梯中抢到"+mZone+"的一个维保单，单号为:"+taskNo+",请速度去抢哦！");
+		oks.setText("我在24梯中抢到" + mZone + "的一个维保单，单号为:" + taskNo + ",请速度去抢哦！");
 		// url仅在微信（包括好友和朋友圈）中使用
-//		oks.setUrl("http://120.55.162.181:8080/slems/upload/haha.html");
-//		oks.setVenueName("24梯");
-		// 启动分享GUI 
+		// oks.setUrl("http://120.55.162.181:8080/slems/upload/haha.html");
+		// oks.setVenueName("24梯");
+		// 启动分享GUI
 		oks.show(this);
 	}
 

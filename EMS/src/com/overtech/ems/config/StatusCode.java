@@ -53,6 +53,14 @@ public class StatusCode {
 	 */
 	public static final int TASKLIST_DONET_FAILED=0x24;
 	/**
+	 * 任务单未完成状态
+	 */
+	public static final int TASK_NO=0x80;
+	/**
+	 * 任务单已完成状态
+	 */
+	public static final int TASK_DO=0x81;
+	/**
 	 * 任务包详情成功
 	 */
 	public static final int PACKAGE_DETAILS_SUCCESS = 0x25;
@@ -164,4 +172,6 @@ public class StatusCode {
 	 * 标签
 	 */
 	public static final int MSG_SET_TAGS = 1002;
+	
+	
 }

@@ -7,7 +7,7 @@
 
     <RelativeLayout
         android:id="@+id/rl_item_list_hot"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
         android:layout_weight="0.91" >
@@ -19,7 +19,14 @@
             android:layout_alignParentTop="true"
             android:layout_marginTop="10dp"
             android:singleLine="true" />
-
+		<TextView 
+		    android:id="@+id/tv_taskno"
+		    style="@style/tv_info_secondary_style"
+		    android:layout_alignParentTop="true"
+		    android:layout_toRightOf="@id/tv_name"
+		    android:layout_alignLeft="@id/tv_distance"
+		    android:layout_marginTop="10dp"
+		    />
         <TextView
             android:id="@+id/tv_address"
             style="@style/tv_info_secondary_style"
@@ -42,14 +49,16 @@
             android:layout_alignBaseline="@+id/tv_address"
             android:layout_alignBottom="@+id/tv_address"
             android:layout_marginLeft="16dp"
-            android:layout_toRightOf="@+id/tv_address" />
+            android:layout_toRightOf="@+id/tv_address"
+             />
 
         <TextView
             android:id="@+id/tv_date"
             style="@style/tv_info_secondary_style"
             android:layout_alignBaseline="@+id/tv_distance"
             android:layout_alignBottom="@+id/tv_distance"
-            android:layout_alignRight="@+id/tv_num" />
+            android:layout_alignRight="@+id/tv_num"
+             />
     </RelativeLayout>
 
 </LinearLayout>

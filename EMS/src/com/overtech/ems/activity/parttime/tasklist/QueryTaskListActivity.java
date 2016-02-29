@@ -319,7 +319,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 		case R.id.btn_login:
 			// 将对应的电梯的完成状态更新到服务器
 			if (isCanConfirmDone) {
-				showDialog(TYPE2, "请确认维保工作是否完成并将设备按钮调至正常状态");
+				showDialog(TYPE2, "请确认维保工作是否完成并将电梯监测设备调至正常状态");
 			} else {
 				Utilities.showToast("维保任务必须在当天完成", context);
 			}
@@ -346,6 +346,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 					@Override
 					public void onClick(View v) {
 						dialogBuilder.dismiss();
+//						Log.e("技术支持电话", mZonePhone);
 						if (TextUtils.equals(type, TYPE1)) {
 							Intent intent = new Intent(Intent.ACTION_CALL, Uri
 									.parse("tel:" + mZonePhone));

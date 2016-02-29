@@ -46,7 +46,7 @@ public class TaskListDonetFragment extends BaseFragment {
 				if(list==null||list.size()==0){
 					Utilities.showToast("无数据", mActivity);
 				}else{
-					adapter=new TaskListAdapter(list, mActivity);
+					adapter=new TaskListAdapter(list, mActivity,StatusCode.TASK_DO);
 					mDonet.setAdapter(adapter);
 				}
 				break;

@@ -6,8 +6,10 @@ import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.MyApplication;
+import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.parttime.TaskPackage;
 import android.content.Context;
+import android.net.sip.SipSession.State;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -21,18 +23,23 @@ public class TaskListAdapter extends BaseAdapter {
 	private double latitude;
 	private double longitude;
 	private LatLng mLatLng;
+	/**
+	 * 完成状态
+	 */
+	private int state;
 
 	public List<TaskPackage> getData() {
 		return list;
 	}
 
-	public TaskListAdapter(List<TaskPackage> list, Context context) {
+	public TaskListAdapter(List<TaskPackage> list, Context context,int state) {
 		super();
 		this.list = list;
 		this.context = context;
 		latitude = ((MyApplication) context.getApplicationContext()).latitude;
 		longitude = ((MyApplication) context.getApplicationContext()).longitude;
 		mLatLng = new LatLng(latitude, longitude);
+		this.state=state;
 	}
 
 	public TaskListAdapter(Context context) {
@@ -73,6 +80,11 @@ public class TaskListAdapter extends BaseAdapter {
 		holder.elevatorAmounts.setText(data.getElevatorAmounts());
 		holder.maintenanceAddress.setText(data.getMaintenanceAddress());
 		holder.maintenanceDate.setText(data.getMaintenanceDate());
+		if(state==StatusCode.TASK_NO){
+			holder.taskNo.setText("");
+		}else if(state==StatusCode.TASK_DO){
+			holder.taskNo.setText(data.getTaskNo());
+		}
 		LatLng latlng = new LatLng(Double.parseDouble(data.getLatitude()),Double.parseDouble(data.getLongitude()));
 		numFormat.setMaximumFractionDigits(2);
 		holder.distance.setText(numFormat.format(DistanceUtil.getDistance(mLatLng, latlng) / 1000.0) + "千米");
@@ -115,13 +127,14 @@ public class TaskListAdapter extends BaseAdapter {
 		TextView maintenanceAddress;
 		TextView distance;
 		TextView maintenanceDate;
-
+		TextView taskNo;
 		public ViewHolder(View view) {
 			taskPackageName = (TextView) view.findViewById(R.id.tv_name);
 			elevatorAmounts = (TextView) view.findViewById(R.id.tv_num);
 			maintenanceAddress = (TextView) view.findViewById(R.id.tv_address);
 			distance = (TextView) view.findViewById(R.id.tv_distance);
 			maintenanceDate = (TextView) view.findViewById(R.id.tv_date);
+			taskNo=(TextView) view.findViewById(R.id.tv_taskno);
 			view.setTag(this);
 		}
 	}

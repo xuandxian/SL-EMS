@@ -95,7 +95,7 @@ public class TaskListNoneFragment extends BaseFragment {
 				} else {
 					mNoPage.setVisibility(View.GONE);
 					mNoWifi.setVisibility(View.GONE);
-					adapter = new TaskListAdapter(list, mActivity);
+					adapter = new TaskListAdapter(list, mActivity,StatusCode.TASK_NO);
 					mSwipeListView.setAdapter(adapter);
 				}
 				break;
