@@ -98,9 +98,11 @@ public class ScanCodeActivity extends BaseActivity implements Callback {
 							QueryTaskListActivity.class);
 					String isStart=result.getIsStart();
 					if(isStart.equals("0")){
-						Utilities.showToast("维保计时开始", mContext);
+//						Utilities.showToast("维保计时开始", mContext);
+						Utilities.showToast("请将电梯监测设备按钮调至维保状态后开始进行维保工作", mContext);
 					}else{
-						Utilities.showToast("维保已经开始", mContext);
+//						Utilities.showToast("维保已经开始", mContext);
+						Utilities.showToast("请将电梯监测设备按钮调至维保状态后开始进行维保工作", mContext);
 					}
 					Bundle bundle = new Bundle();
 					bundle.putString(Constant.TASKNO, result.getTaskNo());
