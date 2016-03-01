@@ -10,8 +10,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp"
-        android:singleLine="true"
-        android:text="丰业广园公寓" />
+        android:singleLine="true" />
 
     <TextView
         android:id="@+id/tv_personal_maintenance_time"
@@ -19,24 +18,28 @@
         android:layout_alignBaseline="@+id/tv_personal_village_name"
         android:layout_alignBottom="@+id/tv_personal_village_name"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="15dp"
-        android:text="" />
+        android:layout_marginRight="15dp" />
+
+    <TextView
+        android:id="@+id/tv_personal_taskno"
+        style="@style/tv_info_secondary_style"
+        android:layout_alignLeft="@+id/tv_personal_village_name"
+        android:layout_below="@+id/tv_personal_village_name"
+        android:layout_marginTop="10dp"
+        android:paddingBottom="10dp" />
 
     <TextView
         android:id="@+id/tv_personal_account"
         style="@style/tv_info_red_style"
-        android:layout_alignLeft="@+id/tv_personal_village_name"
-        android:layout_below="@+id/tv_personal_village_name"
-        android:layout_marginTop="10dp"
-        android:paddingBottom="10dp"
-        android:text="￥200" />
+        android:layout_alignBaseline="@id/tv_personal_taskno"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/tv_personal_taskno" />
 
     <TextView
         android:id="@+id/tv_personal_maintenance_endtime"
         style="@style/tv_info_secondary_style"
         android:layout_alignBaseline="@+id/tv_personal_account"
         android:layout_alignBottom="@+id/tv_personal_account"
-        android:layout_alignRight="@+id/tv_personal_maintenance_time"
-        android:text="" />
+        android:layout_alignRight="@+id/tv_personal_maintenance_time" />
 
 </RelativeLayout>

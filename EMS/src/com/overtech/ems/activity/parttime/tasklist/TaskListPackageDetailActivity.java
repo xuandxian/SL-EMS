@@ -464,6 +464,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 		// oks.setTitle("哥们，分享给你一个维保单");
 		// titleUrl是标题的网络链接，仅在人人网和QQ空间使用
 		// oks.setTitleUrl("http://120.55.162.181:8080/slems/upload/haha.html");
+		oks.setTitleUrl("http://www.wandoujia.com/apps/com.overtech.ems");
 		// 暂时使用云端服务器上面的logo,豌豆荚审核通过后使用豌豆荚中的logo
 		// oks.setImageUrl("http://120.55.162.181:8080/test/icon.png");
 		// text是分享文本，所有平台都需要这个字段

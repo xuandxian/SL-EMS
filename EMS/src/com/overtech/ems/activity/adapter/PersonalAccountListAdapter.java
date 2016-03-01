@@ -16,10 +16,11 @@ import com.overtech.ems.R;
 import com.overtech.ems.entity.parttime.Bill;
 
 public class PersonalAccountListAdapter extends BaseAdapter {
-	
+
 	private Context context;
-	private List<Bill> list ;
-	private SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd"); 
+	private List<Bill> list;
+	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
 	public PersonalAccountListAdapter(Context context, List<Bill> list) {
 		super();
 		this.context = context;
@@ -44,7 +45,7 @@ public class PersonalAccountListAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder = null;
-		Bill data=list.get(position);
+		Bill data = list.get(position);
 		if (convertView == null) {
 			holder = new ViewHolder();
 			convertView = LayoutInflater.from(context).inflate(
@@ -57,20 +58,27 @@ public class PersonalAccountListAdapter extends BaseAdapter {
 					.findViewById(R.id.tv_personal_account);
 			holder.mMaintenanceEndTime = (TextView) convertView
 					.findViewById(R.id.tv_personal_maintenance_endtime);
+			holder.mTaskNo = (TextView) convertView
+					.findViewById(R.id.tv_personal_taskno);
 			convertView.setTag(holder);
 
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		holder.mVillageName.setText(data.getTaskPackageName());
-		
-		
+
 		holder.mMaintenanceTime.setText(data.getMaintenanceDate());
 		holder.mPersonalAccount.setText(data.getTotalPrice());
-		if(data.getClosingDate()!=0){
-			holder.mMaintenanceEndTime.setText(sdf.format((new Date(data.getClosingDate()))));
-		}else{
+		if (data.getClosingDate() != 0) {
+			holder.mMaintenanceEndTime.setText(sdf.format((new Date(data
+					.getClosingDate()))));
+		} else {
 			holder.mMaintenanceEndTime.setText("未结算");
+		}
+		if(data.getTaskNo()!=null){
+			holder.mTaskNo.setText(data.getTaskNo());
+		}else{
+			holder.mTaskNo.setText("");
 		}
 		return convertView;
 	}
@@ -80,5 +88,6 @@ public class PersonalAccountListAdapter extends BaseAdapter {
 		public TextView mMaintenanceTime;
 		public TextView mPersonalAccount;
 		public TextView mMaintenanceEndTime;
+		public TextView mTaskNo;
 	}
 }

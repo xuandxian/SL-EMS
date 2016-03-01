@@ -75,7 +75,7 @@ public class PersonalAboutAppActivity extends BaseActivity implements OnClickLis
 		// titleUrl是标题的网络链接，仅在人人网和QQ空间使用
 		oks.setTitleUrl("http://www.wandoujia.com/apps/com.overtech.ems");
 		//暂时使用云端服务器上面的logo,豌豆荚审核通过后使用豌豆荚中的logo
-		oks.setImageUrl("http://120.55.162.181:8080/test/icon.png");
+//		oks.setImageUrl("http://120.55.162.181:8080/test/icon.png");
 		// text是分享文本，所有平台都需要这个字段
 		oks.setText("一款基于手机移动端的电梯维保App，欢迎下载。");
 		// url仅在微信（包括好友和朋友圈）中使用
