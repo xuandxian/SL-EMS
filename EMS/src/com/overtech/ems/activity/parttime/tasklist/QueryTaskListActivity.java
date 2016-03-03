@@ -4,14 +4,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,7 +23,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
-
 import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
@@ -71,7 +65,6 @@ public class QueryTaskListActivity extends BaseActivity implements
 	private TextView mTaskDetailsTitle;
 	private final String TYPE1 = "CALL_PHONE";
 	private final String TYPE2 = "CONFIRM";
-
 	private Set<String> tagSet;
 	private String TAG = "24梯";
 	/**
@@ -88,52 +81,35 @@ public class QueryTaskListActivity extends BaseActivity implements
 			switch (msg.what) {
 			case StatusCode.WORK_DETAILS_SUCCESS:
 				String json = (String) msg.obj;
-				// Log.e("==queryTaskList==", json);
 				WorkTypeBean bean = gson.fromJson(json, WorkTypeBean.class);
 				ArrayList<String> tempList = bean.getModel();
 				list.add(new MaintenanceType("0", "Title", "content"));
 				for (int i = 0; i < tempList.size(); i++) {
 					String allString = tempList.get(i);
 					String[] data = allString.split("\\|");
-					MaintenanceType type = new MaintenanceType(
-							String.valueOf(i + 1), data[0], data[1]);
+					MaintenanceType type = new MaintenanceType(String.valueOf(i + 1), data[0], data[1]);
 					list.add(type);
 				}
 				mTaskDetailsTitle.setVisibility(View.VISIBLE);
 				adapter = new TaskListDetailsAdapter(context, list);
 				mTaskListData.setAdapter(adapter);
 				break;
-
 			case StatusCode.MAINTENANCE_COMPLETE_SUCCESS:
-
 				String maintenanceJson = (String) msg.obj;// 提交电梯完成状态后，后台返回的信息
-				Log.e("==完成信息==", maintenanceJson);
 				try {
 					JSONObject jsonObject = new JSONObject(maintenanceJson);
 					String updateMsg = jsonObject.getString("msg");// 该电梯完成状态是否已经更新，0，表示更新失败，1表示更新成功
 					boolean completeProgress = jsonObject.getBoolean("success");// 对于维保的单台电梯，true代表该电梯两人都完成，false代表尚未完成或者有一人完成
 					if (updateMsg.equals("1")) {
 						currentElevatorIsFinish = true;
-						/*new AlertDialog.Builder(context)
-								.setMessage("请将设备按钮调至正常状态").show()
-								.setOnDismissListener(new OnDismissListener() {
-
-									@Override
-									public void onDismiss(DialogInterface arg0) {
-										// TODO Auto-generated method stub
-										finish();
-									}
-								});*/
 					} else {
 						currentElevatorIsFinish = false;
 					}
 					if (completeProgress) {
-
 						tagSet.remove(mTaskNo);
 						JPushInterface.setAliasAndTags(getApplicationContext(),
 								null, tagSet, mTagsCallback);
 						if (!jsonObject.isNull("taskState")) {
-
 							String taskState = jsonObject
 									.getString("taskState");
 							if (taskState.equals("0")) {
@@ -417,7 +393,6 @@ public class QueryTaskListActivity extends BaseActivity implements
 					@Override
 					public void onResponse(Response response)
 							throws IOException {
-						// TODO Auto-generated method stub
 						Message msg = new Message();
 						if (response.isSuccessful()) {
 							msg.what = StatusCode.VALIDATE_TIME_SUCCESS;
@@ -431,7 +406,6 @@ public class QueryTaskListActivity extends BaseActivity implements
 
 					@Override
 					public void onFailure(Request arg0, IOException arg1) {
-						// TODO Auto-generated method stub
 						Message msg = new Message();
 						msg.what = StatusCode.RESPONSE_NET_FAILED;
 						msg.obj = "网络异常";

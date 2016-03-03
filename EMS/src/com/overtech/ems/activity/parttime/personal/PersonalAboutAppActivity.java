@@ -73,7 +73,7 @@ public class PersonalAboutAppActivity extends BaseActivity implements OnClickLis
 		oks.setText("一款基于手机移动端的电梯维保App，欢迎下载。");
 		// url仅在微信（包括好友和朋友圈）中使用
 		oks.setUrl("http://www.wandoujia.com/apps/com.overtech.ems");
-		oks.setVenueName("24梯");
+		oks.setVenueName("24T");
 		// 启动分享GUI
 		oks.show(this);
 	}

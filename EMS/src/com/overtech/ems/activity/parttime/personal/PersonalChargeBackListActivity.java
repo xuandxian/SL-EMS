@@ -2,27 +2,18 @@ package com.overtech.ems.activity.parttime.personal;
 
 import java.io.IOException;
 import java.util.List;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
-import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.adapter.PersonalChargebackAdapter;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.bean.ChargebackBean;
@@ -36,7 +27,7 @@ import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
-public class PersonalCancleListActivity extends BaseActivity {
+public class PersonalChargeBackListActivity extends BaseActivity {
 	private ImageView mDoBack;
 	private TextView mHeadTitle;
 	private ListView mChargeback;
@@ -71,7 +62,6 @@ public class PersonalCancleListActivity extends BaseActivity {
 	};
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_personal_cancle_list);
 		initView();

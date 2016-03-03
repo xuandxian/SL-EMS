@@ -2,7 +2,6 @@ package com.overtech.ems.activity.parttime.tasklist;
 
 import java.io.IOException;
 import java.util.Vector;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
@@ -14,7 +13,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
@@ -23,7 +21,6 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.google.gson.Gson;
@@ -78,32 +75,26 @@ public class ScanCodeActivity extends BaseActivity implements Callback {
 			switch (msg.what) {
 			case StatusCode.QUERY_TASK_PACKAGE_ELEVATOR_SUCCESS:
 				String json = (String) msg.obj;
-//				Log.e("==扫描结果==", json);
 				ScanResultBean bean = gson.fromJson(json, ScanResultBean.class);
 				boolean isTrue = bean.isSuccess();
 				if (isTrue) {
 					BeginWorkResult result = bean.getModel();
-					
 					double latitude=Double.parseDouble(result.getLatitude());
 					double longitude=Double.parseDouble(result.getLongitude());
 					LatLng latlng=new LatLng(latitude,longitude);
 					double distance=DistanceUtil.getDistance(mCurrentLocation, latlng);
-//					Log.e("==电梯与当前的距离==", distance+"");
 					if(distance>500.0){
 						Utilities.showToast("您距离维保电梯的距离超出范围", mContext);
 						break;
 					}
-					
-					Intent intent = new Intent(ScanCodeActivity.this,
-							QueryTaskListActivity.class);
-					String isStart=result.getIsStart();
-					if(isStart.equals("0")){
-//						Utilities.showToast("维保计时开始", mContext);
+					Intent intent = new Intent(ScanCodeActivity.this,QueryTaskListActivity.class);
+					//业务调整，该部分注释
+//					String isStart=result.getIsStart();
+//					if(isStart.equals("0")){
+//						Utilities.showToast("请将电梯监测设备按钮调至维保状态后开始进行维保工作", mContext);
+//					}else{
 						Utilities.showToast("请将电梯监测设备按钮调至维保状态后开始进行维保工作", mContext);
-					}else{
-//						Utilities.showToast("维保已经开始", mContext);
-						Utilities.showToast("请将电梯监测设备按钮调至维保状态后开始进行维保工作", mContext);
-					}
+//					}
 					Bundle bundle = new Bundle();
 					bundle.putString(Constant.TASKNO, result.getTaskNo());
 					bundle.putString(Constant.WORKTYPE, result.getWorkType());

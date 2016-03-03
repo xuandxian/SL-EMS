@@ -461,17 +461,10 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	protected void shareToFriends() {// 分享给好友
 		ShareSDK.initSDK(this);
 		OnekeyShare oks = new OnekeyShare();
-		// oks.setTitle("哥们，分享给你一个维保单");
-		// titleUrl是标题的网络链接，仅在人人网和QQ空间使用
-		// oks.setTitleUrl("http://120.55.162.181:8080/slems/upload/haha.html");
 		oks.setTitleUrl("http://www.wandoujia.com/apps/com.overtech.ems");
-		// 暂时使用云端服务器上面的logo,豌豆荚审核通过后使用豌豆荚中的logo
-		// oks.setImageUrl("http://120.55.162.181:8080/test/icon.png");
 		// text是分享文本，所有平台都需要这个字段
-		oks.setText("我在24梯中抢到" + mZone + "的一个维保单，单号为:" + taskNo + ",请速度去抢哦！");
-		// url仅在微信（包括好友和朋友圈）中使用
-		// oks.setUrl("http://120.55.162.181:8080/slems/upload/haha.html");
-		// oks.setVenueName("24梯");
+		oks.setText("我在24T中抢到" + mZone + "的一个维保单，单号为:" + taskNo + ",请速度去抢哦！App下载链接：http://www.wandoujia.com/apps/com.overtech.ems");
+		oks.setVenueName("24T");
 		// 启动分享GUI
 		oks.show(this);
 	}

@@ -25,7 +25,7 @@ import com.overtech.ems.activity.parttime.personal.PersonalAboutAppActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalAccountListActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalAnnouncementActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalBoundsActivity;
-import com.overtech.ems.activity.parttime.personal.PersonalCancleListActivity;
+import com.overtech.ems.activity.parttime.personal.PersonalChargeBackListActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalDeatilsActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalHelpDocActivity;
 import com.overtech.ems.config.StatusCode;
@@ -226,7 +226,7 @@ public class PersonalZoneFragment extends BaseFragment implements
 			startActivity(intent);
 			break;
 		case R.id.rl_cancle_list:// 退单记录
-			intent.setClass(mActivity, PersonalCancleListActivity.class);
+			intent.setClass(mActivity, PersonalChargeBackListActivity.class);
 			startActivity(intent);
 			break;
 		case R.id.rl_help_doc:// 帮助文档

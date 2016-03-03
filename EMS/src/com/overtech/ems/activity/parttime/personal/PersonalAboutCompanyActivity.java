@@ -17,7 +17,7 @@ public class PersonalAboutCompanyActivity extends BaseActivity {
 		setContentView(R.layout.activity_personal_aboutcompany);
 		mDoBack = (ImageView) findViewById(R.id.iv_headBack);
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
-		mHeadContent.setText("公司信息");
+		mHeadContent.setText("关于我们");
 		mDoBack.setVisibility(View.VISIBLE);
 		mDoBack.setOnClickListener(new OnClickListener() {
 			
