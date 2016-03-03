@@ -17,7 +17,6 @@ public class PersonalAboutAppActivity extends BaseActivity implements OnClickLis
 	private TextView mHead;
 	private ImageView mDoBack;
 	private RelativeLayout rl_company_info;
-	private RelativeLayout rl_app_developers;
 	private RelativeLayout rl_share;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +37,6 @@ public class PersonalAboutAppActivity extends BaseActivity implements OnClickLis
 			}
 		});
 		rl_company_info.setOnClickListener(this);
-		rl_app_developers.setOnClickListener(this);
 		rl_share.setOnClickListener(this);
 	}
 
@@ -46,7 +44,6 @@ public class PersonalAboutAppActivity extends BaseActivity implements OnClickLis
 		mHead=(TextView) findViewById(R.id.tv_headTitle);
 		mDoBack=(ImageView) findViewById(R.id.iv_headBack);
 		rl_company_info=(RelativeLayout) findViewById(R.id.rl_company_info);
-		rl_app_developers=(RelativeLayout) findViewById(R.id.rl_app_developers);
 		rl_share=(RelativeLayout) findViewById(R.id.rl_share);
 	}
 
@@ -56,10 +53,6 @@ public class PersonalAboutAppActivity extends BaseActivity implements OnClickLis
 		switch (v.getId()) {
 		case R.id.rl_company_info:
 			intent.setClass(this, PersonalAboutCompanyActivity.class);
-			startActivity(intent);
-			break;
-		case R.id.rl_app_developers:
-			intent.setClass(this, PersonalAboutDeveloperActivity.class);
 			startActivity(intent);
 			break;
 		case R.id.rl_share:
