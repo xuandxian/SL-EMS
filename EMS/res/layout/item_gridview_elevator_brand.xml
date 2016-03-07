@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<CheckBox xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cb_elevator"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal" >
-    <CheckBox 
-        android:id="@+id/cb_elevator"
-        android:text="上海三菱"
-        android:singleLine="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        />
-
-</LinearLayout>
+    android:clickable="false"
+    android:focusable="false"
+    android:focusableInTouchMode="false"
+    android:singleLine="true"
+    android:text="上海三菱" />

@@ -2,6 +2,8 @@ package com.overtech.ems.activity.common.register;
 
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -18,10 +20,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.GridView;
@@ -56,10 +59,13 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment implements OnC
 	private GridView mGridView;
 	private Button mConfirm;
 	private Button mCancle;
+	/**
+	 * 记录选择的电梯品牌
+	 */
+	private HashMap<Integer,Boolean> isSelected;
+	private StringBuilder mCheckedMessage;
 	private TextView mWorkTime;
 	private RegAddPerEduWorkFrgClickListener listener;
-	private HashMap<Integer, Boolean> isSelected;
-	private StringBuilder mCheckedMessage;
 	private String[] data = { "日立", "广日", "上海三菱", "日本三菱", "通力", "巨人通力", "奥的斯",
 			"西子奥的斯", "西奥", "迅达", "许昌西继", "东芝", "蒂森克虏伯", "富士达", "西尼", "上海富士",
 			"华升富士达", "浦东开灵", "长江斯迈普", "三荣", "永大", "现代", "华特", "爱登堡", "新时达",
@@ -92,24 +98,6 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment implements OnC
 		return view;
 	}
 
-	private void dealElevator() {
-		if (adapter != null) {
-			isSelected = adapter.getCheckBox();
-			mCheckedMessage = new StringBuilder();
-			for (int i = 0; i < data.length; i++) {
-				if (isSelected.containsKey(i)) {
-					mCheckedMessage.append(data[i] + "  ");
-				}
-			}
-			if (TextUtils.isEmpty(mCheckedMessage)) {
-				mElevator.setText("电梯品牌");
-			} else {
-				mElevator.setText(mCheckedMessage.toString());
-			}
-		}
-	}
-
-	
 	private void init() {
 		mDoBack.setOnClickListener(this);
 		mNext.setOnClickListener(this);
@@ -189,6 +177,26 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment implements OnC
 		});
 	}
 
+	private void dealElevator() {
+		if (adapter != null) {
+			mCheckedMessage = new StringBuilder();
+			if(!isSelected.isEmpty()){
+				Iterator<Map.Entry<Integer, Boolean>> iterator=isSelected.entrySet().iterator();
+				while(iterator.hasNext()){
+					Map.Entry<Integer,Boolean> brand=iterator.next();
+					mCheckedMessage.append(data[brand.getKey()]+" ");
+				}
+			}
+			if (TextUtils.isEmpty(mCheckedMessage)) {
+				mElevator.setText("电梯品牌");
+			} else {
+				mElevator.setText(mCheckedMessage.toString());
+			}
+		}
+	}
+
+	
+	//选择电梯品牌
 	protected void showPopupWindow() {
 		mPopupWindow = new DimPopupWindow(mContext);
 		View view = LayoutInflater.from(mContext).inflate(
@@ -198,6 +206,24 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment implements OnC
 		mCancle = (Button) view.findViewById(R.id.bt_elevator_cancle);
 		adapter = new ElevatorBrandAdapter(data, mContext);
 		mGridView.setAdapter(adapter);
+		isSelected=adapter.isSelected;
+		mGridView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				Log.e("注册", position+"======");
+				CheckBox elevator=(CheckBox) parent.getChildAt(position);
+				if(elevator.isChecked()){
+					elevator.setChecked(false);
+					isSelected.remove(position);
+				}else{
+					elevator.setChecked(true);
+					isSelected.put(position, true);
+				}
+			}
+		});
 		mPopupWindow.setOutsideTouchable(false);
 		mPopupWindow.setContentView(view);
 		mPopupWindow.showAtLocation(mElevatorBrand, Gravity.CENTER, 0, 0);
