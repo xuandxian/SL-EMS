@@ -1,8 +1,12 @@
 package com.overtech.ems.activity.parttime.tasklist;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Vector;
+
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
 import android.graphics.Bitmap;
@@ -13,14 +17,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Vibrator;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.google.gson.Gson;
@@ -45,9 +50,12 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 /**
- * Initial the camera
+ * 维保人员通过扫描二维码开启工作，将用户名和电梯编号发送到后台进行校验，如果该电梯是当天的维保任务，并且也有维保搭档，则可以开始工作，
+ * 然后为防止维保人员没有到维保地点就扫描开始工作，再加上维保地点经纬度的判断，500米范围之内 需要做的事情：和搭档之间是不是第一次开始该电梯的维保工作
+ * 点击的时候该电梯是否已经完成
  * 
- * @author Ryan.Tang
+ * @author Overtech Will
+ * 
  */
 public class ScanCodeActivity extends BaseActivity implements Callback {
 
@@ -68,6 +76,7 @@ public class ScanCodeActivity extends BaseActivity implements Callback {
 	private double mLatitude;
 	private double mLongitude;
 	private LatLng mCurrentLocation;
+
 	private Handler handler2 = new Handler() {
 		Gson gson = new Gson();
 
@@ -75,42 +84,108 @@ public class ScanCodeActivity extends BaseActivity implements Callback {
 			switch (msg.what) {
 			case StatusCode.QUERY_TASK_PACKAGE_ELEVATOR_SUCCESS:
 				String json = (String) msg.obj;
+				Log.e("hahahah", json);
 				ScanResultBean bean = gson.fromJson(json, ScanResultBean.class);
-				boolean isTrue = bean.isSuccess();
+				BeginWorkResult currentElevator = null;
+				boolean isTrue = bean.isSuccess();//是否满足维保要求
 				if (isTrue) {
-					BeginWorkResult result = bean.getModel();
-					double latitude=Double.parseDouble(result.getLatitude());
-					double longitude=Double.parseDouble(result.getLongitude());
-					LatLng latlng=new LatLng(latitude,longitude);
-					double distance=DistanceUtil.getDistance(mCurrentLocation, latlng);
-					if(distance>500.0){
-						Utilities.showToast("您距离维保电梯的距离超出范围", mContext);
+					int count = 0;// 记录包中完成电梯的数量
+					List<BeginWorkResult> result = bean.getModel();
+					for (int i = 0; i < result.size(); i++) {
+						if (result.get(i).getIsFinish().equals("2")) {
+							count++;
+						}
+					}
+					if (count == result.size()) {// 当任务包中所有的电梯都完成了，就可以进入到问题反馈中去
+						Intent intent = new Intent(ScanCodeActivity.this,
+								QuestionResponseActivity.class);
+						Bundle bundle = new Bundle();
+						bundle.putString(Constant.TASKNO, result.get(0)
+								.getTaskNo());
+						intent.putExtras(bundle);
+						startActivity(intent);
+						ScanCodeActivity.this.finish();
 						break;
 					}
-					Intent intent = new Intent(ScanCodeActivity.this,QueryTaskListActivity.class);
-					//业务调整，该部分注释
-//					String isStart=result.getIsStart();
-//					if(isStart.equals("0")){
-//						Utilities.showToast("请将电梯监测设备按钮调至维保状态后开始进行维保工作", mContext);
-//					}else{
-						Utilities.showToast("请将电梯监测设备按钮调至维保状态后开始进行维保工作", mContext);
-//					}
-					Bundle bundle = new Bundle();
-					bundle.putString(Constant.TASKNO, result.getTaskNo());
-					bundle.putString(Constant.WORKTYPE, result.getWorkType());
-					bundle.putString(Constant.ZONEPHONE, result.getZonePhone());
-					bundle.putString(Constant.ELEVATORNO, mElevatorNo);
-					intent.putExtras(bundle);
-					startActivity(intent);
-				} else {
-					BeginWorkResult result=bean.getModel();
-					if(result.getIsFinish()!=null&&result.getIsFinish().equals("2")){
-						Utilities.showToast("您已经完成了该电梯", context);
-					}else{
-						Utilities.showToast("您尚未满足维保要求", context);//维保要求包括，维保时间正确，有维保搭档，维保电梯正确
+					for (int i = 0; i < result.size(); i++) {//遍历电梯编号，得到当前电梯正在维保的电梯
+						if (mElevatorNo.equals(result.get(i).getElevatorNo())) {
+							currentElevator = result.get(i);
+						}
 					}
+
+					double latitude = Double.parseDouble(currentElevator
+							.getLatitude());
+					double longitude = Double.parseDouble(currentElevator
+							.getLongitude());
+					LatLng latlng = new LatLng(latitude, longitude);
+					double distance = DistanceUtil.getDistance(
+							mCurrentLocation, latlng);
+					if (distance > 500.0) {
+						Utilities.showToast("您距离维保电梯的距离超出范围", mContext);
+						ScanCodeActivity.this.finish();
+						break;
+					}
+
+					// 业务调整，该部分注释
+					// String isStart=result.getIsStart();
+					// if(isStart.equals("0")){
+					// Utilities.showToast("请将电梯监测设备按钮调至维保状态后开始进行维保工作",
+					// mContext);
+					// }else{
+					// Utilities.showToast("请将电梯监测设备按钮调至维保状态后开始进行维保工作",
+					// mContext);
+					// }
+					final String taskNo = currentElevator.getTaskNo();
+					final String workType = currentElevator.getWorkType();
+					final String zonePhone = currentElevator.getZonePhone();
+					new AlertDialog.Builder(context)
+							.setTitle("温馨提示")
+							.setMessage("请将电梯监测设备按钮调至维保状态后开始进行维保工作")
+							.setPositiveButton("确认",
+									new DialogInterface.OnClickListener() {
+
+										@Override
+										public void onClick(
+												DialogInterface dialog,
+												int which) {
+											// TODO Auto-generated method stub
+											Intent intent = new Intent(
+													ScanCodeActivity.this,
+													QueryTaskListActivity.class);
+											Bundle bundle = new Bundle();
+											bundle.putString(Constant.TASKNO,
+													taskNo);
+											bundle.putString(Constant.WORKTYPE,
+													workType);
+											bundle.putString(
+													Constant.ZONEPHONE,
+													zonePhone);
+											bundle.putString(
+													Constant.ELEVATORNO,
+													mElevatorNo);
+											intent.putExtras(bundle);
+											startActivity(intent);
+											dialog.dismiss();
+											ScanCodeActivity.this.finish();
+										}
+									})
+							.setNegativeButton("取消",
+									new DialogInterface.OnClickListener() {
+
+										@Override
+										public void onClick(
+												DialogInterface dialog,
+												int which) {
+											// TODO Auto-generated method stub
+											dialog.dismiss();
+											ScanCodeActivity.this.finish();
+										}
+									}).show();
+
+				} else {
+					Utilities.showToast("您尚未满足维保要求", context);// 维保要求包括，维保时间正确，有维保搭档，维保电梯正确
+					ScanCodeActivity.this.finish();
 				}
-				ScanCodeActivity.this.finish();
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
 				Utilities.showToast("服务端异常", context);
@@ -122,22 +197,70 @@ public class ScanCodeActivity extends BaseActivity implements Callback {
 		};
 	};
 
+	/*
+	 * private Handler handler2 = new Handler() { Gson gson = new Gson();
+	 * 
+	 * public void handleMessage(android.os.Message msg) { switch (msg.what) {
+	 * case StatusCode.QUERY_TASK_PACKAGE_ELEVATOR_SUCCESS: String json =
+	 * (String) msg.obj; Log.e("hahahah", json); ScanResultBean bean =
+	 * gson.fromJson(json, ScanResultBean.class); boolean isTrue =
+	 * bean.isSuccess(); if (isTrue) { BeginWorkResult result = bean.getModel();
+	 * double latitude = Double.parseDouble(result.getLatitude()); double
+	 * longitude = Double .parseDouble(result.getLongitude()); LatLng latlng =
+	 * new LatLng(latitude, longitude); double distance =
+	 * DistanceUtil.getDistance( mCurrentLocation, latlng); if (distance >
+	 * 500.0) { Utilities.showToast("您距离维保电梯的距离超出范围", mContext); break; }
+	 * 
+	 * // 业务调整，该部分注释 // String isStart=result.getIsStart(); //
+	 * if(isStart.equals("0")){ //
+	 * Utilities.showToast("请将电梯监测设备按钮调至维保状态后开始进行维保工作", // mContext); // }else{
+	 * // Utilities.showToast("请将电梯监测设备按钮调至维保状态后开始进行维保工作", // mContext); // }
+	 * final String taskNo=result.getTaskNo(); final String
+	 * workType=result.getWorkType(); final String
+	 * zonePhone=result.getZonePhone(); new AlertDialog.Builder(context)
+	 * .setTitle("温馨提示") .setMessage("请将电梯监测设备按钮调至维保状态后开始进行维保工作")
+	 * .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+	 * 
+	 * @Override public void onClick( DialogInterface dialog, int which) { //
+	 * TODO Auto-generated method stub Intent intent = new
+	 * Intent(ScanCodeActivity.this, QueryTaskListActivity.class); Bundle bundle
+	 * = new Bundle(); bundle.putString(Constant.TASKNO, taskNo);
+	 * bundle.putString(Constant.WORKTYPE, workType);
+	 * bundle.putString(Constant.ZONEPHONE, zonePhone);
+	 * bundle.putString(Constant.ELEVATORNO, mElevatorNo);
+	 * intent.putExtras(bundle); startActivity(intent); dialog.dismiss();
+	 * ScanCodeActivity.this.finish(); } }) .setNegativeButton("取消", new
+	 * DialogInterface.OnClickListener() {
+	 * 
+	 * @Override public void onClick( DialogInterface dialog, int which) { //
+	 * TODO Auto-generated method stub dialog.dismiss();
+	 * ScanCodeActivity.this.finish(); } });
+	 * 
+	 * } else { BeginWorkResult result = bean.getModel(); if
+	 * (result.getIsFinish() != null && result.getIsFinish().equals("2")) {
+	 * Utilities.showToast("您已经完成了该电梯", context); } else {
+	 * Utilities.showToast("您尚未满足维保要求", context);// 维保要求包括，维保时间正确，有维保搭档，维保电梯正确 }
+	 * ScanCodeActivity.this.finish(); } break; case
+	 * StatusCode.RESPONSE_SERVER_EXCEPTION: Utilities.showToast("服务端异常",
+	 * context); break; case StatusCode.RESPONSE_NET_FAILED:
+	 * Utilities.showToast("网络异常", context); break; } }; };
+	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_task_list_capture);
 		mContext = ScanCodeActivity.this;
-		mLatitude=application.latitude;
-		mLongitude=application.longitude;
-		mCurrentLocation=new LatLng(mLatitude, mLongitude);
+		mLatitude = application.latitude;
+		mLongitude = application.longitude;
+		mCurrentLocation = new LatLng(mLatitude, mLongitude);
 		CameraManager.init(getApplication());
 		viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
 		mHeadContent.setText("二维码扫描");
 		mDoBack = (ImageView) findViewById(R.id.iv_headBack);
 		mDoBack.setVisibility(View.VISIBLE);
-		mDoBack.setOnClickListener(new OnClickListener() {
+		mDoBack.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				ScanCodeActivity.this.finish();
@@ -145,7 +268,7 @@ public class ScanCodeActivity extends BaseActivity implements Callback {
 		});
 		hasSurface = false;
 		inactivityTimer = new InactivityTimer(this);
-		
+
 	}
 
 	@Override

@@ -315,14 +315,14 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				if (adapter.isAllCompleted()) {
+				/*if (adapter.isAllCompleted()) {//业务调整，此处不再加进入到问题反馈页面的功能，只提示信息然后进入到电梯详情
 					Intent intent = new Intent(context,
 							QuestionResponseActivity.class);
 					Bundle bundle = new Bundle();
 					bundle.putString(Constant.TASKNO, taskNo);
 					intent.putExtras(bundle);
 					startActivity(intent);
-				} else {
+				} else {*/
 					TaskPackageDetail detail = (TaskPackageDetail) parent
 							.getItemAtPosition(position);
 					String workType = detail.getWorkType();
@@ -340,7 +340,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 							detail.getElevatorNo());
 					intent.putExtras(bundle);
 					startActivity(intent);
-				}
+//				}
 			}
 		});
 		mCancle.setOnClickListener(new OnClickListener() {
@@ -463,7 +463,11 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 		OnekeyShare oks = new OnekeyShare();
 		oks.setTitleUrl("http://www.wandoujia.com/apps/com.overtech.ems");
 		// text是分享文本，所有平台都需要这个字段
-		oks.setText("我在24T中抢到" + mZone + "的一个维保单，单号为:" + taskNo + ",请速度去抢哦！App下载链接：http://www.wandoujia.com/apps/com.overtech.ems");
+		oks.setText("我在24T中抢到"
+				+ mZone
+				+ "的一个维保单，单号为:"
+				+ taskNo
+				+ ",请速度去抢哦！App下载链接：http://www.wandoujia.com/apps/com.overtech.ems");
 		oks.setVenueName("24T");
 		// 启动分享GUI
 		oks.show(this);

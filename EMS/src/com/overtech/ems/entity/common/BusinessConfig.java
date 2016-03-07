@@ -64,10 +64,14 @@ public class BusinessConfig {
 	 * 13.任务包详情
 	 */
 	public static final String URL_TASK_PACKAGE_DETAIL ="/task/taskPackageDetail.action";
+//	/**
+//	 * 14.扫描二维码，查询任务包中的电梯
+//	 */
+//	public static final String URL_QUERY_TASK_PACKAGE_ELEVATOR ="/task/queryTaskPackageElevator.action";
 	/**
 	 * 14.扫描二维码，查询任务包中的电梯
 	 */
-	public static final String URL_QUERY_TASK_PACKAGE_ELEVATOR ="/task/queryTaskPackageElevator.action";
+	public static final String URL_QUERY_TASK_PACKAGE_ELEVATOR ="/task/queryTaskPackageElevator1.action";
 	/**
 	 * 14.电梯详情
 	 */
