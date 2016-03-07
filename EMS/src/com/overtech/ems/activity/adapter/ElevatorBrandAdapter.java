@@ -13,12 +13,12 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import com.overtech.ems.R;
 
-public class GridViewAdapter2 extends BaseAdapter {
+public class ElevatorBrandAdapter extends BaseAdapter {
 	
 	private String[] data;
 	private Context context;
 	private HashMap<Integer,Boolean> isSelected;
-	public GridViewAdapter2(String[] data,Context context) {
+	public ElevatorBrandAdapter(String[] data,Context context) {
 		this.data=data;
 		this.context=context;
 		isSelected=new HashMap<Integer, Boolean>();

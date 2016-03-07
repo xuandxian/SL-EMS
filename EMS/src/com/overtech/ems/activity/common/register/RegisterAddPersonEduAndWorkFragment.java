@@ -31,7 +31,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.overtech.ems.R;
-import com.overtech.ems.activity.adapter.GridViewAdapter2;
+import com.overtech.ems.activity.adapter.ElevatorBrandAdapter;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
 import com.overtech.ems.widget.popwindow.DimPopupWindow;
@@ -52,7 +52,7 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment implements OnC
 	private Spinner mEdu;
 	private EditTextWithDelete mCurrWork;
 	private DimPopupWindow mPopupWindow;
-	private GridViewAdapter2 adapter;
+	private ElevatorBrandAdapter adapter;
 	private GridView mGridView;
 	private Button mConfirm;
 	private Button mCancle;
@@ -196,7 +196,7 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment implements OnC
 		mGridView = (GridView) view.findViewById(R.id.gridViewElevator);
 		mConfirm = (Button) view.findViewById(R.id.bt_elevator_confirm);
 		mCancle = (Button) view.findViewById(R.id.bt_elevator_cancle);
-		adapter = new GridViewAdapter2(data, mContext);
+		adapter = new ElevatorBrandAdapter(data, mContext);
 		mGridView.setAdapter(adapter);
 		mPopupWindow.setOutsideTouchable(false);
 		mPopupWindow.setContentView(view);
