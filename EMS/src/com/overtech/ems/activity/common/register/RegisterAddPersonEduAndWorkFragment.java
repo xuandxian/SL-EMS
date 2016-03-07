@@ -214,7 +214,7 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment implements OnC
 					int position, long id) {
 				// TODO Auto-generated method stub
 				Log.e("注册", position+"======");
-				CheckBox elevator=(CheckBox) parent.getChildAt(position);
+				CheckBox elevator=(CheckBox) view;
 				if(elevator.isChecked()){
 					elevator.setChecked(false);
 					isSelected.remove(position);
