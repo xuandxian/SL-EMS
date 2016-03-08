@@ -40,8 +40,8 @@ public final class CameraManager {
 
   private static final int MIN_FRAME_WIDTH = 360;
   private static final int MIN_FRAME_HEIGHT = 360;
-  private static final int MAX_FRAME_WIDTH = 600;
-  private static final int MAX_FRAME_HEIGHT = 480;
+  private static final int MAX_FRAME_WIDTH = 480;
+  private static final int MAX_FRAME_HEIGHT = 640;
 
   private static CameraManager cameraManager;
 
@@ -221,7 +221,17 @@ public final class CameraManager {
       if (camera == null) {
         return null;
       }
-      int width = screenResolution.x;
+      //此处将扫描框的大小按比例控制
+      int width =screenResolution.x*3/4;
+      int height=screenResolution.y*3/4;
+      
+      if(width<=height){
+    	  height=width;
+      }else{
+    	  width=height;
+      }
+      //此处是控制扫描框的大小，将扫描框的大小是控制在min 和 max 像素范围之间；
+      /*int width = screenResolution.x;
       if (width < MIN_FRAME_WIDTH) {
         width = MIN_FRAME_WIDTH;
       } else if (width > MAX_FRAME_WIDTH) {
@@ -232,7 +242,7 @@ public final class CameraManager {
         height = MIN_FRAME_HEIGHT;
       } else if (height > MAX_FRAME_HEIGHT) {
         height = MAX_FRAME_HEIGHT;
-      }
+      }*/
       int leftOffset = (screenResolution.x - width) / 2;
       int topOffset = (screenResolution.y - height) / 2;
       framingRect = new Rect(leftOffset, topOffset, leftOffset + width, topOffset + height);
