@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.parttime.tasklist.ScanCodeActivity;
@@ -23,7 +24,7 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 	private TextView mNone;
 	private TextView mDonet;
 	private TextView mHead;
-	private TextView mHeadRightContent;
+	private ImageView mQrCode;
 	private FragmentManager manager;
 	private FragmentTransaction transaction;
 	private Fragment mTaskNone;
@@ -45,13 +46,13 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 
 	
 	private void initView(View view) {
-		mHead=(TextView) view.findViewById(R.id.tv_headTitle);
-		mHeadRightContent=(TextView) view.findViewById(R.id.tv_headTitleRight);		
+		mHead=(TextView) view.findViewById(R.id.tv_tasklist_title);
+		mQrCode=(ImageView) view.findViewById(R.id.iv_common_qrcode);		
 		mNone=(TextView) view.findViewById(R.id.tv_tasklist_none);
 		mDonet=(TextView) view.findViewById(R.id.tv_tasklist_donet);
 		mNone.setOnClickListener(this);
 		mDonet.setOnClickListener(this);
-		mHeadRightContent.setOnClickListener(this);
+		mQrCode.setOnClickListener(this);
 		manager = getFragmentManager();
 		mTaskNone=new TaskListNoneFragment();
 		mTaskDonet=new TaskListDonetFragment();
@@ -59,7 +60,7 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 	
 	private void setDefaultView() {
 		mHead.setText("任务单");
-		mHeadRightContent.setText("开始");
+		mQrCode.setVisibility(View.VISIBLE);
 		transaction=manager.beginTransaction();
 		transaction.replace(R.id.fl_container, mTaskNone).commit();
 	}
@@ -81,7 +82,7 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 			mNone.setTextColor(getResources().getColor(R.color.main_secondary));
 			mDonet.setTextColor(Color.rgb(0, 185, 239));
 			break;
-		case R.id.tv_headTitleRight:
+		case R.id.iv_common_qrcode:
 			Intent intent = new Intent();
 			intent.setClass(mActivity, ScanCodeActivity.class);
 			startActivity(intent);
