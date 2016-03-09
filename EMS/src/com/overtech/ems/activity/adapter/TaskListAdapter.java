@@ -87,7 +87,7 @@ public class TaskListAdapter extends BaseAdapter {
 		}
 		LatLng latlng = new LatLng(Double.parseDouble(data.getLatitude()),Double.parseDouble(data.getLongitude()));
 		numFormat.setMaximumFractionDigits(2);
-		holder.distance.setText(numFormat.format(DistanceUtil.getDistance(mLatLng, latlng) / 1000.0) + "千米");
+		holder.distance.setText(numFormat.format(DistanceUtil.getDistance(mLatLng, latlng) / 1000.0) + "km");
 		return convertView;
 	}
 

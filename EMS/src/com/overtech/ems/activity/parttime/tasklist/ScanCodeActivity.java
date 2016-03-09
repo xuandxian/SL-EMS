@@ -125,7 +125,11 @@ public class ScanCodeActivity extends BaseActivity implements Callback {
 						ScanCodeActivity.this.finish();
 						break;
 					}
-
+					if(currentElevator.getIsFinish().equals("2")){
+						Utilities.showToast("你已经为完成了该电梯", mContext);
+						ScanCodeActivity.this.finish();
+						break;
+					}
 					// 业务调整，该部分注释
 					// String isStart=result.getIsStart();
 					// if(isStart.equals("0")){
