@@ -73,7 +73,7 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 					String phone= model.getString("phoneNo");
 					String registerTime=model.getString("registerTime");
 					String workNo=model.getString("workNo");
-					if (avatorUrl == null || "".equals(avatorUrl)) {
+					if (avatorUrl == null || "none".equals(avatorUrl)) {
 						avator.setScaleType(ScaleType.FIT_XY);
 						avator.setImageResource(STUB_ID);
 					} else {
