@@ -2,8 +2,8 @@
 <resources>
 
     <string name="app_name">24梯</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="app_version">V1.0.0</string>
+    <string name="action_settings">设置</string>
     <string name="grabtask_search_info">维保单号、小区名称、所属区域</string>
     <string name="companyDescription">\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u002024T(24梯)是上海乐配信息科技有限公司打造的电梯智能化整体托管服务项目，24T的业务宗旨是“我们全心守护电梯”，公司拥有行业领先的电梯物联网监控技术及专业的电梯维保技术支持团队，承接所有电梯品牌的保养与维修业务。\n
 \u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020\u0020公司运用互联网+的运作模式，保证电梯标准化维保业务顺利进行，采用先进的电梯物联网监控平台，对电梯状态进行智能化的24小时动态监控，通过监控电梯安全部件提前预知电梯运行风险，通过强大的互联网数据平台建立维保人员诚信机制及完整的电梯运行数据，确保以国家标准为基础，树立行业服务品牌标杆。\n

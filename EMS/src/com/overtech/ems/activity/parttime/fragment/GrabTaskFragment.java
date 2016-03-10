@@ -278,7 +278,7 @@ public class GrabTaskFragment extends BaseFragment implements
 			startProgressDialog("正在查询...");
 		} else if (TextUtils.equals(REFRESH_TYPE_FILTER, flag)) {
 			startProgressDialog("正在查询...");
-			mSwipeListView.setPullRefreshEnable(false);
+//			mSwipeListView.setPullRefreshEnable(false);
 		}
 		mSwipeListView.setFooterViewInvisible();
 		Request request = httpEngine.createRequest(url, params);

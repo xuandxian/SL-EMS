@@ -33,13 +33,12 @@ public class GrabTaskDoFilterActivity extends BaseActivity implements OnClickLis
     private GrabTaskFilterAdapter adapter2;
     private Button mZone;
     private Button mTime;
-    int[] image = {R.drawable.filter_zone_huangpu, R.drawable.filter_zone_xuhui, R.drawable.filter_zone_changning, R.drawable.filter_zone_jingan, R.drawable.filter_zone_putuo, R.drawable.filter_zone_hongkou, R.drawable.filter_zone_yangpu, R.drawable.filter_zone_minghang, R.drawable.filter_zone_baoshan, R.drawable.filter_zone_jiading, R.drawable.filter_zone_pudong, R.drawable.filter_zone_jinshan, R.drawable.filter_zone_songjiang, R.drawable.filter_zone_qingpu, R.drawable.filter_zone_fengxian, R.drawable.filter_zone_chongming};
+    int[] image = {R.drawable.filter_zone_huangpu, R.drawable.filter_zone_xuhui, R.drawable.filter_zone_changning, R.drawable.filter_zone_jingan, R.drawable.filter_zone_putuo, R.drawable.filter_zone_hongkou, R.drawable.filter_zone_yangpu, R.drawable.filter_zone_minhang, R.drawable.filter_zone_baoshan, R.drawable.filter_zone_jiading, R.drawable.filter_zone_pudong, R.drawable.filter_zone_jinshan, R.drawable.filter_zone_songjiang, R.drawable.filter_zone_qingpu, R.drawable.filter_zone_fengxian, R.drawable.filter_zone_chongming,R.drawable.filter_zone_zhabei,R.drawable.filter_zone_luwan,R.drawable.filter_zone_nanhui};
     int[] image2 = {R.drawable.filter_time_fifteen_in, R.drawable.filter_time_fifteen_out};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_grab_task_filter);
         findViewById();
         init();
@@ -164,6 +163,15 @@ public class GrabTaskDoFilterActivity extends BaseActivity implements OnClickLis
                             break;
                         case 15:
                             mZone += "崇明县|";
+                            break;
+                        case 16:
+                            mZone += "闸北区|";
+                            break;
+                        case 17:
+                            mZone += "卢湾区|";
+                            break;
+                        case 18:
+                            mZone += "南汇区|";
                             break;
                     }
                 }

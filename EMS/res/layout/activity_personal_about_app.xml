@@ -26,7 +26,7 @@
             android:layout_below="@id/iv_icon"
             android:layout_centerInParent="true"
             android:layout_marginTop="5dp"
-            android:text="24T"
+            android:text="@string/app_name"
             android:textSize="@dimen/text_size_large" />
 
         <TextView
@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_logo_name"
             android:layout_centerInParent="true"
-            android:text="v1.0.0"
+            android:text="@string/app_version"
             android:textColor="@color/bg_mask"
             android:textSize="@dimen/text_size_list" />
     </RelativeLayout>
