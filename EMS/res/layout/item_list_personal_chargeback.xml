@@ -2,47 +2,45 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/bg_bg"
-     >
-	<TextView 
-	    android:id="@+id/tv_task_no"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_marginLeft="10dp"
-	    android:layout_marginTop="10dp"
-	    android:textSize="@dimen/text_size_info"
-	    android:text="WA20160229"
-	    />
-	<TextView 
-	    android:id="@+id/tv_grab_time"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_marginRight="10dp"
-	    android:layout_marginTop="10dp"
-	    android:layout_alignParentRight="true"
-	    android:text="2016-01-01"
-	    android:textSize="@dimen/text_size_info"
-	    />
-	<TextView 
-	    android:id="@+id/tv_taskpackage_name"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_alignParentLeft="true"
-	    android:layout_marginLeft="10dp"
-	    android:layout_marginTop="10dp"
-	   	android:paddingBottom="10dp"
-	    android:layout_below="@id/tv_task_no"
-	    android:text="0201测试数据"
-	    />
-	<TextView 
-	    android:id="@+id/tv_chargeback_time"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:layout_marginTop="10dp"
-	    android:layout_marginRight="10dp"
-	    android:paddingBottom="10dp"
-	    android:layout_alignParentRight="true"
-	    android:layout_below="@id/tv_grab_time"
-	    android:text="2016-10-10"
-	    />
+    android:background="@color/bg_bg" >
+
+    <TextView
+        android:id="@+id/tv_taskpackage_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="0201测试数据" />
+
+    <TextView
+        android:id="@+id/tv_grab_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:text="2016-01-01"
+        android:textSize="@dimen/text_size_info" />
+
+    <TextView
+        android:id="@+id/tv_task_no"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_taskpackage_name"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:text="WA20160229"
+        android:textSize="@dimen/text_size_info" />
+
+    <TextView
+        android:id="@+id/tv_chargeback_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/tv_taskpackage_name"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="2016-10-10" />
+
 </RelativeLayout>

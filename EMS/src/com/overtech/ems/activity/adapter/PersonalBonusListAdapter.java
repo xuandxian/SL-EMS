@@ -79,7 +79,7 @@ public class PersonalBonusListAdapter extends BaseExpandableListAdapter {
 		Date awardDate=new Date(data.getAwardTime());
 		
 		mAwardSum.setText("奖励金额:"+data.getAwardSum());
-		mAwardDate.setText(sdf.format(awardDate));
+		mAwardDate.setText("奖励日期："+sdf.format(awardDate));
 		
 		return convertView;
 	}

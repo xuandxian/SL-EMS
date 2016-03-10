@@ -8,10 +8,10 @@
         style="@style/tv_list_primary_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
         android:padding="5dp"
         />
     <TextView 
@@ -19,8 +19,8 @@
         style="@style/tv_list_primary_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="10dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:padding="5dp"
