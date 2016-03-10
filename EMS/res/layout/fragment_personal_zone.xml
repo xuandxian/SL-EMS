@@ -33,6 +33,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
+                    android:contentDescription="@null"
                     android:src="@drawable/icon_personal_my" />
 
                 <TextView
@@ -60,6 +61,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:contentDescription="@null"
                     android:src="@drawable/icon_big_arrow_right" />
             </RelativeLayout>
 
@@ -83,6 +85,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
+                    android:contentDescription="@null"
                     android:src="@drawable/icon_arrow_right" />
             </RelativeLayout>
 
@@ -106,6 +109,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
+                    android:contentDescription="@null"
                     android:src="@drawable/icon_arrow_right" />
             </RelativeLayout>
 
@@ -128,12 +132,13 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:contentDescription="@null"
                     android:layout_marginRight="15dp"
                     android:src="@drawable/icon_arrow_right" />
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/rl_personal_partner"
+                android:id="@+id/rl_about_app"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dip"
@@ -143,22 +148,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="10dip"
-                    android:text="搭档收藏"
-                    android:textSize="17sp" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/rl_about_app"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="1dip"
-                android:background="@color/main_white" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dip"
-                    android:text="关于APP"
+                    android:text="@string/about_app"
                     android:textSize="17sp" />
 
                 <ImageView
@@ -167,6 +157,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
+                    android:contentDescription="@null"
                     android:src="@drawable/icon_arrow_right" />
             </RelativeLayout>
 
@@ -190,6 +181,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
+                    android:contentDescription="@null"
                     android:src="@drawable/icon_arrow_right" />
             </RelativeLayout>
 
@@ -213,6 +205,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
+                    android:contentDescription="@null"
                     android:src="@drawable/icon_arrow_right" />
             </RelativeLayout>
         </LinearLayout>
