@@ -118,10 +118,10 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements OnCl
 			getActivity().onBackPressed();
 			break;
 		case R.id.btn_next_fragment:
-			if(certificateUri==null){
+			/*if(certificateUri==null){上岗证证书不必非得上传
 				Utilities.showToast("您还没有选择证件", mContext);
 				return;
-			}
+			}*/
 			if(listener!=null){
 				listener.onRegAddWorkCerFrgClick();
 			}

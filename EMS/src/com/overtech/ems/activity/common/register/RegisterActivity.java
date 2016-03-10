@@ -100,28 +100,52 @@ public class RegisterActivity extends BaseActivity implements
 	protected void startUpLoading(String json) {
 		File[] files;
 		String[] fileKeys;
-		// 其他证书可有可无需要对其进行判断
-		if (mOtherCertificateFragment.otherCertificatePath == null) {
+		// 工作证和 其他证书可有可无需要对其进行判断
+		if (mWorkCertificateFragment.workCertificatePath != null
+				&& mOtherCertificateFragment.otherCertificatePath == null) {
 			files = new File[3];
 			files[0] = new File(mIdCardFragment.idCardFrontPath);
 			files[1] = new File(mIdCardFragment.idCardOppositePath);
 			files[2] = new File(mWorkCertificateFragment.workCertificatePath);
+
 			fileKeys = new String[3];
 			fileKeys[0] = "frontIdCard";
 			fileKeys[1] = "oppositeIdCard";
 			fileKeys[2] = "workCertificate";
-		} else {
+		} else if (mWorkCertificateFragment.workCertificatePath != null
+				&& mOtherCertificateFragment.otherCertificatePath != null) {
 			files = new File[4];
 			files[0] = new File(mIdCardFragment.idCardFrontPath);
 			files[1] = new File(mIdCardFragment.idCardOppositePath);
 			files[2] = new File(mWorkCertificateFragment.workCertificatePath);
 			files[3] = new File(mOtherCertificateFragment.otherCertificatePath);
-			fileKeys = new String[4];
+
+			fileKeys = new String[3];
 			fileKeys[0] = "frontIdCard";
 			fileKeys[1] = "oppositeIdCard";
 			fileKeys[2] = "workCertificate";
 			fileKeys[3] = "otherCertificate";
+		} else if (mWorkCertificateFragment.workCertificatePath == null
+				&& mOtherCertificateFragment.otherCertificatePath != null) {
+			files = new File[3];
+			files[0] = new File(mIdCardFragment.idCardFrontPath);
+			files[1] = new File(mIdCardFragment.idCardOppositePath);
+			files[2] = new File(mOtherCertificateFragment.otherCertificatePath);
+
+			fileKeys = new String[3];
+			fileKeys[0] = "frontIdCard";
+			fileKeys[1] = "oppositeIdCard";
+			fileKeys[2] = "otherCertificate";
+		} else {
+			files = new File[2];
+			files[0] = new File(mIdCardFragment.idCardFrontPath);
+			files[1] = new File(mIdCardFragment.idCardOppositePath);
+
+			fileKeys = new String[3];
+			fileKeys[0] = "frontIdCard";
+			fileKeys[1] = "oppositeIdCard";
 		}
+
 		Param param = new Param(Constant.PERSONINFO, json);
 		try {
 			Request request = httpEngine.createRequest(ServicesConfig.REGISTER,
