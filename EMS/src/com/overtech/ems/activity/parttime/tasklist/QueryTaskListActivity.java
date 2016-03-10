@@ -295,13 +295,13 @@ public class QueryTaskListActivity extends BaseActivity implements
 		case R.id.btn_login:
 			// 将对应的电梯的完成状态更新到服务器
 			if (isCanConfirmDone) {
-				showDialog(TYPE2, "请确认维保工作是否完成，并将电梯监测设备按钮调至正常状态");
+				showDialog(TYPE2, "请确认维保工作已完成，并将电梯监测设备按钮调至正常状态");
 			} else {
 				Utilities.showToast("维保任务必须在当天完成", context);
 			}
 			break;
 		case R.id.iv_headTitleRight:
-			showDialog(TYPE1, "是否拨打技术支持电话？");
+			showDialog(TYPE1, "您确认要拨打技术支持电话？");
 			break;
 		default:
 			break;
@@ -315,24 +315,25 @@ public class QueryTaskListActivity extends BaseActivity implements
 				.withMessageColor(R.color.main_primary)
 				.withDialogColor("#FFFFFFFF").isCancelableOnTouchOutside(true)
 				.withDuration(700).withEffect(effect)
-				.withButtonDrawable(R.color.main_white).withButton1Text("是")
-				.withButton1Color("#DD47BEE9").withButton2Text("否")
+				.withButtonDrawable(R.color.main_white).withButton1Text("取消")
+				.withButton1Color("#DD47BEE9").withButton2Text("确认")
 				.withButton2Color("#DD47BEE9")
 				.setButton1Click(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						dialogBuilder.dismiss();
-//						Log.e("技术支持电话", mZonePhone);
+					}
+				}).setButton2Click(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						dialogBuilder.dismiss();
 						if (TextUtils.equals(type, TYPE1)) {
-							Intent intent = new Intent(Intent.ACTION_CALL, Uri
-									.parse("tel:" + mZonePhone));
+							Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mZonePhone));
 							startActivity(intent);
 						} else {
 							if (!currentElevatorIsFinish) {
-								Param taskNoParam = new Param(Constant.TASKNO,
-										mTaskNo);
-								Param elevatorNoParam = new Param(
-										Constant.ELEVATORNO, mElevatorNo);
+								Param taskNoParam = new Param(Constant.TASKNO,mTaskNo);
+								Param elevatorNoParam = new Param(Constant.ELEVATORNO, mElevatorNo);
 								Param loginNameParam = new Param(
 										Constant.LOGINNAME,
 										mSharedPreferences
@@ -373,11 +374,6 @@ public class QueryTaskListActivity extends BaseActivity implements
 								Utilities.showToast("该电梯已经完成", context);
 							}
 						}
-					}
-				}).setButton2Click(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						dialogBuilder.dismiss();
 					}
 				}).show();
 	}

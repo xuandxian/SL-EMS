@@ -1,13 +1,11 @@
 package com.overtech.ems.activity.parttime.tasklist;
 
 import java.io.IOException;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -16,7 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
@@ -44,9 +41,7 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case StatusCode.EVALUATEOTHER:
-//				String state=(String) msg.obj;
 				boolean state=Boolean.parseBoolean((String) msg.obj);
-				Log.e("==评价原因==", state+"");
 				if(state){
 					Intent intent =new Intent(context,MainActivity.class);
 					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -70,7 +65,6 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 	};
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_evaluation);
@@ -123,7 +117,6 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 			
 			@Override
 			public void onResponse(Response response) throws IOException {
-				// TODO Auto-generated method stub
 				Message msg=new Message();
 				if(response.isSuccessful()){
 					msg.what=StatusCode.EVALUATEOTHER;
@@ -137,7 +130,6 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 			
 			@Override
 			public void onFailure(Request arg0, IOException arg1) {
-				// TODO Auto-generated method stub
 				Message msg=new Message();
 				msg.what=StatusCode.RESPONSE_NET_FAILED;
 				msg.obj="网络异常";
@@ -149,7 +141,6 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 	private void upLoading() {
 		evaluateInfo = mContent.getText().toString().trim();
 		int rbId = mChecked.getCheckedRadioButtonId();
-		// TODO
 		switch (rbId) {
 		case R.id.rb_verygood:
 			evaluateLevel = "3";

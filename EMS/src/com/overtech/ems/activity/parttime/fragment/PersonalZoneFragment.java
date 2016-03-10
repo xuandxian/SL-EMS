@@ -143,7 +143,7 @@ public class PersonalZoneFragment extends BaseFragment implements
 	}
 
 	private void onLoading() {
-		startProgressDialog("请稍后...");
+		startProgressDialog("正在加载...");
 		String mLoginName = mSharedPreferences.getString(
 				SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
 		Param param = new Param(Constant.LOGINNAME, mLoginName);

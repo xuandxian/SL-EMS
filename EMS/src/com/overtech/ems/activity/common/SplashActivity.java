@@ -18,8 +18,8 @@ import com.overtech.ems.utils.SharedPreferencesKeys;
  */
 public class SplashActivity extends BaseActivity {
 	
-//	private final long timePeriod=2592000000L; //30天的毫秒数
-	private final long timePeriod=60000L;      //60秒（测试）
+	private final long timePeriod=2592000000L; //30天的毫秒数
+//	private final long timePeriod=60000L;      //60秒（测试）
 	
 	
 	@Override
