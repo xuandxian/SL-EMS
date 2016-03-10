@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -17,7 +18,8 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
-import com.overtech.ems.activity.adapter.PersonalAccountListAdapter;
+import com.overtech.ems.activity.adapter.PersonalAccountHasCountAdapter;
+import com.overtech.ems.activity.adapter.PersonalAccountNoCountAdapter;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.bean.BillBean;
 import com.overtech.ems.entity.common.ServicesConfig;
@@ -37,7 +39,7 @@ public class PersonalAccountListActivity extends BaseActivity implements
 	private ListView mPersonalAccountListView;
 	private TextView mHasCount;
 	private TextView mNoCount;
-	private PersonalAccountListAdapter adapter;
+	private BaseAdapter adapter;
 	private static final String HASCOUNT = "1";
 	private static final String NOCOUNT = "0";
 
@@ -46,11 +48,16 @@ public class PersonalAccountListActivity extends BaseActivity implements
 			switch (msg.what) {
 			case StatusCode.ACCOUNT_LIST_SUCCESS:
 				String json = (String) msg.obj;
-//				Log.e("==w我的账单==", json);
+				Log.e("==w我的账单=="+msg.arg1, json);
 				Gson gson = new Gson();
 				BillBean datas = gson.fromJson(json, BillBean.class);
-				adapter = new PersonalAccountListAdapter(context,
-						datas.getModel());
+				if(msg.arg1==1){
+					adapter = new PersonalAccountHasCountAdapter(context,
+							datas.getModel());
+				}else{
+					adapter = new PersonalAccountNoCountAdapter(context,
+							datas.getModel());
+				}
 				mPersonalAccountListView.setAdapter(adapter);
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
@@ -74,7 +81,7 @@ public class PersonalAccountListActivity extends BaseActivity implements
 		startLoading(HASCOUNT);// 默认已结算
 	}
 
-	private void startLoading(String billState) {
+	private void startLoading(final String billState) {
 		startProgressDialog("正在加载...");
 		Param phoneParam = new Param(Constant.LOGINNAME,
 				mSharedPreferences.getString(
@@ -90,6 +97,7 @@ public class PersonalAccountListActivity extends BaseActivity implements
 				Message msg = new Message();
 				if (response.isSuccessful()) {
 					msg.what = StatusCode.ACCOUNT_LIST_SUCCESS;
+					msg.arg1=Integer.parseInt(billState);
 					msg.obj = response.body().string();
 				} else {
 					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;

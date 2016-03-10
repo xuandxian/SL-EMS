@@ -15,13 +15,13 @@ import android.widget.TextView;
 import com.overtech.ems.R;
 import com.overtech.ems.entity.parttime.Bill;
 
-public class PersonalAccountListAdapter extends BaseAdapter {
+public class PersonalAccountNoCountAdapter extends BaseAdapter {
 
 	private Context context;
 	private List<Bill> list;
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-	public PersonalAccountListAdapter(Context context, List<Bill> list) {
+	public PersonalAccountNoCountAdapter(Context context, List<Bill> list) {
 		super();
 		this.context = context;
 		this.list = list;
@@ -49,45 +49,32 @@ public class PersonalAccountListAdapter extends BaseAdapter {
 		if (convertView == null) {
 			holder = new ViewHolder();
 			convertView = LayoutInflater.from(context).inflate(
-					R.layout.item_personal_account_list, null);
-			holder.mVillageName = (TextView) convertView
+					R.layout.item_personal_no_account, null);
+			holder.mTaskName = (TextView) convertView
 					.findViewById(R.id.tv_personal_village_name);
 			holder.mMaintenanceTime = (TextView) convertView
 					.findViewById(R.id.tv_personal_maintenance_time);
-			holder.mPersonalAccount = (TextView) convertView
-					.findViewById(R.id.tv_personal_account);
-			holder.mMaintenanceEndTime = (TextView) convertView
-					.findViewById(R.id.tv_personal_maintenance_endtime);
 			holder.mTaskNo = (TextView) convertView
 					.findViewById(R.id.tv_personal_taskno);
+			holder.mTaskMoney = (TextView) convertView
+					.findViewById(R.id.tv_personal_account);
+
 			convertView.setTag(holder);
 
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		holder.mVillageName.setText(data.getTaskPackageName());
-
+		holder.mTaskName.setText(data.getTaskPackageName());
 		holder.mMaintenanceTime.setText(data.getMaintenanceDate());
-		holder.mPersonalAccount.setText(data.getTotalPrice());
-		if (data.getClosingDate() != 0) {
-			holder.mMaintenanceEndTime.setText(sdf.format((new Date(data
-					.getClosingDate()))));
-		} else {
-			holder.mMaintenanceEndTime.setText("未结算");
-		}
-		if(data.getTaskNo()!=null){
-			holder.mTaskNo.setText(data.getTaskNo());
-		}else{
-			holder.mTaskNo.setText("");
-		}
+		holder.mTaskNo.setText(data.getTaskNo());
+		holder.mTaskMoney.setText(data.getTotalPrice());
 		return convertView;
 	}
 
 	class ViewHolder {
-		public TextView mVillageName;
+		public TextView mTaskName;
 		public TextView mMaintenanceTime;
-		public TextView mPersonalAccount;
-		public TextView mMaintenanceEndTime;
 		public TextView mTaskNo;
+		public TextView mTaskMoney;
 	}
 }
