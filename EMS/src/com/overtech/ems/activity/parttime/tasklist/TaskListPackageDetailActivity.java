@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -21,7 +20,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
-import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
@@ -81,7 +79,6 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	private LatLng mStartPoint;
 	private LatLng destination;
 	private String mDesName;
-
 	private SwipeRefreshLayout mSwipeLayout;
 	private TaskListPackageDetailAdapter adapter;
 	private ArrayList<TaskPackageDetail> list;
@@ -142,7 +139,6 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				break;
 			case StatusCode.VALIDATE_TIME_SUCCESS:
 				String time = (String) msg.obj;
-				// Log.e("==任务单详情时间==", time);
 				if (time.equals("-1")) {
 					Utilities.showToast("已超过退单时间！！！", context);
 					break;
@@ -164,9 +160,9 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 						.withEffect(effect)
 						.withButtonDrawable(R.color.main_white)
 						.withButton1Text("取消")
-						.withButton1Color(R.color.main_primary)
+						.withButton1Color("#DD47BEE9")
 						.withButton2Text("确认")
-						.withButton2Color(R.color.main_primary)
+						.withButton2Color("#DD47BEE9")
 						.setButton1Click(new View.OnClickListener() {
 							@Override
 							public void onClick(View v) {
@@ -177,24 +173,17 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 							public void onClick(View v) {
 								dialogBuilder.dismiss();
 								startProgressDialog("正在退单...");
-
-								Param param1 = new Param(Constant.TASKNO,
-										taskNo);
-								Param param2 = new Param(Constant.LOGINNAME,
-										mSharedPreferences.getString(
-												Constant.LOGINNAME, ""));
+								Param param1 = new Param(Constant.TASKNO,taskNo);
+								Param param2 = new Param(Constant.LOGINNAME,mSharedPreferences.getString(Constant.LOGINNAME, ""));
 								startLoading(ServicesConfig.CHARGE_BACK_TASK,
 										new com.squareup.okhttp.Callback() {
 
 											@Override
-											public void onResponse(
-													Response response)
-													throws IOException {
+											public void onResponse(Response response)throws IOException {
 												Message msg = new Message();
 												if (response.isSuccessful()) {
 													msg.what = StatusCode.CHARGEBACK_SUCCESS;
-													msg.obj = response.body()
-															.string();
+													msg.obj = response.body().string();
 												} else {
 													msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
 													msg.obj = "服务器异常";
@@ -203,8 +192,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 											}
 
 											@Override
-											public void onFailure(Request arg0,
-													IOException arg1) {
+											public void onFailure(Request arg0,IOException arg1) {
 												Message msg = new Message();
 												msg.what = StatusCode.RESPONSE_NET_FAILED;
 												msg.obj = "网络异常";
@@ -216,20 +204,16 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				break;
 			case StatusCode.CHARGEBACK_SUCCESS:
 				String state = (String) msg.obj;
-				// Log.e("==", state);
 				if (state.equals("true")) {
-
 					tagSet.remove(taskNo);
-					JPushInterface.setAliasAndTags(getApplicationContext(),
-							null, tagSet, mTagsCallback);
+					JPushInterface.setAliasAndTags(getApplicationContext(),null, tagSet, mTagsCallback);
 				} else {
 					Utilities.showToast("退单失败", context);
 				}
 				break;
 			case StatusCode.MSG_SET_TAGS:
 				Log.d("24梯", "Set tags in handler.");
-				JPushInterface.setAliasAndTags(getApplicationContext(), null,
-						(Set<String>) msg.obj, mTagsCallback);
+				JPushInterface.setAliasAndTags(getApplicationContext(), null,(Set<String>) msg.obj, mTagsCallback);
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
 				Utilities.showToast((String) msg.obj, context);
@@ -241,7 +225,6 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			default:
 				break;
 			}
-
 			mSwipeLayout.setRefreshing(false);
 		};
 	};
@@ -259,33 +242,26 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				Utilities.showToast("退单成功", context);
 				stopProgressDialog();
 				finish();
-
 				break;
-
 			case 6002:
 				logs = "Failed to set alias and tags due to timeout. Try again after 60s.";
 				Log.d(TAG, logs);
 				if (AppUtils.isConnected(getApplicationContext())) {
-					handler.sendMessageDelayed(handler.obtainMessage(
-							StatusCode.MSG_SET_TAGS, tags), 1000 * 60);
+					handler.sendMessageDelayed(handler.obtainMessage(StatusCode.MSG_SET_TAGS, tags), 1000 * 60);
 				} else {
 					Log.i(TAG, "No network");
 				}
 				break;
-
 			default:
 				logs = "Failed with errorCode = " + code;
 				Log.d(TAG, logs);
 			}
-
 		}
-
 	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_tasklist_package_detail);
 		Set<String> tempSet = mSharedPreferences.getStringSet("tagSet", null);
 		if (tempSet == null) {
@@ -301,10 +277,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	private void initEvent() {
 		mActivity = TaskListPackageDetailActivity.this;
 		mSwipeLayout.setOnRefreshListener(this);
-		mSwipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
-				android.R.color.holo_green_light,
-				android.R.color.holo_orange_light,
-				android.R.color.holo_red_light);
+		mSwipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,android.R.color.holo_green_light,android.R.color.holo_orange_light,android.R.color.holo_red_light);
 		mDoBack.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -315,17 +288,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				/*if (adapter.isAllCompleted()) {//业务调整，此处不再加进入到问题反馈页面的功能，只提示信息然后进入到电梯详情
-					Intent intent = new Intent(context,
-							QuestionResponseActivity.class);
-					Bundle bundle = new Bundle();
-					bundle.putString(Constant.TASKNO, taskNo);
-					intent.putExtras(bundle);
-					startActivity(intent);
-				} else {*/
-					TaskPackageDetail detail = (TaskPackageDetail) parent
-							.getItemAtPosition(position);
-					String workType = detail.getWorkType();
+					TaskPackageDetail detail = (TaskPackageDetail) parent.getItemAtPosition(position);
 					if (detail.getIsFinish().equals("2")) {
 						Utilities.showToast("你好，该电梯已经完成", mActivity);
 					} else if (detail.getIsFinish().equals("1")) {
@@ -333,14 +296,11 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 					} else {
 						Utilities.showToast("请通过扫描二维码开启工作或者完成工作", context);
 					}
-					Intent intent = new Intent(context,
-							ElevatorDetailActivity.class);
+					Intent intent = new Intent(context,ElevatorDetailActivity.class);
 					Bundle bundle = new Bundle();
-					bundle.putString(Constant.ELEVATORNO,
-							detail.getElevatorNo());
+					bundle.putString(Constant.ELEVATORNO,detail.getElevatorNo());
 					intent.putExtras(bundle);
 					startActivity(intent);
-//				}
 			}
 		});
 		mCancle.setOnClickListener(new OnClickListener() {
@@ -351,8 +311,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 						new Callback() {
 
 							@Override
-							public void onResponse(Response response)
-									throws IOException {
+							public void onResponse(Response response)throws IOException {
 								Message msg = new Message();
 								if (response.isSuccessful()) {
 									msg.what = StatusCode.VALIDATE_TIME_SUCCESS;
@@ -394,24 +353,20 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 		popupWindow.setTouchable(true);
 		popupWindow.setOutsideTouchable(true);
 		popupWindow.setBackgroundDrawable(new BitmapDrawable());
-		popupWindow.setContentView(LayoutInflater.from(activity).inflate(
-				R.layout.layout_tasklist_pop, null));
+		popupWindow.setContentView(LayoutInflater.from(activity).inflate(R.layout.layout_tasklist_pop, null));
 		initUI();
 	}
 
 	// 对popupWindow的ui进行初始化
 	private void initUI() {
-		popupWindow.getContentView().findViewById(R.id.ll_pop_1)
-				.setOnClickListener(// 地图导航
+		popupWindow.getContentView().findViewById(R.id.ll_pop_1).setOnClickListener(// 地图导航
 						new OnClickListener() {
-
 							@Override
 							public void onClick(View v) {
 								startNavicate(mStartPoint, destination, "终点");
 							}
 						});
-		shareToFriends = (LinearLayout) popupWindow.getContentView()
-				.findViewById(R.id.ll_pop_2);
+		shareToFriends = (LinearLayout) popupWindow.getContentView().findViewById(R.id.ll_pop_2);
 		shareToFriends.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -419,8 +374,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				shareToFriends();
 			}
 		});
-		dialToPartner = (LinearLayout) popupWindow.getContentView()
-				.findViewById(R.id.ll_pop_3);
+		dialToPartner = (LinearLayout) popupWindow.getContentView().findViewById(R.id.ll_pop_3);
 		dialToPartner.setOnClickListener(// 拨打搭档电话
 				new OnClickListener() {
 
@@ -448,9 +402,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 								}).setButton2Click(new View.OnClickListener() {
 									@Override
 									public void onClick(View v) {
-										Intent intent = new Intent(
-												Intent.ACTION_CALL, Uri
-														.parse("tel:" + mPhone));
+										Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mPhone));
 										startActivity(intent);
 									}
 								}).show();
@@ -462,32 +414,21 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 		ShareSDK.initSDK(this);
 		OnekeyShare oks = new OnekeyShare();
 		oks.setTitleUrl("http://www.wandoujia.com/apps/com.overtech.ems");
-		// text是分享文本，所有平台都需要这个字段
-		oks.setText("我在24T中抢到"
-				+ mZone
-				+ "的一个维保单，单号为:"
-				+ taskNo
-				+ ",请速度去抢哦！App下载链接：http://www.wandoujia.com/apps/com.overtech.ems");
+		oks.setText("我在24T中抢到"+ mZone+ "的一个维保单，单号为:"+ taskNo+ ",请速度去抢哦！App下载链接：http://www.wandoujia.com/apps/com.overtech.ems");
 		oks.setVenueName("24T");
-		// 启动分享GUI
 		oks.show(this);
 	}
-
 	// 弹出popupWindow
 	protected void showPopupWindow(View v) {
-
 		v.getLocationOnScreen(mLocation);
 		// 设置矩形的大小
-		mRect.set(mLocation[0], mLocation[1], mLocation[0] + v.getWidth(),
-				mLocation[1] + v.getHeight());
-		popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, mScreenWidth
-				- LIST_PADDING - (popupWindow.getWidth() / 2), mRect.bottom);
+		mRect.set(mLocation[0], mLocation[1], mLocation[0] + v.getWidth(),mLocation[1] + v.getHeight());
+		popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, mScreenWidth- LIST_PADDING - (popupWindow.getWidth() / 2), mRect.bottom);
 	}
 
 	public void startNavicate(LatLng startPoint, LatLng endPoint, String endName) {
 		// 构建 route搜索参数
-		RouteParaOption para = new RouteParaOption()
-				.startName("我的位置")
+		RouteParaOption para = new RouteParaOption().startName("我的位置")
 				.startPoint(startPoint)
 				// 路线检索起点
 				.endPoint(endPoint)
@@ -512,12 +453,9 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 		taskNo = bundle.getString(Constant.TASKNO);
 		mTaskPackageName.setText(taskPackage);
 		mTaskNo.setText(taskNo);
-		mLoginName = mSharedPreferences.getString(
-				SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
-
+		mLoginName = mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
 		Param param = new Param(Constant.TASKNO, taskNo);
 		Param param2 = new Param(Constant.LOGINNAME, mLoginName);
-
 		startLoading(ServicesConfig.TASK_PACKAGE_DETAIL, new Callback() {
 
 			@Override
@@ -557,13 +495,11 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
 		super.onActivityResult(requestCode, resultCode, data);
 		switch (requestCode) {
 		case StatusCode.RESULT_TASKLIST_PACKAGEDETAIL:
 			onRefresh();
 			break;
-
 		default:
 			break;
 		}

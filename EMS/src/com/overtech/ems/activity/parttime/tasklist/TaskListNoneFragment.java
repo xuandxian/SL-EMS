@@ -123,9 +123,9 @@ public class TaskListNoneFragment extends BaseFragment {
 						.withEffect(effect)
 						.withButtonDrawable(R.color.main_white)
 						.withButton1Text("取消")
-						.withButton1Color(R.color.main_primary)
+						.withButton1Color("#DD47BEE9")
 						.withButton2Text("确认")
-						.withButton2Color(R.color.main_primary)
+						.withButton2Color("#DD47BEE9")
 						.setButton1Click(new View.OnClickListener() {
 							@Override
 							public void onClick(View v) {
@@ -380,7 +380,7 @@ public class TaskListNoneFragment extends BaseFragment {
 	}
 
 	private void startLoading() {
-		startProgressDialog("正在加载");
+		startProgressDialog("正在加载...");
 		Param param = new Param(Constant.LOGINNAME, loginName);
 		startLoading(ServicesConfig.TASK_LIST_NONE, new Callback() {
 
@@ -411,13 +411,6 @@ public class TaskListNoneFragment extends BaseFragment {
 		creator = new SwipeMenuCreator() {
 			@Override
 			public void create(SwipeMenu menu) {
-//				SwipeMenuItem shareItem = new SwipeMenuItem(mActivity);
-//				shareItem.setBackground(new ColorDrawable(Color.rgb(0x00,0xCD, 0x00)));
-//				shareItem.setWidth(dp2px(90));
-//				shareItem.setTitle("分享");
-//				shareItem.setTitleSize(18);
-//				shareItem.setTitleColor(Color.WHITE);
-//				menu.addMenuItem(shareItem);
 				SwipeMenuItem navicateItem = new SwipeMenuItem(mActivity);
 				navicateItem.setBackground(new ColorDrawable(Color.rgb(0xFF,0x9D, 0x00)));
 				navicateItem.setWidth(dp2px(90));
