@@ -56,15 +56,15 @@ public class PackageDetailAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		String temp = data.getElevatorName();
-		if (temp.contains("号")) {
-			if (temp.endsWith("号")) {
-				holder.mElevtorName.setText(temp);
-			} else {
-				holder.mElevtorName.setText(temp.split("号")[1]);
-			}
-		} else {
+//		if (temp.contains("号")) {
+//			if (temp.endsWith("号")) {
+//				holder.mElevtorName.setText(temp);
+//			} else {
+//				holder.mElevtorName.setText(temp.split("号")[1]);
+//			}
+//		} else {
 			holder.mElevtorName.setText(temp);
-		}
+//		}
 		if (data.getWorkType().equals("0")) {
 			holder.mWorkType.setText("(半月保)");
 		} else if (data.getWorkType().equals("1")) {
