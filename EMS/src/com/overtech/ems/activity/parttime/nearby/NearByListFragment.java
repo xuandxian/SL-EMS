@@ -103,12 +103,12 @@ public class NearByListFragment extends BaseFragment{
 	private void showDialog() {
 		effect = Effectstype.Slideright;
 		dialogBuilder.withTitle("温馨提示").withTitleColor(R.color.main_primary)
-		.withDividerColor("#11000000").withMessage("您是否要接此单？")
+		.withDividerColor("#11000000").withMessage("您确认要接此单？")
 		.withMessageColor(R.color.main_primary).withDialogColor("#FFFFFFFF")
 		.isCancelableOnTouchOutside(true).withDuration(700)
 		.withEffect(effect).withButtonDrawable(R.color.main_white)
-		.withButton1Text("否").withButton1Color(R.color.main_primary)
-		.withButton2Text("是").withButton2Color(R.color.main_primary)
+		.withButton1Text("取消").withButton1Color("#DD47BEE9")
+		.withButton2Text("确认").withButton2Color("#DD47BEE9")
 		.setButton1Click(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {

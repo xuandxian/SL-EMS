@@ -67,7 +67,6 @@ public class QuestionResponseActivity extends BaseActivity implements
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_question_response);
@@ -106,7 +105,7 @@ public class QuestionResponseActivity extends BaseActivity implements
 				intent.putExtras(bundle);
 				startActivity(intent);
 			}else{
-				startProgressDialog("正在提交");
+				startProgressDialog("正在提交...");
 				startLoading();
 			}
 			break;
@@ -130,7 +129,6 @@ public class QuestionResponseActivity extends BaseActivity implements
 
 			@Override
 			public void onResponse(Response response) throws IOException {
-				// TODO Auto-generated method stub
 				Message msg=new Message();
 				if(response.isSuccessful()){
 					msg.obj=response.body().string();
@@ -144,7 +142,6 @@ public class QuestionResponseActivity extends BaseActivity implements
 
 			@Override
 			public void onFailure(Request request, IOException arg1) {
-				// TODO Auto-generated method stub
 				Message msg=new Message();
 				msg.what=StatusCode.RESPONSE_NET_FAILED;
 				msg.obj="网络异常";

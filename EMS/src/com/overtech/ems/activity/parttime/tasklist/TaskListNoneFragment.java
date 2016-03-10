@@ -109,9 +109,9 @@ public class TaskListNoneFragment extends BaseFragment {
 					Utilities.showToast("当天的任务不可以退单！！！", context);
 					break;
 				} else if (time.equals("1")) {
-					dialogBuilder.withMessage("72小时内退单会影响星级评定，你是否要退单？");
+					dialogBuilder.withMessage("72小时内退单会影响星级评定，你确认要退单？");
 				} else {
-					dialogBuilder.withMessage("你是否要退单");
+					dialogBuilder.withMessage("你确认要退单？");
 				}
 				effect = Effectstype.Slideright;
 				dialogBuilder.withTitle("温馨提示")
@@ -122,9 +122,9 @@ public class TaskListNoneFragment extends BaseFragment {
 						.isCancelableOnTouchOutside(true).withDuration(700)
 						.withEffect(effect)
 						.withButtonDrawable(R.color.main_white)
-						.withButton1Text("否")
+						.withButton1Text("取消")
 						.withButton1Color(R.color.main_primary)
-						.withButton2Text("是")
+						.withButton2Text("确认")
 						.withButton2Color(R.color.main_primary)
 						.setButton1Click(new View.OnClickListener() {
 							@Override
@@ -135,7 +135,7 @@ public class TaskListNoneFragment extends BaseFragment {
 							@Override
 							public void onClick(View v) {
 								dialogBuilder.dismiss();
-								startProgressDialog("正在退单");
+								startProgressDialog("正在退单...");
 
 								Param param1 = new Param(Constant.TASKNO,
 										mTaskNo);

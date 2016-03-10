@@ -150,9 +150,9 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 					Utilities.showToast("当天的任务不可以被退单！！！", context);
 					break;
 				} else if (time.equals("1")) {
-					dialogBuilder.withMessage("72小时内退单会影响星级评定，你是否要退单？");
+					dialogBuilder.withMessage("72小时内退单会影响星级评定，你确认要退单？");
 				} else {
-					dialogBuilder.withMessage("你是否要退单");
+					dialogBuilder.withMessage("你确认要退单？");
 				}
 				effect = Effectstype.Slideright;
 				dialogBuilder.withTitle("温馨提示")
@@ -163,9 +163,9 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 						.isCancelableOnTouchOutside(true).withDuration(700)
 						.withEffect(effect)
 						.withButtonDrawable(R.color.main_white)
-						.withButton1Text("否")
+						.withButton1Text("取消")
 						.withButton1Color(R.color.main_primary)
-						.withButton2Text("是")
+						.withButton2Text("确认")
 						.withButton2Color(R.color.main_primary)
 						.setButton1Click(new View.OnClickListener() {
 							@Override
@@ -176,7 +176,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 							@Override
 							public void onClick(View v) {
 								dialogBuilder.dismiss();
-								startProgressDialog("正在退单");
+								startProgressDialog("正在退单...");
 
 								Param param1 = new Param(Constant.TASKNO,
 										taskNo);
@@ -430,15 +430,15 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 						dialogBuilder.withTitle("温馨提示")
 								.withTitleColor(R.color.main_primary)
 								.withDividerColor("#11000000")
-								.withMessage("您是否要拨打电话给您的搭档：" + mPartnerName)
+								.withMessage("您确认要拨打电话给您的搭档：" + mPartnerName)
 								.withMessageColor(R.color.main_primary)
 								.withDialogColor("#FFFFFFFF")
 								.isCancelableOnTouchOutside(true)
 								.withDuration(700).withEffect(effect)
 								.withButtonDrawable(R.color.main_white)
-								.withButton1Text("否")
+								.withButton1Text("取消")
 								.withButton1Color("#DD47BEE9")
-								.withButton2Text("是")
+								.withButton2Text("确认")
 								.withButton2Color("#DD47BEE9")
 								.setButton1Click(new View.OnClickListener() {
 									@Override

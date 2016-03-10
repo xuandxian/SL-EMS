@@ -1,13 +1,10 @@
 package com.overtech.ems.activity;
 
 import java.util.Map;
-
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 import cn.jpush.android.api.JPushInterface;
-
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -29,7 +26,6 @@ public class MyApplication extends Application {
 
 	@Override
 	public void onCreate() {
-		// TODO Auto-generated method stub
 		super.onCreate();
 		if (sp == null) {
 			sp = getSharedPreferences(SystemConfig.PREFERENCES_NAME,
@@ -46,7 +42,6 @@ public class MyApplication extends Application {
 		mLocationClient.requestLocation();
 		JPushInterface.setDebugMode(true); // 设置开启日志,发布时请关闭日志
 		JPushInterface.init(this); // 初始化 JPush
-		Log.e("==application==", "=======onCreate======");
 	}
 
 	public SharedPreferences getSharePreference() {
@@ -57,7 +52,6 @@ public class MyApplication extends Application {
 
 		@Override
 		public void onReceiveLocation(BDLocation location) {
-			Log.e("==收到定位信息===", "ssssssbbbbbb");
 			if (location == null) {
 				Utilities.showToast("定位失败", getApplicationContext());
 				return;
