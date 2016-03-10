@@ -43,7 +43,7 @@ public class PersonalAnnouncementDetailActivity extends BaseActivity {
 					JSONObject model=(JSONObject) jsonObj.get("model");
 					mAnnouncementContent.setText("\u3000\u3000"+model.getString("content"));
 					mAnnouncementDate.setText(model.getString("releaseDate"));
-					mAnnouncementSummary.setText("摘要："+model.getString("summary"));
+					mAnnouncementSummary.setText(model.getString("summary"));
 					mAnnouncementTheme.setText(model.getString("theme"));
 				} catch (JSONException e) {
 					// TODO Auto-generated catch block
@@ -107,7 +107,7 @@ public class PersonalAnnouncementDetailActivity extends BaseActivity {
 		mAnnouncementTheme=(TextView) findViewById(R.id.tv_announcement_theme);
 		mAnnouncementDate=(TextView) findViewById(R.id.tv_announcement_date);
 		mAnnouncementSummary=(TextView) findViewById(R.id.tv_announcement_summary);
-		mHeadContent.setText("详情");
+		mHeadContent.setText("公告详情");
 		mDoBack.setVisibility(View.VISIBLE);
 		mDoBack.setOnClickListener(new OnClickListener() {
 			

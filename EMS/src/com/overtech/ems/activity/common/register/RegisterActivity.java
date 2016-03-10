@@ -61,7 +61,6 @@ public class RegisterActivity extends BaseActivity implements
 					if (success.equals("true")) {
 						Utilities.showToast("恭喜你注册成功，请等待公司为你分配账户和密码！！！",
 								context);
-						finish();
 					} else if (success.equals("false")) {
 						Utilities.showToast(jsonObject.getString("msg"),
 								context);
