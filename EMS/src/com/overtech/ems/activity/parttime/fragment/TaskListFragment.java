@@ -70,6 +70,7 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.tv_tasklist_none:
 			switchContent(mTaskDonet,mTaskNone);
+			mQrCode.setVisibility(View.VISIBLE);
 			mNone.setBackgroundResource(R.drawable.horizontal_line);
 			mDonet.setBackgroundResource(R.color.main_white);
 			mNone.setTextColor(Color.rgb(0, 185, 239));
@@ -77,6 +78,7 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 			break;
 		case R.id.tv_tasklist_donet:
 			switchContent(mTaskNone,mTaskDonet);
+			mQrCode.setVisibility(View.GONE);
 			mNone.setBackgroundResource(R.color.main_white);
 			mDonet.setBackgroundResource(R.drawable.horizontal_line);
 			mNone.setTextColor(getResources().getColor(R.color.main_secondary));

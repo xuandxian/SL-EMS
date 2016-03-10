@@ -7,10 +7,10 @@
         android:id="@+id/include1"
         layout="@layout/headview" />
 
-    <ScrollView
+    <com.overtech.ems.widget.ReboundScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/include1" >
+        android:layout_height="wrap_content"
+        android:layout_below="@id/include1" >
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -305,6 +305,6 @@
                 android:layout_marginLeft="5dp"
                 android:layout_toRightOf="@+id/elevator_last_maintenance_date" />
         </RelativeLayout>
-    </ScrollView>
+    </com.overtech.ems.widget.ReboundScrollView>
 
 </RelativeLayout>
