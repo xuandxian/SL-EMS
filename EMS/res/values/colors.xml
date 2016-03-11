@@ -87,4 +87,7 @@
 	<color name="package_detail">#72d97d</color>
 	
 	<color name="rating_bar">#fcec7e</color>
+	
+	<color name="announce_before">#0000cc</color>
+	<color name="announce_after">#551a8b</color>
 </resources>

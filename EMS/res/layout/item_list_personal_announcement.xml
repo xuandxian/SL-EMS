@@ -23,7 +23,6 @@
             android:layout_marginLeft="5dp"
             android:layout_marginTop="5dp"
             android:singleLine="true"
-            android:textColor="#0000cc"
             android:textSize="@dimen/text_size_title" />
 
         <TextView
@@ -34,8 +33,7 @@
             android:layout_alignParentLeft="true"
             android:layout_marginBottom="5dp"
             android:layout_marginLeft="10dp"
-            android:singleLine="true"
-            android:textColor="#0000cc" />
+            android:singleLine="true" />
 
         <TextView
             android:id="@+id/tv_announcement_time"
@@ -44,8 +42,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentRight="true"
             android:layout_marginBottom="5dp"
-            android:layout_marginRight="5dp"
-            android:textColor="#0000cc" />
+            android:layout_marginRight="5dp" />
     </RelativeLayout>
 
     <ImageView
