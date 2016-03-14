@@ -97,7 +97,7 @@ public class ScanCodeActivity extends BaseActivity implements Callback {
 						}
 					}
 					if (count == result.size()) {// 当任务包中所有的电梯都完成了，就可以进入到问题反馈中去
-						Intent intent = new Intent(ScanCodeActivity.this,
+						/*Intent intent = new Intent(ScanCodeActivity.this,//此处暂时不需要进入到问题反馈中
 								QuestionResponseActivity.class);
 						Bundle bundle = new Bundle();
 						bundle.putString(Constant.TASKNO, result.get(0)
@@ -105,7 +105,7 @@ public class ScanCodeActivity extends BaseActivity implements Callback {
 						intent.putExtras(bundle);
 						startActivity(intent);
 						ScanCodeActivity.this.finish();
-						break;
+						break;*/
 					}
 					for (int i = 0; i < result.size(); i++) {//遍历电梯编号，得到当前电梯正在维保的电梯
 						if (mElevatorNo.equals(result.get(i).getElevatorNo())) {

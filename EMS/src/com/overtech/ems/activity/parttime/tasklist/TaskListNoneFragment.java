@@ -80,7 +80,7 @@ public class TaskListNoneFragment extends BaseFragment {
 			switch (msg.what) {
 			case StatusCode.TASKLIST_NONE_SUCCESS:
 				String json = (String) msg.obj;
-				Log.e("==未完成任务单==", json);
+//				Log.e("==未完成任务单==", json);
 				Gson gson = new Gson();
 				TaskPackageBean bean = gson.fromJson(json,
 						TaskPackageBean.class);

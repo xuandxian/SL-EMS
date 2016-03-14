@@ -62,6 +62,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	private ImageView mDoBack;
 	private ListView mTask;
 	private Button mCancle;
+	private Button mToResponse;
 	private TextView mTaskPackageName;
 	private TextView mTaskNo;
 	private LinearLayout shareToFriends;
@@ -113,6 +114,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			switch (msg.what) {
 			case StatusCode.PACKAGE_DETAILS_SUCCESS:
 				String json = (String) msg.obj;
+//				Log.e("==24t任务详情==", json);
 				Gson gson = new Gson();
 				TaskPackageDetailBean bean = gson.fromJson(json,
 						TaskPackageDetailBean.class);
@@ -131,8 +133,21 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				if (null == list || list.size() == 0) {
 					Utilities.showToast("无数据", mActivity);
 					mCancle.setVisibility(View.GONE);
+					mToResponse.setVisibility(View.GONE);
 				} else {
-					mCancle.setVisibility(View.VISIBLE);
+					int count=0;//记录完成电梯的数量
+					for(TaskPackageDetail data:list){
+						if(data.getIsFinish().equals("2")){
+							count++;
+						}
+					}
+					if(count==list.size()){
+						mToResponse.setVisibility(View.VISIBLE);
+						mCancle.setVisibility(View.GONE);
+					}else{
+						mToResponse.setVisibility(View.GONE);
+						mCancle.setVisibility(View.VISIBLE);
+					}
 					adapter = new TaskListPackageDetailAdapter(context, list);
 					mTask.setAdapter(adapter);
 				}
@@ -333,6 +348,19 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 						}, param);
 			}
 		});
+		mToResponse.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(TaskListPackageDetailActivity.this,
+						QuestionResponseActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putString(Constant.TASKNO, taskNo);
+				intent.putExtras(bundle);
+				startActivity(intent);
+			}
+		});
 		initPopupWindow();
 		mDoMore.setOnClickListener(new OnClickListener() {
 
@@ -485,6 +513,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 		mDoBack = (ImageView) findViewById(R.id.iv_grab_headBack);
 		mTask = (ListView) findViewById(R.id.lv_tasklist);
 		mCancle = (Button) findViewById(R.id.bt_cancle_task);
+		mToResponse=(Button) findViewById(R.id.bt_next_response);
 		mDoMore = (ImageView) findViewById(R.id.iv_navicate_right);
 		mDoMore.setBackgroundResource(R.drawable.icon_common_more);
 		mDoMore.setVisibility(View.VISIBLE);
