@@ -72,19 +72,11 @@
       <file leaf-file-name="QueryTaskListActivity.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/overtech/ems/activity/parttime/tasklist/QueryTaskListActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="11.01227">
-              <caret line="461" column="104" selection-start-line="461" selection-start-column="94" selection-end-line="461" selection-end-column="104" />
+            <state vertical-scroll-proportion="3.8834355">
+              <caret line="399" column="5" selection-start-line="399" selection-start-column="5" selection-end-line="399" selection-end-column="5" />
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#2643#2660#0" expanded="true" />
-                <element signature="e#11719#11720#0" expanded="true" />
-                <element signature="e#11743#11744#0" expanded="true" />
-                <element signature="e#13846#13968#0" expanded="true" />
-                <element signature="e#13967#13968#0" expanded="true" />
-                <element signature="e#14658#14780#0" expanded="true" />
-                <element signature="e#14779#14780#0" expanded="true" />
-                <element signature="e#14798#16370#0" expanded="true" />
-                <element signature="e#16369#16370#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -1375,6 +1367,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="5.0326796">
           <caret line="420" column="49" selection-start-line="420" selection-start-column="49" selection-end-line="420" selection-end-column="49" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1460,19 +1453,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/overtech/ems/activity/parttime/tasklist/QueryTaskListActivity.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="11.01227">
-          <caret line="461" column="104" selection-start-line="461" selection-start-column="94" selection-end-line="461" selection-end-column="104" />
+        <state vertical-scroll-proportion="3.8834355">
+          <caret line="399" column="5" selection-start-line="399" selection-start-column="5" selection-end-line="399" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#2643#2660#0" expanded="true" />
-            <element signature="e#11719#11720#0" expanded="true" />
-            <element signature="e#11743#11744#0" expanded="true" />
-            <element signature="e#13846#13968#0" expanded="true" />
-            <element signature="e#13967#13968#0" expanded="true" />
-            <element signature="e#14658#14780#0" expanded="true" />
-            <element signature="e#14779#14780#0" expanded="true" />
-            <element signature="e#14798#16370#0" expanded="true" />
-            <element signature="e#16369#16370#0" expanded="true" />
           </folding>
         </state>
       </provider>

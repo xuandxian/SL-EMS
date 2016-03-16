@@ -363,9 +363,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Intent intent = new Intent(TaskListPackageDetailActivity.this,
-						QuestionResponseActivity.class);
+				Intent intent = new Intent(TaskListPackageDetailActivity.this,QuestionResponseActivity.class);
 				Bundle bundle = new Bundle();
 				bundle.putString(Constant.TASKNO, taskNo);
 				intent.putExtras(bundle);
