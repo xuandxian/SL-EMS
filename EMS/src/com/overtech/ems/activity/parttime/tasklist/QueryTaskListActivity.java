@@ -107,31 +107,25 @@ public class QueryTaskListActivity extends BaseActivity implements
 					}
 					if (completeProgress) {
 						tagSet.remove(mTaskNo);
-						JPushInterface.setAliasAndTags(getApplicationContext(),
-								null, tagSet, mTagsCallback);
+						JPushInterface.setAliasAndTags(getApplicationContext(),null, tagSet, mTagsCallback);
 						if (!jsonObject.isNull("taskState")) {
-							String taskState = jsonObject
-									.getString("taskState");
+							String taskState = jsonObject.getString("taskState");
 							if (taskState.equals("0")) {
 								// 任务包中还有未完成的
 								Utilities.showToast("您还有未完成的电梯", context);
 								finish();
 							} else {
 								// 任务包中全部都完成了
-								Intent intent = new Intent(
-										QueryTaskListActivity.this,
-										QuestionResponseActivity.class);
+								Intent intent = new Intent(QueryTaskListActivity.this,QuestionResponseActivity.class);
 								Bundle bundle = new Bundle();
 								bundle.putString(Constant.TASKNO, mTaskNo);
 								intent.putExtras(bundle);
 								startActivity(intent);
 								finish();
-
 							}
 						} else {
 							Utilities.showToast("查询其他电梯状态失败", context);
 						}
-
 					} else {
 						Utilities.showToast("请和搭档确认电梯的完成状态", context);
 						finish();
@@ -142,7 +136,6 @@ public class QueryTaskListActivity extends BaseActivity implements
 				break;
 			case StatusCode.VALIDATE_TIME_SUCCESS:
 				String time = (String) msg.obj;
-				// Log.e("==时间==", time);
 				if (time.equals("0")) {
 					isCanConfirmDone = true;
 				} else {
@@ -150,9 +143,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 				}
 				break;
 			case StatusCode.MSG_SET_TAGS:
-				Log.d("24梯", "Set tags in handler.");
-				JPushInterface.setAliasAndTags(getApplicationContext(), null,
-						(Set<String>) msg.obj, mTagsCallback);
+				JPushInterface.setAliasAndTags(getApplicationContext(), null,(Set<String>) msg.obj, mTagsCallback);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
 				Utilities.showToast((String) msg.obj, context);
@@ -189,8 +180,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 				logs = "Failed to set alias and tags due to timeout. Try again after 60s.";
 				Log.d(TAG, logs);
 				if (AppUtils.isConnected(getApplicationContext())) {
-					handler.sendMessageDelayed(handler.obtainMessage(
-							StatusCode.MSG_SET_TAGS, tags), 1000 * 60);
+					handler.sendMessageDelayed(handler.obtainMessage(StatusCode.MSG_SET_TAGS, tags), 1000 * 60);
 				} else {
 					Log.i(TAG, "No network");
 				}
@@ -200,9 +190,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 				logs = "Failed with errorCode = " + code;
 				Log.d(TAG, logs);
 			}
-
 		}
-
 	};
 
 	@Override
@@ -232,8 +220,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 
 	private void init() {
 		context = QueryTaskListActivity.this;
-		mListFooterView = LayoutInflater.from(context).inflate(
-				R.layout.listview_footer_done, null);
+		mListFooterView = LayoutInflater.from(context).inflate(R.layout.listview_footer_done, null);
 		mDone = (Button) mListFooterView.findViewById(R.id.btn_login);
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
 		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
@@ -334,25 +321,14 @@ public class QueryTaskListActivity extends BaseActivity implements
 							if (!currentElevatorIsFinish) {
 								Param taskNoParam = new Param(Constant.TASKNO,mTaskNo);
 								Param elevatorNoParam = new Param(Constant.ELEVATORNO, mElevatorNo);
-								Param loginNameParam = new Param(
-										Constant.LOGINNAME,
-										mSharedPreferences
-												.getString(
-														SharedPreferencesKeys.CURRENT_LOGIN_NAME,
-														""));
-								startLoading(
-										ServicesConfig.MAINTENCE_LIST_COMPLETE,
-										new Callback() {
-
+								Param loginNameParam = new Param(Constant.LOGINNAME,mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME,""));
+								startLoading(ServicesConfig.MAINTENCE_LIST_COMPLETE,new Callback() {
 											@Override
-											public void onResponse(
-													Response response)
-													throws IOException {
+											public void onResponse(Response response)throws IOException {
 												Message msg = new Message();
 												if (response.isSuccessful()) {
 													msg.what = StatusCode.MAINTENANCE_COMPLETE_SUCCESS;
-													msg.obj = response.body()
-															.string();
+													msg.obj = response.body().string();
 												} else {
 													msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
 													msg.obj = "服务器异常";
@@ -361,15 +337,13 @@ public class QueryTaskListActivity extends BaseActivity implements
 											}
 
 											@Override
-											public void onFailure(Request arg0,
-													IOException arg1) {
+											public void onFailure(Request arg0,IOException arg1) {
 												Message msg = new Message();
 												msg.what = StatusCode.RESPONSE_NET_FAILED;
 												msg.obj = "网络异常";
 												handler.sendMessage(msg);
 											}
-										}, taskNoParam, elevatorNoParam,
-										loginNameParam);
+										}, taskNoParam, elevatorNoParam,loginNameParam);
 							} else {
 								Utilities.showToast("该电梯已经完成", context);
 							}
@@ -387,8 +361,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 				new Callback() {
 
 					@Override
-					public void onResponse(Response response)
-							throws IOException {
+					public void onResponse(Response response)throws IOException {
 						Message msg = new Message();
 						if (response.isSuccessful()) {
 							msg.what = StatusCode.VALIDATE_TIME_SUCCESS;
@@ -414,6 +387,5 @@ public class QueryTaskListActivity extends BaseActivity implements
 		Request request = httpEngine.createRequest(url, params);
 		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(callback);
-
 	}
 }
