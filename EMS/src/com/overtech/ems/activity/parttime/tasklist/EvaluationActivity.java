@@ -43,8 +43,8 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 			case StatusCode.EVALUATEOTHER:
 				boolean state=Boolean.parseBoolean((String) msg.obj);
 				if(state){
-					Intent intent =new Intent(context,TaskListPackageDetailActivity.class);
-//					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					Intent intent =new Intent(context,MainActivity.class);
+					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					startActivity(intent);
 					finish();
 				}else{
