@@ -7,7 +7,8 @@ package com.overtech.ems.entity.parttime;
 public class Bonus {
 	private String awardRemark;
 	private String awardSum;
-	private long awardTime;
+//	private long awardTime;
+	private String awardDate;
 	public String getAwardRemark() {
 		return awardRemark;
 	}
@@ -20,11 +21,11 @@ public class Bonus {
 	public void setAwardSum(String awardSum) {
 		this.awardSum = awardSum;
 	}
-	public long getAwardTime() {
-		return awardTime;
+	public String getAwardDate() {
+		return awardDate;
 	}
-	public void setAwardTime(long awardTime) {
-		this.awardTime = awardTime;
+	public void setAwardDate(String awardDate) {
+		this.awardDate = awardDate;
 	}
 	
 }

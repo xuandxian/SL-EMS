@@ -67,7 +67,7 @@ public class PersonalAccountNoCountAdapter extends BaseAdapter {
 		holder.mTaskName.setText(data.getTaskPackageName());
 		holder.mMaintenanceTime.setText(data.getMaintenanceDate());
 		holder.mTaskNo.setText(data.getTaskNo());
-		holder.mTaskMoney.setText(data.getTotalPrice());
+		holder.mTaskMoney.setText("￥"+data.getTotalPrice());
 		return convertView;
 	}
 

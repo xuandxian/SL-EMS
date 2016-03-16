@@ -2,19 +2,16 @@ package com.overtech.ems.activity.parttime.personal;
 
 import java.io.IOException;
 import java.util.List;
-
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
@@ -32,6 +29,7 @@ import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
+//奖励记录
 public class PersonalBoundsActivity extends BaseActivity implements OnClickListener {
 	private ImageView mDoBack;
 	private TextView mHeadContent;

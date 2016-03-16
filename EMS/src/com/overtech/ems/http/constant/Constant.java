@@ -35,6 +35,14 @@ public class Constant {
 	 */
 	public static final String FILTERTIME="mFilterTime";
 	/**
+	 * 维保日期
+	 */
+	public static final String MAINTENANCEDATA="maintenanceData";
+	/**
+	 * is Today
+	 */
+	public static final String ISTODAY="isToday";
+	/**
 	 * 任务单号
 	 */
 	public static final String TASKNO="taskNo";

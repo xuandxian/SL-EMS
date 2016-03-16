@@ -77,13 +77,22 @@
     </content>
     <orderEntry type="jdk" jdkName="Android API 20 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="Native_Libs2" level="project" />
-    <orderEntry type="library" exported="" name="okio-1.6.0" level="project" />
+    <orderEntry type="library" exported="" name="ShareSDK-Wechat-2.6.6" level="project" />
     <orderEntry type="library" exported="" name="android-support-v4" level="project" />
-    <orderEntry type="library" exported="" name="SMSSDK-1.1.5" level="project" />
-    <orderEntry type="library" exported="" name="okhttp-2.5.0" level="project" />
-    <orderEntry type="library" exported="" name="BaiduLBS_Android" level="project" />
-    <orderEntry type="library" exported="" name="zxing" level="project" />
+    <orderEntry type="library" exported="" name="ShareSDK-Wechat-Core-2.6.6" level="project" />
+    <orderEntry type="library" exported="" name="MobCommons" level="project" />
+    <orderEntry type="library" exported="" name="jpush-android-2.0.5" level="project" />
     <orderEntry type="library" exported="" name="gson-2.2.1" level="project" />
+    <orderEntry type="library" exported="" name="BaiduLBS_Android" level="project" />
+    <orderEntry type="library" exported="" name="MobTools" level="project" />
+    <orderEntry type="library" exported="" name="ShareSDK-QQ-2.6.6" level="project" />
+    <orderEntry type="library" exported="" name="okhttp-2.5.0" level="project" />
+    <orderEntry type="library" exported="" name="okio-1.6.0" level="project" />
+    <orderEntry type="library" exported="" name="zxing" level="project" />
+    <orderEntry type="library" exported="" name="ShareSDK-Wechat-Moments-2.6.6" level="project" />
+    <orderEntry type="library" exported="" name="Native_Libs2" level="project" />
+    <orderEntry type="library" exported="" name="ShareSDK-Core-2.6.6" level="project" />
+    <orderEntry type="library" exported="" name="ShareSDK-SinaWeibo-2.6.6" level="project" />
+    <orderEntry type="library" exported="" name="ShareSDK-ShortMessage-2.6.6" level="project" />
   </component>
 </module>

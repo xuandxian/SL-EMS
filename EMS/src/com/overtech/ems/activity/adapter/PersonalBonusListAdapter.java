@@ -1,18 +1,13 @@
 package com.overtech.ems.activity.adapter;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
-
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
-
 import com.overtech.ems.R;
-import com.overtech.ems.entity.parttime.Bill;
 import com.overtech.ems.entity.parttime.Bonus;
 
 public class PersonalBonusListAdapter extends BaseExpandableListAdapter {
@@ -25,13 +20,11 @@ public class PersonalBonusListAdapter extends BaseExpandableListAdapter {
 	}
 	@Override
 	public int getGroupCount() {
-		// TODO Auto-generated method stub
 		return group.size();
 	}
 
 	@Override
 	public int getChildrenCount(int groupPosition) {
-		// TODO Auto-generated method stub
 		return 1;
 	}
 
@@ -43,7 +36,6 @@ public class PersonalBonusListAdapter extends BaseExpandableListAdapter {
 
 	@Override
 	public Object getChild(int groupPosition, int childPosition) {
-		// TODO Auto-generated method stub
 		return group.get(groupPosition).getAwardRemark();
 	}
 
@@ -55,13 +47,11 @@ public class PersonalBonusListAdapter extends BaseExpandableListAdapter {
 
 	@Override
 	public long getChildId(int groupPosition, int childPosition) {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public boolean hasStableIds() {
-		// TODO Auto-generated method stub
 		return true;
 	}
 
@@ -74,19 +64,13 @@ public class PersonalBonusListAdapter extends BaseExpandableListAdapter {
 		}
 		TextView mAwardSum=(TextView) convertView.findViewById(R.id.tv_bonus);
 		TextView mAwardDate=(TextView) convertView.findViewById(R.id.tv_bonus_date);
-		
-		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-		Date awardDate=new Date(data.getAwardTime());
-		
 		mAwardSum.setText("奖励金额:"+data.getAwardSum());
-		mAwardDate.setText("奖励日期："+sdf.format(awardDate));
-		
+		mAwardDate.setText("奖励日期："+data.getAwardDate());
 		return convertView;
 	}
 
 	@Override
-	public View getChildView(int groupPosition, int childPosition,
-			boolean isLastChild, View convertView, ViewGroup parent) {
+	public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
 		TextView tv=new TextView(context);
 		tv.setPadding(40, 10, 0, 10);
 		tv.setTextColor(context.getResources().getColor(R.color.main_secondary));
@@ -96,9 +80,6 @@ public class PersonalBonusListAdapter extends BaseExpandableListAdapter {
 
 	@Override
 	public boolean isChildSelectable(int groupPosition, int childPosition) {
-		// TODO Auto-generated method stub
 		return true;
 	}
-
-	
 }

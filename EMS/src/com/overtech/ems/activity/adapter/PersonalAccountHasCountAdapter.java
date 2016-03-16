@@ -66,12 +66,10 @@ public class PersonalAccountHasCountAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		holder.mTaskName.setText(data.getTaskPackageName());
-
-		holder.mMaintenanceDate.setText(data.getMaintenanceDate());
-		holder.mTaskClosingDate.setText(sdf.format((new Date(data
-				.getClosingDate()))));
+		holder.mMaintenanceDate.setText("("+data.getMaintenanceDate()+")");
+		holder.mTaskClosingDate.setText(sdf.format((new Date(data.getClosingDate()))));
 		holder.mTaskNo.setText(data.getTaskNo());
-		holder.mTaskMoney.setText(data.getTotalPrice());
+		holder.mTaskMoney.setText("￥"+data.getTotalPrice());
 		return convertView;
 	}
 

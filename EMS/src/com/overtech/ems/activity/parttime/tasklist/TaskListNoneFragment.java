@@ -355,6 +355,8 @@ public class TaskListNoneFragment extends BaseFragment {
 				Intent intent = new Intent(mActivity,
 						TaskListPackageDetailActivity.class);
 				Bundle bundle = new Bundle();
+				Boolean isToday=Utilities.isToday(data.getMaintenanceDate());
+				bundle.putBoolean(Constant.ISTODAY,isToday);
 				bundle.putString(Constant.TASKNO, data.getTaskNo());
 				bundle.putString(Constant.TASKPACKAGENAME,
 						data.getTaskPackageName());

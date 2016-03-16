@@ -29,6 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="150dp"
             android:gravity="top"
+            android:hint="请输入反馈意见..."
             android:background="@drawable/shape_edittext_input"
             />
         <Button 

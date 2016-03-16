@@ -13,6 +13,7 @@ import android.graphics.Bitmap;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
+import android.media.effect.Effect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -41,6 +42,7 @@ import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
+import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.zxing.camera.CameraManager;
 import com.overtech.ems.widget.zxing.decoding.CaptureActivityHandler;
 import com.overtech.ems.widget.zxing.decoding.InactivityTimer;
@@ -142,49 +144,7 @@ public class ScanCodeActivity extends BaseActivity implements Callback {
 					final String taskNo = currentElevator.getTaskNo();
 					final String workType = currentElevator.getWorkType();
 					final String zonePhone = currentElevator.getZonePhone();
-					new AlertDialog.Builder(context)
-							.setTitle("温馨提示")
-							.setMessage("请将电梯监测设备按钮调至维保状态后开始进行维保工作")
-							.setPositiveButton("确认",
-									new DialogInterface.OnClickListener() {
-
-										@Override
-										public void onClick(
-												DialogInterface dialog,
-												int which) {
-											// TODO Auto-generated method stub
-											Intent intent = new Intent(
-													ScanCodeActivity.this,
-													QueryTaskListActivity.class);
-											Bundle bundle = new Bundle();
-											bundle.putString(Constant.TASKNO,
-													taskNo);
-											bundle.putString(Constant.WORKTYPE,
-													workType);
-											bundle.putString(
-													Constant.ZONEPHONE,
-													zonePhone);
-											bundle.putString(
-													Constant.ELEVATORNO,
-													mElevatorNo);
-											intent.putExtras(bundle);
-											startActivity(intent);
-											dialog.dismiss();
-											ScanCodeActivity.this.finish();
-										}
-									})
-							.setNegativeButton("取消",
-									new DialogInterface.OnClickListener() {
-
-										@Override
-										public void onClick(
-												DialogInterface dialog,
-												int which) {
-											// TODO Auto-generated method stub
-											dialog.dismiss();
-											ScanCodeActivity.this.finish();
-										}
-									}).show();
+					showNiffyDialog2(taskNo,workType,zonePhone);
 
 				} else {
 					Utilities.showToast("您尚未满足维保要求", context);// 维保要求包括，维保时间正确，有维保搭档，维保电梯正确
@@ -201,54 +161,6 @@ public class ScanCodeActivity extends BaseActivity implements Callback {
 		};
 	};
 
-	/*
-	 * private Handler handler2 = new Handler() { Gson gson = new Gson();
-	 * 
-	 * public void handleMessage(android.os.Message msg) { switch (msg.what) {
-	 * case StatusCode.QUERY_TASK_PACKAGE_ELEVATOR_SUCCESS: String json =
-	 * (String) msg.obj; Log.e("hahahah", json); ScanResultBean bean =
-	 * gson.fromJson(json, ScanResultBean.class); boolean isTrue =
-	 * bean.isSuccess(); if (isTrue) { BeginWorkResult result = bean.getModel();
-	 * double latitude = Double.parseDouble(result.getLatitude()); double
-	 * longitude = Double .parseDouble(result.getLongitude()); LatLng latlng =
-	 * new LatLng(latitude, longitude); double distance =
-	 * DistanceUtil.getDistance( mCurrentLocation, latlng); if (distance >
-	 * 500.0) { Utilities.showToast("您距离维保电梯的距离超出范围", mContext); break; }
-	 * 
-	 * // 业务调整，该部分注释 // String isStart=result.getIsStart(); //
-	 * if(isStart.equals("0")){ //
-	 * Utilities.showToast("请将电梯监测设备按钮调至维保状态后开始进行维保工作", // mContext); // }else{
-	 * // Utilities.showToast("请将电梯监测设备按钮调至维保状态后开始进行维保工作", // mContext); // }
-	 * final String taskNo=result.getTaskNo(); final String
-	 * workType=result.getWorkType(); final String
-	 * zonePhone=result.getZonePhone(); new AlertDialog.Builder(context)
-	 * .setTitle("温馨提示") .setMessage("请将电梯监测设备按钮调至维保状态后开始进行维保工作")
-	 * .setPositiveButton("确认", new DialogInterface.OnClickListener() {
-	 * 
-	 * @Override public void onClick( DialogInterface dialog, int which) { //
-	 * TODO Auto-generated method stub Intent intent = new
-	 * Intent(ScanCodeActivity.this, QueryTaskListActivity.class); Bundle bundle
-	 * = new Bundle(); bundle.putString(Constant.TASKNO, taskNo);
-	 * bundle.putString(Constant.WORKTYPE, workType);
-	 * bundle.putString(Constant.ZONEPHONE, zonePhone);
-	 * bundle.putString(Constant.ELEVATORNO, mElevatorNo);
-	 * intent.putExtras(bundle); startActivity(intent); dialog.dismiss();
-	 * ScanCodeActivity.this.finish(); } }) .setNegativeButton("取消", new
-	 * DialogInterface.OnClickListener() {
-	 * 
-	 * @Override public void onClick( DialogInterface dialog, int which) { //
-	 * TODO Auto-generated method stub dialog.dismiss();
-	 * ScanCodeActivity.this.finish(); } });
-	 * 
-	 * } else { BeginWorkResult result = bean.getModel(); if
-	 * (result.getIsFinish() != null && result.getIsFinish().equals("2")) {
-	 * Utilities.showToast("您已经完成了该电梯", context); } else {
-	 * Utilities.showToast("您尚未满足维保要求", context);// 维保要求包括，维保时间正确，有维保搭档，维保电梯正确 }
-	 * ScanCodeActivity.this.finish(); } break; case
-	 * StatusCode.RESPONSE_SERVER_EXCEPTION: Utilities.showToast("服务端异常",
-	 * context); break; case StatusCode.RESPONSE_NET_FAILED:
-	 * Utilities.showToast("网络异常", context); break; } }; };
-	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -441,6 +353,91 @@ public class ScanCodeActivity extends BaseActivity implements Callback {
 			Vibrator vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 			vibrator.vibrate(VIBRATE_DURATION);
 		}
+	}
+
+	private void showNiffyDialog(final String taskNo,final String workType,final String zonePhone){
+		new AlertDialog.Builder(context)
+				.setTitle("温馨提示")
+				.setMessage("请将电梯监测设备按钮调至维保状态后开始进行维保工作")
+				.setPositiveButton("确认",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(
+									DialogInterface dialog,
+									int which) {
+								// TODO Auto-generated method stub
+								Intent intent = new Intent(
+										ScanCodeActivity.this,
+										QueryTaskListActivity.class);
+								Bundle bundle = new Bundle();
+								bundle.putString(Constant.TASKNO,
+										taskNo);
+								bundle.putString(Constant.WORKTYPE,
+										workType);
+								bundle.putString(
+										Constant.ZONEPHONE,
+										zonePhone);
+								bundle.putString(
+										Constant.ELEVATORNO,
+										mElevatorNo);
+								intent.putExtras(bundle);
+								startActivity(intent);
+								dialog.dismiss();
+								ScanCodeActivity.this.finish();
+							}
+						})
+				.setNegativeButton("取消",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(
+									DialogInterface dialog,
+									int which) {
+								// TODO Auto-generated method stub
+								dialog.dismiss();
+								ScanCodeActivity.this.finish();
+							}
+						}).show();
+	}
+	private void showNiffyDialog2(final String taskNo,final String workType,final String zonePhone){
+		Effectstype effect = Effectstype.Slideright;
+		dialogBuilder.withTitle("温馨提示").withTitleColor(R.color.main_primary)
+				.withDividerColor("#11000000").withMessage("请将电梯监测设备按钮调至维保状态后开始进行维保工作")
+				.withMessageColor(R.color.main_primary)
+				.withDialogColor("#FFFFFFFF").isCancelableOnTouchOutside(true)
+				.withDuration(700).withEffect(effect)
+				.withButtonDrawable(R.color.main_white).withButton1Text("取消")
+				.withButton1Color("#DD47BEE9").withButton2Text("确认")
+				.withButton2Color("#DD47BEE9")
+				.setButton1Click(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						dialogBuilder.dismiss();
+					}
+				}).setButton2Click(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(
+						ScanCodeActivity.this,
+						QueryTaskListActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putString(Constant.TASKNO,
+						taskNo);
+				bundle.putString(Constant.WORKTYPE,
+						workType);
+				bundle.putString(
+						Constant.ZONEPHONE,
+						zonePhone);
+				bundle.putString(
+						Constant.ELEVATORNO,
+						mElevatorNo);
+				intent.putExtras(bundle);
+				startActivity(intent);
+				dialogBuilder.dismiss();
+				ScanCodeActivity.this.finish();
+			}
+		}).show();
 	}
 
 	/**

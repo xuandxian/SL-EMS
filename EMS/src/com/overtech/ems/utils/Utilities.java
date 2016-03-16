@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -153,4 +154,27 @@ public class Utilities {
 		Matcher m = p.matcher(password);
 		return m.matches();
 	}
+	//判断是否为今天
+	public static boolean isToday(Calendar cal) {
+		boolean ret = false;
+		Calendar tmp = Calendar.getInstance();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		String s1 = format.format(cal.getTime());
+		String s2 = format.format(tmp.getTime());
+		if (s1.equals(s2)) {
+			ret = true;
+		}
+		return ret;
+	}
+	public static boolean isToday(String s1) {
+		boolean ret = false;
+		Calendar tmp = Calendar.getInstance();
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		String s2 = format.format(tmp.getTime());
+		if (s1.equals(s2)) {
+			ret = true;
+		}
+		return ret;
+	}
+
 }

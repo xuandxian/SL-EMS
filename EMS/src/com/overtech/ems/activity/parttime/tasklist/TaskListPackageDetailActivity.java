@@ -80,6 +80,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	private LatLng mStartPoint;
 	private LatLng destination;
 	private String mDesName;
+	private boolean isToday;
 	private SwipeRefreshLayout mSwipeLayout;
 	private TaskListPackageDetailAdapter adapter;
 	private ArrayList<TaskPackageDetail> list;
@@ -143,10 +144,20 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 					}
 					if(count==list.size()){
 						mToResponse.setVisibility(View.VISIBLE);
+						mToResponse.setBackgroundColor(0xff00b9ef);
+						mToResponse.setClickable(true);
 						mCancle.setVisibility(View.GONE);
 					}else{
-						mToResponse.setVisibility(View.GONE);
-						mCancle.setVisibility(View.VISIBLE);
+						if (true==isToday){
+							mToResponse.setVisibility(View.VISIBLE);
+							mToResponse.setBackgroundColor(0xffcccccc);
+							mToResponse.setClickable(false);
+						    mCancle.setVisibility(View.GONE);
+						}else {
+							mToResponse.setVisibility(View.GONE);
+							mCancle.setVisibility(View.VISIBLE);
+						}
+
 					}
 					adapter = new TaskListPackageDetailAdapter(context, list);
 					mTask.setAdapter(adapter);
@@ -292,7 +303,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	private void initEvent() {
 		mActivity = TaskListPackageDetailActivity.this;
 		mSwipeLayout.setOnRefreshListener(this);
-		mSwipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,android.R.color.holo_green_light,android.R.color.holo_orange_light,android.R.color.holo_red_light);
+		mSwipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
 		mDoBack.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -302,20 +313,20 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 		mTask.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-					TaskPackageDetail detail = (TaskPackageDetail) parent.getItemAtPosition(position);
-					if (detail.getIsFinish().equals("2")) {
-						Utilities.showToast("你好，该电梯已经完成", mActivity);
-					} else if (detail.getIsFinish().equals("1")) {
-						Utilities.showToast("仍有人未完成该电梯的维保工作", context);
-					} else {
-						Utilities.showToast("请通过扫描二维码开启工作或者完成工作", context);
-					}
-					Intent intent = new Intent(context,ElevatorDetailActivity.class);
-					Bundle bundle = new Bundle();
-					bundle.putString(Constant.ELEVATORNO,detail.getElevatorNo());
-					intent.putExtras(bundle);
-					startActivity(intent);
+									int position, long id) {
+				TaskPackageDetail detail = (TaskPackageDetail) parent.getItemAtPosition(position);
+				if (detail.getIsFinish().equals("2")) {
+					Utilities.showToast("你好，该电梯已经完成", mActivity);
+				} else if (detail.getIsFinish().equals("1")) {
+					Utilities.showToast("仍有人未完成该电梯的维保工作", context);
+				} else {
+					Utilities.showToast("请通过扫描二维码开启工作或者完成工作", context);
+				}
+				Intent intent = new Intent(context, ElevatorDetailActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putString(Constant.ELEVATORNO, detail.getElevatorNo());
+				intent.putExtras(bundle);
+				startActivity(intent);
 			}
 		});
 		mCancle.setOnClickListener(new OnClickListener() {
@@ -326,7 +337,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 						new Callback() {
 
 							@Override
-							public void onResponse(Response response)throws IOException {
+							public void onResponse(Response response) throws IOException {
 								Message msg = new Message();
 								if (response.isSuccessful()) {
 									msg.what = StatusCode.VALIDATE_TIME_SUCCESS;
@@ -349,7 +360,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			}
 		});
 		mToResponse.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -388,12 +399,12 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	// 对popupWindow的ui进行初始化
 	private void initUI() {
 		popupWindow.getContentView().findViewById(R.id.ll_pop_1).setOnClickListener(// 地图导航
-						new OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								startNavicate(mStartPoint, destination, "终点");
-							}
-						});
+				new OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						startNavicate(mStartPoint, destination, "终点");
+					}
+				});
 		shareToFriends = (LinearLayout) popupWindow.getContentView().findViewById(R.id.ll_pop_2);
 		shareToFriends.setOnClickListener(new OnClickListener() {
 
@@ -428,12 +439,12 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 										dialogBuilder.dismiss();
 									}
 								}).setButton2Click(new View.OnClickListener() {
-									@Override
-									public void onClick(View v) {
-										Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mPhone));
-										startActivity(intent);
-									}
-								}).show();
+							@Override
+							public void onClick(View v) {
+								Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mPhone));
+								startActivity(intent);
+							}
+						}).show();
 					}
 				});
 	}
@@ -442,7 +453,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 		ShareSDK.initSDK(this);
 		OnekeyShare oks = new OnekeyShare();
 		oks.setTitleUrl("http://www.wandoujia.com/apps/com.overtech.ems");
-		oks.setText("我在24T中抢到"+ mZone+ "的一个维保单，单号为:"+ taskNo+ ",请速度去抢哦！App下载链接：http://www.wandoujia.com/apps/com.overtech.ems");
+		oks.setText("我在24T中抢到" + mZone + "的一个维保单，单号为:" + taskNo + ",请速度去抢哦！App下载链接：http://www.wandoujia.com/apps/com.overtech.ems");
 		oks.setVenueName("24T");
 		oks.show(this);
 	}
@@ -477,6 +488,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 		mStartPoint = bundle.getParcelable(Constant.CURLOCATION);
 		destination = bundle.getParcelable(Constant.DESTINATION);
 		mDesName = bundle.getString(Constant.DESNAME);
+		isToday=bundle.getBoolean(Constant.ISTODAY);
 		String taskPackage = bundle.getString(Constant.TASKPACKAGENAME);
 		taskNo = bundle.getString(Constant.TASKNO);
 		mTaskPackageName.setText(taskPackage);

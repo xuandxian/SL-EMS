@@ -16,7 +16,7 @@
     <TextView
         android:id="@+id/tv_personal_maintenance_time"
         style="@style/tv_list_primary_style"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="5dp"
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@id/tv_personal_village_name"
         android:text="维保时间" />
@@ -31,33 +31,24 @@
         android:text="维保单号" />
 
     <TextView
-        android:id="@+id/tv_personal_closingdate"
-        style="@style/tv_info_secondary_style"
+        android:id="@+id/tv_personal_account"
+        style="@style/tv_info_red_style"
         android:layout_alignBaseline="@id/tv_personal_village_name"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        android:text="2016-09-09" />
+        android:text="维保金额" />
 
     <TextView
-        android:id="@+id/tv_personal_account"
-        style="@style/tv_info_red_style"
+        android:id="@+id/tv_personal_closingdate"
+        style="@style/tv_info_secondary_style"
         android:layout_alignBaseline="@id/tv_personal_taskno"
         android:layout_alignParentRight="true"
         android:layout_below="@id/tv_personal_closingdate"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
-        android:text="维保金额" />
+        android:text="2016-09-09" />
 
-    <!--
-         <TextView
-        android:id="@+id/tv_personal_maintenance_endtime"
-        style="@style/tv_info_secondary_style"
-        android:layout_alignBaseline="@+id/tv_personal_account"
-        android:layout_alignBottom="@+id/tv_personal_account"
-        android:layout_alignRight="@+id/tv_personal_maintenance_time"
-        android:text="结算时间"/>
-            -->
 
 </RelativeLayout>
