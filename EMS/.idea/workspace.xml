@@ -49,10 +49,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ScanCodeActivity.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="ScanCodeActivity.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/overtech/ems/activity/parttime/tasklist/ScanCodeActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
+            <state vertical-scroll-proportion="-1.7484663">
               <caret line="97" column="24" selection-start-line="97" selection-start-column="24" selection-end-line="97" selection-end-column="24" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -69,14 +69,23 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="QueryTaskListActivity.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="QueryTaskListActivity.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/overtech/ems/activity/parttime/tasklist/QueryTaskListActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="3.8834355">
-              <caret line="399" column="5" selection-start-line="399" selection-start-column="5" selection-end-line="399" selection-end-column="5" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="26" column="43" selection-start-line="26" selection-start-column="43" selection-end-line="26" selection-end-column="43" />
               <folding>
-                <element signature="imports" expanded="true" />
                 <element signature="e#2643#2660#0" expanded="true" />
+                <element signature="e#7363#8427#0" expanded="true" />
+                <element signature="e#8426#8427#0" expanded="true" />
+                <element signature="e#11717#11718#0" expanded="true" />
+                <element signature="e#11741#11742#0" expanded="true" />
+                <element signature="e#13844#13966#0" expanded="true" />
+                <element signature="e#13965#13966#0" expanded="true" />
+                <element signature="e#14656#14778#0" expanded="true" />
+                <element signature="e#14777#14778#0" expanded="true" />
+                <element signature="e#14796#16368#0" expanded="true" />
+                <element signature="e#16367#16368#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -1433,9 +1442,29 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/overtech/ems/activity/parttime/tasklist/ScanCodeActivity.java">
+    <entry file="file://$PROJECT_DIR$/src/com/overtech/ems/activity/parttime/tasklist/QueryTaskListActivity.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
+          <caret line="26" column="43" selection-start-line="26" selection-start-column="43" selection-end-line="26" selection-end-column="43" />
+          <folding>
+            <element signature="e#2643#2660#0" expanded="true" />
+            <element signature="e#7363#8427#0" expanded="true" />
+            <element signature="e#8426#8427#0" expanded="true" />
+            <element signature="e#11717#11718#0" expanded="true" />
+            <element signature="e#11741#11742#0" expanded="true" />
+            <element signature="e#13844#13966#0" expanded="true" />
+            <element signature="e#13965#13966#0" expanded="true" />
+            <element signature="e#14656#14778#0" expanded="true" />
+            <element signature="e#14777#14778#0" expanded="true" />
+            <element signature="e#14796#16368#0" expanded="true" />
+            <element signature="e#16367#16368#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/overtech/ems/activity/parttime/tasklist/ScanCodeActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.7484663">
           <caret line="97" column="24" selection-start-line="97" selection-start-column="24" selection-end-line="97" selection-end-column="24" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -1447,17 +1476,6 @@
             <element signature="e#4860#4861#0" expanded="true" />
             <element signature="e#6122#6237#0" expanded="true" />
             <element signature="e#6236#6237#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/overtech/ems/activity/parttime/tasklist/QueryTaskListActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="3.8834355">
-          <caret line="399" column="5" selection-start-line="399" selection-start-column="5" selection-end-line="399" selection-end-column="5" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#2643#2660#0" expanded="true" />
           </folding>
         </state>
       </provider>
