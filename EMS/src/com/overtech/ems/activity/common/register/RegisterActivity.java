@@ -139,7 +139,7 @@ public class RegisterActivity extends BaseActivity implements
 			files = new File[2];
 			files[0] = new File(mIdCardFragment.idCardFrontPath);
 			files[1] = new File(mIdCardFragment.idCardOppositePath);
-			fileKeys = new String[3];
+			fileKeys = new String[2];
 			fileKeys[0] = "frontIdCard";
 			fileKeys[1] = "oppositeIdCard";
 		}
