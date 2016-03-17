@@ -119,7 +119,7 @@ public class RegisterActivity extends BaseActivity implements
 			files[2] = new File(mWorkCertificateFragment.workCertificatePath);
 			files[3] = new File(mOtherCertificateFragment.otherCertificatePath);
 
-			fileKeys = new String[3];
+			fileKeys = new String[4];
 			fileKeys[0] = "frontIdCard";
 			fileKeys[1] = "oppositeIdCard";
 			fileKeys[2] = "workCertificate";
@@ -139,7 +139,6 @@ public class RegisterActivity extends BaseActivity implements
 			files = new File[2];
 			files[0] = new File(mIdCardFragment.idCardFrontPath);
 			files[1] = new File(mIdCardFragment.idCardOppositePath);
-
 			fileKeys = new String[3];
 			fileKeys[0] = "frontIdCard";
 			fileKeys[1] = "oppositeIdCard";
