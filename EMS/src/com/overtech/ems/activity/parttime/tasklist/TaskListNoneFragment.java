@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -23,7 +22,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
-
 import com.baidu.location.LocationClient;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.route.BaiduMapRoutePlan;
@@ -50,7 +48,6 @@ import com.overtech.ems.widget.swipemenu.SwipeMenuItem;
 import com.overtech.ems.widget.swipemenu.SwipeMenuListView;
 import com.overtech.ems.widget.swipemenu.SwipeMenuListView.OnMenuItemClickListener;
 import com.squareup.okhttp.Call;
-import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
@@ -68,7 +65,6 @@ public class TaskListNoneFragment extends BaseFragment {
 	private String mTaskNo;
 	private String loginName;
 	private int mPosition;
-
 	private Set<String> tagSet;
 	private String TAG = "24梯";
 	/**
@@ -80,10 +76,8 @@ public class TaskListNoneFragment extends BaseFragment {
 			switch (msg.what) {
 			case StatusCode.TASKLIST_NONE_SUCCESS:
 				String json = (String) msg.obj;
-//				Log.e("==未完成任务单==", json);
 				Gson gson = new Gson();
-				TaskPackageBean bean = gson.fromJson(json,
-						TaskPackageBean.class);
+				TaskPackageBean bean = gson.fromJson(json,TaskPackageBean.class);
 				list = bean.getModel();
 				if (null == list || list.size() == 0) {
 					Utilities.showToast("无数据", mActivity);
@@ -101,7 +95,6 @@ public class TaskListNoneFragment extends BaseFragment {
 				break;
 			case StatusCode.VALIDATE_TIME_SUCCESS:
 				String time = (String) msg.obj;
-				// Log.e("==未完成时间什么值==", time);
 				if (time.equals("-1")) {
 					Utilities.showToast("已超过退单时间！！！", context);
 					break;
@@ -136,64 +129,24 @@ public class TaskListNoneFragment extends BaseFragment {
 							public void onClick(View v) {
 								dialogBuilder.dismiss();
 								startProgressDialog("正在退单...");
-
-								Param param1 = new Param(Constant.TASKNO,
-										mTaskNo);
-								Param param2 = new Param(Constant.LOGINNAME,
-										loginName);
-								startLoading(ServicesConfig.CHARGE_BACK_TASK,
-										new com.squareup.okhttp.Callback() {
-
-											@Override
-											public void onResponse(
-													Response response)
-													throws IOException {
-												Message msg = new Message();
-												if (response.isSuccessful()) {
-													msg.what = StatusCode.CHARGEBACK_SUCCESS;
-													msg.obj = response.body()
-															.string();
-												} else {
-													msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
-													msg.obj = "服务器异常";
-												}
-												handler.sendMessage(msg);
-											}
-
-											@Override
-											public void onFailure(Request arg0,
-													IOException arg1) {
-												Message msg = new Message();
-												msg.what = StatusCode.RESPONSE_NET_FAILED;
-												msg.obj = "网络异常";
-												handler.sendMessage(msg);
-											}
-										}, param1, param2);
+								dealChargeBackTask();
 							}
 						}).show();
 				break;
 			case StatusCode.CHARGEBACK_SUCCESS:
-
 				String state = (String) msg.obj;
 				if (state.equals("true")) {
-
 					list.remove(mPosition);
 					adapter.notifyDataSetChanged();
-
 					tagSet.remove(mTaskNo);
-					JPushInterface.setAliasAndTags(getActivity()
-							.getApplicationContext(), null, tagSet,
-							mTagsCallback);
-
+					JPushInterface.setAliasAndTags(getActivity().getApplicationContext(), null, tagSet,mTagsCallback);
 				} else {
 					Utilities.showToast("退单失败", context);
 				}
 				break;
 			case StatusCode.MSG_SET_TAGS:
 				Log.d("24梯", "Set tags in handler.");
-				JPushInterface.setAliasAndTags(getActivity()
-						.getApplicationContext(), null, (Set<String>) msg.obj,
-						mTagsCallback);
+				JPushInterface.setAliasAndTags(getActivity().getApplicationContext(), null, (Set<String>) msg.obj,mTagsCallback);
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
 				Utilities.showToast((String) msg.obj, mActivity);
@@ -259,47 +212,41 @@ public class TaskListNoneFragment extends BaseFragment {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_task_list_none,
-				container, false);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.fragment_task_list_none,container, false);
+		initTag();
+		findViewById(view);
+		init();
+		return view;
+	}
+
+	private void initTag() {
 		Set<String> tempSet = mSharedPreferences.getStringSet("tagSet", null);
 		if (tempSet == null) {
 			tagSet = new LinkedHashSet<String>();
 		} else {
 			tagSet = tempSet;
 		}
-		findViewById(view);
-		init();
-		return view;
-
 	}
 
 	private void findViewById(View view) {
-		mSwipeListView = (SwipeMenuListView) view
-				.findViewById(R.id.sl_task_list_listview);
+		mSwipeListView = (SwipeMenuListView) view.findViewById(R.id.sl_task_list_listview);
 		mNoPage=(LinearLayout) view.findViewById(R.id.page_no_result);
 		mNoWifi=(LinearLayout) view.findViewById(R.id.page_no_wifi);
 		reLoad=(Button) view.findViewById(R.id.load_btn_retry);
 	}
 
 	private void init() {
+		loginName = mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
 		mLocationClient = ((MyApplication) getActivity().getApplication()).mLocationClient;
 		mLocationClient.requestLocation();
 		mLocationClient.start();
 		initListView();
 		mSwipeListView.setMenuCreator(creator);
-		mSwipeListView
-				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
-
+		mSwipeListView.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 					@Override
-					public void onMenuItemClick(int position, SwipeMenu menu,
-							int index) {
+					public void onMenuItemClick(int position, SwipeMenu menu,int index) {
 						switch (index) {
-//						case 0:// 分享
-//							Utilities.showToast("点击分享", context);
-//							showShare();
-//							break;
 						case 0:// 导航
 							LatLng startPoint = adapter.getCurrentLocation();
 							LatLng endPoint = adapter.getDestination(position);
@@ -307,65 +254,21 @@ public class TaskListNoneFragment extends BaseFragment {
 							startNavicate(startPoint, endPoint, endName);
 							break;
 						case 1:// t退单
-							TaskPackage data = (TaskPackage) adapter
-									.getItem(position);
+							TaskPackage data = (TaskPackage) adapter.getItem(position);
 							mTaskNo = data.getTaskNo();
 							mPosition = position;
-							Param param = new Param(Constant.TASKNO, mTaskNo);
-							startLoading(
-									ServicesConfig.CHARGE_BACK_TASK_VALIDATE_TIME,
-									new Callback() {
-
-										@Override
-										public void onResponse(Response response)
-												throws IOException {
-											Message msg = new Message();
-											if (response.isSuccessful()) {
-												msg.what = StatusCode.VALIDATE_TIME_SUCCESS;
-												msg.obj = response.body()
-														.string();
-											} else {
-												msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
-												msg.obj = "服务器异常";
-											}
-											handler.sendMessage(msg);
-										}
-
-										@Override
-										public void onFailure(Request arg0,
-												IOException arg1) {
-											Message msg = new Message();
-											msg.what = StatusCode.RESPONSE_NET_FAILED;
-											msg.obj = "网络异常";
-											handler.sendMessage(msg);
-										}
-									}, param);
+							doChargeBackTaskValidateTime(mTaskNo);
 							break;
 						}
 					}
-
 				});
 		mSwipeListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				TaskPackage data = (TaskPackage) parent.getAdapter().getItem(
-						position);
-				Intent intent = new Intent(mActivity,
-						TaskListPackageDetailActivity.class);
-				Bundle bundle = new Bundle();
-				Boolean isToday=Utilities.isToday(data.getMaintenanceDate());
-				bundle.putBoolean(Constant.ISTODAY,isToday);
-				bundle.putString(Constant.TASKNO, data.getTaskNo());
-				bundle.putString(Constant.TASKPACKAGENAME,
-						data.getTaskPackageName());
-				bundle.putString(Constant.DESNAME, data.getTaskPackageName());
-				bundle.putParcelable(Constant.CURLOCATION,
-						adapter.getCurrentLocation());
-				bundle.putParcelable(Constant.DESTINATION,
-						adapter.getDestination(position));
-				intent.putExtras(bundle);
+			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
+				TaskPackage data = (TaskPackage) parent.getAdapter().getItem(position);
+				Intent intent = new Intent(mActivity,TaskListPackageDetailActivity.class);
+				intent.putExtra(Constant.TASKNO, data.getTaskNo());
 				startActivityForResult(intent, REQUESTCODE);
 			}
 		});
@@ -373,18 +276,84 @@ public class TaskListNoneFragment extends BaseFragment {
 			
 			@Override
 			public void onClick(View arg0) {
-				// TODO Auto-generated method stub
-				startLoading();
+				getDataFromServer();
 			}
 		});
-		loginName = mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
-		startLoading();
+		getDataFromServer();
+	}
+	
+    //侧滑退单，验证该维保单号的时间
+	protected void doChargeBackTaskValidateTime(String taskNo) {
+		Param param = new Param(Constant.TASKNO, mTaskNo);
+		Request request = httpEngine.createRequest(ServicesConfig.CHARGE_BACK_TASK_VALIDATE_TIME, param);
+		Call call = httpEngine.createRequestCall(request);
+		call.enqueue(new com.squareup.okhttp.Callback(){
+
+			@Override
+			public void onResponse(Response response)throws IOException {
+				Message msg = new Message();
+				if (response.isSuccessful()) {
+					msg.what = StatusCode.VALIDATE_TIME_SUCCESS;
+					msg.obj = response.body().string();
+				} else {
+					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
+					msg.obj = "服务器异常";
+				}
+				handler.sendMessage(msg);
+			}
+			@Override
+			public void onFailure(Request request,IOException e) {
+				Message msg = new Message();
+				msg.what = StatusCode.RESPONSE_NET_FAILED;
+				msg.obj = "网络异常";
+				handler.sendMessage(msg);
+			}
+		});
+	}
+	//处理退单事件
+	private void dealChargeBackTask() {
+		Param param1 = new Param(Constant.TASKNO,mTaskNo);
+		Param param2 = new Param(Constant.LOGINNAME,loginName);
+		Request request = httpEngine.createRequest(ServicesConfig.CHARGE_BACK_TASK, param1,param2);
+		Call call = httpEngine.createRequestCall(request);
+		call.enqueue(new com.squareup.okhttp.Callback(){
+
+			@Override
+			public void onFailure(Request request,IOException e) {
+				Message msg = new Message();
+				msg.what = StatusCode.RESPONSE_NET_FAILED;
+				msg.obj = "网络异常";
+				handler.sendMessage(msg);
+			}
+
+			@Override
+			public void onResponse(Response response)throws IOException {
+				Message msg = new Message();
+				if (response.isSuccessful()) {
+					msg.what = StatusCode.CHARGEBACK_SUCCESS;
+					msg.obj = response.body().string();
+				} else {
+					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
+					msg.obj = "服务器异常";
+				}
+				handler.sendMessage(msg);
+			}});
 	}
 
-	private void startLoading() {
+	private void getDataFromServer() {
 		startProgressDialog("正在加载...");
 		Param param = new Param(Constant.LOGINNAME, loginName);
-		startLoading(ServicesConfig.TASK_LIST_NONE, new Callback() {
+		Request request = httpEngine.createRequest(ServicesConfig.TASK_LIST_NONE, param);
+		Call call = httpEngine.createRequestCall(request);
+		call.enqueue(new com.squareup.okhttp.Callback(){
+
+			@Override
+			public void onFailure(Request request, IOException e) {
+				Message msg = new Message();
+				msg.what = StatusCode.RESPONSE_NET_FAILED;
+				msg.obj = "网络异常";
+				handler.sendMessage(msg);
+			}
 
 			@Override
 			public void onResponse(Response response) throws IOException {
@@ -398,15 +367,8 @@ public class TaskListNoneFragment extends BaseFragment {
 				}
 				handler.sendMessage(msg);
 			}
-
-			@Override
-			public void onFailure(Request arg0, IOException arg1) {
-				Message msg = new Message();
-				msg.what = StatusCode.RESPONSE_NET_FAILED;
-				msg.obj = "网络异常";
-				handler.sendMessage(msg);
-			}
-		}, param);
+		});
+		
 	}
 
 	private void initListView() {
@@ -434,8 +396,7 @@ public class TaskListNoneFragment extends BaseFragment {
 	public void startNavicate(LatLng startPoint, LatLng endPoint, String endName) {//endName暂时不使用
 		// 构建 route搜索参数
 		RouteParaOption para = new RouteParaOption().startName("起点").startPoint(startPoint)
-				.endPoint(endPoint).endName("终点")
-				.busStrategyType(EBusStrategyType.bus_time_first);
+				.endPoint(endPoint).endName("终点").busStrategyType(EBusStrategyType.bus_time_first);
 		try {
 			BaiduMapRoutePlan.setSupportWebRoute(true);
 			BaiduMapRoutePlan.openBaiduMapTransitRoute(para, mActivity);
@@ -448,17 +409,10 @@ public class TaskListNoneFragment extends BaseFragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == REQUESTCODE) {
-			startLoading();
+           getDataFromServer();
 		}
 	}
 
-	protected void startLoading(String url, Callback callback, Param... params) {
-		Request request = httpEngine.createRequest(url, params);
-		Call call = httpEngine.createRequestCall(request);
-		call.enqueue(callback);
-	}
-	
-	
 	@Override
 	public void onDestroy() {
 		super.onDestroy();

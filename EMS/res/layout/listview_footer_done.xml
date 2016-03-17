@@ -6,7 +6,7 @@
     android:paddingTop="15dp" >
 
     <Button
-        android:id="@+id/btn_login"
+        android:id="@+id/btn_tasklist_done"
         style="@style/btn_title_white_style"
         android:background="@drawable/shape_button_visiable"
         android:text="完 成" />

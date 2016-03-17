@@ -23,6 +23,9 @@ import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
+/*
+ * 电梯详情
+ */
 public class ElevatorDetailActivity extends BaseActivity {
 
 	private ImageView mGoBack;
@@ -119,8 +122,7 @@ public class ElevatorDetailActivity extends BaseActivity {
 	}
 
 	private void getExtraData() {
-		Bundle bundle = getIntent().getExtras();
-		sElevatorNo = bundle.getString(Constant.ELEVATORNO);
+		sElevatorNo = getIntent().getStringExtra(Constant.ELEVATORNO);
 	}
 
 	private void init() {
@@ -137,7 +139,7 @@ public class ElevatorDetailActivity extends BaseActivity {
 	}
 
 	private void getDataByElevatorNo() {
-		startProgressDialog("正在加载数据");
+		startProgressDialog("正在加载...");
 		Param param = new Param(Constant.ELEVATORNO, sElevatorNo);
 		Request request = httpEngine.createRequest(ServicesConfig.ELEVATOR_DETAIL, param);
 		Call call = httpEngine.createRequestCall(request);

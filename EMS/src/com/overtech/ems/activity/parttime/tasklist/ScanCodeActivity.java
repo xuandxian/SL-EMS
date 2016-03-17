@@ -30,14 +30,6 @@ import com.overtech.ems.widget.zxing.decoding.CaptureActivityHandler;
 import com.overtech.ems.widget.zxing.decoding.InactivityTimer;
 import com.overtech.ems.widget.zxing.view.ViewfinderView;
 
-/**
- * 维保人员通过扫描二维码开启工作，将用户名和电梯编号发送到后台进行校验，如果该电梯是当天的维保任务，并且也有维保搭档，则可以开始工作，
- * 然后为防止维保人员没有到维保地点就扫描开始工作，再加上维保地点经纬度的判断，500米范围之内 需要做的事情：和搭档之间是不是第一次开始该电梯的维保工作
- * 点击的时候该电梯是否已经完成
- * 
- * @author Overtech Will
- * 
- */
 public class ScanCodeActivity extends Activity implements Callback {
 
 	private CaptureActivityHandler handler;

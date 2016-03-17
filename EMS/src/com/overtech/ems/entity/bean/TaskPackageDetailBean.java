@@ -10,7 +10,61 @@ public class TaskPackageDetailBean {
 	private String partnerName;
 	private String zonePhone;
 	private String zone;
+	private String taskPackageName;    //任务包名称
+	private String latitude;           //纬度
+	private String longitude;          //经度
+	private String maintenanceDate;    //维保日期
 	
+
+	public TaskPackageDetailBean(List<TaskPackageDetail> model,
+			boolean success, String partnerPhone, String partnerName,
+			String zonePhone, String zone, String taskPackageName,
+			String latitude, String longitude, String maintenanceDate) {
+		super();
+		this.model = model;
+		this.success = success;
+		this.partnerPhone = partnerPhone;
+		this.partnerName = partnerName;
+		this.zonePhone = zonePhone;
+		this.zone = zone;
+		this.taskPackageName = taskPackageName;
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.maintenanceDate = maintenanceDate;
+	}
+	
+	public String getMaintenanceDate() {
+		return maintenanceDate;
+	}
+
+	public void setMaintenanceDate(String maintenanceDate) {
+		this.maintenanceDate = maintenanceDate;
+	}
+
+	public String getTaskPackageName() {
+		return taskPackageName;
+	}
+
+	public void setTaskPackageName(String taskPackageName) {
+		this.taskPackageName = taskPackageName;
+	}
+
+	public String getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+
+	public String getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
+
 	public String getZonePhone() {
 		return zonePhone;
 	}

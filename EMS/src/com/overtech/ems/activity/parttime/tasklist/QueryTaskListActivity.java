@@ -47,12 +47,17 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 /*
- *维保清单列表
+ * 维保清单列表
+ *
+ * 维保人员通过扫描二维码开启工作，将用户名和电梯编号发送到后台进行校验，如果该电梯是当天的维保任务，并且也有维保搭档，则可以开始工作，
+ * 然后为防止维保人员没有到维保地点就扫描开始工作，再加上维保地点经纬度的判断，500米范围之内 需要做的事情：和搭档之间是不是第一次开始该电梯的维保工作
+ * 点击的时候该电梯是否已经完成
+ * 
+ * @author Overtech Will
  * 
  */
 
-public class QueryTaskListActivity extends BaseActivity implements
-		OnClickListener {
+public class QueryTaskListActivity extends BaseActivity implements OnClickListener {
 	private TextView mHeadContent;
 	private ImageView mHeadBack, mCallPhone;
 	private double mLatitude;
@@ -62,8 +67,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 	private String mZonePhone;
 	private String mTaskNo;
 	private String mElevatorNo;
-	// 当前电梯的完成状态
-	private boolean currentElevatorIsFinish;
+	private boolean currentElevatorIsFinish;// 当前电梯的完成状态
 	private ListView mTaskListData;
 	private View mListFooterView;
 	private Button mDone;
@@ -73,16 +77,9 @@ public class QueryTaskListActivity extends BaseActivity implements
 	private final String TYPE2 = "CONFIRM";
 	private Set<String> tagSet;
 	private String TAG = "24梯";
-	/**
-	 * 是否可以完成工作，true代表是当天的任务可以完成，false代表不是维保时间的任务，不可以完成
-	 */
-	private boolean isCanConfirmDone;
-
 	ArrayList<MaintenanceType> list = new ArrayList<MaintenanceType>();
-
 	private Handler handler = new Handler() {
 		Gson gson = new Gson();
-
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 				case StatusCode.QUERY_TASK_PACKAGE_ELEVATOR_SUCCESS:
@@ -105,9 +102,6 @@ public class QueryTaskListActivity extends BaseActivity implements
 						}
 						double latitude = Double.parseDouble(currentElevator.getLatitude());
 						double longitude = Double.parseDouble(currentElevator.getLongitude());
-						String taskNo = currentElevator.getTaskNo();
-						String workType = currentElevator.getWorkType();
-						String zonePhone = currentElevator.getZonePhone();
 						LatLng latlng = new LatLng(latitude, longitude);
 						double distance = DistanceUtil.getDistance(mCurrentLocation, latlng);
 						if (distance > 500.0) {
@@ -115,11 +109,14 @@ public class QueryTaskListActivity extends BaseActivity implements
 							finish();
 						}else {
 							if(currentElevator.getIsFinish().equals("2")){
-								Utilities.showToast("你已经为完成了该电梯", context);
+								Utilities.showToast("你已经完成了该电梯", context);
 								finish();
 							}else {
 								stopProgressDialog();
-								showNiffyDialog(taskNo, workType, zonePhone);
+								mTaskNo = currentElevator.getTaskNo();
+								mWorktype = currentElevator.getWorkType();
+								mZonePhone = currentElevator.getZonePhone();
+								showNiffyDialog(mTaskNo, mWorktype, mZonePhone);
 							}
 						}
 					} else {
@@ -155,58 +152,50 @@ public class QueryTaskListActivity extends BaseActivity implements
 					}
 					if (completeProgress) {
 						tagSet.remove(mTaskNo);
-						JPushInterface.setAliasAndTags(getApplicationContext(),
-								null, tagSet, mTagsCallback);
+						JPushInterface.setAliasAndTags(getApplicationContext(),null, tagSet, mTagsCallback);
 						if (!jsonObject.isNull("taskState")) {
 							String taskState = jsonObject
 									.getString("taskState");
 							if (taskState.equals("0")) {
 								// 任务包中还有未完成的
 								Utilities.showToast("您还有未完成的电梯", context);
+								Intent intent = new Intent(QueryTaskListActivity.this,TaskListPackageDetailActivity.class);
+								intent.putExtra(Constant.TASKNO, mTaskNo);
+								startActivity(intent);
 								finish();
 							} else {
 								// 任务包中全部都完成了
-								Intent intent = new Intent(
-										QueryTaskListActivity.this,
-										QuestionResponseActivity.class);
-								Bundle bundle = new Bundle();
-								bundle.putString(Constant.TASKNO, mTaskNo);
-								intent.putExtras(bundle);
+								Intent intent = new Intent(QueryTaskListActivity.this,TaskListPackageDetailActivity.class);
+								intent.putExtra(Constant.TASKNO, mTaskNo);
 								startActivity(intent);
 								finish();
-
 							}
 						} else {
 							Utilities.showToast("查询其他电梯状态失败", context);
+							Intent intent = new Intent(QueryTaskListActivity.this,TaskListPackageDetailActivity.class);
+							intent.putExtra(Constant.TASKNO, mTaskNo);
+							startActivity(intent);
+							finish();
 						}
-
 					} else {
 						Utilities.showToast("请和搭档确认电梯的完成状态", context);
+						Intent intent = new Intent(QueryTaskListActivity.this,TaskListPackageDetailActivity.class);
+						intent.putExtra(Constant.TASKNO, mTaskNo);
+						startActivity(intent);
 						finish();
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 				break;
-			case StatusCode.VALIDATE_TIME_SUCCESS:
-				String time = (String) msg.obj;
-				// Log.e("==时间==", time);
-				if (time.equals("0")) {
-					isCanConfirmDone = true;
-				} else {
-					isCanConfirmDone = false;
-				}
-				break;
 			case StatusCode.MSG_SET_TAGS:
-				Log.d("24梯", "Set tags in handler.");
-				JPushInterface.setAliasAndTags(getApplicationContext(), null,
-						(Set<String>) msg.obj, mTagsCallback);
+				JPushInterface.setAliasAndTags(getApplicationContext(), null,(Set<String>) msg.obj, mTagsCallback);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast((String) msg.obj, context);
+				Utilities.showToast("网络异常", context);
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast((String) msg.obj, context);
+				Utilities.showToast("服务器异常", context);
 				break;
 			}
 			stopProgressDialog();
@@ -217,62 +206,67 @@ public class QueryTaskListActivity extends BaseActivity implements
 
 		@Override
 		public void gotResult(int code, String alias, Set<String> tags) {
-			String logs;
 			switch (code) {
 			case 0:
-				logs = "Set tag and alias success";
-				Log.d(TAG, logs);
+				Log.d(TAG, "Set tag and alias success");
 				mSharedPreferences.edit().putStringSet("tagSet", tags).commit();// 成功保存标签后，将标签放到本地
-				/*
-				 * // 当该电梯中所有的电梯都完成后，并且标签也在jpush后台注册成功后，开始问题反馈； Intent intent =
-				 * new Intent(QueryTaskListActivity.this,
-				 * QuestionResponseActivity.class); Bundle bundle = new
-				 * Bundle(); bundle.putString(Constant.TASKNO, mTaskNo);
-				 * intent.putExtras(bundle); startActivity(intent); finish();
-				 */
-
 				break;
-
 			case 6002:
-				logs = "Failed to set alias and tags due to timeout. Try again after 60s.";
-				Log.d(TAG, logs);
+				Log.d(TAG, "Failed to set alias and tags due to timeout. Try again after 60s.");
 				if (AppUtils.isConnected(getApplicationContext())) {
-					handler.sendMessageDelayed(handler.obtainMessage(
-							StatusCode.MSG_SET_TAGS, tags), 1000 * 60);
+					handler.sendMessageDelayed(handler.obtainMessage(StatusCode.MSG_SET_TAGS, tags), 1000 * 60);
 				} else {
 					Log.i(TAG, "No network");
 				}
 				break;
-
 			default:
-				logs = "Failed with errorCode = " + code;
-				Log.d(TAG, logs);
+				Log.d(TAG, "Failed with errorCode = " + code);
 			}
-
 		}
-
 	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_task_details);
+		initTag();
+		init();
+		getExtraDataAndValidate();
+	}
+	
+	private void initTag() {
 		Set<String> tempSet = mSharedPreferences.getStringSet("tagSet", null);
 		if (tempSet == null) {
 			tagSet = new LinkedHashSet<String>();
 		} else {
 			tagSet = tempSet;
 		}
+	}
+	
+	
+	private void init() {
+		context = QueryTaskListActivity.this;
 		mLatitude = application.latitude;
 		mLongitude = application.longitude;
 		mCurrentLocation = new LatLng(mLatitude, mLongitude);
-		getExtraDataAndValidate();
-		init();
-		initEvent();
-		getData();
+		mListFooterView = LayoutInflater.from(context).inflate(R.layout.listview_footer_done, null);
+		mDone = (Button) mListFooterView.findViewById(R.id.btn_tasklist_done);
+		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
+		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
+		mCallPhone = (ImageView) findViewById(R.id.iv_headTitleRight);
+		mTaskDetailsTitle = (TextView) findViewById(R.id.tv_task_detail_title);
+		mHeadContent.setText("维保清单");
+		mHeadBack.setVisibility(View.VISIBLE);
+		mCallPhone.setVisibility(View.VISIBLE);
+		mTaskListData = (ListView) findViewById(R.id.lv_task_details);
+		mTaskListData.addFooterView(mListFooterView);
+		mHeadBack.setOnClickListener(this);
+		mCallPhone.setOnClickListener(this);
+		mDone.setOnClickListener(this);
 	}
 
 	private void getExtraDataAndValidate() {
+		startProgressDialog("正在查询...");
 		Intent intent = getIntent();
 		mElevatorNo=intent.getStringExtra(Constant.ELEVATORNO);
 		Param param = new Param(Constant.ELEVATORNO, mElevatorNo);
@@ -302,32 +296,13 @@ public class QueryTaskListActivity extends BaseActivity implements
 		});
 	}
 
-	private void init() {
-		context = QueryTaskListActivity.this;
-		mListFooterView = LayoutInflater.from(context).inflate(R.layout.listview_footer_done, null);
-		mDone = (Button) mListFooterView.findViewById(R.id.btn_login);
-		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
-		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
-		mCallPhone = (ImageView) findViewById(R.id.iv_headTitleRight);
-		mTaskDetailsTitle = (TextView) findViewById(R.id.tv_task_detail_title);
-		mHeadContent.setText("维保清单");
-		mHeadBack.setVisibility(View.VISIBLE);
-		mCallPhone.setVisibility(View.VISIBLE);
-		mTaskListData = (ListView) findViewById(R.id.lv_task_details);
-		mTaskListData.addFooterView(mListFooterView);
-	}
-
-	private void initEvent() {
-		mHeadBack.setOnClickListener(this);
-		mCallPhone.setOnClickListener(this);
-		mDone.setOnClickListener(this);
-	}
-
-	private void getData() {
+	//根据维保类型，获取维保任务列表
+	private void getMaintenanceTaskListData() {
 		startProgressDialog("正在加载...");
-		validateDate();
 		Param param = new Param(Constant.WORKTYPE, mWorktype);
-		startLoading(ServicesConfig.WORK_TYPE, new Callback() {
+		Request request = httpEngine.createRequest(ServicesConfig.WORK_TYPE, param);
+		Call call = httpEngine.createRequestCall(request);
+		call.enqueue(new Callback() {
 			@Override
 			public void onResponse(Response response) throws IOException {
 				Message msg = new Message();
@@ -336,92 +311,25 @@ public class QueryTaskListActivity extends BaseActivity implements
 					msg.obj = response.body().string();
 				} else {
 					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
-					msg.obj = "服务器异常";
 				}
 				handler.sendMessage(msg);
 			}
-
+			
 			@Override
 			public void onFailure(Request request, IOException e) {
 				Message msg = new Message();
 				msg.what = StatusCode.RESPONSE_NET_FAILED;
-				msg.obj = "网络异常";
 				handler.sendMessage(msg);
 			}
-		}, param);
-
+		});
 	}
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-	}
-
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.iv_headBack:
-			finish();
-			break;
-		case R.id.btn_login:
-			// 将对应的电梯的完成状态更新到服务器
-			if (isCanConfirmDone) {
-				showDialog(TYPE2, "请确认维保工作已完成，并将电梯监测设备按钮调至正常状态!!!");
-			} else {
-				Utilities.showToast("维保任务必须在当天完成", context);
-			}
-			break;
-		case R.id.iv_headTitleRight:
-			showDialog(TYPE1, "您确认要拨打技术支持电话？");
-			break;
-		default:
-			break;
-		}
-	}
-
-	/**
-	 * 请求服务器对任务单的维保时间进行验证
-	 */
-	private void validateDate() {
-		Param param = new Param(Constant.TASKNO, mTaskNo);
-		startLoading(ServicesConfig.CHARGE_BACK_TASK_VALIDATE_TIME,
-				new Callback() {
-
-					@Override
-					public void onResponse(Response response)
-							throws IOException {
-						Message msg = new Message();
-						if (response.isSuccessful()) {
-							msg.what = StatusCode.VALIDATE_TIME_SUCCESS;
-							msg.obj = response.body().string();
-						} else {
-							msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
-							msg.obj = "服务器异常";
-						}
-						handler.sendMessage(msg);
-					}
-
-					@Override
-					public void onFailure(Request arg0, IOException arg1) {
-						Message msg = new Message();
-						msg.what = StatusCode.RESPONSE_NET_FAILED;
-						msg.obj = "网络异常";
-						handler.sendMessage(msg);
-					}
-				}, param);
-	}
-
-	protected void startLoading(String url, Callback callback, Param... params) {
-		Request request = httpEngine.createRequest(url, params);
-		Call call = httpEngine.createRequestCall(request);
-		call.enqueue(callback);
-	}
 	private void showNiffyDialog(String taskNo, String workType,String zonePhone){
 		Effectstype effect = Effectstype.Slideright;
 		dialogBuilder.withTitle("温馨提示").withTitleColor(R.color.main_primary)
 				.withDividerColor("#11000000").withMessage("请将电梯监测设备按钮调至维保状态后开始进行维保工作")
 				.withMessageColor(R.color.main_primary)
-				.withDialogColor("#FFFFFFFF").isCancelableOnTouchOutside(true)
+				.withDialogColor("#FFFFFFFF").isCancelableOnTouchOutside(false)
 				.withDuration(700).withEffect(effect)
 				.withButtonDrawable(R.color.main_white).withButton1Text("取消")
 				.withButton1Color("#DD47BEE9").withButton2Text("确认")
@@ -430,12 +338,13 @@ public class QueryTaskListActivity extends BaseActivity implements
 					@Override
 					public void onClick(View v) {
 						dialogBuilder.dismiss();
+						finish();
 					}
 				}).setButton2Click(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {
-
-
+						dialogBuilder.dismiss();
+						getMaintenanceTaskListData();
 					}
 		}).show();
 	}
@@ -466,33 +375,55 @@ public class QueryTaskListActivity extends BaseActivity implements
 								Param taskNoParam = new Param(Constant.TASKNO,mTaskNo);
 								Param elevatorNoParam = new Param(Constant.ELEVATORNO, mElevatorNo);
 								Param loginNameParam = new Param(Constant.LOGINNAME, mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, ""));
-								startLoading(ServicesConfig.MAINTENCE_LIST_COMPLETE, new Callback() {
-											@Override
-											public void onResponse(Response response) throws IOException {
-												Message msg = new Message();
-												if (response.isSuccessful()) {
-													msg.what = StatusCode.MAINTENANCE_COMPLETE_SUCCESS;
-													msg.obj = response.body().string();
-												} else {
-													msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
-													msg.obj = "服务器异常";
-												}
-												handler.sendMessage(msg);
-											}
-
-											@Override
-											public void onFailure(Request arg0, IOException arg1) {
-												Message msg = new Message();
-												msg.what = StatusCode.RESPONSE_NET_FAILED;
-												msg.obj = "网络异常";
-												handler.sendMessage(msg);
-											}
-										}, taskNoParam, elevatorNoParam, loginNameParam);
+								Request request = httpEngine.createRequest(ServicesConfig.MAINTENCE_LIST_COMPLETE, taskNoParam,elevatorNoParam,loginNameParam);
+								Call call = httpEngine.createRequestCall(request);
+								call.enqueue(new Callback() {
+									
+									@Override
+									public void onResponse(Response response) throws IOException {
+										Message msg = new Message();
+										if (response.isSuccessful()) {
+											msg.what = StatusCode.MAINTENANCE_COMPLETE_SUCCESS;
+											msg.obj = response.body().string();
+										} else {
+											msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
+										}
+										handler.sendMessage(msg);
+									}
+									@Override
+									public void onFailure(Request request, IOException e) {
+										Message msg = new Message();
+										msg.what = StatusCode.RESPONSE_NET_FAILED;
+										handler.sendMessage(msg);
+									}
+								});
 							} else {
 								Utilities.showToast("该电梯已经完成", context);
 							}
 						}
 					}
 		}).show();
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.iv_headBack:
+			finish();
+			break;
+		case R.id.btn_tasklist_done:
+			showDialog(TYPE2, "请确认维保工作已完成，并将电梯监测设备按钮调至正常状态!!!");
+			break;
+		case R.id.iv_headTitleRight:
+			showDialog(TYPE1, "您确认要拨打技术支持电话？");
+			break;
+		default:
+			break;
+		}
 	}
 }

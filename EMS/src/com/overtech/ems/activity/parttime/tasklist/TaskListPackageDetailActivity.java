@@ -32,7 +32,6 @@ import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
-
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.route.BaiduMapRoutePlan;
 import com.baidu.mapapi.utils.route.RouteParaOption;
@@ -40,6 +39,7 @@ import com.baidu.mapapi.utils.route.RouteParaOption.EBusStrategyType;
 import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
+import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.adapter.TaskListPackageDetailAdapter;
 import com.overtech.ems.activity.parttime.common.ElevatorDetailActivity;
 import com.overtech.ems.config.StatusCode;
@@ -53,25 +53,29 @@ import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.squareup.okhttp.Call;
-import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-
-public class TaskListPackageDetailActivity extends BaseActivity implements
-		OnRefreshListener {
+/*
+ *任务包详情(任务单模块)
+ * 
+ */
+public class TaskListPackageDetailActivity extends BaseActivity implements OnRefreshListener,OnClickListener {
 	private ImageView mDoBack;
-	private ListView mTask;
-	private Button mCancle;
-	private Button mToResponse;
+	private ListView mTaskListView;
+	private Button mDoChargeBack;
+	private Button mDoResponse;
 	private TextView mTaskPackageName;
 	private TextView mTaskNo;
 	private LinearLayout shareToFriends;
 	private LinearLayout dialToPartner;
-	private String mPhone;
-	private String mZonePhone;
-	private String mZone;
-	private String mPartnerName;
-	private String taskNo;
+	private String sPhone;
+	private String sTaskPackageName;
+	private String latitude;           //纬度
+	private String longitude;          //经度
+	private String maintenanceDate;    //维保日期
+	private String sZone;
+	private String sPartnerName;
+	private String sTaskNo;
 	private String mLoginName;
 	private Context mActivity;
 	private Effectstype effect;
@@ -79,52 +83,40 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	private PopupWindow popupWindow;
 	private LatLng mStartPoint;
 	private LatLng destination;
-	private String mDesName;
+//	private String mDesName;
 	private boolean isToday;
 	private SwipeRefreshLayout mSwipeLayout;
 	private TaskListPackageDetailAdapter adapter;
 	private ArrayList<TaskPackageDetail> list;
-
 	private Set<String> tagSet;
 	private String TAG = "24梯";
-	/**
-	 * 列表弹窗的间隔
-	 */
-	protected final int LIST_PADDING = 10;
-	/**
-	 * 实例化一个矩形
-	 */
-	private Rect mRect = new Rect();
+	protected final int LIST_PADDING = 10;//列表弹窗的间隔
+	private Rect mRect = new Rect();//实例化一个矩形
+	private final int[] mLocation = new int[2];//坐标的位置（x、y）
+	private int mScreenWidth;//屏幕的宽度
+	private int mScreenHeight;//屏幕的高度
 
-	/**
-	 * 坐标的位置（x、y）
-	 */
-	private final int[] mLocation = new int[2];
-
-	/**
-	 * 屏幕的宽度
-	 */
-	private int mScreenWidth;
-	/**
-	 * 屏幕的高度
-	 */
-	private int mScreenHeight;
+	
 	private Handler handler = new Handler() {
 
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case StatusCode.PACKAGE_DETAILS_SUCCESS:
 				String json = (String) msg.obj;
-//				Log.e("==24t任务详情==", json);
 				Gson gson = new Gson();
-				TaskPackageDetailBean bean = gson.fromJson(json,
-						TaskPackageDetailBean.class);
+				TaskPackageDetailBean bean = gson.fromJson(json,TaskPackageDetailBean.class);
 				list = (ArrayList<TaskPackageDetail>) bean.getModel();
-				mPhone = bean.getPartnerPhone();
-				mZonePhone = bean.getZonePhone();
-				mPartnerName = bean.getPartnerName();
-				mZone = bean.getZone();
-				if (mPartnerName == null || mPhone == null) {
+				sPhone = bean.getPartnerPhone();
+				sTaskPackageName = bean.getTaskPackageName();
+				latitude=bean.getLatitude();
+				longitude=bean.getLongitude();
+				destination=new LatLng(Double.valueOf(latitude), Double.valueOf(longitude));
+				maintenanceDate=bean.getMaintenanceDate();
+				sPartnerName = bean.getPartnerName();
+				sZone = bean.getZone();
+				mTaskNo.setText(sTaskNo);
+				mTaskPackageName.setText(sTaskPackageName);
+				if (sPartnerName == null || sPhone == null) {
 					shareToFriends.setVisibility(View.VISIBLE);
 					dialToPartner.setVisibility(View.GONE);
 				} else {
@@ -133,8 +125,8 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				}
 				if (null == list || list.size() == 0) {
 					Utilities.showToast("无数据", mActivity);
-					mCancle.setVisibility(View.GONE);
-					mToResponse.setVisibility(View.GONE);
+					mDoChargeBack.setVisibility(View.GONE);
+					mDoResponse.setVisibility(View.GONE);
 				} else {
 					int count=0;//记录完成电梯的数量
 					for(TaskPackageDetail data:list){
@@ -143,25 +135,26 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 						}
 					}
 					if(count==list.size()){
-						mToResponse.setVisibility(View.VISIBLE);
-						mToResponse.setBackgroundColor(0xff00b9ef);
-						mToResponse.setClickable(true);
-						mCancle.setVisibility(View.GONE);
+						mDoResponse.setVisibility(View.VISIBLE);
+						mDoResponse.setBackgroundColor(0xff00b9ef);
+						mDoResponse.setClickable(true);
+						mDoChargeBack.setVisibility(View.GONE);
 					}else{
+						isToday=Utilities.isToday(maintenanceDate);
 						if (true==isToday){
-							mToResponse.setVisibility(View.VISIBLE);
-							mToResponse.setBackgroundColor(0xffcccccc);
-							mToResponse.setClickable(false);
-						    mCancle.setVisibility(View.GONE);
+							mDoResponse.setVisibility(View.VISIBLE);
+							mDoResponse.setBackgroundColor(0xffcccccc);
+							mDoResponse.setClickable(false);
+						    mDoChargeBack.setVisibility(View.GONE);
 						}else {
-							mToResponse.setVisibility(View.GONE);
-							mCancle.setVisibility(View.VISIBLE);
+							mDoResponse.setVisibility(View.GONE);
+							mDoChargeBack.setVisibility(View.VISIBLE);
 						}
-
 					}
 					adapter = new TaskListPackageDetailAdapter(context, list);
-					mTask.setAdapter(adapter);
+					mTaskListView.setAdapter(adapter);
 				}
+				stopProgressDialog();
 				break;
 			case StatusCode.VALIDATE_TIME_SUCCESS:
 				String time = (String) msg.obj;
@@ -199,39 +192,39 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 							public void onClick(View v) {
 								dialogBuilder.dismiss();
 								startProgressDialog("正在退单...");
-								Param param1 = new Param(Constant.TASKNO,taskNo);
+								Param param1 = new Param(Constant.TASKNO,sTaskNo);
 								Param param2 = new Param(Constant.LOGINNAME,mSharedPreferences.getString(Constant.LOGINNAME, ""));
-								startLoading(ServicesConfig.CHARGE_BACK_TASK,
-										new com.squareup.okhttp.Callback() {
+								Request request = httpEngine.createRequest(ServicesConfig.CHARGE_BACK_TASK, param1,param2);
+								Call call = httpEngine.createRequestCall(request);
+								call.enqueue(new com.squareup.okhttp.Callback(){
 
-											@Override
-											public void onResponse(Response response)throws IOException {
-												Message msg = new Message();
-												if (response.isSuccessful()) {
-													msg.what = StatusCode.CHARGEBACK_SUCCESS;
-													msg.obj = response.body().string();
-												} else {
-													msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
-													msg.obj = "服务器异常";
-												}
-												handler.sendMessage(msg);
-											}
-
-											@Override
-											public void onFailure(Request arg0,IOException arg1) {
-												Message msg = new Message();
-												msg.what = StatusCode.RESPONSE_NET_FAILED;
-												msg.obj = "网络异常";
-												handler.sendMessage(msg);
-											}
-										}, param1, param2);
+									@Override
+									public void onResponse(Response response)throws IOException {
+										Message msg = new Message();
+										if (response.isSuccessful()) {
+											msg.what = StatusCode.CHARGEBACK_SUCCESS;
+											msg.obj = response.body().string();
+										} else {
+											msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
+											msg.obj = "服务器异常";
+										}
+										handler.sendMessage(msg);
+									}
+									@Override
+									public void onFailure(Request request,IOException e) {
+										Message msg = new Message();
+										msg.what = StatusCode.RESPONSE_NET_FAILED;
+										msg.obj = "网络异常";
+										handler.sendMessage(msg);
+									}
+								});
 							}
 						}).show();
 				break;
 			case StatusCode.CHARGEBACK_SUCCESS:
 				String state = (String) msg.obj;
 				if (state.equals("true")) {
-					tagSet.remove(taskNo);
+					tagSet.remove(sTaskNo);
 					JPushInterface.setAliasAndTags(getApplicationContext(),null, tagSet, mTagsCallback);
 				} else {
 					Utilities.showToast("退单失败", context);
@@ -248,6 +241,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			case StatusCode.RESPONSE_NET_FAILED:
 				Utilities.showToast((String) msg.obj, context);
 				stopProgressDialog();
+				break;
 			default:
 				break;
 			}
@@ -284,100 +278,64 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			}
 		}
 	};
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tasklist_package_detail);
+		initTag();
+		initView();
+		getExtraDataAndInit();
+		initEvent();
+	}
+
+	private void initTag() {
 		Set<String> tempSet = mSharedPreferences.getStringSet("tagSet", null);
 		if (tempSet == null) {
 			tagSet = new LinkedHashSet<String>();
 		} else {
 			tagSet = tempSet;
 		}
-		initView();
-		initData();
-		initEvent();
+	}
+	
+	private void initView() {
+		mStartPoint=new LatLng(((MyApplication)getApplicationContext()).latitude,(((MyApplication)getApplicationContext())).longitude);
+		mDoBack = (ImageView) findViewById(R.id.iv_grab_headBack);
+		mTaskListView = (ListView) findViewById(R.id.lv_tasklist);
+		mDoChargeBack = (Button) findViewById(R.id.bt_cancle_task);
+		mDoResponse=(Button) findViewById(R.id.bt_next_response);
+		mDoMore = (ImageView) findViewById(R.id.iv_navicate_right);
+		mDoMore.setBackgroundResource(R.drawable.icon_common_more);
+		mDoMore.setVisibility(View.VISIBLE);
+		mTaskPackageName = (TextView) findViewById(R.id.tv_headTitle_community_name);
+		mTaskNo = (TextView) findViewById(R.id.tv_headTitle_taskno);
+		mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.srl_container);
 	}
 
+	private void getExtraDataAndInit() {
+		Intent intent=getIntent();
+		sTaskNo = intent.getStringExtra(Constant.TASKNO);
+		mLoginName = mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
+		getDataFromServer();
+	}
+	
 	private void initEvent() {
 		mActivity = TaskListPackageDetailActivity.this;
 		mSwipeLayout.setOnRefreshListener(this);
 		mSwipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright, android.R.color.holo_green_light, android.R.color.holo_orange_light, android.R.color.holo_red_light);
-		mDoBack.setOnClickListener(new OnClickListener() {
+		mDoBack.setOnClickListener(this);
+		mDoChargeBack.setOnClickListener(this);
+		mDoResponse.setOnClickListener(this);
+		mDoMore.setOnClickListener(this);
+		mTaskListView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onClick(View v) {
-				finish();
-			}
-		});
-		mTask.setOnItemClickListener(new OnItemClickListener() {
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-									int position, long id) {
+			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
 				TaskPackageDetail detail = (TaskPackageDetail) parent.getItemAtPosition(position);
-				if (detail.getIsFinish().equals("2")) {
-					Utilities.showToast("你好，该电梯已经完成", mActivity);
-				} else if (detail.getIsFinish().equals("1")) {
-					Utilities.showToast("仍有人未完成该电梯的维保工作", context);
-				} else {
-					Utilities.showToast("请通过扫描二维码开启工作或者完成工作", context);
-				}
 				Intent intent = new Intent(context, ElevatorDetailActivity.class);
-				Bundle bundle = new Bundle();
-				bundle.putString(Constant.ELEVATORNO, detail.getElevatorNo());
-				intent.putExtras(bundle);
-				startActivity(intent);
-			}
-		});
-		mCancle.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Param param = new Param(Constant.TASKNO, taskNo);
-				startLoading(ServicesConfig.CHARGE_BACK_TASK_VALIDATE_TIME,
-						new Callback() {
-
-							@Override
-							public void onResponse(Response response) throws IOException {
-								Message msg = new Message();
-								if (response.isSuccessful()) {
-									msg.what = StatusCode.VALIDATE_TIME_SUCCESS;
-									msg.obj = response.body().string();
-								} else {
-									msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
-									msg.obj = "服务器异常";
-								}
-								handler.sendMessage(msg);
-							}
-
-							@Override
-							public void onFailure(Request arg0, IOException arg1) {
-								Message msg = new Message();
-								msg.what = StatusCode.RESPONSE_NET_FAILED;
-								msg.obj = "网络异常";
-								handler.sendMessage(msg);
-							}
-						}, param);
-			}
-		});
-		mToResponse.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(TaskListPackageDetailActivity.this,QuestionResponseActivity.class);
-				Bundle bundle = new Bundle();
-				bundle.putString(Constant.TASKNO, taskNo);
-				intent.putExtras(bundle);
+				intent.putExtra(Constant.ELEVATORNO, detail.getElevatorNo());
 				startActivity(intent);
 			}
 		});
 		initPopupWindow();
-		mDoMore.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				showPopupWindow(v);
-			}
-		});
 	}
 
 	private void initPopupWindow() {
@@ -412,16 +370,14 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			}
 		});
 		dialToPartner = (LinearLayout) popupWindow.getContentView().findViewById(R.id.ll_pop_3);
-		dialToPartner.setOnClickListener(// 拨打搭档电话
-				new OnClickListener() {
-
+		dialToPartner.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						Effectstype effect = Effectstype.Shake;
 						dialogBuilder.withTitle("温馨提示")
 								.withTitleColor(R.color.main_primary)
 								.withDividerColor("#11000000")
-								.withMessage("您确认要拨打电话给您的搭档：" + mPartnerName)
+								.withMessage("您确认要拨打电话给您的搭档：" + sPartnerName)
 								.withMessageColor(R.color.main_primary)
 								.withDialogColor("#FFFFFFFF")
 								.isCancelableOnTouchOutside(true)
@@ -439,7 +395,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 								}).setButton2Click(new View.OnClickListener() {
 							@Override
 							public void onClick(View v) {
-								Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mPhone));
+								Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + sPhone));
 								startActivity(intent);
 							}
 						}).show();
@@ -451,7 +407,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 		ShareSDK.initSDK(this);
 		OnekeyShare oks = new OnekeyShare();
 		oks.setTitleUrl("http://www.wandoujia.com/apps/com.overtech.ems");
-		oks.setText("我在24T中抢到" + mZone + "的一个维保单，单号为:" + taskNo + ",请速度去抢哦！App下载链接：http://www.wandoujia.com/apps/com.overtech.ems");
+		oks.setText("我在24T中抢到" + sZone + "的一个维保单，单号为:" + sTaskNo + ",请速度去抢哦！App下载链接：http://www.wandoujia.com/apps/com.overtech.ems");
 		oks.setVenueName("24T");
 		oks.show(this);
 	}
@@ -464,14 +420,8 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	}
 
 	public void startNavicate(LatLng startPoint, LatLng endPoint, String endName) {
-		// 构建 route搜索参数
 		RouteParaOption para = new RouteParaOption().startName("我的位置")
-				.startPoint(startPoint)
-				// 路线检索起点
-				.endPoint(endPoint)
-				// 路线检索终点
-				// .endName(endName)
-				.endName("终点")
+				.startPoint(startPoint).endPoint(endPoint).endName("终点")
 				.busStrategyType(EBusStrategyType.bus_recommend_way);
 		try {
 			BaiduMapRoutePlan.setSupportWebRoute(true);
@@ -479,57 +429,6 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-	}
-
-	private void initData() {
-		Bundle bundle = getIntent().getExtras();
-		mStartPoint = bundle.getParcelable(Constant.CURLOCATION);
-		destination = bundle.getParcelable(Constant.DESTINATION);
-		mDesName = bundle.getString(Constant.DESNAME);
-		isToday=bundle.getBoolean(Constant.ISTODAY);
-		String taskPackage = bundle.getString(Constant.TASKPACKAGENAME);
-		taskNo = bundle.getString(Constant.TASKNO);
-		mTaskPackageName.setText(taskPackage);
-		mTaskNo.setText(taskNo);
-		mLoginName = mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
-		Param param = new Param(Constant.TASKNO, taskNo);
-		Param param2 = new Param(Constant.LOGINNAME, mLoginName);
-		startLoading(ServicesConfig.TASK_PACKAGE_DETAIL, new Callback() {
-
-			@Override
-			public void onResponse(Response response) throws IOException {
-				Message msg = new Message();
-				if (response.isSuccessful()) {
-					msg.what = StatusCode.PACKAGE_DETAILS_SUCCESS;
-					msg.obj = response.body().string();
-				} else {
-					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
-					msg.obj = "服务器异常";
-				}
-				handler.sendMessage(msg);
-			}
-
-			@Override
-			public void onFailure(Request arg0, IOException arg1) {
-				Message msg = new Message();
-				msg.what = StatusCode.RESPONSE_NET_FAILED;
-				msg.obj = "网络异常";
-				handler.sendMessage(msg);
-			}
-		}, param, param2);
-	}
-
-	private void initView() {
-		mDoBack = (ImageView) findViewById(R.id.iv_grab_headBack);
-		mTask = (ListView) findViewById(R.id.lv_tasklist);
-		mCancle = (Button) findViewById(R.id.bt_cancle_task);
-		mToResponse=(Button) findViewById(R.id.bt_next_response);
-		mDoMore = (ImageView) findViewById(R.id.iv_navicate_right);
-		mDoMore.setBackgroundResource(R.drawable.icon_common_more);
-		mDoMore.setVisibility(View.VISIBLE);
-		mTaskPackageName = (TextView) findViewById(R.id.tv_headTitle_community_name);
-		mTaskNo = (TextView) findViewById(R.id.tv_headTitle_taskno);
-		mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.srl_container);
 	}
 
 	@Override
@@ -546,9 +445,16 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 
 	@Override
 	public void onRefresh() {
-		Param param = new Param(Constant.TASKNO, taskNo);
+		getDataFromServer();
+	}
+	
+	private void getDataFromServer() {
+		startProgressDialog("正在加载...");
+		Param param = new Param(Constant.TASKNO, sTaskNo);
 		Param param2 = new Param(Constant.LOGINNAME, mLoginName);
-		startLoading(ServicesConfig.TASK_PACKAGE_DETAIL, new Callback() {
+		Request request = httpEngine.createRequest(ServicesConfig.TASK_PACKAGE_DETAIL, param,param2);
+		Call call = httpEngine.createRequestCall(request);
+		call.enqueue(new com.squareup.okhttp.Callback(){
 
 			@Override
 			public void onResponse(Response response) throws IOException {
@@ -562,7 +468,6 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				}
 				handler.sendMessage(msg);
 			}
-
 			@Override
 			public void onFailure(Request arg0, IOException arg1) {
 				Message msg = new Message();
@@ -570,12 +475,53 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				msg.obj = "网络异常";
 				handler.sendMessage(msg);
 			}
-		}, param, param2);
+
+		});
 	}
 
-	protected void startLoading(String url, Callback callback, Param... params) {
-		Request request = httpEngine.createRequest(url, params);
-		Call call = httpEngine.createRequestCall(request);
-		call.enqueue(callback);
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.iv_grab_headBack:
+			finish();
+			break;
+		case R.id.bt_cancle_task:
+			Param param = new Param(Constant.TASKNO, sTaskNo);
+			Request request = httpEngine.createRequest(ServicesConfig.CHARGE_BACK_TASK_VALIDATE_TIME, param);
+			Call call = httpEngine.createRequestCall(request);
+			call.enqueue(new com.squareup.okhttp.Callback(){
+
+				@Override
+				public void onFailure(Request request, IOException e) {
+					Message msg = new Message();
+					msg.what = StatusCode.RESPONSE_NET_FAILED;
+					msg.obj = "网络异常";
+					handler.sendMessage(msg);
+				}
+
+				@Override
+				public void onResponse(Response response) throws IOException {
+					Message msg = new Message();
+					if (response.isSuccessful()) {
+						msg.what = StatusCode.VALIDATE_TIME_SUCCESS;
+						msg.obj = response.body().string();
+					} else {
+						msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
+						msg.obj = "服务器异常";
+					}
+					handler.sendMessage(msg);
+				}});
+			break;
+		case R.id.bt_next_response:
+			Intent intent = new Intent(TaskListPackageDetailActivity.this,QuestionResponseActivity.class);
+			Bundle bundle = new Bundle();
+			bundle.putString(Constant.TASKNO, sTaskNo);
+			intent.putExtras(bundle);
+			startActivity(intent);
+			break;
+		case R.id.iv_navicate_right:
+			showPopupWindow(v);
+			break;
+	    }
 	}
 }
