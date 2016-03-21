@@ -98,16 +98,13 @@
         <activity android:name="com.overtech.ems.activity.parttime.common.ElevatorDetailActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAccountListActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalBoundsActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalChangePhoneNoActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.ChangePhoneNoValidatePasswordActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.ChangePhoneNoValicateSmsCodeActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.ChangePhoneNoSuccessActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.QueryTaskListActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.QuestionResponseActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.EvaluationActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.tasklist.QueryTaskPackageActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.TaskListPackageDetailActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.nearby.TaskPackageListActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalChargeBackListActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalHelpDocActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAnnouncementActivity" />
