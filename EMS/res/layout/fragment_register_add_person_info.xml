@@ -98,7 +98,7 @@
                 android:layout_height="55dp"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/rl_register_add_info_3"
-                android:layout_marginTop="-1dp"
+                android:layout_marginTop="1dp"
                 android:background="@color/main_white" >
 
                 <Spinner
@@ -113,6 +113,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_alignParentLeft="true"
+                android:layout_marginTop="1dp"
                 android:layout_below="@+id/rl_register_add_info_4"
                 android:background="@color/main_white" >
 
