@@ -14,18 +14,18 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.overtech.ems.R;
+import com.overtech.ems.activity.BaseFragment;
 import com.overtech.ems.activity.parttime.tasklist.ScanCodeActivity;
 import com.overtech.ems.activity.parttime.tasklist.TaskListDonetFragment;
 import com.overtech.ems.activity.parttime.tasklist.TaskListNoneFragment;
 
-public class TaskListFragment extends Fragment implements OnClickListener {
+public class TaskListFragment extends BaseFragment implements OnClickListener {
 
 	private Activity mActivity;
 	private TextView mNone;
 	private TextView mDonet;
 	private TextView mHead;
 	private ImageView mQrCode;
-	private FragmentManager manager;
 	private FragmentTransaction transaction;
 	private Fragment mTaskNone;
 	private Fragment mTaskDonet;
@@ -53,7 +53,6 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 		mNone.setOnClickListener(this);
 		mDonet.setOnClickListener(this);
 		mQrCode.setOnClickListener(this);
-		manager = getFragmentManager();
 		mTaskNone=new TaskListNoneFragment();
 		mTaskDonet=new TaskListDonetFragment();
 	}
@@ -61,8 +60,17 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 	private void setDefaultView() {
 		mHead.setText("任务单");
 		mQrCode.setVisibility(View.VISIBLE);
-		transaction=manager.beginTransaction();
+		transaction=fragmentManager.beginTransaction();
 		transaction.replace(R.id.fl_container, mTaskNone).commit();
+	}
+	
+	private void switchContent(Fragment from, Fragment to) {
+		transaction = fragmentManager.beginTransaction();
+		if (!to.isAdded()) { 
+			transaction.hide(from).add(R.id.fl_container, to).commit(); 
+		} else {
+			transaction.hide(from).show(to).commit();
+		}
 	}
 	
 	@Override
@@ -92,12 +100,4 @@ public class TaskListFragment extends Fragment implements OnClickListener {
 		}
 	}
 
-	private void switchContent(Fragment from, Fragment to) {
-		transaction = manager.beginTransaction();
-		if (!to.isAdded()) { 
-			transaction.hide(from).add(R.id.fl_container, to).commit(); 
-		} else {
-			transaction.hide(from).show(to).commit();
-		}
-	}
 }

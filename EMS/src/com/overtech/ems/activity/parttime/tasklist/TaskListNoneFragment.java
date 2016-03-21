@@ -67,10 +67,7 @@ public class TaskListNoneFragment extends BaseFragment {
 	private int mPosition;
 	private Set<String> tagSet;
 	private String TAG = "24梯";
-	/**
-	 * 访问任务包详情的请求码
-	 */
-	private final int REQUESTCODE = 0x11;
+	private final int REQUESTCODE = 0x11; //访问任务包详情的请求码
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
