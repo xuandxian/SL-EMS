@@ -2,6 +2,7 @@ package com.overtech.ems.activity.parttime.personal;
 
 import java.io.IOException;
 import java.util.List;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,9 +10,10 @@ import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.ExpandableListView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
+
 import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
@@ -33,7 +35,8 @@ import com.squareup.okhttp.Response;
 public class PersonalBoundsActivity extends BaseActivity implements OnClickListener {
 	private ImageView mDoBack;
 	private TextView mHeadContent;
-	private ExpandableListView mPersonalAccountListView;
+//	private ExpandableListView mPersonalAccountListView;
+	private ListView mPersonalAccountListView;
 	private PersonalBonusListAdapter adapter;
 	private List<Bonus> list;
 	private Context context;
@@ -77,7 +80,8 @@ public class PersonalBoundsActivity extends BaseActivity implements OnClickListe
 	private void findViewById() {
 		mDoBack=(ImageView)findViewById(R.id.iv_headBack);
 		mHeadContent=(TextView)findViewById(R.id.tv_headTitle);
-		mPersonalAccountListView=(ExpandableListView)findViewById(R.id.lv_personal_account_list);
+//		mPersonalAccountListView=(ExpandableListView)findViewById(R.id.lv_personal_account_list);
+		mPersonalAccountListView=(ListView)findViewById(R.id.lv_personal_account_list);
 	}
 	
 	private void initData() {
