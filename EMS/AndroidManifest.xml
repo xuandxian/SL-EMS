@@ -98,20 +98,20 @@
         <activity android:name="com.overtech.ems.activity.parttime.common.ElevatorDetailActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAccountListActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalBoundsActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.personal.ChangePhoneNoValidatePasswordActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.personal.ChangePhoneNoValicateSmsCodeActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.personal.ChangePhoneNoSuccessActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.personal.phoneno.ChangePhoneNoValidatePasswordActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.personal.phoneno.ChangePhoneNoValicateSmsCodeActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.personal.phoneno.ChangePhoneNoSuccessActivityActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.QueryTaskListActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.QuestionResponseActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.EvaluationActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.tasklist.TaskListPackageDetailActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalChargeBackListActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalHelpDocActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAnnouncementActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAnnouncementDetailActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.personal.others.PersonalHelpDocActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.personal.notice.PersonalNoticeActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.personal.notice.PersonalNoticeDetailActivity" />
         <activity android:name="com.overtech.ems.activity.parttime.common.ShowCommunityLocationActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAboutAppActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAboutCompanyActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.personal.others.PersonalAboutAppActivity" />
+        <activity android:name="com.overtech.ems.activity.parttime.personal.others.PersonalAboutCompanyActivity" />
 
         <!-- Required SDK核心功能 -->
         <activity

@@ -1,4 +1,4 @@
-package com.overtech.ems.activity.parttime.personal;
+package com.overtech.ems.activity.parttime.personal.notice;
 
 import java.io.IOException;
 import org.json.JSONException;
@@ -25,7 +25,7 @@ import com.squareup.okhttp.Response;
  * 公告详情
  * 
  */
-public class PersonalAnnouncementDetailActivity extends BaseActivity {
+public class PersonalNoticeDetailActivity extends BaseActivity {
 	private TextView mHeadContent;
 	private ImageView mDoBack;
 	private TextView mAnnouncementContent;

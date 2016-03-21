@@ -1,4 +1,4 @@
-package com.overtech.ems.activity.parttime.personal;
+package com.overtech.ems.activity.parttime.personal.others;
 
 import android.os.Bundle;
 import android.view.View;

@@ -1,14 +1,10 @@
-package com.overtech.ems.activity.parttime.personal;
+package com.overtech.ems.activity.parttime.personal.notice;
 
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import android.content.Intent;
-import android.content.ClipData.Item;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -20,7 +16,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
@@ -40,7 +35,7 @@ import com.squareup.okhttp.Response;
  * 公告栏
  * 
  */
-public class PersonalAnnouncementActivity extends BaseActivity {
+public class PersonalNoticeActivity extends BaseActivity {
 	private ImageView mDoBack;
 	private TextView mHeadContent;
 	private ListView mAnnouncement;
@@ -156,7 +151,7 @@ public class PersonalAnnouncementActivity extends BaseActivity {
 				Bundle bundle = new Bundle();
 				bundle.putString(Constant.ANNOUNCEMENTID, data.getId());
 				Intent intent = new Intent(activity,
-						PersonalAnnouncementDetailActivity.class);
+						PersonalNoticeDetailActivity.class);
 				intent.putExtras(bundle);
 				startActivity(intent);
 			}

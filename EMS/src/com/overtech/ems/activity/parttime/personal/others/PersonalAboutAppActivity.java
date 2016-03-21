@@ -1,4 +1,4 @@
-package com.overtech.ems.activity.parttime.personal;
+package com.overtech.ems.activity.parttime.personal.others;
 
 import android.content.Intent;
 import android.os.Bundle;

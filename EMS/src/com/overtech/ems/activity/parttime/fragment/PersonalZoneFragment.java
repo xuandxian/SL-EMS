@@ -21,13 +21,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
-import com.overtech.ems.activity.parttime.personal.PersonalAboutAppActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalAccountListActivity;
-import com.overtech.ems.activity.parttime.personal.PersonalAnnouncementActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalBoundsActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalChargeBackListActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalDeatilsActivity;
-import com.overtech.ems.activity.parttime.personal.PersonalHelpDocActivity;
+import com.overtech.ems.activity.parttime.personal.notice.PersonalNoticeActivity;
+import com.overtech.ems.activity.parttime.personal.others.PersonalAboutAppActivity;
+import com.overtech.ems.activity.parttime.personal.others.PersonalHelpDocActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.http.HttpEngine.Param;
@@ -222,7 +222,7 @@ public class PersonalZoneFragment extends BaseFragment implements
 			startActivity(intent);
 			break;
 		case R.id.rl_personal_notice:// 公告
-			intent.setClass(mActivity, PersonalAnnouncementActivity.class);
+			intent.setClass(mActivity, PersonalNoticeActivity.class);
 			startActivity(intent);
 			break;
 		case R.id.rl_cancle_list:// 退单记录
