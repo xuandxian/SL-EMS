@@ -49,13 +49,14 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	private Button mLogin;
 	private TextView mRegister;
 	private ToggleButton mChangePasswordState;
-	String encryptPassword;
+	private String encryptPassword;
 
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case StatusCode.LOGIN_SUCCESS:
 				mSharedPreferences.edit().putString(SharedPreferencesKeys.CURRENT_LOGIN_NAME,sUserName).commit();// 将登陆的用户名保存
+				mSharedPreferences.edit().putString(SharedPreferencesKeys.CURRENT_LOGIN_PASSWORD,encryptPassword).commit();// 将登陆的密码保存
 				mSharedPreferences.edit().putLong(SharedPreferencesKeys.CURRENT_DATE,new Date().getTime()).commit();
 				Intent intent = new Intent(LoginActivity.this,MainActivity.class);
 				startActivity(intent);
