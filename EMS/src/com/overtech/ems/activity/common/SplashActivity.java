@@ -9,7 +9,6 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.view.WindowManager;
 import cn.jpush.android.api.JPushInterface;
-
 import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
@@ -49,7 +48,10 @@ public class SplashActivity extends BaseActivity {
 				Utilities.showToast("网络异常", context);
 				break;
 			case StatusCode.LOGIN_NOT_EXIST:
-				Utilities.showToast("用户或者密码错误", context);
+				Utilities.showToast("用户账户异常", context);
+				Intent intent2 = new Intent(SplashActivity.this,LoginActivity.class);
+				startActivity(intent2);
+				finish();
 				break;
 			}
 			stopProgressDialog();
@@ -66,7 +68,7 @@ public class SplashActivity extends BaseActivity {
 			@Override
 			public void run() {
 				long lastDate=application.getSharePreference().getLong(SharedPreferencesKeys.CURRENT_DATE, 0);
-				if(lastDate==0){
+				if(lastDate==0){ 
 					Intent intent = new Intent(SplashActivity.this,LoginActivity.class);
 					startActivity(intent);
 					finish();
@@ -74,13 +76,13 @@ public class SplashActivity extends BaseActivity {
 					long currentDate=new Date().getTime();
 					long period=currentDate-lastDate;
 					if (period<timePeriod) {
-						Intent intent = new Intent(SplashActivity.this,MainActivity.class);
-						startActivity(intent);
-						finish();
-					}else {
 						String username=mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME,null);
 						String password=mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_PASSWORD,null);
 						doLogin(username,password);
+					}else {
+						Intent intent = new Intent(SplashActivity.this,LoginActivity.class);
+						startActivity(intent);
+						finish();
 					}
 				}
 			}

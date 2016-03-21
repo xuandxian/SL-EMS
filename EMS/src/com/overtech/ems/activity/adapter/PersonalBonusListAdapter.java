@@ -23,37 +23,32 @@ public class PersonalBonusListAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		// TODO Auto-generated method stub
-		return datas.size();
+		return datas.size()==0 ? 0:datas.size();
 	}
 
 	@Override
 	public Object getItem(int position) {
-		// TODO Auto-generated method stub
-		return null;
+		return datas.get(position);
 	}
 
 	@Override
 	public long getItemId(int position) {
-		// TODO Auto-generated method stub
-		return 0;
+		return position;
 	}
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		// TODO Auto-generated method stub
 		Bonus bonus = datas.get(position);
 		if (convertView == null) {
-			convertView = LayoutInflater.from(context).inflate(
-					R.layout.item_expandablelistview_bonus, null);
+			convertView = LayoutInflater.from(context).inflate(R.layout.item_expandablelistview_bonus, null);
 		}
-		TextView mAwardSum = (TextView) convertView.findViewById(R.id.tv_bonus);
+		TextView mAwardSum = (TextView) convertView.findViewById(R.id.tv_bonus_money);
 		TextView mAwardDate = (TextView) convertView
 				.findViewById(R.id.tv_bonus_date);
 		TextView mAwardRemark = (TextView) convertView
 				.findViewById(R.id.tv_bonus_remark);
 
-		mAwardSum.setText("奖励金额：" + bonus.getAwardSum());
+		mAwardSum.setText("￥" + bonus.getAwardSum());
 		mAwardDate.setText("奖励日期：" + bonus.getAwardDate());
 		mAwardRemark.setText("奖励原因：" + bonus.getAwardRemark());
 		return convertView;

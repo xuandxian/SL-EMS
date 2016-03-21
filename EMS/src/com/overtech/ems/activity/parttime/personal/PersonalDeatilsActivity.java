@@ -63,7 +63,6 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 			switch (msg.what) {
 			case StatusCode.PERSONAL_DETAIL_SUCCESS:
 				String json=(String) msg.obj;
-				Log.e("==个人详细信息==", json);
 				try {
 					JSONObject jsonObject=new JSONObject(json);
 					JSONObject model=(JSONObject) jsonObject.get("model");
@@ -90,7 +89,6 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 
 									@Override
 									public String key() {
-										// TODO Auto-generated method stub
 										return null;
 									}
 								}).into(avator);
@@ -122,7 +120,6 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		statckInstance.pushActivity(this);
 		setContentView(R.layout.activity_personal_details);
 		initViews();
