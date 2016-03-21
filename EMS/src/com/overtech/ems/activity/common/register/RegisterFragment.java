@@ -1,10 +1,8 @@
 package com.overtech.ems.activity.common.register;
 
 import java.io.IOException;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -18,10 +16,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
 import com.overtech.ems.config.StatusCode;
@@ -41,7 +37,7 @@ public class RegisterFragment extends BaseFragment {
 	private View view;
 	private TimeButton mGetValidate;
 	private EditTextWithDelete mRegisterPhone;
-	private EditText mEtValidateCode;
+	private EditTextWithDelete mEtValidateCode;
 	private String validateCode;
 	private TextView mHeadTitle;
 	private ImageView mDoBack;
@@ -126,7 +122,6 @@ public class RegisterFragment extends BaseFragment {
 			
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-				// TODO Auto-generated method stub
 				if(!TextUtils.isEmpty(arg0)&&Utilities.isMobileNO(arg0.toString())){
 					mGetValidate.setEnabled(true);
 				}else{
@@ -137,13 +132,11 @@ public class RegisterFragment extends BaseFragment {
 			@Override
 			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
 					int arg3) {
-				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
 			public void afterTextChanged(Editable arg0) {
-				// TODO Auto-generated method stub
 				
 			}
 		});
@@ -228,7 +221,7 @@ public class RegisterFragment extends BaseFragment {
 		mNext = (Button) view.findViewById(R.id.btn_next_fragment);
 		mRegisterPhone = (EditTextWithDelete) view.findViewById(R.id.et_register_phone);
 		mGetValidate = (TimeButton) view.findViewById(R.id.btn_get_valicate_code);
-		mEtValidateCode = (EditText) view.findViewById(R.id.et_valicate_code);
+		mEtValidateCode = (EditTextWithDelete) view.findViewById(R.id.et_valicate_code);
 	}
 
 	public void setRegFraBtnClickListener(RegFraBtnClickListener listener) {
