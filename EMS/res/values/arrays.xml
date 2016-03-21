@@ -8,7 +8,7 @@
         <item>江苏</item>
     </string-array>
     <string-array name="sh_zone">
-        <item>区域选择</item>
+        <item>所在区域</item>
         <item>黄浦区</item>
         <item>徐汇区</item>
         <item>长宁区</item>

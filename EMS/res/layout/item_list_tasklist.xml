@@ -18,23 +18,21 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:layout_marginTop="10dp"
-            android:singleLine="true" />
+            android:singleLine="true"
+            android:ellipsize="end"
+            android:text="丰业广元公寓0318"/>
 
         <TextView
             android:id="@+id/tv_taskno"
             style="@style/tv_info_secondary_style"
-            android:layout_alignParentTop="true"
+            android:layout_alignBaseline="@+id/tv_name"
+            android:layout_alignBottom="@+id/tv_name"
             android:layout_marginTop="10dp"
            	android:layout_marginLeft="20dp"
-            android:layout_toRightOf="@id/tv_name" />
-
-        <TextView
-            android:id="@+id/tv_address"
-            style="@style/tv_info_secondary_style"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@id/tv_name"
-            android:layout_marginTop="10dp"
-            android:paddingBottom="10dp" />
+            android:layout_toLeftOf="@+id/tv_num"
+            android:layout_marginRight="7dp"
+            android:text="WA201603180001"
+            />
 
         <TextView
             android:id="@+id/tv_num"
@@ -42,7 +40,17 @@
             android:layout_alignBaseline="@+id/tv_name"
             android:layout_alignBottom="@+id/tv_name"
             android:layout_alignParentRight="true"
-            android:layout_marginRight="16dp" />
+            android:layout_marginRight="16dp"
+            android:text="3"/>
+
+        <TextView
+            android:id="@+id/tv_address"
+            style="@style/tv_info_secondary_style"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/tv_name"
+            android:layout_marginTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="徐汇区广元西路"/>
 
         <TextView
             android:id="@+id/tv_distance"
@@ -50,14 +58,16 @@
             android:layout_alignBaseline="@+id/tv_address"
             android:layout_alignBottom="@+id/tv_address"
             android:layout_marginLeft="16dp"
-            android:layout_toRightOf="@+id/tv_address" />
+            android:layout_toRightOf="@+id/tv_address"
+            android:text="0.0km"/>
 
         <TextView
             android:id="@+id/tv_date"
             style="@style/tv_info_secondary_style"
             android:layout_alignBaseline="@+id/tv_distance"
             android:layout_alignBottom="@+id/tv_distance"
-            android:layout_alignRight="@+id/tv_num" />
+            android:layout_alignRight="@+id/tv_num"
+            android:text="2016-03-18"/>
     </RelativeLayout>
 
 </LinearLayout>
