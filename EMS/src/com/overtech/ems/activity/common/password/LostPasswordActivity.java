@@ -83,7 +83,7 @@ public class LostPasswordActivity extends BaseActivity {
 				break;
 				case StatusCode.COMMOM_SUBMIT_SMS_CODE:
 					String json3=(String)msg.obj;
-					try {
+					try {  
 						JSONObject jsonObj=new JSONObject(json3);
 						String model=jsonObj.getString("model");
 						if (model.equals("3")) {

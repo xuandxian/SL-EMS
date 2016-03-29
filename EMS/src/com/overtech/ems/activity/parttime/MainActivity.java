@@ -2,7 +2,9 @@ package com.overtech.ems.activity.parttime;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -54,8 +56,14 @@ public class MainActivity extends BaseActivity {
 
 	private void setDefaultView() {
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
-		mGrabTaskFragment = new GrabTaskFragment();
-		transaction.replace(R.id.mHomeContent, mGrabTaskFragment);
+		String flag=getIntent().getStringExtra("flag");
+		if (TextUtils.equals("1", flag)) {
+			mTaskListFragment=new TaskListFragment();
+			transaction.replace(R.id.mHomeContent, mTaskListFragment);
+		}else {
+			mGrabTaskFragment = new GrabTaskFragment();
+			transaction.replace(R.id.mHomeContent, mGrabTaskFragment);
+		}
 		transaction.commit();
 	}
 

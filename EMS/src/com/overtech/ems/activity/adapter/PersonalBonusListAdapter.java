@@ -43,10 +43,8 @@ public class PersonalBonusListAdapter extends BaseAdapter {
 			convertView = LayoutInflater.from(context).inflate(R.layout.item_expandablelistview_bonus, null);
 		}
 		TextView mAwardSum = (TextView) convertView.findViewById(R.id.tv_bonus_money);
-		TextView mAwardDate = (TextView) convertView
-				.findViewById(R.id.tv_bonus_date);
-		TextView mAwardRemark = (TextView) convertView
-				.findViewById(R.id.tv_bonus_remark);
+		TextView mAwardDate = (TextView) convertView.findViewById(R.id.tv_bonus_date);
+		TextView mAwardRemark = (TextView) convertView.findViewById(R.id.tv_bonus_remark);
 
 		mAwardSum.setText("￥" + bonus.getAwardSum());
 		mAwardDate.setText("奖励日期：" + bonus.getAwardDate());

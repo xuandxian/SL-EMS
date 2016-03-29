@@ -45,6 +45,7 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 				if(state){
 					Intent intent =new Intent(context,MainActivity.class);
 					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+					intent.putExtra("flag", "1");
 					startActivity(intent);
 					finish();
 				}else{

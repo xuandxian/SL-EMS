@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
     android:id="@+id/rl_item_package_detail"
-     >
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
 
     <TextView
         android:id="@+id/tv_grab_task_package_name"
@@ -12,17 +11,10 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp"
+        android:layout_toLeftOf="@+id/tv_grab_task_package_productor"
+        android:ellipsize="end"
         android:singleLine="true"
         android:text="31号楼1号电梯" />
-    <TextView
-        android:id="@+id/tv_grab_task_package_work_type"
-        style="@style/tv_list_primary_style"
-        android:layout_alignBaseline="@+id/tv_grab_task_package_name"
-        android:layout_alignBottom="@+id/tv_grab_task_package_name"
-        android:layout_toRightOf="@+id/tv_grab_task_package_name"
-        android:singleLine="true"
-        android:layout_marginLeft="3dp"
-        android:text="(半月保)" />
 
     <TextView
         android:id="@+id/tv_grab_task_package_productor"
@@ -49,12 +41,22 @@
         android:layout_alignBottom="@+id/tv_grab_task_package_eveltor_no"
         android:layout_alignRight="@+id/tv_grab_task_package_productor"
         android:text="20层/20站" />
-    <ImageView 
+
+    <ImageView
         android:id="@+id/iv_complete_state"
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        />
+        android:layout_alignParentTop="true" />
+
+    <TextView
+        android:id="@+id/tv_grab_task_package_work_type"
+        style="@style/tv_info_secondary_style"
+        android:layout_alignBaseline="@+id/tv_grab_task_package_eveltor_no"
+        android:layout_alignBottom="@+id/tv_grab_task_package_eveltor_no"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@+id/tv_grab_task_package_eveltor_no"
+        android:singleLine="true"
+        android:text="(半月保)" />
 
 </RelativeLayout>

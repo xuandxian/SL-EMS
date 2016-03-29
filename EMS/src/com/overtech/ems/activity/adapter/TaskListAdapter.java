@@ -81,8 +81,9 @@ public class TaskListAdapter extends BaseAdapter {
 		holder.maintenanceAddress.setText(data.getMaintenanceAddress());
 		holder.maintenanceDate.setText(data.getMaintenanceDate());
 		if(state==StatusCode.TASK_NO){
-			holder.taskNo.setText("");
+			holder.taskNo.setVisibility(View.GONE);
 		}else if(state==StatusCode.TASK_DO){
+			holder.taskNo.setVisibility(View.VISIBLE);
 			holder.taskNo.setText(data.getTaskNo());
 		}
 		LatLng latlng = new LatLng(Double.parseDouble(data.getLatitude()),Double.parseDouble(data.getLongitude()));
