@@ -1,73 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/main_white"
-    android:orientation="horizontal" >
+    android:background="@color/main_white" >
 
-    <RelativeLayout
-        android:id="@+id/rl_item_list_hot"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
+    <TextView
+        android:id="@+id/tv_name"
+        style="@style/tv_list_primary_style"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/tv_address"
         android:layout_marginLeft="15dp"
-        android:layout_weight="0.91" >
+        android:layout_marginTop="10dp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="丰业广元公寓0318" />
 
-        <TextView
-            android:id="@+id/tv_name"
-            style="@style/tv_list_primary_style"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginTop="10dp"
-            android:singleLine="true"
-            android:ellipsize="end"
-            android:text="丰业广元公寓0318"/>
+    <TextView
+        android:id="@+id/tv_taskno"
+        style="@style/tv_info_secondary_style"
+        android:layout_alignBaseline="@+id/tv_name"
+        android:layout_alignBottom="@+id/tv_name"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="7dp"
+        android:layout_marginTop="10dp"
+        android:layout_toLeftOf="@+id/tv_num"
+        android:text="WA201603180001"
+         />
 
-        <TextView
-            android:id="@+id/tv_taskno"
-            style="@style/tv_info_secondary_style"
-            android:layout_alignBaseline="@+id/tv_name"
-            android:layout_alignBottom="@+id/tv_name"
-            android:layout_marginTop="10dp"
-           	android:layout_marginLeft="20dp"
-            android:layout_toLeftOf="@+id/tv_num"
-            android:layout_marginRight="7dp"
-            android:text="WA201603180001"
-            />
+    <TextView
+        android:id="@+id/tv_num"
+        style="@style/tv_info_secondary_style"
+        android:layout_alignBaseline="@+id/tv_name"
+        android:layout_alignBottom="@+id/tv_name"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="16dp"
+        android:text="3" />
 
-        <TextView
-            android:id="@+id/tv_num"
-            style="@style/tv_info_secondary_style"
-            android:layout_alignBaseline="@+id/tv_name"
-            android:layout_alignBottom="@+id/tv_name"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="16dp"
-            android:text="3"/>
+    <TextView
+        android:id="@+id/tv_address"
+        style="@style/tv_info_secondary_style"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@id/tv_name"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:paddingBottom="10dp"
+        android:layout_toLeftOf="@+id/tv_distance"
+        android:singleLine="true"
+        android:ellipsize="end"
+        android:text="徐汇区广元西路" />
 
-        <TextView
-            android:id="@+id/tv_address"
-            style="@style/tv_info_secondary_style"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@id/tv_name"
-            android:layout_marginTop="10dp"
-            android:paddingBottom="10dp"
-            android:text="徐汇区广元西路"/>
+    <TextView
+        android:id="@+id/tv_distance"
+        style="@style/tv_info_secondary_style"
+        android:layout_alignBaseline="@+id/tv_address"
+        android:layout_alignBottom="@+id/tv_address"
+        android:layout_toLeftOf="@+id/tv_date"
+        android:layout_marginRight="20dp"
+        android:text="0.0km" />
 
-        <TextView
-            android:id="@+id/tv_distance"
-            style="@style/tv_info_secondary_style"
-            android:layout_alignBaseline="@+id/tv_address"
-            android:layout_alignBottom="@+id/tv_address"
-            android:layout_marginLeft="16dp"
-            android:layout_toRightOf="@+id/tv_address"
-            android:text="0.0km"/>
+    <TextView
+        android:id="@+id/tv_date"
+        style="@style/tv_info_secondary_style"
+        android:layout_alignBaseline="@+id/tv_distance"
+        android:layout_alignBottom="@+id/tv_distance"
+        android:layout_alignRight="@+id/tv_num"
+        android:text="2016-03-18" />
 
-        <TextView
-            android:id="@+id/tv_date"
-            style="@style/tv_info_secondary_style"
-            android:layout_alignBaseline="@+id/tv_distance"
-            android:layout_alignBottom="@+id/tv_distance"
-            android:layout_alignRight="@+id/tv_num"
-            android:text="2016-03-18"/>
-    </RelativeLayout>
+</RelativeLayout>
 
-</LinearLayout>
