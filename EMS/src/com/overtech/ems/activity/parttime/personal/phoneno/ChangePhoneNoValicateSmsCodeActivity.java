@@ -120,7 +120,6 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 			
 			@Override
 			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-				// TODO Auto-generated method stub
 				if(!TextUtils.isEmpty(arg0)&&Utilities.isMobileNO(arg0.toString())){
 					mGetMessageCode.setEnabled(true);
 				}else{
@@ -131,13 +130,11 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 			@Override
 			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
 					int arg3) {
-				// TODO Auto-generated method stub
 				
 			}
 			
 			@Override
 			public void afterTextChanged(Editable arg0) {
-				// TODO Auto-generated method stub
 				
 			}
 		});
@@ -151,7 +148,7 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 		mNextContent = (Button) findViewById(R.id.btn_next);
 		mPhoneNoEditText = (EditTextWithDelete) findViewById(R.id.et_update_phone);
 		mValidateCodeEditText = (EditTextWithDelete) findViewById(R.id.et_update_verificate_password);
-		mHeadContent.setText("输入验证码");
+		mHeadContent.setText("更换手机号");
 		mDoBack.setVisibility(View.VISIBLE);
 	}
 

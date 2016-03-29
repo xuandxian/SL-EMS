@@ -37,9 +37,10 @@ import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
 import com.overtech.ems.activity.adapter.GrabTaskAdapter;
+import com.overtech.ems.activity.common.LoginActivity;
+import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
 import com.overtech.ems.activity.parttime.grabtask.GrabTaskDoFilterActivity;
 import com.overtech.ems.activity.parttime.grabtask.KeyWordSerachActivity;
-import com.overtech.ems.activity.parttime.grabtask.PackageDetailActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.bean.StatusCodeBean;
 import com.overtech.ems.entity.bean.TaskPackageBean;
@@ -133,11 +134,8 @@ public class GrabTaskFragment extends BaseFragment implements
 						Utilities.showToast("格式不对", context);
 					} else {
 						tagSet.add(tagItem);
-						JPushInterface.setAliasAndTags(getActivity()
-								.getApplicationContext(), null, tagSet,
-								mTagsCallback);
+						JPushInterface.setAliasAndTags(getActivity().getApplicationContext(), null, tagSet,mTagsCallback);
 					}
-
 					onRefresh();
 				} else if (TextUtils.equals(content, "2")) {
 					Utilities.showToast("抢单成功，请到任务中查看", context);
@@ -156,6 +154,11 @@ public class GrabTaskFragment extends BaseFragment implements
 					Utilities.showToast("差一点就抢到了", context);
 				} else if (TextUtils.equals(content, "4")) {
 					Utilities.showToast("维保日期的电梯数量已经超过10台，不能够再抢单。", context);
+				}else {
+					Utilities.showToast("账户异常", context);
+					Intent intent=new Intent(getActivity(),LoginActivity.class);
+					startActivity(intent);
+					getActivity().finish();
 				}
 				break;
 			case StatusCode.MSG_SET_TAGS:

@@ -33,7 +33,7 @@ import com.baidu.mapapi.model.LatLng;
 import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
-import com.overtech.ems.activity.parttime.grabtask.PackageDetailActivity;
+import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.bean.TaskPackageBean;
 import com.overtech.ems.entity.common.ServicesConfig;

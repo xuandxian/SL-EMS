@@ -79,7 +79,7 @@ public class ChangePhoneNoValidatePasswordActivity extends BaseActivity implemen
 
 	private void initView() {
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
-		mHeadContent.setText("验证密码");
+		mHeadContent.setText("更换手机号");
 		mDoBack = (ImageView) findViewById(R.id.iv_headBack);
 		mNextContent = (Button) findViewById(R.id.btn_next);
 		mPhone = (EditTextWithDelete) findViewById(R.id.et_phone);

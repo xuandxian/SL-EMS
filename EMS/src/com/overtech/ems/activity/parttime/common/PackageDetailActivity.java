@@ -1,4 +1,4 @@
-package com.overtech.ems.activity.parttime.grabtask;
+package com.overtech.ems.activity.parttime.common;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,8 +25,7 @@ import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.PackageDetailAdapter;
-import com.overtech.ems.activity.parttime.common.ElevatorDetailActivity;
-import com.overtech.ems.activity.parttime.common.ShowCommunityLocationActivity;
+import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.bean.StatusCodeBean;
 import com.overtech.ems.entity.bean.TaskPackageDetailBean;
@@ -44,7 +43,7 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 /*
- *任务包详情(抢单模块)
+ *任务包详情(抢单模块/附近模块)
  * @author Tony
  * @date 2016-01-13
  * 
@@ -120,6 +119,11 @@ public class PackageDetailActivity extends BaseActivity {
 					Utilities.showToast("差一点就抢到了", context);
 				} else if (TextUtils.equals(content, "4")) {
 					Utilities.showToast("维保日期的电梯数量已经超过10台，不能够再抢单。", context);
+				}else {
+					Utilities.showToast("账户异常", context);
+					Intent intent=new Intent(PackageDetailActivity.this,LoginActivity.class);
+					startActivity(intent);
+					finish();
 				}
 				break;
 			case StatusCode.MSG_SET_TAGS:
