@@ -8,9 +8,12 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ImageView;
+
 import com.baidu.mapapi.SDKInitializer;
 import com.overtech.ems.R;
 import com.overtech.ems.http.HttpEngine;
@@ -30,9 +33,9 @@ public class BaseActivity extends Activity {
 
 	public static final String ACTION_NETWORK_CHANGE = "android.net.conn.CONNECTIVITY_CHANGE";
 	public static final String ACTION_NEW_VERSION = "apk.update.action";
-	
+
 	public MyApplication application;
-	
+
 	public ImageLoader imageLoader;
 
 	public Activity activity;
@@ -50,7 +53,7 @@ public class BaseActivity extends Activity {
 	public NiftyDialogBuilder dialogBuilder;
 
 	public SharedPreferences mSharedPreferences;
-	
+
 	public StackManager statckInstance;
 
 	private InputMethodManager imm;
@@ -61,7 +64,7 @@ public class BaseActivity extends Activity {
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		SDKInitializer.initialize(getApplicationContext());
-		application=(MyApplication)this.getApplication();
+		application = (MyApplication) this.getApplication();
 		activity = this;
 		context = this;
 		fragmentManager = getFragmentManager();
@@ -72,12 +75,12 @@ public class BaseActivity extends Activity {
 		imageLoader = ImageLoader.getInstance();
 		imageLoader.initContext(context);
 		progressDialog = CustomProgressDialog.createDialog(context);
-		progressDialog.setMessage(context.getString(R.string.loading_public_default));
+		progressDialog.setMessage(context
+				.getString(R.string.loading_public_default));
 		progressDialog.setCanceledOnTouchOutside(false);
 		mSharedPreferences = application.getSharePreference();
-		statckInstance=StackManager.getStackManager();
+		statckInstance = StackManager.getStackManager();
 	}
-	
 
 	@Override
 	protected void onResume() {
@@ -109,6 +112,12 @@ public class BaseActivity extends Activity {
 		}
 		progressDialog.setMessage(content);
 		progressDialog.show();
+
+		ImageView imageView = (ImageView) progressDialog
+				.findViewById(R.id.loadingImageView);
+		AnimationDrawable animationDrawable = (AnimationDrawable) imageView
+				.getBackground();
+		animationDrawable.start();
 	}
 
 	public void stopProgressDialog() {
