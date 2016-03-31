@@ -87,7 +87,7 @@ public class NearByMapFragment extends BaseFragment {
 		initView(view);
 		getExtralData();
 		setMarkerClick();
-		setMapLongClick();
+//		setMapLongClick();
 		return view;
 	}
 
@@ -221,21 +221,22 @@ public class NearByMapFragment extends BaseFragment {
 		});
 	}
 
-	private void setMapLongClick() {
-		mBaiduMap.setOnMapLongClickListener(new OnMapLongClickListener() {
-
-			@Override
-			public void onMapLongClick(LatLng point) {
-				mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(12.0f));
-				longPressLocation = point;
-				Param latitude = new Param(Constant.LATITUDE, String
-						.valueOf(point.latitude));
-				Param longitude = new Param(Constant.LONGITUDE, String
-						.valueOf(point.longitude));
-				getDataByLatlng(ServicesConfig.NEARBY, "1", latitude, longitude);
-			}
-		});
-	}
+	//长按地图事件，显示周围10km的维保任务包
+//	private void setMapLongClick() {
+//		mBaiduMap.setOnMapLongClickListener(new OnMapLongClickListener() {
+//
+//			@Override
+//			public void onMapLongClick(LatLng point) {
+//				mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(12.0f));
+//				longPressLocation = point;
+//				Param latitude = new Param(Constant.LATITUDE, String
+//						.valueOf(point.latitude));
+//				Param longitude = new Param(Constant.LONGITUDE, String
+//						.valueOf(point.longitude));
+//				getDataByLatlng(ServicesConfig.NEARBY, "1", latitude, longitude);
+//			}
+//		});
+//	}
 
 	@Override
 	public void onDestroy() {
