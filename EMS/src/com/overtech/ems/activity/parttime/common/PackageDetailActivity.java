@@ -120,10 +120,11 @@ public class PackageDetailActivity extends BaseActivity {
 				} else if (TextUtils.equals(content, "4")) {
 					Utilities.showToast("维保日期的电梯数量已经超过10台，不能够再抢单。", context);
 				}else {
-					Utilities.showToast("账户异常", context);
-					Intent intent=new Intent(PackageDetailActivity.this,LoginActivity.class);
-					startActivity(intent);
-					finish();
+					Utilities.showToast("用户账户异常", context);
+//					Intent intent=new Intent(PackageDetailActivity.this,LoginActivity.class);
+//					startActivity(intent);
+//					finish();
+					System.exit(0);
 				}
 				break;
 			case StatusCode.MSG_SET_TAGS:

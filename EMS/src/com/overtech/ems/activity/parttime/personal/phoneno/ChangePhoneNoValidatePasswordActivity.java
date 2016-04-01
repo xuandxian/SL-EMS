@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
+import com.overtech.ems.activity.common.password.ResetPasswordActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.Employee;
@@ -36,7 +37,7 @@ public class ChangePhoneNoValidatePasswordActivity extends BaseActivity implemen
 	private TextView mHeadContent;
 	private ImageView mDoBack;
 	private Button mNextContent;
-	private String phone;
+	private String phone,flag;
 	private EditTextWithDelete mPhone;
 	private EditTextWithDelete mPassword;
 
@@ -44,8 +45,13 @@ public class ChangePhoneNoValidatePasswordActivity extends BaseActivity implemen
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case StatusCode.RESPONSE_VALICATE_PASSWORD_SUCCESS:
-				Intent intent = new Intent(ChangePhoneNoValidatePasswordActivity.this,ChangePhoneNoValicateSmsCodeActivity.class);
-				startActivity(intent);
+				if (TextUtils.equals("0",flag)){
+					Intent intent = new Intent(ChangePhoneNoValidatePasswordActivity.this,ChangePhoneNoValicateSmsCodeActivity.class);
+					startActivity(intent);
+				}else if(TextUtils.equals("1",flag)){
+					Intent intent = new Intent(ChangePhoneNoValidatePasswordActivity.this,ResetPasswordActivity.class);
+					startActivity(intent);
+				}
 				break;
 			case StatusCode.RESPONSE_VALICATE_PASSWORD_FAILURE:
 				Utilities.showToast("密码错误", context);
@@ -67,6 +73,7 @@ public class ChangePhoneNoValidatePasswordActivity extends BaseActivity implemen
 		setContentView(R.layout.activity_change_phoneno_vc);
 		statckInstance.pushActivity(this);
 		phone = getIntent().getStringExtra("phone");
+		flag = getIntent().getStringExtra("flag");
 		initView();
 		initEvent();
 	}
@@ -79,7 +86,11 @@ public class ChangePhoneNoValidatePasswordActivity extends BaseActivity implemen
 
 	private void initView() {
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
-		mHeadContent.setText("更换手机号");
+		if (TextUtils.equals("0", flag)){
+			mHeadContent.setText("更换手机号");
+		}else if (TextUtils.equals("1",flag)){
+			mHeadContent.setText("修改密码");
+		}
 		mDoBack = (ImageView) findViewById(R.id.iv_headBack);
 		mNextContent = (Button) findViewById(R.id.btn_next);
 		mPhone = (EditTextWithDelete) findViewById(R.id.et_phone);

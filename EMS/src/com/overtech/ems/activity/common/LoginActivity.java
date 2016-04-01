@@ -69,7 +69,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 				Utilities.showToast("网络异常", context);
 				break;
 			case StatusCode.LOGIN_NOT_EXIST:
-				Utilities.showToast("用户或者密码错误", context);
+				Utilities.showToast("登陆失败", context);
 				break;
 			}
 			stopProgressDialog();

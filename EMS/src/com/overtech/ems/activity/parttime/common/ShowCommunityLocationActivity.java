@@ -119,7 +119,7 @@ public class ShowCommunityLocationActivity extends BaseActivity {
 			return;
 		}
 		BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.icon_map_community);
-		MarkerOptions option = new MarkerOptions().position(ll).icon(bitmap).zIndex(0);
+		MarkerOptions option = new MarkerOptions().position(ll).icon(bitmap).zIndex(14);
 		option.animateType(MarkerAnimateType.grow);
 		mBaiduMap.addOverlay(option);
 		BaiduMapInfoWindow infoWindow = new BaiduMapInfoWindow(context,mCommunityName);
@@ -134,42 +134,42 @@ public class ShowCommunityLocationActivity extends BaseActivity {
 		@Override
 		public void onReceiveLocation(BDLocation location) {
 			if (null==location) {
-				Log.e("ShowCommunityLocationActivity", "定位失败");
+//				Log.e("ShowCommunityLocationActivity", "定位失败");
 				return;
 			}
-			Log.e("ShowCommunityLocationActivity", "定位成功");
-			myLocation=new LatLng(location.getLatitude(), location.getLongitude());
-			setMyLocationMarker(myLocation);
+//			Log.e("ShowCommunityLocationActivity", "定位成功");
+//			myLocation=new LatLng(location.getLatitude(), location.getLongitude());
+//			setMyLocationMarker(myLocation);
 			double distance=DistanceUtil.getDistance(myLocation,communituLocation);
-			animateMapStatusByDistance(distance);
+//			animateMapStatusByDistance(distance);
 		}
 	}
-	public void setMyLocationMarker(LatLng point) {
-		BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.icon_location);
-		MarkerOptions option = new MarkerOptions().position(point).icon(bitmap).zIndex(0);
-		option.animateType(MarkerAnimateType.drop);
-		mBaiduMap.addOverlay(option);
-	}
+//	public void setMyLocationMarker(LatLng point) {
+//		BitmapDescriptor bitmap = BitmapDescriptorFactory.fromResource(R.drawable.icon_location);
+//		MarkerOptions option = new MarkerOptions().position(point).icon(bitmap).zIndex(0);
+//		option.animateType(MarkerAnimateType.drop);
+//		mBaiduMap.addOverlay(option);
+//	}
 
-	public void animateMapStatusByDistance(double distance) {
-		if (distance>=20000) {
-			mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(11.0f));
-		}else if (distance<20000 && distance>=1000) {
-			mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(12.0f));
-		}else if(distance<10000 && distance>=5000){
-			mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(13.0f));
-		}else if (distance<5000 && distance>=2000) {
-			mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(14.0f));
-		}else if (distance<2000 && distance>=1000) {
-			mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(15.0f));
-		}else if (distance<1000 && distance>=500) {
-			mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(16.0f));
-		}else if (distance<500 && distance>=200) {
-			mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(17.0f));
-		}else {
-			mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(19.0f));
-		}
-	}
+//	public void animateMapStatusByDistance(double distance) {
+//		if (distance>=20000) {
+//			mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(11.0f));
+//		}else if (distance<20000 && distance>=1000) {
+//			mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(12.0f));
+//		}else if(distance<10000 && distance>=5000){
+//			mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(13.0f));
+//		}else if (distance<5000 && distance>=2000) {
+//			mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(14.0f));
+//		}else if (distance<2000 && distance>=1000) {
+//			mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(15.0f));
+//		}else if (distance<1000 && distance>=500) {
+//			mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(16.0f));
+//		}else if (distance<500 && distance>=200) {
+//			mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(17.0f));
+//		}else {
+//			mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(19.0f));
+//		}
+//	}
 
 	@Override
 	public void onDestroy() {

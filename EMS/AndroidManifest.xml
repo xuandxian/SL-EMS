@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.overtech.ems"
     android:versionCode="2"
-    android:versionName="2.0" >
+    android:versionName="2.0">
 
     <uses-sdk
         android:minSdkVersion="14"
@@ -11,6 +11,7 @@
     <permission
         android:name="com.overtech.ems.permission.JPUSH_MESSAGE"
         android:protectionLevel="signature" />
+
     <uses-permission android:name="com.overtech.ems.permission.JPUSH_MESSAGE" />
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
@@ -40,15 +41,18 @@
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <android:uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
-        android:name="com.overtech.ems.activity.MyApplication"
+        android:name=".activity.MyApplication"
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
-            android:name="com.overtech.ems.activity.common.SplashActivity"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:name=".activity.common.SplashActivity"
+            android:theme="@android:style/Theme.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -58,67 +62,69 @@
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
-                
-                <category android:name="android.intent.category.BROWSABLE"/>
-                
-                <data android:scheme="myapp" android:host="24t.app" android:pathPrefix="/openwith"/>
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="24t.app"
+                    android:pathPrefix="/openwith"
+                    android:scheme="myapp" />
             </intent-filter>
         </activity>
-		<service
+
+        <service
             android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote" >
+            android:process=":remote">
             <intent-filter>
-                <action android:name="com.baidu.location.service_v2.2" >
-                </action>
+                <action android:name="com.baidu.location.service_v2.2" />
             </intent-filter>
         </service>
+
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="pRtgsRZyxmePt5lPifOnVSS4" />
 
-        <activity android:name="com.overtech.ems.activity.BaseActivity" />
+        <activity android:name=".activity.BaseActivity" />
         <activity
-            android:name="com.overtech.ems.activity.common.LoginActivity"
-            android:launchMode="singleTask" >
-        </activity>
+            android:name=".activity.common.LoginActivity"
+            android:launchMode="singleTask" />
         <activity
-            android:name="com.overtech.ems.activity.parttime.MainActivity"
+            android:name=".activity.parttime.MainActivity"
             android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity android:name="com.overtech.ems.activity.common.password.LostPasswordActivity" />
-        <activity android:name="com.overtech.ems.activity.common.password.ResetPasswordActivity" />
-        <activity android:name="com.overtech.ems.activity.common.password.ResetPasswordSuccessActivity" />
-        <activity android:name="com.overtech.ems.activity.common.register.RegisterActivity" />
-        <activity android:name="com.overtech.ems.activity.common.register.RegisterSuccessActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalDeatilsActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.grabtask.GrabTaskDoFilterActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.grabtask.KeyWordSerachActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.tasklist.ScanCodeActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.common.PackageDetailActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.common.ElevatorDetailActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalAccountListActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalBoundsActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.personal.phoneno.ChangePhoneNoValidatePasswordActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.personal.phoneno.ChangePhoneNoValicateSmsCodeActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.personal.phoneno.ChangePhoneNoSuccessActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.tasklist.QueryTaskListActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.tasklist.QuestionResponseActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.tasklist.EvaluationActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.tasklist.TaskListPackageDetailActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.personal.PersonalChargeBackListActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.personal.others.PersonalHelpDocActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.personal.notice.PersonalNoticeActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.personal.notice.PersonalNoticeDetailActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.common.ShowCommunityLocationActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.personal.others.PersonalAboutAppActivity" />
-        <activity android:name="com.overtech.ems.activity.parttime.personal.others.PersonalAboutCompanyActivity" />
+        <activity android:name=".activity.common.password.LostPasswordActivity" />
+        <activity android:name=".activity.common.password.ResetPasswordActivity" />
+        <activity android:name=".activity.common.password.ResetPasswordSuccessActivity" />
+        <activity android:name=".activity.common.register.RegisterActivity" />
+        <activity android:name=".activity.common.register.RegisterSuccessActivity" />
+        <activity android:name=".activity.parttime.personal.PersonalDeatilsActivity" />
+        <activity android:name=".activity.parttime.grabtask.GrabTaskDoFilterActivity" />
+        <activity android:name=".activity.parttime.grabtask.KeyWordSerachActivity" />
+        <activity android:name=".activity.parttime.tasklist.ScanCodeActivity" />
+        <activity android:name=".activity.parttime.common.PackageDetailActivity" />
+        <activity android:name=".activity.parttime.common.ElevatorDetailActivity" />
+        <activity android:name=".activity.parttime.personal.PersonalAccountListActivity" />
+        <activity android:name=".activity.parttime.personal.PersonalBoundsActivity" />
+        <activity android:name=".activity.parttime.personal.phoneno.ChangePhoneNoValidatePasswordActivity" />
+        <activity android:name=".activity.parttime.personal.phoneno.ChangePhoneNoValicateSmsCodeActivity" />
+        <activity android:name=".activity.parttime.personal.phoneno.ChangePhoneNoSuccessActivity" />
+        <activity android:name=".activity.parttime.tasklist.QueryTaskListActivity" />
+        <activity android:name=".activity.parttime.tasklist.QuestionResponseActivity" />
+        <activity android:name=".activity.parttime.tasklist.EvaluationActivity" />
+        <activity android:name=".activity.parttime.tasklist.TaskListPackageDetailActivity" />
+        <activity android:name=".activity.parttime.personal.PersonalChargeBackListActivity" />
+        <activity android:name=".activity.parttime.personal.others.PersonalHelpDocActivity" />
+        <activity android:name=".activity.parttime.personal.notice.PersonalNoticeActivity" />
+        <activity android:name=".activity.parttime.personal.notice.PersonalNoticeDetailActivity" />
+        <activity android:name=".activity.parttime.common.ShowCommunityLocationActivity" />
+        <activity android:name=".activity.parttime.personal.others.PersonalAboutAppActivity" />
+        <activity android:name=".activity.parttime.personal.others.PersonalAboutCompanyActivity" />
 
         <!-- Required SDK核心功能 -->
         <activity
             android:name="cn.jpush.android.ui.PushActivity"
             android:configChanges="orientation|keyboardHidden"
             android:exported="false"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:theme="@android:style/Theme.NoTitleBar">
             <intent-filter>
                 <action android:name="cn.jpush.android.ui.PushActivity" />
 
@@ -130,15 +136,14 @@
         <service
             android:name="cn.jpush.android.service.DownloadService"
             android:enabled="true"
-            android:exported="false" >
-        </service>
+            android:exported="false" />
 
         <!-- since 1.8.0 option 可选项。用于同一设备中不同应用的JPush服务相互拉起的功能。 -->
         <!-- 若不启用该功能可删除该组件，将不拉起其他应用也不能被其他应用拉起 -->
         <service
             android:name="cn.jpush.android.service.DaemonService"
             android:enabled="true"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.DaemonService" />
 
@@ -151,7 +156,7 @@
         <service
             android:name="cn.jpush.android.service.PushService"
             android:enabled="true"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.REGISTER" />
                 <action android:name="cn.jpush.android.intent.REPORT" />
@@ -163,10 +168,10 @@
         <receiver
             android:name="cn.jpush.android.service.PushReceiver"
             android:enabled="true"
-            android:exported="false" >
-            <intent-filter android:priority="1000" >
+            android:exported="false">
+            <intent-filter android:priority="1000">
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />
- <!-- Required  显示通知栏 -->
+                <!-- Required  显示通知栏 -->
                 <category android:name="com.overtech.ems" />
             </intent-filter>
             <intent-filter>
@@ -187,23 +192,23 @@
             android:name="cn.jpush.android.service.AlarmReceiver"
             android:exported="false" />
         <receiver
-            android:name="com.overtech.ems.receiver.MyPushReceiver"
+            android:name=".receiver.MyPushReceiver"
             android:enabled="true"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.REGISTRATION" />
- <!-- Required  用户注册SDK的intent -->
+                <!-- Required  用户注册SDK的intent -->
                 <action android:name="cn.jpush.android.intent.UNREGISTRATION" />
                 <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" />
- <!-- Required  用户接收SDK消息的intent -->
+                <!-- Required  用户接收SDK消息的intent -->
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" />
- <!-- Required  用户接收SDK通知栏信息的intent -->
+                <!-- Required  用户接收SDK通知栏信息的intent -->
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" />
- <!-- Required  用户打开自定义通知栏的intent -->
+                <!-- Required  用户打开自定义通知栏的intent -->
                 <action android:name="cn.jpush.android.intent.ACTION_RICHPUSH_CALLBACK" />
- <!-- Optional 用户接受Rich Push Javascript 回调函数的intent -->
+                <!-- Optional 用户接受Rich Push Javascript 回调函数的intent -->
                 <action android:name="cn.jpush.android.intent.CONNECTION" />
- <!-- 接收网络变化 连接/断开 since 1.6.3 -->
+                <!-- 接收网络变化 连接/断开 since 1.6.3 -->
                 <category android:name="com.overtech.ems" />
             </intent-filter>
         </receiver>
@@ -214,13 +219,13 @@
         <meta-data
             android:name="JPUSH_APPKEY"
             android:value="a2bef218730286d3c4aa7ade" />
- <!-- </>值来自开发者平台取得的AppKey -->
+        <!-- </>值来自开发者平台取得的AppKey -->
         <activity
             android:name="com.mob.tools.MobUIShell"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:windowSoftInputMode="stateHidden|adjustResize" >
+            android:windowSoftInputMode="stateHidden|adjustResize">
             <intent-filter>
                 <data android:scheme="tencent100371282" />
 
@@ -243,6 +248,8 @@
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity android:name=".activity.parttime.personal.password.ValicatePasswordActivity" />
+        <activity android:name=".activity.parttime.personal.password.UpdatePasswordActivity"></activity>
     </application>
 
 </manifest>

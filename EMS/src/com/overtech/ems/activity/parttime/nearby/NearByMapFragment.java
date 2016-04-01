@@ -97,10 +97,8 @@ public class NearByMapFragment extends BaseFragment {
 		if (null == bundle) {
 			return;
 		}
-		ArrayList<TaskPackage> list = (ArrayList<TaskPackage>) bundle
-				.getSerializable("taskPackage");
-		myLocation = new LatLng(bundle.getDouble(Constant.LATITUDE),
-				bundle.getDouble(Constant.LONGITUDE));
+		ArrayList<TaskPackage> list = (ArrayList<TaskPackage>) bundle.getSerializable("taskPackage");
+		myLocation = new LatLng(bundle.getDouble(Constant.LATITUDE), bundle.getDouble(Constant.LONGITUDE));
 		addOverLay(list);
 		setMyLocationMarker(myLocation);
 	}
@@ -108,7 +106,7 @@ public class NearByMapFragment extends BaseFragment {
 	private void initView(View view) {
 		mMapView = (MapView) view.findViewById(R.id.bmapView);
 		mBaiduMap = mMapView.getMap();
-		mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(17.0f));// 缩放到16
+		mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(13.0f));// 缩放到13
 	}
 
 	private void getDataByLatlng(String url, String flag, Param... params) {
@@ -164,22 +162,21 @@ public class NearByMapFragment extends BaseFragment {
 		if (null == dataList || dataList.size() == 0) {
 			Utilities.showToast("无数据", context);
 		} else {
-			if (null != longPressLocation) {
-				OverlayOptions ooCircle = new CircleOptions()
-						.fillColor(0x6663B8FF).center(longPressLocation)
-						.stroke(new Stroke(1, 0x330000ff)).radius(10000);
-				mBaiduMap.addOverlay(ooCircle);
-				MapStatusUpdate u = MapStatusUpdateFactory
-						.newLatLng(longPressLocation);
-				mBaiduMap.animateMapStatus(u);
-			}
+//			if (null != longPressLocation) {
+//				OverlayOptions ooCircle = new CircleOptions()
+//						.fillColor(0x6663B8FF).center(longPressLocation)
+//						.stroke(new Stroke(1, 0x330000ff)).radius(10000);
+//				mBaiduMap.addOverlay(ooCircle);
+//				MapStatusUpdate u = MapStatusUpdateFactory
+//						.newLatLng(longPressLocation);
+//				mBaiduMap.animateMapStatus(u);
+//			}
 			for (int i = 0; i < dataList.size(); i++) {
 				data = dataList.get(i);
 				String lat = data.getLatitude();
 				String lon = data.getLongitude();
 				if (!(TextUtils.isEmpty(lat) || TextUtils.isEmpty(lon))) {
-					LatLng ll = new LatLng(Double.parseDouble(lat),
-							Double.parseDouble(lon));
+					LatLng ll = new LatLng(Double.parseDouble(lat), Double.parseDouble(lon));
 					Button button = new Button(getActivity());
 					button.setBackgroundResource(R.drawable.map_popcontent);
 					button.setGravity(Gravity.CENTER);
@@ -187,9 +184,7 @@ public class NearByMapFragment extends BaseFragment {
 					button.setTextColor(Color.WHITE);
 					button.setText(data.getTaskPackageName());
 					bitmap = BitmapDescriptorFactory.fromView(button);
-					mOverlayOptions = new MarkerOptions().position(ll)
-							.icon(bitmap).zIndex(11).draggable(false)
-							.period(10);
+					mOverlayOptions = new MarkerOptions().position(ll).icon(bitmap).zIndex(13).draggable(false).period(10);
 					mOverlayOptions.animateType(MarkerAnimateType.drop);
 					mMarker = (Marker) (mBaiduMap.addOverlay(mOverlayOptions));
 					Bundle bundle = new Bundle();

@@ -7,7 +7,7 @@
     <include
         android:id="@+id/include_phone_change"
         layout="@layout/headview" />
-
+<!--
     <RelativeLayout
         android:id="@+id/rl_change_title"
         android:layout_width="match_parent"
@@ -56,12 +56,14 @@
                 android:textColor="#757575" />
         </LinearLayout>
     </RelativeLayout>
+    -->
 
     <RelativeLayout
-        android:id="@+id/rl_register_1 "
+        android:id="@+id/rl_register"
         android:layout_width="match_parent"
         android:layout_height="55dp"
-        android:layout_below="@+id/rl_change_title"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/include_phone_change"
         android:background="@color/main_white" >
 
         <com.overtech.ems.widget.EditTextWithDelete
@@ -104,7 +106,7 @@
         android:layout_width="match_parent"
         android:layout_height="55dp"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/rl_register_1 "
+        android:layout_below="@+id/rl_register"
         android:background="@color/main_white" >
 
         <com.overtech.ems.widget.EditTextWithDelete
@@ -114,7 +116,7 @@
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
             android:background="@drawable/shape_input"
-            android:hint="请输入登录密码"
+            android:hint="请输入原密码"
             android:inputType="textPassword"
             android:maxLength="18" />
     </RelativeLayout>
