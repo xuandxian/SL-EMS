@@ -35,6 +35,7 @@ import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.AppUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
+import com.overtech.ems.utils.StackManager;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.squareup.okhttp.Call;
@@ -121,9 +122,10 @@ public class PackageDetailActivity extends BaseActivity {
 					Utilities.showToast("维保日期的电梯数量已经超过10台，不能够再抢单。", context);
 				}else {
 					Utilities.showToast("用户账户异常", context);
-//					Intent intent=new Intent(PackageDetailActivity.this,LoginActivity.class);
-//					startActivity(intent);
-//					finish();
+					statckInstance.popTopActivitys(PackageDetailActivity.class);
+					Intent intent=new Intent(PackageDetailActivity.this,LoginActivity.class);
+					startActivity(intent);
+					finish();
 					System.exit(0);
 				}
 				break;
