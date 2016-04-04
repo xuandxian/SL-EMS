@@ -111,21 +111,13 @@ public class RegisterAddPersonInfoFragment extends Fragment implements
 			break;
 		case R.id.btn_next_fragment:
 			nameContent=mName.getText().toString().trim();
-			if(TextUtils.isEmpty(nameContent)){
-				Utilities.showToast("姓名不能为空", mContext);
-				return;
-			}
-			if(!AppUtils.isValidString(nameContent)){
-				Utilities.showToast("姓名格式不对", mContext);
+			if(!Utilities.isChinese(nameContent)){
+				Utilities.showToast("姓名输入不正确", mContext);
 				return;
 			}
 			idNumContent=mIdNum.getText().toString().trim();
-			if(TextUtils.isEmpty(idNumContent)){
-				Utilities.showToast("身份证不能为空", mContext);
-				return;
-			}
-			if(!AppUtils.IDCardValidate(idNumContent)){
-				Utilities.showToast("身份证格式不对", mContext);
+			if(TextUtils.isEmpty(idNumContent)||!AppUtils.IDCardValidate(idNumContent)){
+				Utilities.showToast("身份证输入不正确", mContext);
 				return;
 			}
 			workNumContent = mWorkNum.getText().toString().trim();

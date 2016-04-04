@@ -280,13 +280,4 @@ public class AppUtils {
         Matcher m=pattern.matcher(strDate);
         return m.matches();
     }
-    
-    /**
-     * 功能:判断名字
-     */
-    public static boolean isValidString(String str){
-    	Pattern pattern=Pattern.compile("^(?:[\\u4e00-\\u9fa5]*\\w*\\s*)+$");
-    	Matcher matcher=pattern.matcher(str);
-    	return matcher.matches();
-    }
 }

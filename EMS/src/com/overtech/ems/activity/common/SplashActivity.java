@@ -43,9 +43,11 @@ public class SplashActivity extends BaseActivity {
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
 				Utilities.showToast("服务端异常", context);
+				finish();
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
 				Utilities.showToast("网络异常", context);
+				finish();
 				break;
 			case StatusCode.LOGIN_NOT_EXIST:
 				Utilities.showToast("用户账户异常", context);

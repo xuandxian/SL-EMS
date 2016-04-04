@@ -37,7 +37,7 @@ public class ChangePhoneNoValidatePasswordActivity extends BaseActivity implemen
 	private TextView mHeadContent;
 	private ImageView mDoBack;
 	private Button mNextContent;
-	private String phone,flag;
+	private String mPhoneNo,flag;
 	private EditTextWithDelete mPhone;
 	private EditTextWithDelete mPassword;
 
@@ -50,6 +50,7 @@ public class ChangePhoneNoValidatePasswordActivity extends BaseActivity implemen
 					startActivity(intent);
 				}else if(TextUtils.equals("1",flag)){
 					Intent intent = new Intent(ChangePhoneNoValidatePasswordActivity.this,ResetPasswordActivity.class);
+					intent.putExtra("mPhoneNo", mPhoneNo);
 					startActivity(intent);
 				}
 				break;
@@ -72,7 +73,7 @@ public class ChangePhoneNoValidatePasswordActivity extends BaseActivity implemen
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_change_phoneno_vc);
 		statckInstance.pushActivity(this);
-		phone = getIntent().getStringExtra("phone");
+		mPhoneNo = getIntent().getStringExtra("phone");
 		flag = getIntent().getStringExtra("flag");
 		initView();
 		initEvent();
@@ -94,7 +95,7 @@ public class ChangePhoneNoValidatePasswordActivity extends BaseActivity implemen
 		mDoBack = (ImageView) findViewById(R.id.iv_headBack);
 		mNextContent = (Button) findViewById(R.id.btn_next);
 		mPhone = (EditTextWithDelete) findViewById(R.id.et_phone);
-		mPhone.setHint(phone);
+		mPhone.setHint(mPhoneNo);
 		mPassword = (EditTextWithDelete) findViewById(R.id.et_verificate_password);
 	}
 
