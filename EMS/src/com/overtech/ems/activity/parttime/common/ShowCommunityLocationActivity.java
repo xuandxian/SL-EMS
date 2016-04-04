@@ -76,6 +76,7 @@ public class ShowCommunityLocationActivity extends BaseActivity {
 	private void initBaiduMap() {
 		mMapView = (MapView) findViewById(R.id.bmapView);
 		mBaiduMap = mMapView.getMap();
+		mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(15.0f));// 缩放到15
 		mLocationClient = new LocationClient(this);
 		mLocationClient.registerLocationListener(myListener);// 注册定位监听接口
 		LocationClientOption option = new LocationClientOption();
