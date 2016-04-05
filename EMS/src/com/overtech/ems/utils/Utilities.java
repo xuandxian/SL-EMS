@@ -180,7 +180,7 @@ public class Utilities {
 	}
 	
 	public static boolean isAllChinese(String s) {
-		String string = "[\u4E00-\u9FA5\\p{p}]){2,4}";
+		String string = "([\\u4E00-\\u9FA5\\\\P{p}]){2,4}";
 		Pattern p = Pattern.compile(string);
 		Matcher m = p.matcher(s);
 		return m.matches();
