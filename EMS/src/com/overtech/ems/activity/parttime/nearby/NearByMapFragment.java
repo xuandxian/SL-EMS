@@ -147,6 +147,14 @@ public class NearByMapFragment extends BaseFragment {
 		mBaiduMap.addOverlay(option);
 		MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(myLocation);
 		mBaiduMap.animateMapStatus(u);
+		Button button =new Button(getActivity());
+		button.setBackgroundResource(R.drawable.map_bubble_info);
+		button.setGravity(Gravity.CENTER);
+		button.setPadding(5, 0, 5, 30);
+		button.setTextColor(Color.GRAY);
+		button.setText("我的位置");
+		InfoWindow myInfoWindow=new InfoWindow(button, point, -47);
+		mBaiduMap.showInfoWindow(myInfoWindow);
 	}
 
 	public void addOverLay(ArrayList<TaskPackage> dataList) {
