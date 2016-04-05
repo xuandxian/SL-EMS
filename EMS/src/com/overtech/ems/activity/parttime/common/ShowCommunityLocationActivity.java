@@ -28,6 +28,7 @@ import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
+import com.overtech.ems.activity.parttime.common.BaiduMapInfoWindow;
 
 public class ShowCommunityLocationActivity extends BaseActivity {
 	private TextView mHeadContent;

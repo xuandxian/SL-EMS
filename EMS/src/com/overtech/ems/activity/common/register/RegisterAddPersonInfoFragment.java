@@ -111,7 +111,7 @@ public class RegisterAddPersonInfoFragment extends Fragment implements
 			break;
 		case R.id.btn_next_fragment:
 			nameContent=mName.getText().toString().trim();
-			if(!Utilities.isChinese(nameContent)){
+			if(!Utilities.isAllChinese(nameContent)){
 				Utilities.showToast("姓名输入不正确", mContext);
 				return;
 			}
