@@ -112,7 +112,7 @@ public class RegisterAddPersonInfoFragment extends Fragment implements
 		case R.id.btn_next_fragment:
 			nameContent=mName.getText().toString().trim();
 			if(!Utilities.isAllChinese(nameContent)){
-				Utilities.showToast("姓名输入不正确", mContext);
+				Utilities.showToast("姓名必须为中文", mContext);
 				return;
 			}
 			idNumContent=mIdNum.getText().toString().trim();
