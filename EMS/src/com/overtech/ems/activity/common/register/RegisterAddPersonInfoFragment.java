@@ -1,9 +1,9 @@
 package com.overtech.ems.activity.common.register;
 
 import android.app.Activity;
-import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,8 +56,6 @@ public class RegisterAddPersonInfoFragment extends Fragment implements
 		return view;
 	}
 
-	
-
 	private void findViewById(View v) {
 		mHeadTitle = (TextView) v.findViewById(R.id.tv_headTitle);
 		mDoBack = (ImageView) v.findViewById(R.id.iv_headBack);
@@ -102,6 +100,7 @@ public class RegisterAddPersonInfoFragment extends Fragment implements
 			}
 		});
 	}
+
 	@Override
 	public void onClick(View arg0) {
 		// TODO Auto-generated method stub
@@ -110,26 +109,27 @@ public class RegisterAddPersonInfoFragment extends Fragment implements
 			getActivity().onBackPressed();
 			break;
 		case R.id.btn_next_fragment:
-			nameContent=mName.getText().toString().trim();
-			if(!Utilities.isChinese(nameContent)){
+			nameContent = mName.getText().toString().trim();
+			if (!Utilities.isChinese(nameContent)) {
 				Utilities.showToast("姓名输入不正确", mContext);
 				return;
 			}
-			idNumContent=mIdNum.getText().toString().trim();
-			if(TextUtils.isEmpty(idNumContent)||!AppUtils.IDCardValidate(idNumContent)){
+			idNumContent = mIdNum.getText().toString().trim();
+			if (TextUtils.isEmpty(idNumContent)
+					|| !AppUtils.IDCardValidate(idNumContent)) {
 				Utilities.showToast("身份证输入不正确", mContext);
 				return;
 			}
 			workNumContent = mWorkNum.getText().toString().trim();
-			if(TextUtils.isEmpty(workNumContent)){
+			if (TextUtils.isEmpty(workNumContent)) {
 				Utilities.showToast("上岗证编号不能为空", mContext);
 				return;
 			}
-			if(cityContent.equals("城市选择")){
+			if (cityContent.equals("城市选择")) {
 				Utilities.showToast("您还没有选择城市", mContext);
 				return;
 			}
-			if(zoneContent.equals("区域选择")){
+			if (zoneContent.equals("区域选择")) {
 				Utilities.showToast("您还没有选择区域", mContext);
 				return;
 			}

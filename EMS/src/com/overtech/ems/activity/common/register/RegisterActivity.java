@@ -5,13 +5,15 @@ import java.io.IOException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
+
 import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
@@ -76,14 +78,16 @@ public class RegisterActivity extends BaseActivity implements
 				stopProgressDialog();
 				break;
 			}
-		};
+		}
+
+		;
 	};
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_register);
-		manager = getFragmentManager();
+		manager = getSupportFragmentManager();
 		FragmentTransaction transaction = manager.beginTransaction();
 		if (mPrivacyItemFragment == null) {
 			mPrivacyItemFragment = new RegisterPrivacyItemFragment();

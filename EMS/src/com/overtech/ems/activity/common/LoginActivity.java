@@ -1,5 +1,9 @@
 package com.overtech.ems.activity.common;
 
+import java.io.IOException;
+import java.util.Date;
+
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,25 +19,28 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.common.password.LostPasswordActivity;
 import com.overtech.ems.activity.common.register.RegisterActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.config.StatusCode;
-import com.overtech.ems.entity.common.ServicesConfig;
-import com.overtech.ems.entity.parttime.Employee;
+import com.overtech.ems.config.SystemConfig;
+import com.overtech.ems.entity.bean.LoginBean;
+import com.overtech.ems.entity.common.Requester;
+import com.overtech.ems.http.OkHttpClientManager;
+import com.overtech.ems.http.OkHttpClientManager.ResultCallback;
+import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.security.MD5Util;
+import com.overtech.ems.utils.Logr;
+import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
-import com.google.gson.Gson;
-import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-import java.io.IOException;
-import java.util.Date;
 
 /**
  * @author Tony
@@ -50,40 +57,17 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	private TextView mRegister;
 	private ToggleButton mChangePasswordState;
 	private String encryptPassword;
-
-	private Handler handler = new Handler() {
-		public void handleMessage(android.os.Message msg) {
-			switch (msg.what) {
-			case StatusCode.LOGIN_SUCCESS:
-				mSharedPreferences.edit().putString(SharedPreferencesKeys.CURRENT_LOGIN_NAME,sUserName).commit();// 将登陆的用户名保存
-				mSharedPreferences.edit().putString(SharedPreferencesKeys.CURRENT_LOGIN_PASSWORD,encryptPassword).commit();// 将登陆的密码保存
-				mSharedPreferences.edit().putLong(SharedPreferencesKeys.CURRENT_DATE,new Date().getTime()).commit();
-				Intent intent = new Intent(LoginActivity.this,MainActivity.class);
-				startActivity(intent);
-				finish();
-				break;
-			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast("服务端异常", context);
-				break;
-			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast("网络异常", context);
-				break;
-			case StatusCode.LOGIN_NOT_EXIST:
-				Utilities.showToast("登陆失败", context);
-				break;
-			}
-			stopProgressDialog();
-		};
-	};
+	private Context ctx;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+		ctx = this;
 		initView();
 		initData();
 	}
-	
+
 	private void initView() {
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
 		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
@@ -101,13 +85,19 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		mLostPassword.setOnClickListener(this);
 		mRegister.setOnClickListener(this);
 		mHeadBack.setOnClickListener(this);
-		mChangePasswordState.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+		mChangePasswordState
+				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 					@Override
-					public void onCheckedChanged(CompoundButton buttonView,boolean isChecked) {
+					public void onCheckedChanged(CompoundButton buttonView,
+							boolean isChecked) {
 						if (isChecked) {
-							mPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());// 设置密码为可见的
+							mPassword
+									.setTransformationMethod(HideReturnsTransformationMethod
+											.getInstance());// 设置密码为可见的
 						} else {
-							mPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+							mPassword
+									.setTransformationMethod(PasswordTransformationMethod
+											.getInstance());
 						}
 					}
 				});
@@ -117,65 +107,91 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			public void onClick(View arg0) {
 				sUserName = mUserName.getText().toString().trim();
 				sPassword = mPassword.getText().toString().trim();
-				if (TextUtils.isEmpty(sUserName) || TextUtils.isEmpty(sPassword)) {
+				if (TextUtils.isEmpty(sUserName)
+						|| TextUtils.isEmpty(sPassword)) {
 					Utilities.showToast("输入不能为空", context);
 				} else {
-					doLogin(sUserName,sPassword);
+					doLogin(sUserName, sPassword);
 				}
 			}
 		});
 	}
-	
-	private void doLogin(String username,String password){
+
+	private void doLogin(String username, String password) {
 		try {
 			encryptPassword = MD5Util.md5Encode(password);
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
 		startProgressDialog("正在登录...");
-		Employee employee = new Employee();
-		employee.setLoginName(username);
-		employee.setPassword(encryptPassword);
-		Gson gson = new Gson();
-		String person = gson.toJson(employee);
-		Request request = httpEngine.createRequest(ServicesConfig.LOGIN, person);
-		Call call = httpEngine.createRequestCall(request);
-		call.enqueue(new Callback() {
+		Requester requester = new Requester();
+		requester.cmd = 1;
+		requester.pwd = encryptPassword;
+		requester.body.put("loginName", username);
+		ResultCallback<LoginBean> callback = new ResultCallback<LoginBean>() {
+
 			@Override
-			public void onFailure(Request request, IOException e) {
-				Message msg = new Message();
-				msg.what = StatusCode.RESPONSE_NET_FAILED;
-				handler.sendMessage(msg);
+			public void onError(Request request, Exception e) {
+				// TODO Auto-generated method stub
+				Logr.e(request.toString(), ctx);
 			}
 
 			@Override
-			public void onResponse(Response response)throws IOException {
-				Message msg = new Message();
-				if (response.isSuccessful()) {
-					String result = response.body().string();
-					if (TextUtils.equals("true", result)) {
-						msg.what = StatusCode.LOGIN_SUCCESS;
-					} else {
-						msg.what = StatusCode.LOGIN_NOT_EXIST;
-					}
+			public void onResponse(LoginBean response) {
+				// TODO Auto-generated method stub
+				stopProgressDialog();
+				int st = response.st;
+				if (st != 0) {
+					Utilities.showToast(response.msg, ctx);
 				} else {
-					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
+					String certificate = response.body.certificate;
+					String employeeType = response.body.employeeType;
+					String uid = response.body.uid;
+					SharePreferencesUtils.put(ctx,
+							SharedPreferencesKeys.CERTIFICATED, certificate);
+					SharePreferencesUtils.put(ctx, SharedPreferencesKeys.UID,
+							uid);
+					SharePreferencesUtils.put(ctx,
+							SharedPreferencesKeys.EMPLOYEETYPE, employeeType);
+
+					mSharedPreferences
+							.edit()
+							.putString(
+									SharedPreferencesKeys.CURRENT_LOGIN_NAME,
+									sUserName).commit();// 将登陆的用户名保存
+					mSharedPreferences
+							.edit()
+							.putString(
+									SharedPreferencesKeys.CURRENT_LOGIN_PASSWORD,
+									encryptPassword).commit();// 将登陆的密码保存
+					mSharedPreferences
+							.edit()
+							.putLong(SharedPreferencesKeys.CURRENT_DATE,
+									new Date().getTime()).commit();
+					Intent intent = new Intent(LoginActivity.this,
+							MainActivity.class);
+					startActivity(intent);
+					finish();
 				}
-				handler.sendMessage(msg);
 			}
-		});
-		
+
+		};
+		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
+				gson.toJson(requester));
+
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.tv_lost_password:
-			Intent intent = new Intent(LoginActivity.this,LostPasswordActivity.class);
+			Intent intent = new Intent(LoginActivity.this,
+					LostPasswordActivity.class);
 			startActivity(intent);
 			break;
 		case R.id.tv_login_by_message:
-			Intent intent2 = new Intent(LoginActivity.this,RegisterActivity.class);
+			Intent intent2 = new Intent(LoginActivity.this,
+					RegisterActivity.class);
 			startActivity(intent2);
 			break;
 		case R.id.iv_headBack:

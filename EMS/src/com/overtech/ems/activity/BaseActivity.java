@@ -1,7 +1,6 @@
 package com.overtech.ems.activity;
 
 import android.app.Activity;
-import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,14 +9,16 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
 import com.baidu.mapapi.SDKInitializer;
+import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.http.HttpEngine;
-import com.overtech.ems.http.OkHttpClientManager;
 import com.overtech.ems.utils.StackManager;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.CustomProgressDialog;
@@ -29,7 +30,7 @@ import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
  * @description Activity基类(网络、百度地图、返回手势，短信验证码)
  * @date 2015-10-05
  */
-public class BaseActivity extends Activity {
+public class BaseActivity extends FragmentActivity {
 
 	public static final String ACTION_NETWORK_CHANGE = "android.net.conn.CONNECTIVITY_CHANGE";
 	public static final String ACTION_NEW_VERSION = "apk.update.action";
@@ -44,8 +45,6 @@ public class BaseActivity extends Activity {
 
 	public FragmentManager fragmentManager;
 
-	public OkHttpClientManager okHttpClientManager;
-
 	public HttpEngine httpEngine;
 
 	public CustomProgressDialog progressDialog;
@@ -58,16 +57,17 @@ public class BaseActivity extends Activity {
 
 	private InputMethodManager imm;
 
+	public Gson gson;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		SDKInitializer.initialize(getApplicationContext());
 		application = (MyApplication) this.getApplication();
 		activity = this;
 		context = this;
-		fragmentManager = getFragmentManager();
+		fragmentManager = getSupportFragmentManager();
 		dialogBuilder = NiftyDialogBuilder.getInstance(this);
 		// sharePreferencesUtils=SharePreferencesUtils.getInstance();
 		httpEngine = HttpEngine.getInstance();
@@ -80,6 +80,9 @@ public class BaseActivity extends Activity {
 		progressDialog.setCanceledOnTouchOutside(false);
 		mSharedPreferences = application.getSharePreference();
 		statckInstance = StackManager.getStackManager();
+		if (gson == null) {
+			gson = new Gson();
+		}
 	}
 
 	@Override

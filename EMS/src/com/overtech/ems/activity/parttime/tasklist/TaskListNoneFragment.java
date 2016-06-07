@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
@@ -22,7 +23,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
-import com.baidu.location.LocationClient;
+
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.route.BaiduMapRoutePlan;
 import com.baidu.mapapi.utils.route.RouteParaOption;
@@ -30,12 +31,11 @@ import com.baidu.mapapi.utils.route.RouteParaOption.EBusStrategyType;
 import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
-import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.adapter.TaskListAdapter;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.bean.TaskPackageBean;
+import com.overtech.ems.entity.bean.TaskPackageBean.TaskPackage;
 import com.overtech.ems.entity.common.ServicesConfig;
-import com.overtech.ems.entity.parttime.TaskPackage;
 import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.AppUtils;
@@ -56,7 +56,6 @@ public class TaskListNoneFragment extends BaseFragment {
 	private SwipeMenuCreator creator;
 	private Activity mActivity;
 	private Effectstype effect;
-	private LocationClient mLocationClient;
 	private TaskListAdapter adapter;
 	private List<TaskPackage> list;
 	private LinearLayout mNoPage;
@@ -67,26 +66,28 @@ public class TaskListNoneFragment extends BaseFragment {
 	private int mPosition;
 	private Set<String> tagSet;
 	private String TAG = "24梯";
-	private final int REQUESTCODE = 0x11; //访问任务包详情的请求码
+	private final int REQUESTCODE = 0x11; // 访问任务包详情的请求码
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case StatusCode.TASKLIST_NONE_SUCCESS:
 				String json = (String) msg.obj;
 				Gson gson = new Gson();
-				TaskPackageBean bean = gson.fromJson(json,TaskPackageBean.class);
-				list = bean.getModel();
+				TaskPackageBean bean = gson.fromJson(json,
+						TaskPackageBean.class);
+				list = bean.body.data;
 				if (null == list || list.size() == 0) {
 					Utilities.showToast("无数据", mActivity);
 					mNoPage.setVisibility(View.VISIBLE);
 					mNoWifi.setVisibility(View.GONE);
-					if(adapter!=null){
+					if (adapter != null) {
 						adapter.clearAdapter();
 					}
 				} else {
 					mNoPage.setVisibility(View.GONE);
 					mNoWifi.setVisibility(View.GONE);
-					adapter = new TaskListAdapter(list, mActivity,StatusCode.TASK_NO);
+					adapter = new TaskListAdapter(list, mActivity,
+							StatusCode.TASK_NO);
 					mSwipeListView.setAdapter(adapter);
 				}
 				break;
@@ -112,10 +113,8 @@ public class TaskListNoneFragment extends BaseFragment {
 						.isCancelableOnTouchOutside(true).withDuration(700)
 						.withEffect(effect)
 						.withButtonDrawable(R.color.main_white)
-						.withButton1Text("取消")
-						.withButton1Color("#DD47BEE9")
-						.withButton2Text("确认")
-						.withButton2Color("#DD47BEE9")
+						.withButton1Text("取消").withButton1Color("#DD47BEE9")
+						.withButton2Text("确认").withButton2Color("#DD47BEE9")
 						.setButton1Click(new View.OnClickListener() {
 							@Override
 							public void onClick(View v) {
@@ -136,20 +135,24 @@ public class TaskListNoneFragment extends BaseFragment {
 					list.remove(mPosition);
 					adapter.notifyDataSetChanged();
 					tagSet.remove(mTaskNo);
-					JPushInterface.setAliasAndTags(getActivity().getApplicationContext(), null, tagSet,mTagsCallback);
+					JPushInterface.setAliasAndTags(getActivity()
+							.getApplicationContext(), null, tagSet,
+							mTagsCallback);
 				} else {
 					Utilities.showToast("退单失败", context);
 				}
 				break;
 			case StatusCode.MSG_SET_TAGS:
 				Log.d("24梯", "Set tags in handler.");
-				JPushInterface.setAliasAndTags(getActivity().getApplicationContext(), null, (Set<String>) msg.obj,mTagsCallback);
+				JPushInterface.setAliasAndTags(getActivity()
+						.getApplicationContext(), null, (Set<String>) msg.obj,
+						mTagsCallback);
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
 				Utilities.showToast((String) msg.obj, mActivity);
 				mNoPage.setVisibility(View.VISIBLE);
 				mNoWifi.setVisibility(View.GONE);
-				if(adapter!=null){
+				if (adapter != null) {
 					adapter.clearAdapter();
 				}
 				break;
@@ -157,7 +160,7 @@ public class TaskListNoneFragment extends BaseFragment {
 				Utilities.showToast((String) msg.obj, mActivity);
 				mNoPage.setVisibility(View.GONE);
 				mNoWifi.setVisibility(View.VISIBLE);
-				if(adapter!=null){
+				if (adapter != null) {
 					adapter.clearAdapter();
 				}
 				break;
@@ -209,8 +212,10 @@ public class TaskListNoneFragment extends BaseFragment {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_task_list_none,container, false);
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.fragment_task_list_none,
+				container, false);
 		initTag();
 		findViewById(view);
 		init();
@@ -227,22 +232,23 @@ public class TaskListNoneFragment extends BaseFragment {
 	}
 
 	private void findViewById(View view) {
-		mSwipeListView = (SwipeMenuListView) view.findViewById(R.id.sl_task_list_listview);
-		mNoPage=(LinearLayout) view.findViewById(R.id.page_no_result);
-		mNoWifi=(LinearLayout) view.findViewById(R.id.page_no_wifi);
-		reLoad=(Button) view.findViewById(R.id.load_btn_retry);
+		mSwipeListView = (SwipeMenuListView) view
+				.findViewById(R.id.sl_task_list_listview);
+		mNoPage = (LinearLayout) view.findViewById(R.id.page_no_result);
+		mNoWifi = (LinearLayout) view.findViewById(R.id.page_no_wifi);
+		reLoad = (Button) view.findViewById(R.id.load_btn_retry);
 	}
 
 	private void init() {
-		loginName = mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
-		mLocationClient = ((MyApplication) getActivity().getApplication()).mLocationClient;
-		mLocationClient.requestLocation();
-		mLocationClient.start();
+		loginName = mSharedPreferences.getString(
+				SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
 		initListView();
 		mSwipeListView.setMenuCreator(creator);
-		mSwipeListView.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+		mSwipeListView
+				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 					@Override
-					public void onMenuItemClick(int position, SwipeMenu menu,int index) {
+					public void onMenuItemClick(int position, SwipeMenu menu,
+							int index) {
 						switch (index) {
 						case 0:// 导航
 							LatLng startPoint = adapter.getCurrentLocation();
@@ -251,8 +257,9 @@ public class TaskListNoneFragment extends BaseFragment {
 							startNavicate(startPoint, endPoint, endName);
 							break;
 						case 1:// t退单
-							TaskPackage data = (TaskPackage) adapter.getItem(position);
-							mTaskNo = data.getTaskNo();
+							TaskPackage data = (TaskPackage) adapter
+									.getItem(position);
+							mTaskNo = data.taskNo;
 							mPosition = position;
 							doChargeBackTaskValidateTime(mTaskNo);
 							break;
@@ -262,15 +269,18 @@ public class TaskListNoneFragment extends BaseFragment {
 		mSwipeListView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> parent, View view,int position, long id) {
-				TaskPackage data = (TaskPackage) parent.getAdapter().getItem(position);
-				Intent intent = new Intent(mActivity,TaskListPackageDetailActivity.class);
-				intent.putExtra(Constant.TASKNO, data.getTaskNo());
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				TaskPackage data = (TaskPackage) parent.getAdapter().getItem(
+						position);
+				Intent intent = new Intent(mActivity,
+						TaskListPackageDetailActivity.class);
+				intent.putExtra(Constant.TASKNO, data.taskNo);
 				startActivityForResult(intent, REQUESTCODE);
 			}
 		});
 		reLoad.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View arg0) {
 				getDataFromServer();
@@ -278,16 +288,17 @@ public class TaskListNoneFragment extends BaseFragment {
 		});
 		getDataFromServer();
 	}
-	
-    //侧滑退单，验证该维保单号的时间
+
+	// 侧滑退单，验证该维保单号的时间
 	protected void doChargeBackTaskValidateTime(String taskNo) {
 		Param param = new Param(Constant.TASKNO, mTaskNo);
-		Request request = httpEngine.createRequest(ServicesConfig.CHARGE_BACK_TASK_VALIDATE_TIME, param);
+		Request request = httpEngine.createRequest(
+				ServicesConfig.CHARGE_BACK_TASK_VALIDATE_TIME, param);
 		Call call = httpEngine.createRequestCall(request);
-		call.enqueue(new com.squareup.okhttp.Callback(){
+		call.enqueue(new com.squareup.okhttp.Callback() {
 
 			@Override
-			public void onResponse(Response response)throws IOException {
+			public void onResponse(Response response) throws IOException {
 				Message msg = new Message();
 				if (response.isSuccessful()) {
 					msg.what = StatusCode.VALIDATE_TIME_SUCCESS;
@@ -298,8 +309,9 @@ public class TaskListNoneFragment extends BaseFragment {
 				}
 				handler.sendMessage(msg);
 			}
+
 			@Override
-			public void onFailure(Request request,IOException e) {
+			public void onFailure(Request request, IOException e) {
 				Message msg = new Message();
 				msg.what = StatusCode.RESPONSE_NET_FAILED;
 				msg.obj = "网络异常";
@@ -307,16 +319,18 @@ public class TaskListNoneFragment extends BaseFragment {
 			}
 		});
 	}
-	//处理退单事件
+
+	// 处理退单事件
 	private void dealChargeBackTask() {
-		Param param1 = new Param(Constant.TASKNO,mTaskNo);
-		Param param2 = new Param(Constant.LOGINNAME,loginName);
-		Request request = httpEngine.createRequest(ServicesConfig.CHARGE_BACK_TASK, param1,param2);
+		Param param1 = new Param(Constant.TASKNO, mTaskNo);
+		Param param2 = new Param(Constant.LOGINNAME, loginName);
+		Request request = httpEngine.createRequest(
+				ServicesConfig.CHARGE_BACK_TASK, param1, param2);
 		Call call = httpEngine.createRequestCall(request);
-		call.enqueue(new com.squareup.okhttp.Callback(){
+		call.enqueue(new com.squareup.okhttp.Callback() {
 
 			@Override
-			public void onFailure(Request request,IOException e) {
+			public void onFailure(Request request, IOException e) {
 				Message msg = new Message();
 				msg.what = StatusCode.RESPONSE_NET_FAILED;
 				msg.obj = "网络异常";
@@ -324,7 +338,7 @@ public class TaskListNoneFragment extends BaseFragment {
 			}
 
 			@Override
-			public void onResponse(Response response)throws IOException {
+			public void onResponse(Response response) throws IOException {
 				Message msg = new Message();
 				if (response.isSuccessful()) {
 					msg.what = StatusCode.CHARGEBACK_SUCCESS;
@@ -334,15 +348,17 @@ public class TaskListNoneFragment extends BaseFragment {
 					msg.obj = "服务器异常";
 				}
 				handler.sendMessage(msg);
-			}});
+			}
+		});
 	}
 
 	private void getDataFromServer() {
 		startProgressDialog("正在加载...");
 		Param param = new Param(Constant.LOGINNAME, loginName);
-		Request request = httpEngine.createRequest(ServicesConfig.TASK_LIST_NONE, param);
+		Request request = httpEngine.createRequest(
+				ServicesConfig.TASK_LIST_NONE, param);
 		Call call = httpEngine.createRequestCall(request);
-		call.enqueue(new com.squareup.okhttp.Callback(){
+		call.enqueue(new com.squareup.okhttp.Callback() {
 
 			@Override
 			public void onFailure(Request request, IOException e) {
@@ -365,7 +381,7 @@ public class TaskListNoneFragment extends BaseFragment {
 				handler.sendMessage(msg);
 			}
 		});
-		
+
 	}
 
 	private void initListView() {
@@ -373,14 +389,16 @@ public class TaskListNoneFragment extends BaseFragment {
 			@Override
 			public void create(SwipeMenu menu) {
 				SwipeMenuItem navicateItem = new SwipeMenuItem(mActivity);
-				navicateItem.setBackground(new ColorDrawable(Color.rgb(0xFF,0x9D, 0x00)));
+				navicateItem.setBackground(new ColorDrawable(Color.rgb(0xFF,
+						0x9D, 0x00)));
 				navicateItem.setWidth(dp2px(90));
 				navicateItem.setTitle("导航");
 				navicateItem.setTitleSize(18);
 				navicateItem.setTitleColor(Color.WHITE);
 				menu.addMenuItem(navicateItem);
 				SwipeMenuItem deleteItem = new SwipeMenuItem(mActivity);
-				deleteItem.setBackground(new ColorDrawable(Color.rgb(0xFF,0x3A, 0x30)));
+				deleteItem.setBackground(new ColorDrawable(Color.rgb(0xFF,
+						0x3A, 0x30)));
 				deleteItem.setWidth(dp2px(90));
 				deleteItem.setTitle("退单");
 				deleteItem.setTitleSize(18);
@@ -390,10 +408,11 @@ public class TaskListNoneFragment extends BaseFragment {
 		};
 	}
 
-	public void startNavicate(LatLng startPoint, LatLng endPoint, String endName) {//endName暂时不使用
+	public void startNavicate(LatLng startPoint, LatLng endPoint, String endName) {// endName暂时不使用
 		// 构建 route搜索参数
-		RouteParaOption para = new RouteParaOption().startName("起点").startPoint(startPoint)
-				.endPoint(endPoint).endName("终点").busStrategyType(EBusStrategyType.bus_time_first);
+		RouteParaOption para = new RouteParaOption().startName("起点")
+				.startPoint(startPoint).endPoint(endPoint).endName("终点")
+				.busStrategyType(EBusStrategyType.bus_time_first);
 		try {
 			BaiduMapRoutePlan.setSupportWebRoute(true);
 			BaiduMapRoutePlan.openBaiduMapTransitRoute(para, mActivity);
@@ -406,13 +425,8 @@ public class TaskListNoneFragment extends BaseFragment {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == REQUESTCODE) {
-           getDataFromServer();
+			getDataFromServer();
 		}
 	}
 
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		mLocationClient.stop();
-	}
 }

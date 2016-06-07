@@ -3,21 +3,38 @@ package com.overtech.ems.activity.parttime.nearby;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
+
 import com.baidu.mapapi.model.LatLng;
 import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
 import com.overtech.ems.activity.adapter.GrabTaskAdapter;
 import com.overtech.ems.activity.common.LoginActivity;
+import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.bean.StatusCodeBean;
-import com.overtech.ems.entity.bean.TaskPackageBean;
+import com.overtech.ems.entity.bean.TaskPackageBean.TaskPackage;
 import com.overtech.ems.entity.common.ServicesConfig;
-import com.overtech.ems.entity.parttime.TaskPackage;
 import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.AppUtils;
@@ -33,21 +50,6 @@ import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-import android.R.integer;
-import android.app.Activity;
-import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 
 @SuppressWarnings("unchecked")
 public class NearByListFragment extends BaseFragment {
@@ -56,19 +58,20 @@ public class NearByListFragment extends BaseFragment {
 	private SwipeMenuCreator creator;
 	private Activity mActivity;
 	private Effectstype effect;
-	private ArrayList<TaskPackage> list;
+	private List<TaskPackage> list;
 	private LatLng myLocation;
 	private GrabTaskAdapter mAdapter;
 	private String tagItem;
 	private Set<String> tagSet;
-	
+
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			Gson gson = new Gson();
 			switch (msg.what) {
 			case StatusCode.GRAG_RESPONSE_SUCCESS:
 				String status = (String) msg.obj;
-				StatusCodeBean bean = gson.fromJson(status,StatusCodeBean.class);
+				StatusCodeBean bean = gson.fromJson(status,
+						StatusCodeBean.class);
 				String content = bean.getModel();
 				if (TextUtils.equals(content, "0")) {
 					Utilities.showToast("请不要重复抢单", context);
@@ -79,7 +82,9 @@ public class NearByListFragment extends BaseFragment {
 						Utilities.showToast("格式不对", context);
 					} else {
 						tagSet.add(tagItem);
-						JPushInterface.setAliasAndTags(getActivity().getApplicationContext(), null, tagSet,mTagsCallback);
+						JPushInterface.setAliasAndTags(getActivity()
+								.getApplicationContext(), null, tagSet,
+								mTagsCallback);
 					}
 				} else if (TextUtils.equals(content, "2")) {
 					Utilities.showToast("抢单成功，请到任务中查看", context);
@@ -97,9 +102,10 @@ public class NearByListFragment extends BaseFragment {
 					Utilities.showToast("差一点就抢到了", context);
 				} else if (TextUtils.equals(content, "4")) {
 					Utilities.showToast("维保日期的电梯数量已经超过10台，不能够再抢单。", context);
-				}else {
+				} else {
 					Utilities.showToast("用户账户异常", context);
-					Intent intent=new Intent(getActivity(),LoginActivity.class);
+					Intent intent = new Intent(getActivity(),
+							LoginActivity.class);
 					startActivity(intent);
 					getActivity().finish();
 				}
@@ -157,7 +163,8 @@ public class NearByListFragment extends BaseFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_nearby_list, container,false);
+		View view = inflater.inflate(R.layout.fragment_nearby_list, container,
+				false);
 		Set<String> tempSet = mSharedPreferences.getStringSet("tagSet", null);
 		if (tempSet == null) {
 			tagSet = new LinkedHashSet<String>();
@@ -174,8 +181,7 @@ public class NearByListFragment extends BaseFragment {
 		if (null == bundle) {
 			return;
 		}
-		list = (ArrayList<TaskPackage>) getArguments().getSerializable(
-				"taskPackage");
+		list = ((MainActivity) getActivity()).list;
 		myLocation = new LatLng(bundle.getDouble("latitude"),
 				bundle.getDouble("longitude"));
 	}
@@ -197,7 +203,7 @@ public class NearByListFragment extends BaseFragment {
 			}
 		};
 		mNearBySwipeListView.setMenuCreator(creator);
-		mAdapter = new GrabTaskAdapter(list, myLocation, mActivity);
+		mAdapter = new GrabTaskAdapter(list, mActivity);
 		mNearBySwipeListView.setAdapter(mAdapter);
 		mNearBySwipeListView
 				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
@@ -218,10 +224,10 @@ public class NearByListFragment extends BaseFragment {
 				Intent intent = new Intent(mActivity,
 						PackageDetailActivity.class);
 				Bundle bundle = new Bundle();
-				bundle.putString("CommunityName", data.getTaskPackageName());
-				bundle.putString("TaskNo", data.getTaskNo());
-				bundle.putString("Longitude", data.getLongitude());
-				bundle.putString("Latitude", data.getLatitude());
+				bundle.putString("CommunityName", data.taskPackageName);
+				bundle.putString("TaskNo", data.taskNo);
+				bundle.putString("Longitude", data.longitude);
+				bundle.putString("Latitude", data.latitude);
 				intent.putExtras(bundle);
 				startActivity(intent);
 			}
@@ -250,7 +256,7 @@ public class NearByListFragment extends BaseFragment {
 						startProgressDialog("正在抢单...");
 						String mLoginName = mSharedPreferences.getString(
 								SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
-						String mTaskNo = list.get(position).getTaskNo();
+						String mTaskNo = list.get(position).taskNo;
 						Param paramPhone = new Param(Constant.LOGINNAME,
 								mLoginName);
 						Param paramTaskNo = new Param(Constant.TASKNO, mTaskNo);

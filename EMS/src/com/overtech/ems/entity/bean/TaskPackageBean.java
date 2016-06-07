@@ -2,26 +2,31 @@ package com.overtech.ems.entity.bean;
 
 import java.util.List;
 
-import com.overtech.ems.entity.parttime.TaskPackage;
 /**
  * 
  * @author Will
- *	@解析抢单列表数据
+ * @解析抢单列表数据
  */
 public class TaskPackageBean {
-	private List<TaskPackage> model;
-	private boolean success;
-	public boolean isSuccess() {
-		return success;
+	public int st;
+	public String msg;
+	public Body body;
+
+	public class Body {
+		public String status;
+		public String taskNo;
+		public List<TaskPackage> data;
 	}
-	public void setSuccess(boolean success) {
-		this.success = success;
+
+	public class TaskPackage {
+		public String taskNo; // 维保单号
+		public String taskPackageName; // 项目名称
+		public String elevatorAmounts; // 电梯数量
+		public String isFinish; // 抢单人数
+		public String latitude; // 纬度
+		public String longitude; // 经度
+		public String maintenanceAddress; // 维保地点
+		public String maintenanceDate; // 维保日期
+		public String topState; // 是否置顶
 	}
-	public List<TaskPackage> getModel() {
-		return model;
-	}
-	public void setModel(List<TaskPackage> model) {
-		this.model = model;
-	}
-	
 }

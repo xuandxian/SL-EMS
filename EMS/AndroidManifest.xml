@@ -118,6 +118,7 @@
         <activity android:name=".activity.parttime.common.ShowCommunityLocationActivity" />
         <activity android:name=".activity.parttime.personal.others.PersonalAboutAppActivity" />
         <activity android:name=".activity.parttime.personal.others.PersonalAboutCompanyActivity" />
+        <activity android:name="com.overtech.ems.activity.fulltime.activity.MaintenanceDetailActivity"/>
 
         <!-- Required SDK核心功能 -->
         <activity

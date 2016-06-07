@@ -2,6 +2,7 @@ package com.overtech.ems.activity.parttime.nearby;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -16,19 +17,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.BaiduMap.OnMapLongClickListener;
 import com.baidu.mapapi.map.BaiduMap.OnMarkerClickListener;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
-import com.baidu.mapapi.map.CircleOptions;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MarkerOptions.MarkerAnimateType;
-import com.baidu.mapapi.map.OverlayOptions;
-import com.baidu.mapapi.map.Stroke;
 import com.baidu.mapapi.model.LatLng;
 import com.google.gson.Gson;
 import com.overtech.ems.R;
@@ -36,8 +33,7 @@ import com.overtech.ems.activity.BaseFragment;
 import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.bean.TaskPackageBean;
-import com.overtech.ems.entity.common.ServicesConfig;
-import com.overtech.ems.entity.parttime.TaskPackage;
+import com.overtech.ems.entity.bean.TaskPackageBean.TaskPackage;
 import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.Utilities;
@@ -57,15 +53,16 @@ public class NearByMapFragment extends BaseFragment {
 	private View view;
 	private TaskPackage data;
 	private LatLng myLocation, longPressLocation;
-	
+
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			Gson gson = new Gson();
 			switch (msg.what) {
 			case StatusCode.GET_DATA_BY_LOCATION_SUCCESS:
 				String json = (String) msg.obj;
-				TaskPackageBean tasks = gson.fromJson(json,TaskPackageBean.class);
-				ArrayList<TaskPackage> newData = (ArrayList<TaskPackage>) tasks.getModel();
+				TaskPackageBean tasks = gson.fromJson(json,
+						TaskPackageBean.class);
+				List<TaskPackage> newData = (ArrayList<TaskPackage>) tasks.body.data;
 				addOverLay(newData);
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
@@ -87,7 +84,7 @@ public class NearByMapFragment extends BaseFragment {
 		initView(view);
 		getExtralData();
 		setMarkerClick();
-//		setMapLongClick();
+		// setMapLongClick();
 		return view;
 	}
 
@@ -97,8 +94,10 @@ public class NearByMapFragment extends BaseFragment {
 		if (null == bundle) {
 			return;
 		}
-		ArrayList<TaskPackage> list = (ArrayList<TaskPackage>) bundle.getSerializable("taskPackage");
-		myLocation = new LatLng(bundle.getDouble(Constant.LATITUDE), bundle.getDouble(Constant.LONGITUDE));
+		ArrayList<TaskPackage> list = (ArrayList<TaskPackage>) bundle
+				.getSerializable("taskPackage");
+		myLocation = new LatLng(bundle.getDouble(Constant.LATITUDE),
+				bundle.getDouble(Constant.LONGITUDE));
 		addOverLay(list);
 		setMyLocationMarker(myLocation);
 	}
@@ -149,7 +148,7 @@ public class NearByMapFragment extends BaseFragment {
 		mBaiduMap.animateMapStatus(u);
 	}
 
-	public void addOverLay(ArrayList<TaskPackage> dataList) {
+	public void addOverLay(List<TaskPackage> dataList) {
 		if (mMapView == null) {
 			mMapView = (MapView) view.findViewById(R.id.bmapView);
 		}
@@ -162,34 +161,37 @@ public class NearByMapFragment extends BaseFragment {
 		if (null == dataList || dataList.size() == 0) {
 			Utilities.showToast("无数据", context);
 		} else {
-//			if (null != longPressLocation) {
-//				OverlayOptions ooCircle = new CircleOptions()
-//						.fillColor(0x6663B8FF).center(longPressLocation)
-//						.stroke(new Stroke(1, 0x330000ff)).radius(10000);
-//				mBaiduMap.addOverlay(ooCircle);
-//				MapStatusUpdate u = MapStatusUpdateFactory
-//						.newLatLng(longPressLocation);
-//				mBaiduMap.animateMapStatus(u);
-//			}
+			// if (null != longPressLocation) {
+			// OverlayOptions ooCircle = new CircleOptions()
+			// .fillColor(0x6663B8FF).center(longPressLocation)
+			// .stroke(new Stroke(1, 0x330000ff)).radius(10000);
+			// mBaiduMap.addOverlay(ooCircle);
+			// MapStatusUpdate u = MapStatusUpdateFactory
+			// .newLatLng(longPressLocation);
+			// mBaiduMap.animateMapStatus(u);
+			// }
 			for (int i = 0; i < dataList.size(); i++) {
 				data = dataList.get(i);
-				String lat = data.getLatitude();
-				String lon = data.getLongitude();
+				String lat = data.latitude;
+				String lon = data.longitude;
 				if (!(TextUtils.isEmpty(lat) || TextUtils.isEmpty(lon))) {
-					LatLng ll = new LatLng(Double.parseDouble(lat), Double.parseDouble(lon));
+					LatLng ll = new LatLng(Double.parseDouble(lat),
+							Double.parseDouble(lon));
 					Button button = new Button(getActivity());
 					button.setBackgroundResource(R.drawable.map_popcontent);
 					button.setGravity(Gravity.CENTER);
 					button.setPadding(5, 0, 5, 30);
 					button.setTextColor(Color.WHITE);
-					button.setText(data.getTaskPackageName());
+					button.setText(data.taskPackageName);
 					bitmap = BitmapDescriptorFactory.fromView(button);
-					mOverlayOptions = new MarkerOptions().position(ll).icon(bitmap).zIndex(13).draggable(false).period(10);
+					mOverlayOptions = new MarkerOptions().position(ll)
+							.icon(bitmap).zIndex(13).draggable(false)
+							.period(10);
 					mOverlayOptions.animateType(MarkerAnimateType.drop);
 					mMarker = (Marker) (mBaiduMap.addOverlay(mOverlayOptions));
-					Bundle bundle = new Bundle();
-					bundle.putSerializable("taskPackage", data);
-					mMarker.setExtraInfo(bundle);
+//					Bundle bundle = new Bundle();
+//					bundle.putSerializable("taskPackage", data);
+//					mMarker.setExtraInfo(bundle);
 				}
 			}
 		}
@@ -200,14 +202,17 @@ public class NearByMapFragment extends BaseFragment {
 
 			@Override
 			public boolean onMarkerClick(final Marker marker) {
-				if (marker.getExtraInfo()!=null) {
-					TaskPackage taskPackage = (TaskPackage) marker.getExtraInfo().get("taskPackage");
-					Intent intent = new Intent(activity,PackageDetailActivity.class);
+				if (marker.getExtraInfo() != null) {
+					TaskPackage taskPackage = (TaskPackage) marker
+							.getExtraInfo().get("taskPackage");
+					Intent intent = new Intent(activity,
+							PackageDetailActivity.class);
 					Bundle bundle = new Bundle();
-					bundle.putString("CommunityName",taskPackage.getTaskPackageName());
-					bundle.putString("TaskNo", taskPackage.getTaskNo());
-					bundle.putString("Longitude", taskPackage.getLongitude());
-					bundle.putString("Latitude", taskPackage.getLatitude());
+					bundle.putString("CommunityName",
+							taskPackage.taskPackageName);
+					bundle.putString("TaskNo", taskPackage.taskNo);
+					bundle.putString("Longitude", taskPackage.longitude);
+					bundle.putString("Latitude", taskPackage.latitude);
 					intent.putExtras(bundle);
 					startActivity(intent);
 				}
@@ -216,22 +221,22 @@ public class NearByMapFragment extends BaseFragment {
 		});
 	}
 
-	//长按地图事件，显示周围10km的维保任务包
-//	private void setMapLongClick() {
-//		mBaiduMap.setOnMapLongClickListener(new OnMapLongClickListener() {
-//
-//			@Override
-//			public void onMapLongClick(LatLng point) {
-//				mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(12.0f));
-//				longPressLocation = point;
-//				Param latitude = new Param(Constant.LATITUDE, String
-//						.valueOf(point.latitude));
-//				Param longitude = new Param(Constant.LONGITUDE, String
-//						.valueOf(point.longitude));
-//				getDataByLatlng(ServicesConfig.NEARBY, "1", latitude, longitude);
-//			}
-//		});
-//	}
+	// 长按地图事件，显示周围10km的维保任务包
+	// private void setMapLongClick() {
+	// mBaiduMap.setOnMapLongClickListener(new OnMapLongClickListener() {
+	//
+	// @Override
+	// public void onMapLongClick(LatLng point) {
+	// mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(12.0f));
+	// longPressLocation = point;
+	// Param latitude = new Param(Constant.LATITUDE, String
+	// .valueOf(point.latitude));
+	// Param longitude = new Param(Constant.LONGITUDE, String
+	// .valueOf(point.longitude));
+	// getDataByLatlng(ServicesConfig.NEARBY, "1", latitude, longitude);
+	// }
+	// });
+	// }
 
 	@Override
 	public void onDestroy() {

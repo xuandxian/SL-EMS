@@ -13,6 +13,7 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.text.TextUtils;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
@@ -45,15 +46,19 @@ public class ScanCodeActivity extends Activity implements Callback {
 	private ImageView mDoBack;
 	private TextView mHeadContent;
 	private Context mContext;
+	private String employeeType;
 	private String mElevatorNo;
+	public static String QZ = "全职";
+	public static String JZ = "兼职";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_task_list_capture);
+		employeeType = getIntent().getStringExtra(Constant.EMPLOYEETYPE);
 		CameraManager.init(getApplication());
-		mContext=ScanCodeActivity.this;
+		mContext = ScanCodeActivity.this;
 		viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
 		mHeadContent.setText("二维码扫描");
@@ -119,10 +124,15 @@ public class ScanCodeActivity extends Activity implements Callback {
 		if (mElevatorNo.equals("")) {
 			Utilities.showToast("扫描失败", mContext);
 		} else {
-			Intent intent = new Intent(ScanCodeActivity.this, QueryTaskListActivity.class);
-			intent.putExtra(Constant.ELEVATORNO,mElevatorNo);
-			startActivity(intent);
-			ScanCodeActivity.this.finish();
+			if (TextUtils.equals(QZ, employeeType)) {
+				// 前往维修清单
+			} else {
+				Intent intent = new Intent(ScanCodeActivity.this,
+						QueryTaskListActivity.class);
+				intent.putExtra(Constant.ELEVATORNO, mElevatorNo);
+				startActivity(intent);
+				ScanCodeActivity.this.finish();
+			}
 		}
 	}
 
@@ -135,7 +145,8 @@ public class ScanCodeActivity extends Activity implements Callback {
 			return;
 		}
 		if (handler == null) {
-			handler = new CaptureActivityHandler(this, decodeFormats,characterSet);
+			handler = new CaptureActivityHandler(this, decodeFormats,
+					characterSet);
 		}
 	}
 
@@ -182,9 +193,11 @@ public class ScanCodeActivity extends Activity implements Callback {
 			mediaPlayer = new MediaPlayer();
 			mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
 			mediaPlayer.setOnCompletionListener(beepListener);
-			AssetFileDescriptor file = getResources().openRawResourceFd(R.raw.beep);
+			AssetFileDescriptor file = getResources().openRawResourceFd(
+					R.raw.beep);
 			try {
-				mediaPlayer.setDataSource(file.getFileDescriptor(), file.getStartOffset(), file.getLength());
+				mediaPlayer.setDataSource(file.getFileDescriptor(),
+						file.getStartOffset(), file.getLength());
 				file.close();
 				mediaPlayer.setVolume(BEEP_VOLUME, BEEP_VOLUME);
 				mediaPlayer.prepare();

@@ -7,6 +7,7 @@ import android.os.Looper;
 import android.widget.ImageView;
 import com.google.gson.Gson;
 import com.google.gson.internal.$Gson$Types;
+import com.overtech.ems.utils.Logr;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.FormEncodingBuilder;
@@ -36,6 +37,8 @@ public class OkHttpClientManager {
 	private OkHttpClient mOkHttpClient;
 	private Handler mDelivery;
 	private Gson mGson;
+	public static final MediaType JSON = MediaType
+			.parse("application/json;charset=utf-8");
 
 	private OkHttpClientManager() {
 		mOkHttpClient = new OkHttpClient();
@@ -130,6 +133,19 @@ public class OkHttpClientManager {
 			Param... params) {
 		Request request = buildPostRequest(url, params);
 		deliveryResult(callback, request);
+	}
+
+	/**
+	 * 异步的post请求
+	 * 
+	 * @param url
+	 * @param calllback
+	 * @param jsonData
+	 */
+	private void _postAsyn(String url, final ResultCallback calllback,
+			String jsonData) {
+		Request request = buildPostRequest(url, jsonData);
+		deliveryResult(calllback, request);
 	}
 
 	/**
@@ -373,6 +389,11 @@ public class OkHttpClientManager {
 			throws IOException {
 		return getInstance()._postAsString(url, params);
 	}
+	//当前项目常用接口普
+	public static void postAsyn(String url, final ResultCallback callback,
+			String jsonData) {
+		getInstance()._postAsyn(url, callback, jsonData);
+	}
 
 	public static void postAsyn(String url, final ResultCallback callback,
 			Param... params) {
@@ -508,6 +529,7 @@ public class OkHttpClientManager {
 			public void onResponse(final Response response) {
 				try {
 					final String string = response.body().string();
+					Logr.e(string);
 					if (callback.mType == String.class) {
 						sendSuccessResultCallback(string, callback);
 					} else {
@@ -547,6 +569,14 @@ public class OkHttpClientManager {
 				}
 			}
 		});
+	}
+
+	private Request buildPostRequest(String url, String jsonData) {
+		if (jsonData == null) {
+			return null;
+		}
+		RequestBody requestBody = RequestBody.create(JSON, jsonData);
+		return new Request.Builder().url(url).post(requestBody).build();
 	}
 
 	private Request buildPostRequest(String url, Param[] params) {
