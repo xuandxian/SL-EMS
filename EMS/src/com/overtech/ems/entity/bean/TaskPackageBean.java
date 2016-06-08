@@ -22,7 +22,7 @@ public class TaskPackageBean {
 		public String taskNo; // 维保单号
 		public String taskPackageName; // 项目名称
 		public String elevatorAmounts; // 电梯数量
-		public String isFinish; // 抢单人数
+		public String grabNums; // 抢单人数
 		public String latitude; // 纬度
 		public String longitude; // 经度
 		public String maintenanceAddress; // 维保地点

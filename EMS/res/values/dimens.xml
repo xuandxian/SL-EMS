@@ -1,5 +1,6 @@
 <resources>
-    <!-- dialog UI  -->
+
+    <!-- dialog UI -->
     <dimen name="dialog_padding">35dp</dimen>
     <dimen name="common_margin">16dip</dimen>
     <dimen name="common_warning_line_space">5dp</dimen>
@@ -18,4 +19,7 @@
     <dimen name="calendar_month_title_bottommargin">4dp</dimen>
     <dimen name="calendar_text_medium">18sp</dimen>
     <dimen name="calendar_text_small">14sp</dimen>
+    <dimen name="maintenance_task_size">36sp</dimen>
+    <dimen name="maintenance_task_sub_size">24sp</dimen>
+
 </resources>

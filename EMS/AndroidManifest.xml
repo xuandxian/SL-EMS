@@ -120,7 +120,8 @@
         <activity android:name=".activity.parttime.personal.others.PersonalAboutAppActivity" />
         <activity android:name=".activity.parttime.personal.others.PersonalAboutCompanyActivity" />
         <activity android:name="com.overtech.ems.activity.fulltime.activity.MaintenanceDetailActivity"/>
-
+        <activity android:name="com.overtech.ems.activity.fulltime.activity.MaintenanceTaskActivity"/>
+		<activity android:name="com.overtech.ems.activity.fulltime.activity.MaintenanceTaskDetailActivity"/>
         <!-- Required SDK核心功能 -->
         <activity
             android:name="cn.jpush.android.ui.PushActivity"

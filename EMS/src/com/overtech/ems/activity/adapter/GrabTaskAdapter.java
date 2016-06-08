@@ -87,9 +87,9 @@ public class GrabTaskAdapter extends BaseAdapter {
 			}
 		}
 		holder.date.setText(data.maintenanceDate);
-		if (TextUtils.equals(data.isFinish, "0")) {
+		if (TextUtils.equals(data.grabNums, "0")) {
 			holder.iv_icon.setImageResource(R.drawable.icon_task_none);
-		} else if (TextUtils.equals(data.isFinish, "1")) {
+		} else if (TextUtils.equals(data.grabNums, "1")) {
 			holder.iv_icon.setImageResource(R.drawable.icon_task_done);
 		}
 		if (TextUtils.equals(data.topState, "1")) {

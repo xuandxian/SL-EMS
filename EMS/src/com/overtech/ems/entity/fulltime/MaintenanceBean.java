@@ -16,6 +16,7 @@ public class MaintenanceBean {
 	public class Body {
 		//维修单明细部分
 		public String repairAddress;
+		public String elevatorNo;
 		public String elevatorBrand;
 		public String storeySite;
 		public String latitude;

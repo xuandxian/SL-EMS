@@ -25,6 +25,7 @@ import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.overtech.ems.R;
 import com.overtech.ems.utils.Utilities;
+import com.overtech.ems.activity.fulltime.activity.MaintenanceTaskActivity;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.widget.zxing.camera.CameraManager;
 import com.overtech.ems.widget.zxing.decoding.CaptureActivityHandler;
@@ -126,6 +127,11 @@ public class ScanCodeActivity extends Activity implements Callback {
 		} else {
 			if (TextUtils.equals(QZ, employeeType)) {
 				// 前往维修清单
+				Intent intent = new Intent(ScanCodeActivity.this,
+						MaintenanceTaskActivity.class);
+				intent.putExtra(Constant.ELEVATORNO, mElevatorNo);
+				startActivity(intent);
+				finish();
 			} else {
 				Intent intent = new Intent(ScanCodeActivity.this,
 						QueryTaskListActivity.class);

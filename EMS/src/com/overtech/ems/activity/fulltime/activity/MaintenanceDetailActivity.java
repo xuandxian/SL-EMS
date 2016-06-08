@@ -2,6 +2,7 @@ package com.overtech.ems.activity.fulltime.activity;
 
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,9 +13,15 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.utils.route.BaiduMapRoutePlan;
+import com.baidu.mapapi.utils.route.RouteParaOption;
+import com.baidu.mapapi.utils.route.RouteParaOption.EBusStrategyType;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
+import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.common.LoginActivity;
+import com.overtech.ems.activity.parttime.common.ElevatorDetailActivity;
 import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.common.Requester;
 import com.overtech.ems.entity.fulltime.MaintenanceBean;
@@ -44,6 +51,10 @@ public class MaintenanceDetailActivity extends BaseActivity implements
 	private String uid;
 	private String certificate;
 	private String workorderCode;
+	private String partnerTel;
+	private String elevatorNo;
+	private LatLng curLatLng;
+	private LatLng desLatLng;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +114,11 @@ public class MaintenanceDetailActivity extends BaseActivity implements
 					faultCause.setText(response.body.faultCause);
 					faultFrom.setText(response.body.faultFrom);
 					faultComponent.setText(response.body.faultComponent);
+					partnerTel = response.body.partnerTel;
+					elevatorNo = response.body.elevatorNo;
+					desLatLng = new LatLng(
+							Double.parseDouble(response.body.latitude),
+							Double.parseDouble(response.body.longitude));
 				}
 				stopProgressDialog();
 			}
@@ -116,6 +132,9 @@ public class MaintenanceDetailActivity extends BaseActivity implements
 		title.setText(workorderCode);
 		more.setVisibility(View.VISIBLE);
 		more.setOnClickListener(this);
+		double latitude = ((MyApplication) getApplicationContext()).latitude;
+		double longitude = ((MyApplication) getApplicationContext()).longitude;
+		curLatLng = new LatLng(latitude, longitude);
 	}
 
 	private void initView() {
@@ -153,11 +172,42 @@ public class MaintenanceDetailActivity extends BaseActivity implements
 				morePopupWindow.setOutsideTouchable(true);
 				morePopupWindow.setBackgroundDrawable(new ColorDrawable(
 						0x00000000));
+
+				morePopupWindow.showAsDropDown(more);
+			} else {
+				morePopupWindow.showAsDropDown(more);
 			}
 			break;
-
+		case R.id.ll_pop_1:
+			startNavicate(curLatLng, desLatLng, "终点");
+			break;
+		case R.id.ll_pop_3:
+			Intent dial = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"
+					+ partnerTel));
+			startActivity(dial);
+			break;
+		case R.id.rl_elevator_detail:
+			Intent elevatorDetail = new Intent(this,
+					ElevatorDetailActivity.class);
+			elevatorDetail.putExtra(Constant.ELEVATORNO, elevatorNo);
+			startActivity(elevatorDetail);
+			break;
 		default:
 			break;
+		}
+	}
+
+	private void startNavicate(LatLng startPoint, LatLng endPoint,
+			String endName) {
+		// TODO Auto-generated method stub
+		RouteParaOption para = new RouteParaOption().startName("我的位置")
+				.startPoint(startPoint).endPoint(endPoint).endName(endName)
+				.busStrategyType(EBusStrategyType.bus_recommend_way);
+		try {
+			BaiduMapRoutePlan.setSupportWebRoute(true);
+			BaiduMapRoutePlan.openBaiduMapTransitRoute(para, this);
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }
