@@ -28,6 +28,7 @@ import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
+import com.overtech.ems.activity.parttime.common.BaiduMapInfoWindow;
 
 public class ShowCommunityLocationActivity extends BaseActivity {
 	private TextView mHeadContent;
@@ -97,7 +98,10 @@ public class ShowCommunityLocationActivity extends BaseActivity {
 
 			@Override
 			public boolean onMarkerClick(Marker arg0) {
-				return false;
+				BaiduMapInfoWindow infoWindow = new BaiduMapInfoWindow(context, mCommunityName);
+				mInfoWindow = new InfoWindow(infoWindow, communituLocation, -40);
+				mBaiduMap.showInfoWindow(mInfoWindow);
+				return true;
 			}
 		});
 		mHeadBack.setOnClickListener(new OnClickListener() {
@@ -123,11 +127,11 @@ public class ShowCommunityLocationActivity extends BaseActivity {
 		MarkerOptions option = new MarkerOptions().position(ll).icon(bitmap).zIndex(14);
 		option.animateType(MarkerAnimateType.grow);
 		mBaiduMap.addOverlay(option);
-		BaiduMapInfoWindow infoWindow = new BaiduMapInfoWindow(context,mCommunityName);
-		mInfoWindow = new InfoWindow(infoWindow, communituLocation, -40);
-		mBaiduMap.showInfoWindow(mInfoWindow);
 		MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
 		mBaiduMap.animateMapStatus(u);
+//		BaiduMapInfoWindow infoWindow = new BaiduMapInfoWindow(context,mCommunityName);
+//		mInfoWindow = new InfoWindow(infoWindow, communituLocation, -40);
+//		mBaiduMap.showInfoWindow(mInfoWindow);
 	}
 
 	public class MyLocationListener implements BDLocationListener{

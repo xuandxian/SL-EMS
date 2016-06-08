@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 
@@ -20,6 +21,7 @@ import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BaiduMap.OnMarkerClickListener;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.InfoWindow;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
@@ -48,6 +50,7 @@ public class NearByMapFragment extends BaseFragment {
 	private MapView mMapView = null;
 	private BaiduMap mBaiduMap = null;
 	private BitmapDescriptor bitmap;
+	private InfoWindow mInfoWindow;
 	private MarkerOptions mOverlayOptions;
 	private Marker mMarker;
 	private View view;
@@ -146,6 +149,14 @@ public class NearByMapFragment extends BaseFragment {
 		mBaiduMap.addOverlay(option);
 		MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(myLocation);
 		mBaiduMap.animateMapStatus(u);
+		Button button = new Button(getActivity());
+		button.setBackgroundResource(R.drawable.map_bubble_info);
+		button.setGravity(Gravity.CENTER);
+		button.setPadding(5, 0, 5, 30);
+		button.setTextColor(Color.GRAY);
+		button.setText("我的位置");
+		InfoWindow myInfoWindow = new InfoWindow(button, point, -47);
+		mBaiduMap.showInfoWindow(myInfoWindow);
 	}
 
 	public void addOverLay(List<TaskPackage> dataList) {
@@ -175,23 +186,24 @@ public class NearByMapFragment extends BaseFragment {
 				String lat = data.latitude;
 				String lon = data.longitude;
 				if (!(TextUtils.isEmpty(lat) || TextUtils.isEmpty(lon))) {
+
 					LatLng ll = new LatLng(Double.parseDouble(lat),
 							Double.parseDouble(lon));
-					Button button = new Button(getActivity());
-					button.setBackgroundResource(R.drawable.map_popcontent);
-					button.setGravity(Gravity.CENTER);
-					button.setPadding(5, 0, 5, 30);
-					button.setTextColor(Color.WHITE);
-					button.setText(data.taskPackageName);
-					bitmap = BitmapDescriptorFactory.fromView(button);
+					// Button button = new Button(getActivity());
+					// button.setBackgroundResource(R.drawable.map_popcontent);
+					// button.setGravity(Gravity.CENTER);
+					// button.setPadding(5, 0, 5, 30);
+					// button.setTextColor(Color.WHITE);
+					// button.setText(data.getTaskPackageName());
+					bitmap = BitmapDescriptorFactory
+							.fromResource(R.drawable.icon_map_community);
 					mOverlayOptions = new MarkerOptions().position(ll)
-							.icon(bitmap).zIndex(13).draggable(false)
-							.period(10);
+							.icon(bitmap).zIndex(0).draggable(false).period(10);
 					mOverlayOptions.animateType(MarkerAnimateType.drop);
 					mMarker = (Marker) (mBaiduMap.addOverlay(mOverlayOptions));
-//					Bundle bundle = new Bundle();
-//					bundle.putSerializable("taskPackage", data);
-//					mMarker.setExtraInfo(bundle);
+					// Bundle bundle = new Bundle();
+					// bundle.putSerializable("taskPackage", data);
+					// mMarker.setExtraInfo(bundle);
 				}
 			}
 		}
@@ -203,18 +215,29 @@ public class NearByMapFragment extends BaseFragment {
 			@Override
 			public boolean onMarkerClick(final Marker marker) {
 				if (marker.getExtraInfo() != null) {
-					TaskPackage taskPackage = (TaskPackage) marker
+					final TaskPackage taskPackage = (TaskPackage) marker
 							.getExtraInfo().get("taskPackage");
-					Intent intent = new Intent(activity,
-							PackageDetailActivity.class);
-					Bundle bundle = new Bundle();
-					bundle.putString("CommunityName",
-							taskPackage.taskPackageName);
-					bundle.putString("TaskNo", taskPackage.taskNo);
-					bundle.putString("Longitude", taskPackage.longitude);
-					bundle.putString("Latitude", taskPackage.latitude);
-					intent.putExtras(bundle);
-					startActivity(intent);
+					BaiduMapInfoWindow infoWindow = new BaiduMapInfoWindow(
+							getActivity(), taskPackage);
+					mInfoWindow = new InfoWindow(infoWindow, marker
+							.getPosition(), -40);
+					mBaiduMap.showInfoWindow(mInfoWindow);
+					infoWindow.setOnClickListener(new OnClickListener() {
+
+						@Override
+						public void onClick(View v) {
+							Intent intent = new Intent(activity,
+									PackageDetailActivity.class);
+							Bundle bundle = new Bundle();
+							bundle.putString("CommunityName",
+									taskPackage.taskPackageName);
+							bundle.putString("TaskNo", taskPackage.taskNo);
+							bundle.putString("Longitude", taskPackage.longitude);
+							bundle.putString("Latitude", taskPackage.latitude);
+							intent.putExtras(bundle);
+							startActivity(intent);
+						}
+					});
 				}
 				return true;
 			}

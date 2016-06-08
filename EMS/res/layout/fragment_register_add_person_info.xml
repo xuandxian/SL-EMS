@@ -43,6 +43,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
+                    android:singleLine="true"
                     android:background="@drawable/shape_input"
                     android:hint="姓名" />
             </RelativeLayout>
@@ -66,7 +67,6 @@
                     android:layout_marginRight="20dp"
                     android:background="@drawable/shape_input"
                     android:hint="身份证号码"
-                    android:inputType="number"
                     android:maxLength="18" />
             </RelativeLayout>
 

@@ -159,10 +159,10 @@ public class TaskListPackageDetailActivity extends BaseActivity implements OnRef
 			case StatusCode.VALIDATE_TIME_SUCCESS:
 				String time = (String) msg.obj;
 				if (time.equals("-1")) {
-					Utilities.showToast("已超过退单时间！！！", context);
+					Utilities.showToast("该维保单时间已经过期", context);
 					break;
 				} else if (time.equals("0")) {
-					Utilities.showToast("当天的任务不可以被退单！！！", context);
+					Utilities.showToast("当天的任务不可以被退单", context);
 					break;
 				} else if (time.equals("1")) {
 					dialogBuilder.withMessage("72小时内退单会影响星级评定，你确认要退单？");

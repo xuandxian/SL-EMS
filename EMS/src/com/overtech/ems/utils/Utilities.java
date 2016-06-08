@@ -154,7 +154,8 @@ public class Utilities {
 		Matcher m = p.matcher(password);
 		return m.matches();
 	}
-	//判断是否为今天
+
+	// 判断是否为今天
 	public static boolean isToday(Calendar cal) {
 		boolean ret = false;
 		Calendar tmp = Calendar.getInstance();
@@ -166,6 +167,7 @@ public class Utilities {
 		}
 		return ret;
 	}
+
 	public static boolean isToday(String s1) {
 		boolean ret = false;
 		Calendar tmp = Calendar.getInstance();
@@ -176,34 +178,55 @@ public class Utilities {
 		}
 		return ret;
 	}
+	
+	public static boolean isAllChinese(String s) {
+		String string = "([\\u4E00-\\u9FA5\\\\P{p}]){2,4}";
+		Pattern p = Pattern.compile(string);
+		Matcher m = p.matcher(s);
+		return m.matches();
+	}
 
 	/**
 	 * 是否是中文
+	 * 
 	 * @param c
 	 * @return
 	 */
-	public static boolean isChinese(char c) {
-		Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
-		if (ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS
-				|| ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS
-				|| ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A
-				|| ub == Character.UnicodeBlock.GENERAL_PUNCTUATION
-				|| ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
-				|| ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS) {
-			return true;
-		}
-		return false;
-	}
-	// 完整的判断中文汉字和符号
-	public static boolean isChinese(String strName) {
-		char[] ch = strName.toCharArray();
-		for (int i = 0; i < ch.length; i++) {
-			char c = ch[i];
-			if (isChinese(c)) {
-				return true;
-			}
-		}
-		return false;
-	}
+//	public static boolean isChinese(char c) {
+//		boolean flag = false;
+//		Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
+//		if (ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS
+//				|| ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS
+//				|| ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A
+//				|| ub == Character.UnicodeBlock.GENERAL_PUNCTUATION
+//				|| ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
+//				|| ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS) {
+//			flag = true;
+//		} else {
+//			flag = false;
+//		}
+//		return flag;
+//	}
+//
+//	// 完整的判断中文汉字和符号
+//	public static boolean isChinese(String strName) {
+//		boolean flag = false;
+//		int count = 0;
+//		if (strName.length()>=2&&strName.length()<=4) {
+//			char[] ch = strName.toCharArray();
+//			for (int i = 0; i < ch.length; i++) {
+//				char c = ch[i];
+//				if (isChinese(c)) {
+//					count++;
+//				}
+//			}
+//			if (count == strName.length()) {
+//				flag = true;
+//			}
+//		}else {
+//			flag=false;
+//		}
+//		return flag;
+//	}
 
 }
