@@ -50,5 +50,6 @@
     <string name="fault_peoperty">故障性质</string>
     <string name="fault_duty">故障责任</string>
     <string name="fault_attention">注意事项</string>
+    <string name="site_tel">站点电话</string>
 
 </resources>

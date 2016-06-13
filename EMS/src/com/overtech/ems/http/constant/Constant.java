@@ -3,10 +3,23 @@ package com.overtech.ems.http.constant;
 /**
  * Key值类
  * 
- * @author Overtech
+ * @author Overtech Will
  * 
  */
 public class Constant {
+	
+	/**
+	 * 标记传递的是parent or child
+	 */
+	public static final String TYPE="type";
+	/**
+	 * 维修单名称
+	 */
+	public static final String MAINTENANCENAME="name";
+	/**
+	 * 维修单报告详情
+	 */
+	public static final String MAINTENANCEDETAIL="maintenanceDetail";
 	/**
 	 * 员工类型
 	 */
@@ -47,7 +60,7 @@ public class Constant {
 	/**
 	 * 维保日期
 	 */
-	public static final String MAINTENANCEDATA = "maintenanceData";
+	public static final String MAINTENANCEDATA = "maintenanceDate";
 	/**
 	 * is Today
 	 */

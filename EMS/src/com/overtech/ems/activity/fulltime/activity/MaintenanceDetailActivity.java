@@ -55,12 +55,14 @@ public class MaintenanceDetailActivity extends BaseActivity implements
 	private String elevatorNo;
 	private LatLng curLatLng;
 	private LatLng desLatLng;
+	private MaintenanceDetailActivity activity;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_maintenance_detail);
+		activity = this;
 		uid = (String) SharePreferencesUtils.get(this,
 				SharedPreferencesKeys.UID, "");
 		certificate = (String) SharePreferencesUtils.get(this,

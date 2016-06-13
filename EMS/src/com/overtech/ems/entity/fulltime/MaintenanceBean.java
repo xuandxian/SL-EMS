@@ -14,7 +14,7 @@ public class MaintenanceBean {
 	public Body body;
 
 	public class Body {
-		//维修单明细部分
+		// 维修单明细部分
 		public String repairAddress;
 		public String elevatorNo;
 		public String elevatorBrand;
@@ -26,8 +26,11 @@ public class MaintenanceBean {
 		public String faultCause;
 		public String faultFrom;
 		public String faultComponent;
-		
+
 		public List<Workorder> data;
+
+		public String workorderCode;// 维修单二维码部分
+		public String siteTel;
 	}
 
 	public class Workorder {

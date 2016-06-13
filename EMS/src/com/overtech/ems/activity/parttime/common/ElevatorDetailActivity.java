@@ -1,5 +1,6 @@
 package com.overtech.ems.activity.parttime.common;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -49,11 +50,12 @@ public class ElevatorDetailActivity extends BaseActivity {
 	private String sElevatorNo;
 	private String uid;
 	private String certificate;
-
+	private Activity activity;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_elevator_detail);
+		activity=this;
 		findViewById();
 		getExtraData();
 		init();

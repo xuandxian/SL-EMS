@@ -39,8 +39,6 @@ public class BaseActivity extends FragmentActivity {
 
 	public ImageLoader imageLoader;
 
-	public Activity activity;
-
 	public Context context;
 
 	public FragmentManager fragmentManager;
@@ -65,7 +63,6 @@ public class BaseActivity extends FragmentActivity {
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 		application = (MyApplication) this.getApplication();
-		activity = this;
 		context = this;
 		fragmentManager = getSupportFragmentManager();
 		dialogBuilder = NiftyDialogBuilder.getInstance(this);
