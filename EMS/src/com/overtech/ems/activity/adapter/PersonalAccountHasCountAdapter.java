@@ -1,9 +1,8 @@
 package com.overtech.ems.activity.adapter;
 
-import java.sql.Date;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -13,15 +12,15 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.overtech.ems.R;
-import com.overtech.ems.entity.parttime.Bill;
 
 public class PersonalAccountHasCountAdapter extends BaseAdapter {
 
 	private Context context;
-	private List<Bill> list;
+	private List<Map<String, Object>> list;
 	private SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-	public PersonalAccountHasCountAdapter(Context context, List<Bill> list) {
+	public PersonalAccountHasCountAdapter(Context context,
+			List<Map<String, Object>> list) {
 		super();
 		this.context = context;
 		this.list = list;
@@ -45,7 +44,7 @@ public class PersonalAccountHasCountAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder = null;
-		Bill data = list.get(position);
+		Map<String, Object> data = list.get(position);
 		if (convertView == null) {
 			holder = new ViewHolder();
 			convertView = LayoutInflater.from(context).inflate(
@@ -65,11 +64,13 @@ public class PersonalAccountHasCountAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		holder.mTaskName.setText(data.getTaskPackageName());
-		holder.mMaintenanceDate.setText("("+data.getMaintenanceDate()+")");
-		holder.mTaskClosingDate.setText(sdf.format((new Date(data.getClosingDate()))));
-		holder.mTaskNo.setText(data.getTaskNo());
-		holder.mTaskMoney.setText("￥"+data.getTotalPrice());
+		holder.mTaskName.setText(data.get("projectName").toString());
+		holder.mMaintenanceDate
+				.setText("(" + data.get("maintenanceDate") + ")");
+		holder.mTaskClosingDate.setText(sdf.format((data.get("closingDate")
+				.toString())));
+		holder.mTaskNo.setText(data.get("taskNo").toString());
+		holder.mTaskMoney.setText("￥" + data.get("totalPrice").toString());
 		return convertView;
 	}
 

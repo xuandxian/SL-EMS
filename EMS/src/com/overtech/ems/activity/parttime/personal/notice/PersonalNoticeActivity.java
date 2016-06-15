@@ -1,9 +1,10 @@
 package com.overtech.ems.activity.parttime.personal.notice;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.HashSet;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -16,6 +17,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
@@ -25,6 +27,7 @@ import com.overtech.ems.entity.bean.AnnouncementBean;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.entity.parttime.Announcement;
 import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.Utilities;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
@@ -39,12 +42,13 @@ public class PersonalNoticeActivity extends BaseActivity {
 	private ImageView mDoBack;
 	private TextView mHeadContent;
 	private ListView mAnnouncement;
+	private PersonalNoticeActivity activity;
 	private PersonalAnnounceAdapter adapter;
 	private List<Announcement> list;
 	private int announceSize;
 	private HashSet<String> announceItemPosition;
-	private final String ANNOUNCEITEMPOSITION="announce_item_position";
-	private final String ANNOUNCE_SIZE="announces_size";
+	private final String ANNOUNCEITEMPOSITION = "announce_item_position";
+	private final String ANNOUNCE_SIZE = "announces_size";
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -57,23 +61,21 @@ public class PersonalNoticeActivity extends BaseActivity {
 				if (null == list || list.size() == 0) {
 					Utilities.showToast("无数据", activity);
 				} else {
-					int newItems = list.size() - announceSize;//计算最新的数据集合的大小与之前的数据集合大小
+					int newItems = list.size() - announceSize;// 计算最新的数据集合的大小与之前的数据集合大小
 					if (newItems > 0) {
-						HashSet<String> tempSet = new HashSet<String>();//初始化一个tempSet,用于保存更新后的数据的已经点击的公告条目的位置
+						HashSet<String> tempSet = new HashSet<String>();// 初始化一个tempSet,用于保存更新后的数据的已经点击的公告条目的位置
 						Iterator<String> iterator = announceItemPosition
 								.iterator();
 						while (iterator.hasNext()) {
 							int a = Integer.parseInt(iterator.next())
-									+ newItems;//如果原集合中有数据，则将保存的角标全部加上新的计算的差值
+									+ newItems;// 如果原集合中有数据，则将保存的角标全部加上新的计算的差值
 							tempSet.add(String.valueOf(a));
 						}
-						announceItemPosition = tempSet;//使用最新的集合
-						mSharedPreferences
-								.edit()
-								.putStringSet(ANNOUNCEITEMPOSITION,
-										announceItemPosition).commit();//将集合保存到配置文件中
-						mSharedPreferences.edit()
-								.putInt(ANNOUNCE_SIZE, list.size()).commit();//将大小保存
+						announceItemPosition = tempSet;// 使用最新的集合
+						SharePreferencesUtils.put(activity,
+								ANNOUNCEITEMPOSITION, announceItemPosition);// 将位置保存
+						SharePreferencesUtils.put(activity, ANNOUNCE_SIZE,
+								list.size());// 将集合大小保存
 					}
 					adapter = new PersonalAnnounceAdapter(context, list,
 							announceItemPosition);
@@ -97,6 +99,7 @@ public class PersonalNoticeActivity extends BaseActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		activity = this;
 		setContentView(R.layout.activity_personal_announcement);
 		initView();
 		initData();
@@ -107,9 +110,10 @@ public class PersonalNoticeActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		super.onResume();
 		Log.e("onResume", "onresume");
-		announceSize = mSharedPreferences.getInt(ANNOUNCE_SIZE, 0);// 获取保存的公告条目的长度
-		announceItemPosition = (HashSet<String>) mSharedPreferences
-				.getStringSet(ANNOUNCEITEMPOSITION, new HashSet<String>());// 获取已经点击过的公告条目的position集合
+		announceSize = (Integer) SharePreferencesUtils.get(activity,
+				ANNOUNCE_SIZE, 0);// 获取保存的公告条目的长度
+		SharePreferencesUtils.get(activity, ANNOUNCEITEMPOSITION,
+				new HashSet<String>());// 获取已经点击过的公告条目的position集合
 		if (adapter != null) {
 			adapter.setHashSet(announceItemPosition);
 			adapter.notifyDataSetChanged();
@@ -133,19 +137,16 @@ public class PersonalNoticeActivity extends BaseActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				announceItemPosition.add(String.valueOf(position));//将点击的位置保存到集合中
-				mSharedPreferences.edit()
-						.putStringSet(ANNOUNCEITEMPOSITION, announceItemPosition).commit();//保存到配置文件中
-				/*Iterator<String> it = announceItemPosition.iterator();//测试使用
-				while (it.hasNext()) {
-					Log.e("==dianji==", it.next());
-				}
-				Map map=mSharedPreferences.getAll();
-				Set set=map.keySet();
-				Iterator iterator=set.iterator();
-				while(iterator.hasNext()){
-					Log.e("=====", iterator.next()+"");
-				}*/
+				announceItemPosition.add(String.valueOf(position));// 将点击的位置保存到集合中
+				SharePreferencesUtils.put(activity, ANNOUNCEITEMPOSITION,
+						announceItemPosition);
+				/*
+				 * Iterator<String> it = announceItemPosition.iterator();//测试使用
+				 * while (it.hasNext()) { Log.e("==dianji==", it.next()); } Map
+				 * map=mSharedPreferences.getAll(); Set set=map.keySet();
+				 * Iterator iterator=set.iterator(); while(iterator.hasNext()){
+				 * Log.e("=====", iterator.next()+""); }
+				 */
 				Announcement data = (Announcement) parent.getAdapter().getItem(
 						position);
 				Bundle bundle = new Bundle();

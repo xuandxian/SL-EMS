@@ -18,7 +18,7 @@ public class TaskPackageBean {
 		public List<TaskPackage> data;
 	}
 
-	public class TaskPackage {
+	public class TaskPackage {	
 		public String taskNo; // 维保单号
 		public String taskPackageName; // 项目名称
 		public String elevatorAmounts; // 电梯数量

@@ -2,22 +2,27 @@ package com.overtech.ems.entity.parttime;
 
 import java.util.List;
 
-import com.overtech.ems.entity.bean.BeginWorkResult;
-
+/**
+ * 维保开始时候 二维码扫描开始查询任务单 解析实体类
+ * @author Overtech Will
+ *
+ */
 public class ScanResultBean {
-	private List<BeginWorkResult> model;
-	private boolean success;
-	public List<BeginWorkResult> getModel() {
-		return model;
+	public int st;
+	public String msg;
+	public Body body;
+	public class Body{
+		public List<BeginWorkResult> data;
+		public String isMeetRequire;
 	}
-	public void setModel(List<BeginWorkResult> model) {
-		this.model = model;
+	public class BeginWorkResult{
+		public String elevatorNo;
+		public String taskNo;
+		public String workType;
+		public String zonePhone;
+		public String isStart;
+		public String isFinish;
+		public String longitude;
+		public String latitude;
 	}
-	public boolean isSuccess() {
-		return success;
-	}
-	public void setSuccess(boolean success) {
-		this.success = success;
-	}
-	
 }

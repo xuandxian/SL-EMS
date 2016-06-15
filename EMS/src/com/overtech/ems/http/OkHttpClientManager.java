@@ -31,12 +31,14 @@ import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 public class OkHttpClientManager {
 	private static OkHttpClientManager mInstance;
 	private OkHttpClient mOkHttpClient;
 	private Handler mDelivery;
 	private Gson mGson;
+	private final int timeOut = 20000;
 	public static final MediaType JSON = MediaType
 			.parse("application/json;charset=utf-8");
 
@@ -44,6 +46,9 @@ public class OkHttpClientManager {
 		mOkHttpClient = new OkHttpClient();
 		mOkHttpClient.setCookieHandler(new CookieManager(null,
 				CookiePolicy.ACCEPT_ORIGINAL_SERVER));
+		mOkHttpClient.setReadTimeout(timeOut, TimeUnit.MILLISECONDS);
+		mOkHttpClient.setConnectTimeout(timeOut, TimeUnit.MILLISECONDS);
+		mOkHttpClient.setFollowRedirects(true);
 		mDelivery = new Handler(Looper.getMainLooper());
 		mGson = new Gson();
 	}
@@ -389,7 +394,8 @@ public class OkHttpClientManager {
 			throws IOException {
 		return getInstance()._postAsString(url, params);
 	}
-	//当前项目常用接口普
+
+	// 当前项目常用接口普
 	public static void postAsyn(String url, final ResultCallback callback,
 			String jsonData) {
 		getInstance()._postAsyn(url, callback, jsonData);

@@ -1,6 +1,7 @@
 package com.overtech.ems.activity.adapter;
 
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,20 +11,20 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.overtech.ems.R;
-import com.overtech.ems.entity.parttime.Bonus;
 
 public class PersonalBonusListAdapter extends BaseAdapter {
-	private List<Bonus> datas;
+	private List<Map<String, Object>> datas;
 	private Context context;
 
-	public PersonalBonusListAdapter(List<Bonus> list, Context context) {
+	public PersonalBonusListAdapter(List<Map<String, Object>> list,
+			Context context) {
 		this.datas = list;
 		this.context = context;
 	}
 
 	@Override
 	public int getCount() {
-		return datas.size()==0 ? 0:datas.size();
+		return datas.size() == 0 ? 0 : datas.size();
 	}
 
 	@Override
@@ -38,17 +39,21 @@ public class PersonalBonusListAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		Bonus bonus = datas.get(position);
+		Map<String, Object> bonus = datas.get(position);
 		if (convertView == null) {
-			convertView = LayoutInflater.from(context).inflate(R.layout.item_expandablelistview_bonus, null);
+			convertView = LayoutInflater.from(context).inflate(
+					R.layout.item_expandablelistview_bonus, null);
 		}
-		TextView mAwardSum = (TextView) convertView.findViewById(R.id.tv_bonus_money);
-		TextView mAwardDate = (TextView) convertView.findViewById(R.id.tv_bonus_date);
-		TextView mAwardRemark = (TextView) convertView.findViewById(R.id.tv_bonus_remark);
+		TextView mAwardSum = (TextView) convertView
+				.findViewById(R.id.tv_bonus_money);
+		TextView mAwardDate = (TextView) convertView
+				.findViewById(R.id.tv_bonus_date);
+		TextView mAwardRemark = (TextView) convertView
+				.findViewById(R.id.tv_bonus_remark);
 
-		mAwardSum.setText("￥" + bonus.getAwardSum());
-		mAwardDate.setText("奖励日期：" + bonus.getAwardDate());
-		mAwardRemark.setText("奖励原因：" + bonus.getAwardRemark());
+		mAwardSum.setText("￥" + bonus.get("awardSum").toString());
+		mAwardDate.setText("奖励日期：" + bonus.get("awardTime").toString());
+		mAwardRemark.setText("奖励原因：" + bonus.get("awardRemark").toString());
 		return convertView;
 	}
 

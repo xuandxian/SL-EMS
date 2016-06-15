@@ -12,6 +12,8 @@ public class SharedPreferencesKeys {
 	public static final String CURRENT_DATE = "currentDate";
 
 	public static final String CERTIFICATED = "certificate";
-	public static final String UID="uid";
-	public static final String EMPLOYEETYPE="employeeType";
+	public static final String UID = "uid";
+	public static final String EMPLOYEETYPE = "employeeType";
+
+	public static final String TAGSET = "tagSet";
 }

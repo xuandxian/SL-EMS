@@ -1,18 +1,7 @@
 package com.overtech.ems.activity.common.password;
 
-import com.google.gson.Gson;
-import com.overtech.ems.R;
-import com.overtech.ems.activity.BaseActivity;
-import com.overtech.ems.config.StatusCode;
-import com.overtech.ems.entity.common.ServicesConfig;
-import com.overtech.ems.entity.parttime.Employee;
-import com.overtech.ems.security.MD5Util;
-import com.overtech.ems.utils.Utilities;
-import com.overtech.ems.widget.EditTextWithDelete;
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
+import java.io.IOException;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,7 +13,21 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import java.io.IOException;
+
+import com.overtech.ems.R;
+import com.overtech.ems.activity.BaseActivity;
+import com.overtech.ems.config.StatusCode;
+import com.overtech.ems.config.SystemConfig;
+import com.overtech.ems.entity.bean.CommonBean;
+import com.overtech.ems.entity.common.Requester;
+import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.security.MD5Util;
+import com.overtech.ems.utils.Utilities;
+import com.overtech.ems.widget.EditTextWithDelete;
+import com.squareup.okhttp.Call;
+import com.squareup.okhttp.Callback;
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
 
 public class ResetPasswordActivity extends BaseActivity {
 	private TextView mHeadContent;
@@ -36,15 +39,25 @@ public class ResetPasswordActivity extends BaseActivity {
 	private String sPasswordConfirm;
 	private Context context;
 	private String mPhoneNo;
-	
-	
+	private ResetPasswordActivity activity;
+
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case StatusCode.RESET_PASSWORD_SUCCESS:
-				Intent intent = new Intent(ResetPasswordActivity.this,ResetPasswordSuccessActivity.class);
-				startActivity(intent);
-//				finish();
+				String json = (String) msg.obj;
+				CommonBean bean = gson.fromJson(json, CommonBean.class);
+				int st = bean.st;
+				String beanMsg = bean.msg;
+				if (st == 0) {
+					Utilities.showToast(beanMsg, context);
+					Intent intent = new Intent(activity,
+							ResetPasswordSuccessActivity.class);
+					startActivity(intent);
+				}else{
+					Utilities.showToast(beanMsg, activity);
+				}
+				// finish();
 				break;
 			case StatusCode.RESET_PASSWORD_FAILED:
 				Utilities.showToast("重置密码失败", context);
@@ -69,7 +82,7 @@ public class ResetPasswordActivity extends BaseActivity {
 
 	private void findViewById() {
 		context = ResetPasswordActivity.this;
-		mPhoneNo=getIntent().getStringExtra("mPhoneNo");
+		mPhoneNo = getIntent().getStringExtra("mPhoneNo");
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
 		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
 		mResetPassword = (Button) findViewById(R.id.btn_reset_password);
@@ -78,6 +91,7 @@ public class ResetPasswordActivity extends BaseActivity {
 	}
 
 	private void init() {
+		activity = ResetPasswordActivity.this;
 		mHeadContent.setText("密码重置");
 		mHeadBack.setVisibility(View.VISIBLE);
 		mResetPassword.setOnClickListener(new OnClickListener() {
@@ -86,43 +100,47 @@ public class ResetPasswordActivity extends BaseActivity {
 			public void onClick(View arg0) {
 				sPasswordNew = mPasswordNew.getText().toString().trim();
 				sPasswordConfirm = mPasswordConfirm.getText().toString().trim();
-				if (TextUtils.isEmpty(sPasswordNew) || TextUtils.isEmpty(sPasswordConfirm)) {
+				if (TextUtils.isEmpty(sPasswordNew)
+						|| TextUtils.isEmpty(sPasswordConfirm)) {
 					Utilities.showToast("输入不能为空", context);
 				} else {
-					if (sPasswordNew.length() >= 6 && sPasswordNew.length() <= 18) {
+					if (sPasswordNew.length() >= 6
+							&& sPasswordNew.length() <= 18) {
 						if (TextUtils.equals(sPasswordNew, sPasswordConfirm)) {
 							startProgressDialog("正在更新...");
-							Employee employee = new Employee();
-							employee.setPhoneNo(mPhoneNo);
+							Requester requester = new Requester();
+							requester.cmd = 20043;
+							requester.body.put(Constant.PHONENO, mPhoneNo);
 							try {
-								employee.setPassword(MD5Util.md5Encode(sPasswordNew));
+								requester.body.put("password",
+										MD5Util.md5Encode(sPasswordNew));
 							} catch (Exception e1) {
+								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
-							Gson gson = new Gson();
-							String person = gson.toJson(employee);
-							Request request = httpEngine.createRequest(ServicesConfig.UPDATE_PASSWORD, person);
+							Request request = httpEngine.createRequest(
+									SystemConfig.NEWIP, gson.toJson(requester));
 							Call call = httpEngine.createRequestCall(request);
 							call.enqueue(new Callback() {
 								@Override
-								public void onFailure(Request request,IOException e) {
+								public void onFailure(Request request,
+										IOException e) {
 									Message msg = new Message();
 									msg.what = StatusCode.RESPONSE_NET_FAILED;
+									msg.obj = "网络异常";
 									handler.sendMessage(msg);
 								}
 
 								@Override
-								public void onResponse(Response response)throws IOException {
+								public void onResponse(Response response)
+										throws IOException {
 									Message msg = new Message();
 									if (response.isSuccessful()) {
-										String result = response.body().string();
-										if (TextUtils.equals("true", result)) {
-											msg.what = StatusCode.RESET_PASSWORD_SUCCESS;
-										} else {
-											msg.what = StatusCode.RESET_PASSWORD_FAILED;
-										}
+										msg.what = StatusCode.RESET_PASSWORD_SUCCESS;
+										msg.obj = response.body().string();
 									} else {
-										msg.what = StatusCode.RESPONSE_NET_FAILED;
+										msg.what = StatusCode.RESET_PASSWORD_FAILED;
+										msg.obj = "服务器正在维护...";
 									}
 									handler.sendMessage(msg);
 								}

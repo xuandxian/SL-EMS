@@ -16,14 +16,20 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="未完成" />
+            android:background="@drawable/horizontal_line"
+            android:text="未完成"
+            android:textColor="@color/bg_title_red"
+            android:textSize="15sp" />
 
         <Button
             android:id="@+id/bt_maintenance_done"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="已完成" />
+            android:background="@color/main_white"
+            android:text="已完成"
+            android:textColor="@color/bg_title_red"
+            android:textSize="15sp" />
     </LinearLayout>
 
     <FrameLayout

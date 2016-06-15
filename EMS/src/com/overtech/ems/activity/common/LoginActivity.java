@@ -1,13 +1,8 @@
 package com.overtech.ems.activity.common;
 
-import java.io.IOException;
-import java.util.Date;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -25,27 +20,23 @@ import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.common.password.LostPasswordActivity;
 import com.overtech.ems.activity.common.register.RegisterActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
-import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.LoginBean;
 import com.overtech.ems.entity.common.Requester;
 import com.overtech.ems.http.OkHttpClientManager;
 import com.overtech.ems.http.OkHttpClientManager.ResultCallback;
-import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.security.MD5Util;
 import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
-import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
 /**
- * @author Tony
+ * @author Overtech Will
  * @description 登录界面
- * @date 2015-10-05
+ * @date 2016-6-14
  */
 public class LoginActivity extends BaseActivity implements OnClickListener {
 	private EditTextWithDelete mUserName, mPassword;
@@ -65,7 +56,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		setContentView(R.layout.activity_login);
 		ctx = this;
 		initView();
-		initData();
+		initEvent();
 	}
 
 	private void initView() {
@@ -79,7 +70,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		mChangePasswordState = (ToggleButton) findViewById(R.id.tb_change_password);
 	}
 
-	private void initData() {
+	private void initEvent() {
 		mHeadContent.setText("登 录");
 		mHeadBack.setVisibility(View.VISIBLE);
 		mLostPassword.setOnClickListener(this);
@@ -133,6 +124,8 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			@Override
 			public void onError(Request request, Exception e) {
 				// TODO Auto-generated method stub
+				stopProgressDialog();
+				Utilities.showToast("服务器维护中，请稍后重新尝试", ctx);
 				Logr.e(request.toString(), ctx);
 			}
 
@@ -140,6 +133,10 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			public void onResponse(LoginBean response) {
 				// TODO Auto-generated method stub
 				stopProgressDialog();
+				if (response == null) {
+					Utilities.showToast("登录失败，请重试", ctx);
+					return;
+				}
 				int st = response.st;
 				if (st != 0) {
 					Utilities.showToast(response.msg, ctx);
@@ -154,20 +151,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 					SharePreferencesUtils.put(ctx,
 							SharedPreferencesKeys.EMPLOYEETYPE, employeeType);
 
-					mSharedPreferences
-							.edit()
-							.putString(
-									SharedPreferencesKeys.CURRENT_LOGIN_NAME,
-									sUserName).commit();// 将登陆的用户名保存
-					mSharedPreferences
-							.edit()
-							.putString(
-									SharedPreferencesKeys.CURRENT_LOGIN_PASSWORD,
-									encryptPassword).commit();// 将登陆的密码保存
-					mSharedPreferences
-							.edit()
-							.putLong(SharedPreferencesKeys.CURRENT_DATE,
-									new Date().getTime()).commit();
 					Intent intent = new Intent(LoginActivity.this,
 							MainActivity.class);
 					startActivity(intent);

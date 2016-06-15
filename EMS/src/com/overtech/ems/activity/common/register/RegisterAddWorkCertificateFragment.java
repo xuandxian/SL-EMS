@@ -3,14 +3,13 @@ package com.overtech.ems.activity.common.register;
 import java.io.File;
 
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -26,7 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.overtech.ems.R;
-import com.overtech.ems.utils.ImageCacheUtils;
+import com.overtech.ems.utils.ImageUtils;
 import com.overtech.ems.widget.popwindow.DimPopupWindow;
 
 public class RegisterAddWorkCertificateFragment extends Fragment implements
@@ -44,12 +43,15 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements
 	private RegAddWorkCerFrgClickListener listener;
 	public String workCertificatePath = null;
 
-	public static final int OPEN_PHOTO_REQUESTCODE = 0x1;
-	private static final int PHOTO_CAPTURE = 0x2;
 	/**
-	 * 图片的target大小.
+	 * 打开本地相册的requestcode.
 	 */
-	private static final int target = 400;
+	public final int SELECT_PICK = 0x3;
+	/**
+	 * android kitkat 版本打开图册的requestcode
+	 */
+	public final int SELECT_PICK_KITKAT = 0x4;
+	private static final int PHOTO_CAPTURE = 0x2;
 	private Uri certificateUri = null;
 
 	@Override
@@ -83,14 +85,19 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements
 	}
 
 	protected void showPopupWindow() {
-		mPopupWindow = new DimPopupWindow(mContext);
-		View contentView = LayoutInflater.from(mContext).inflate(
-				R.layout.layout_dim_pop_add_idcard, null);
-		initView(contentView);
-		mPopupWindow.setContentView(contentView);
-		mPopupWindow.setInAnimation(R.anim.register_add_idcard_in);
-		mPopupWindow.showAtLocation(((Activity) mContext).getWindow()
-				.getDecorView().getRootView(), Gravity.BOTTOM, 0, 0);
+		if (mPopupWindow == null) {
+			mPopupWindow = new DimPopupWindow(mContext);
+			View contentView = LayoutInflater.from(mContext).inflate(
+					R.layout.layout_dim_pop_add_idcard, null);
+			initView(contentView);
+			mPopupWindow.setContentView(contentView);
+			mPopupWindow.setInAnimation(R.anim.register_add_idcard_in);
+			mPopupWindow.showAtLocation(((Activity) mContext).getWindow()
+					.getDecorView().getRootView(), Gravity.BOTTOM, 0, 0);
+		} else {
+			mPopupWindow.showAtLocation(((Activity) mContext).getWindow()
+					.getDecorView().getRootView(), Gravity.BOTTOM, 0, 0);
+		}
 	}
 
 	private void initView(View contentView) {
@@ -140,10 +147,14 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements
 	}
 
 	private void openPhoto() {
-		Intent intent = new Intent(Intent.ACTION_PICK, null);
-		intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-				"image/*");
-		startActivityForResult(intent, OPEN_PHOTO_REQUESTCODE);
+		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+		intent.addCategory(Intent.CATEGORY_OPENABLE);
+		intent.setType("image/jpeg");
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			startActivityForResult(intent, SELECT_PICK_KITKAT);
+		} else {
+			startActivityForResult(intent, SELECT_PICK);
+		}
 	}
 
 	private File outFile;
@@ -164,18 +175,6 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements
 		startActivityForResult(intent, PHOTO_CAPTURE);
 	}
 
-	private String getPhotoPath(Uri imageUri) {
-		ContentResolver resolver = mContext.getContentResolver();
-		String[] proj = { MediaStore.Images.Media.DATA };
-		Cursor cursor = resolver.query(imageUri, proj, null, null, null);
-		int columIndex = cursor
-				.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-		if (cursor.moveToNext()) {
-			return cursor.getString(columIndex);
-		}
-		return null;
-	}
-
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		String sdStatus = Environment.getExternalStorageState();
@@ -184,49 +183,25 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements
 			return;
 		}
 		switch (requestCode) {
-		case OPEN_PHOTO_REQUESTCODE:
+		case SELECT_PICK:
+		case SELECT_PICK_KITKAT:
 			if (resultCode == Activity.RESULT_OK) {
-				// 如果用这个方法，Options为null时候，就是默认decode会出现oom哦.
-				// Bitmap bm = ImageCacheUtil.decode(null, null,
-				// ImageCacheDemoActivity.this, data.getData(), null);
-
-				// 这里调用这个方法就不会oom.屌丝们就用这个方法吧.
-				Bitmap bm = ImageCacheUtils.getResizedBitmap(null, null,
-						mContext, data.getData(), target, false);
-				mWorkCertificate.setImageBitmap(bm);
 				certificateUri = data.getData();
-				workCertificatePath = getPhotoPath(certificateUri);
+				workCertificatePath = ImageUtils.getPath(getActivity(),
+						data.getData());
+				mWorkCertificate.setImageBitmap(ImageUtils
+						.getSmallBitmap(workCertificatePath));
 			}
 			break;
+
 		case PHOTO_CAPTURE:
 			if (resultCode == Activity.RESULT_CANCELED) {
 
 			}
 			if (resultCode == Activity.RESULT_OK) {
-				BitmapFactory.Options op = new BitmapFactory.Options();
-				Bitmap bmp = BitmapFactory
-						.decodeFile(outFile.getAbsolutePath());
-				int width = bmp.getWidth();
-				int height = bmp.getHeight();
-				// 设置想要的大小
-				int newWidth = 480;
-				int newHeight = 640;
-				// 计算缩放比例
-				float scaleWidth = ((float) newWidth) / width;
-				float scaleHeight = ((float) newHeight) / height;
-				// 取得想要缩放的matrix参数
-				Matrix matrix = new Matrix();
-				matrix.postScale(scaleWidth, scaleHeight);
-				// 得到新的图片
-				bmp = Bitmap.createBitmap(bmp, 0, 0, width, height, matrix,
-						true);
-				// canvas.drawBitmap(bitMap, 0, 0, paint)
-				// 防止内存溢出
-				op.inSampleSize = 4; // 这个数字越大,图片大小越小.
-				Bitmap pic = null;
-				pic = BitmapFactory.decodeFile(outFile.getAbsolutePath(), op);
-				mWorkCertificate.setImageBitmap(pic);
 				workCertificatePath = outFile.getAbsolutePath();
+				mWorkCertificate.setImageBitmap(ImageUtils
+						.getSmallBitmap(workCertificatePath));
 				certificateUri = cameraUri;
 			}
 			break;

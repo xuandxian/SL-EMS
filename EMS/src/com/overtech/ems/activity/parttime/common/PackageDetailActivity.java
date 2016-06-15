@@ -1,9 +1,10 @@
 package com.overtech.ems.activity.parttime.common;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,21 +22,22 @@ import android.widget.ListView;
 import android.widget.TextView;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
-import com.google.gson.Gson;
+
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.PackageDetailAdapter;
 import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.config.StatusCode;
+import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.StatusCodeBean;
 import com.overtech.ems.entity.bean.TaskPackageDetailBean;
+import com.overtech.ems.entity.bean.TaskPackageDetailBean.TaskPackage;
+import com.overtech.ems.entity.common.Requester;
 import com.overtech.ems.entity.common.ServicesConfig;
-import com.overtech.ems.entity.parttime.TaskPackageDetail;
-import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.AppUtils;
+import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
-import com.overtech.ems.utils.StackManager;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.squareup.okhttp.Call;
@@ -45,15 +47,15 @@ import com.squareup.okhttp.Response;
 
 /*
  *任务包详情(抢单模块/附近模块)
- * @author Tony
- * @date 2016-01-13
+ * @author Will
+ * @date 2016-06-15
  * 
  */
 
 public class PackageDetailActivity extends BaseActivity {
 	private ListView mPackageDetailListView;
 	private PackageDetailAdapter adapter;
-	private ArrayList<TaskPackageDetail> list;
+	private List<TaskPackage> list;
 	private Button mGrabTaskBtn;
 	private Effectstype effect;
 	private ImageView mDoBack;
@@ -68,62 +70,74 @@ public class PackageDetailActivity extends BaseActivity {
 	private String tagItem;
 	private String TAG = "24梯";
 	private int totalPrice;
-
+	private String uid;
+	private String certificate;
+	private PackageDetailActivity activity;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
-			Gson gson = new Gson();
 			switch (msg.what) {
 			case StatusCode.PACKAGE_DETAILS_SUCCESS:
 				String json = (String) msg.obj;
-				TaskPackageDetailBean tasks = gson.fromJson(json,TaskPackageDetailBean.class);
-				list = (ArrayList<TaskPackageDetail>) tasks.getModel();
+				TaskPackageDetailBean tasks = gson.fromJson(json,
+						TaskPackageDetailBean.class);
+				list = tasks.body.datas;
 				if (null == list || list.size() == 0) {
 					Utilities.showToast("无数据", context);
 				} else {
-					adapter = new PackageDetailAdapter(context, list);
-					mPackageDetailListView.setAdapter(adapter);
+					if (adapter == null) {
+						adapter = new PackageDetailAdapter(context, list);
+						mPackageDetailListView.setAdapter(adapter);
+					} else {
+						adapter.setData(list);
+						adapter.notifyDataSetChanged();
+					}
 				}
 				for (int i = 0; i < list.size(); i++) {
-					totalPrice += Integer.valueOf(list.get(i).getMaintainPrice());
+					totalPrice += Integer.valueOf(list.get(i).maintainPrice);
 				}
-				mGrabTaskBtn.setText("抢单(￥" + String.valueOf(totalPrice) + "元)");
+				mGrabTaskBtn
+						.setText("抢单(￥" + String.valueOf(totalPrice) + "元)");
 				break;
 			case StatusCode.GRAG_RESPONSE_SUCCESS:
 				String status = (String) msg.obj;
-				StatusCodeBean bean = gson.fromJson(status,StatusCodeBean.class);
+				StatusCodeBean bean = gson.fromJson(status,
+						StatusCodeBean.class);
 				String content = bean.getModel();
 				if (TextUtils.equals(content, "0")) {
 					Utilities.showToast("请不要重复抢单", context);
 				} else if (TextUtils.equals(content, "1")) {
 					Utilities.showToast("抢单成功，等待第二个人抢", context);
-					// 推送业务代码 
+					// 推送业务代码
 					tagItem = bean.getTaskNo();
 					if (!AppUtils.isValidTagAndAlias(tagItem)) {
 						Utilities.showToast("格式不对", context);
 					} else {
 						tagSet.add(tagItem);
-						JPushInterface.setAliasAndTags(getApplicationContext(),null, tagSet, mTagsCallback);
+						JPushInterface.setAliasAndTags(getApplicationContext(),
+								null, tagSet, mTagsCallback);
 					}
 					onActivityForResult();
 				} else if (TextUtils.equals(content, "2")) {
 					Utilities.showToast("抢单成功，请到任务中查看", context);
-					// 推送业务代码 
+					// 推送业务代码
 					tagItem = bean.getTaskNo();
 					if (!AppUtils.isValidTagAndAlias(tagItem)) {
 						Utilities.showToast("格式不对", context);
 					} else {
 						tagSet.add(tagItem);
-						JPushInterface.setAliasAndTags(getApplicationContext(),null, tagSet, mTagsCallback);
+						JPushInterface.setAliasAndTags(getApplicationContext(),
+								null, tagSet, mTagsCallback);
 					}
 					onActivityForResult();
 				} else if (TextUtils.equals(content, "3")) {
 					Utilities.showToast("差一点就抢到了", context);
 				} else if (TextUtils.equals(content, "4")) {
 					Utilities.showToast("维保日期的电梯数量已经超过10台，不能够再抢单。", context);
-				}else {
+				} else {
 					Utilities.showToast("用户账户异常", context);
-					statckInstance.popTopActivitys(PackageDetailActivity.class);
-					Intent intent=new Intent(PackageDetailActivity.this,LoginActivity.class);
+					stackInstance.popTopActivitys(PackageDetailActivity.class);
+					Intent intent = new Intent(PackageDetailActivity.this,
+							LoginActivity.class);
 					startActivity(intent);
 					finish();
 					System.exit(0);
@@ -131,11 +145,13 @@ public class PackageDetailActivity extends BaseActivity {
 				break;
 			case StatusCode.MSG_SET_TAGS:
 				Log.d("24梯", "Set tags in handler.");
-				JPushInterface.setAliasAndTags(getApplicationContext(), null,(Set<String>) msg.obj, mTagsCallback);
+				JPushInterface.setAliasAndTags(getApplicationContext(), null,
+						(Set<String>) msg.obj, mTagsCallback);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
 				Utilities.showToast("网络异常", context);
-				mGrabTaskBtn.setText("抢单(￥" + String.valueOf(totalPrice) + "元)");
+				mGrabTaskBtn
+						.setText("抢单(￥" + String.valueOf(totalPrice) + "元)");
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
 				Utilities.showToast("服务端异常", context);
@@ -154,7 +170,7 @@ public class PackageDetailActivity extends BaseActivity {
 			case 0:
 				logs = "Set tag and alias success";
 				Log.d(TAG, logs);
-				mSharedPreferences.edit().putStringSet("tagSet", tags).commit();// 成功保存标签后，将标签放到本地
+				SharePreferencesUtils.put(activity, "tagSet", tags);// 成功保存标签后，将标签放到本地
 				break;
 
 			case 6002:
@@ -181,15 +197,13 @@ public class PackageDetailActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_package_detail);
-		Set<String> tempSet = mSharedPreferences.getStringSet("tagSet", null);
-		if (tempSet == null) {
-			tagSet = new LinkedHashSet<String>();
-		} else {
-			tagSet = tempSet;
-		}
+		activity = this;
+		Set<String> tempSet = (Set<String>) SharePreferencesUtils.get(activity,
+				"tagSet", new LinkedHashSet<String>());
+		tagSet = tempSet;
 		getExtrasData();
 		findViewById();
-		getDataByTaskNo(ServicesConfig.TASK_PACKAGE_DETAIL);
+		getDataByTaskNo(SystemConfig.NEWIP);
 		init();
 	}
 
@@ -202,6 +216,10 @@ public class PackageDetailActivity extends BaseActivity {
 		mTaskNo = bundle.getString("TaskNo");
 		mLongitude = bundle.getString("Longitude");
 		mLatitude = bundle.getString("Latitude");
+		uid = (String) SharePreferencesUtils.get(activity,
+				SharedPreferencesKeys.UID, "");
+		certificate = (String) SharePreferencesUtils.get(activity,
+				SharedPreferencesKeys.CERTIFICATED, "");
 	}
 
 	private void findViewById() {
@@ -217,8 +235,13 @@ public class PackageDetailActivity extends BaseActivity {
 
 	private void getDataByTaskNo(String url) {
 		startProgressDialog("正在查询...");
-		Param param = new Param(Constant.TASKNO, mTaskNo);
-		Request request = httpEngine.createRequest(url, param);
+		Requester requester = new Requester();
+		requester.cmd = 20051;
+		requester.uid = uid;
+		requester.certificate = certificate;
+		requester.body.put("taskNo", mTaskNo);
+
+		Request request = httpEngine.createRequest(url, gson.toJson(requester));
 		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {
 
@@ -246,14 +269,17 @@ public class PackageDetailActivity extends BaseActivity {
 	private void init() {
 		mHeadTitleCommunity.setText(mCommunityName);
 		mHeadTitleTaskNo.setText(mTaskNo);
-		mPackageDetailListView.setOnItemClickListener(new OnItemClickListener() {
+		mPackageDetailListView
+				.setOnItemClickListener(new OnItemClickListener() {
 
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view,
 							int position, long id) {
-						TaskPackageDetail data = (TaskPackageDetail) parent.getItemAtPosition(position);
-						String elevatorNo = data.getElevatorNo();
-						Intent intent = new Intent(PackageDetailActivity.this,ElevatorDetailActivity.class);
+						TaskPackage data = (TaskPackage) parent
+								.getItemAtPosition(position);
+						String elevatorNo = data.elevatorNo;
+						Intent intent = new Intent(PackageDetailActivity.this,
+								ElevatorDetailActivity.class);
 						Bundle bundle = new Bundle();
 						bundle.putString(Constant.ELEVATORNO, elevatorNo);
 						intent.putExtras(bundle);
@@ -278,7 +304,8 @@ public class PackageDetailActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View arg0) {
-				Intent intent = new Intent(PackageDetailActivity.this,ShowCommunityLocationActivity.class);
+				Intent intent = new Intent(PackageDetailActivity.this,
+						ShowCommunityLocationActivity.class);
 				Bundle bundle = new Bundle();
 				bundle.putString("CommunityName", mCommunityName);
 				bundle.putString("Longitude", mLongitude);
@@ -309,10 +336,14 @@ public class PackageDetailActivity extends BaseActivity {
 					public void onClick(View v) {
 						dialogBuilder.dismiss();
 						startProgressDialog("正在抢单...");
-						String mLoginName = mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
-						Param paramPhone = new Param(Constant.LOGINNAME,mLoginName);
-						Param paramTaskNo = new Param(Constant.TASKNO, mTaskNo);
-						Request request = httpEngine.createRequest(ServicesConfig.Do_GRABTASK, paramPhone,paramTaskNo);
+						Requester requester = new Requester();
+						requester.certificate = certificate;
+						requester.uid = uid;
+						requester.cmd = 20023;
+						requester.body.put(Constant.TASKNO, mTaskNo);
+						Request request = httpEngine.createRequest(
+								ServicesConfig.Do_GRABTASK,
+								gson.toJson(requester));
 						Call call = httpEngine.createRequestCall(request);
 						call.enqueue(new Callback() {
 
@@ -324,7 +355,8 @@ public class PackageDetailActivity extends BaseActivity {
 							}
 
 							@Override
-							public void onResponse(Response response)throws IOException {
+							public void onResponse(Response response)
+									throws IOException {
 								Message msg = new Message();
 								if (response.isSuccessful()) {
 									msg.what = StatusCode.GRAG_RESPONSE_SUCCESS;

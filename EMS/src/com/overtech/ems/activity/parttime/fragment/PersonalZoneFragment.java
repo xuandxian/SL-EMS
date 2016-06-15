@@ -34,7 +34,7 @@ import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.picasso.Picasso;
 import com.overtech.ems.picasso.Transformation;
-import com.overtech.ems.utils.ImageCacheUtils;
+import com.overtech.ems.utils.ImageUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.squareup.okhttp.Call;
@@ -94,7 +94,7 @@ public class PersonalZoneFragment extends BaseFragment implements
 											@Override
 											public Bitmap transform(
 													Bitmap source) {
-												return ImageCacheUtils
+												return ImageUtils
 														.toRoundBitmap(source);
 											}
 

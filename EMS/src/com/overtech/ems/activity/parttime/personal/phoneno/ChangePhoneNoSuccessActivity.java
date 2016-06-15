@@ -23,7 +23,7 @@ public class ChangePhoneNoSuccessActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_change_phoneno_success);
-		statckInstance.pushActivity(this);
+		stackInstance.pushActivity(this);
 		initView();
 	}
 

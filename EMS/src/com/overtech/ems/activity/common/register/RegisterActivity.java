@@ -1,20 +1,12 @@
 package com.overtech.ems.activity.common.register;
 
-import java.io.File;
-import java.io.IOException;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.HashMap;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.View;
 
-import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.common.register.RegisterAddIdCardFragment.RegAddIdCardFrgClickListener;
@@ -24,17 +16,16 @@ import com.overtech.ems.activity.common.register.RegisterAddWorkCertificateFragm
 import com.overtech.ems.activity.common.register.RegisterFragment.RegFraBtnClickListener;
 import com.overtech.ems.activity.common.register.RegisterOtherCertificateFragment.RegOthCerFrgListener;
 import com.overtech.ems.activity.common.register.RegisterPrivacyItemFragment.RegPriItemFrgBtnClickListener;
-import com.overtech.ems.config.StatusCode;
-import com.overtech.ems.entity.common.ServicesConfig;
-import com.overtech.ems.entity.parttime.Employee;
-import com.overtech.ems.http.HttpEngine.Param;
-import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.config.SystemConfig;
+import com.overtech.ems.entity.bean.LoginBean;
+import com.overtech.ems.entity.common.Requester;
+import com.overtech.ems.http.OkHttpClientManager;
+import com.overtech.ems.http.OkHttpClientManager.ResultCallback;
+import com.overtech.ems.utils.ImageUtils;
+import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
 public class RegisterActivity extends BaseActivity implements
 		RegPriItemFrgBtnClickListener, RegFraBtnClickListener,
@@ -50,43 +41,13 @@ public class RegisterActivity extends BaseActivity implements
 	private RegisterAddWorkCertificateFragment mWorkCertificateFragment;
 	private RegisterOtherCertificateFragment mOtherCertificateFragment;
 	public String mPhoneNo;
-
-	private Handler handler = new Handler() {
-		public void handleMessage(android.os.Message msg) {
-			switch (msg.what) {
-			case StatusCode.REGISTER_SUCCESS:
-				String json = (String) msg.obj;
-				Log.e("==注册==", json);
-				try {
-					JSONObject jsonObject = new JSONObject(json);
-					String success = jsonObject.getString("success");
-					if (success.equals("true")) {
-						Utilities.showToast("恭喜你注册成功，请等待公司为你分配账户和密码！！！",
-								context);
-					} else if (success.equals("false")) {
-						Utilities.showToast(jsonObject.getString("msg"),
-								context);
-					}
-				} catch (JSONException e) {
-					e.printStackTrace();
-				}
-				stopProgressDialog();
-				finish();
-				break;
-			case StatusCode.REGISTER_FAILED:
-				Utilities.showToast((String) msg.obj, context);
-				stopProgressDialog();
-				break;
-			}
-		}
-
-		;
-	};
+	private RegisterActivity activity;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_register);
+		activity = this;
 		manager = getSupportFragmentManager();
 		FragmentTransaction transaction = manager.beginTransaction();
 		if (mPrivacyItemFragment == null) {
@@ -100,112 +61,128 @@ public class RegisterActivity extends BaseActivity implements
 	/**
 	 * 上传用户信息
 	 */
-	protected void startUpLoading(String json) {
-		File[] files;
-		String[] fileKeys;
+	protected void startUpLoading() {
+		startProgressDialog("上传中，请等待上传结果");
+		Requester requester = new Requester();
+		requester.cmd = 3;
+		requester.body.put("phone", mPhoneNo);
+		requester.body.put("name", mPersonInfoFragment.nameContent);
+		requester.body.put("idcard", mPersonInfoFragment.idNumContent);
+		requester.body.put("workNo", mPersonInfoFragment.workNumContent);
+		requester.body.put("city", mPersonInfoFragment.cityContent);
+		requester.body.put("zone", mPersonInfoFragment.zoneContent);
+		requester.body.put("eduLevel", mPersonEduWorkFragment.eduLevel);
+		requester.body.put("workUnit", mPersonEduWorkFragment.workUnit);
+		requester.body.put("enterTime", mPersonEduWorkFragment.enterTime);
+		requester.body.put("workYears", mPersonEduWorkFragment.workYears);
+		requester.body.put("elevatorBrand",
+				mPersonEduWorkFragment.elevatorBrand);
+
+		HashMap<String, Object> front = new HashMap<String, Object>();// 身份证正面
+		front.put("content",
+				ImageUtils.bitmapToString(mIdCardFragment.idCardFrontPath));
+		front.put("name",
+				ImageUtils.getBitmapAttrName(mIdCardFragment.idCardFrontPath));
+		requester.body.put("frontIdCard", front);
+
+		HashMap<String, Object> opposite = new HashMap<String, Object>();// 身份证反面
+		front.put("content",
+				ImageUtils.bitmapToString(mIdCardFragment.idCardOppositePath));
+		front.put("name", ImageUtils
+				.getBitmapAttrName(mIdCardFragment.idCardOppositePath));
+		requester.body.put("oppositeIdCard", opposite);
+
+		HashMap<String, Object> workcertificate = new HashMap<String, Object>();// 工作证书
+		front.put("content", ImageUtils
+				.bitmapToString(mWorkCertificateFragment.workCertificatePath));
+		front.put(
+				"name",
+				ImageUtils
+						.getBitmapAttrName(mWorkCertificateFragment.workCertificatePath));
+		requester.body.put("workCertificate", workcertificate);
+
+		HashMap<String, Object> other = new HashMap<String, Object>();// 其他证书
+		front.put("content", ImageUtils
+				.bitmapToString(mOtherCertificateFragment.otherCertificatePath));
+		front.put(
+				"name",
+				ImageUtils
+						.getBitmapAttrName(mOtherCertificateFragment.otherCertificatePath));
+		requester.body.put("otherCertificate", other);
+
 		// 工作证和 其他证书可有可无需要对其进行判断
-		if (mWorkCertificateFragment.workCertificatePath != null
-				&& mOtherCertificateFragment.otherCertificatePath == null) {
-			files = new File[3];
-			files[0] = new File(mIdCardFragment.idCardFrontPath);
-			files[1] = new File(mIdCardFragment.idCardOppositePath);
-			files[2] = new File(mWorkCertificateFragment.workCertificatePath);
+		// if (mWorkCertificateFragment.workCertificatePath != null
+		// && mOtherCertificateFragment.otherCertificatePath == null) {
+		// files = new File[3];
+		// files[0] = new File(mIdCardFragment.idCardFrontPath);
+		// files[1] = new File(mIdCardFragment.idCardOppositePath);
+		// files[2] = new File(mWorkCertificateFragment.workCertificatePath);
+		//
+		// fileKeys = new String[3];
+		// fileKeys[0] = "frontIdCard";
+		// fileKeys[1] = "oppositeIdCard";
+		// fileKeys[2] = "workCertificate";
+		//
+		// } else if (mWorkCertificateFragment.workCertificatePath != null
+		// && mOtherCertificateFragment.otherCertificatePath != null) {
+		// files = new File[4];
+		// files[0] = new File(mIdCardFragment.idCardFrontPath);
+		// files[1] = new File(mIdCardFragment.idCardOppositePath);
+		// files[2] = new File(mWorkCertificateFragment.workCertificatePath);
+		// files[3] = new File(mOtherCertificateFragment.otherCertificatePath);
+		//
+		// fileKeys = new String[4];
+		// fileKeys[0] = "frontIdCard";
+		// fileKeys[1] = "oppositeIdCard";
+		// fileKeys[2] = "workCertificate";
+		// fileKeys[3] = "otherCertificate";
+		// } else if (mWorkCertificateFragment.workCertificatePath == null
+		// && mOtherCertificateFragment.otherCertificatePath != null) {
+		// files = new File[3];
+		// files[0] = new File(mIdCardFragment.idCardFrontPath);
+		// files[1] = new File(mIdCardFragment.idCardOppositePath);
+		// files[2] = new File(mOtherCertificateFragment.otherCertificatePath);
+		//
+		// fileKeys = new String[3];
+		// fileKeys[0] = "frontIdCard";
+		// fileKeys[1] = "oppositeIdCard";
+		// fileKeys[2] = "otherCertificate";
+		// } else {
+		// files = new File[2];
+		// files[0] = new File(mIdCardFragment.idCardFrontPath);
+		// files[1] = new File(mIdCardFragment.idCardOppositePath);
+		// fileKeys = new String[2];
+		// fileKeys[0] = "frontIdCard";
+		// fileKeys[1] = "oppositeIdCard";
+		// }
 
-			fileKeys = new String[3];
-			fileKeys[0] = "frontIdCard";
-			fileKeys[1] = "oppositeIdCard";
-			fileKeys[2] = "workCertificate";
-		} else if (mWorkCertificateFragment.workCertificatePath != null
-				&& mOtherCertificateFragment.otherCertificatePath != null) {
-			files = new File[4];
-			files[0] = new File(mIdCardFragment.idCardFrontPath);
-			files[1] = new File(mIdCardFragment.idCardOppositePath);
-			files[2] = new File(mWorkCertificateFragment.workCertificatePath);
-			files[3] = new File(mOtherCertificateFragment.otherCertificatePath);
+		ResultCallback<LoginBean> callback = new ResultCallback<LoginBean>() {
 
-			fileKeys = new String[4];
-			fileKeys[0] = "frontIdCard";
-			fileKeys[1] = "oppositeIdCard";
-			fileKeys[2] = "workCertificate";
-			fileKeys[3] = "otherCertificate";
-		} else if (mWorkCertificateFragment.workCertificatePath == null
-				&& mOtherCertificateFragment.otherCertificatePath != null) {
-			files = new File[3];
-			files[0] = new File(mIdCardFragment.idCardFrontPath);
-			files[1] = new File(mIdCardFragment.idCardOppositePath);
-			files[2] = new File(mOtherCertificateFragment.otherCertificatePath);
-
-			fileKeys = new String[3];
-			fileKeys[0] = "frontIdCard";
-			fileKeys[1] = "oppositeIdCard";
-			fileKeys[2] = "otherCertificate";
-		} else {
-			files = new File[2];
-			files[0] = new File(mIdCardFragment.idCardFrontPath);
-			files[1] = new File(mIdCardFragment.idCardOppositePath);
-			fileKeys = new String[2];
-			fileKeys[0] = "frontIdCard";
-			fileKeys[1] = "oppositeIdCard";
-		}
-
-		Param param = new Param(Constant.PERSONINFO, json);
-		try {
-			Request request = httpEngine.createRequest(ServicesConfig.REGISTER,
-					files, fileKeys, param);
-			Call call = httpEngine.createRequestCall(request);
-			call.enqueue(new Callback() {
-
-				@Override
-				public void onResponse(Response response) throws IOException {
-					Message msg = new Message();
-					if (response.isSuccessful()) {
-						msg.what = StatusCode.REGISTER_SUCCESS;
-						msg.obj = response.body().string();
-					} else {
-						msg.what = StatusCode.REGISTER_FAILED;
-						msg.obj = "服务器异常，请重新上传";
-					}
-					handler.sendMessage(msg);
-
+			@Override
+			public void onResponse(LoginBean response) {
+				// TODO Auto-generated method stub
+				if (response == null) {
+					Utilities.showToast("上传失败，请重新尝试", activity);
+					return;
 				}
-
-				@Override
-				public void onFailure(Request arg0, IOException arg1) {
-					Message msg = new Message();
-					msg.what = StatusCode.REGISTER_FAILED;
-					msg.obj = "网络异常，请重新上传";
-					handler.sendMessage(msg);
+				int st = response.st;
+				if (st == 0) {
+					Utilities.showToast(response.msg, activity);
+					finish();
+				} else {
+					Utilities.showToast(response.msg, activity);
 				}
-			});
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+			}
 
-	}
-
-	/**
-	 * 获取用户的注册信息
-	 */
-
-	protected String getAllMessage() {
-		Employee employee = new Employee();
-		// 获取个人信息页面的信息
-		employee.setPhoneNo(mPhoneNo);
-		employee.setName(mPersonInfoFragment.nameContent);
-		employee.setIdcardNo(mPersonInfoFragment.idNumContent);
-		employee.setWorkNo(mPersonInfoFragment.workNumContent);
-		employee.setCity(mPersonInfoFragment.cityContent);
-		employee.setZone(mPersonInfoFragment.zoneContent);
-
-		employee.setEduLevel(mPersonEduWorkFragment.eduLevel);
-		employee.setWorkUnit(mPersonEduWorkFragment.workUnit);
-		employee.setEntryTime(mPersonEduWorkFragment.enterTime);
-		employee.setWorkYears(mPersonEduWorkFragment.workYears);
-		employee.setElevatorBrand(mPersonEduWorkFragment.elevatorBrand);
-		Gson gson = new Gson();
-		String employeeJson = gson.toJson(employee);
-		Log.e("++++++测试实体类的json+++++++", employeeJson);
-		return employeeJson;
+			@Override
+			public void onError(Request request, Exception e) {
+				// TODO Auto-generated method stub
+				Logr.e(request.toString());
+				stopProgressDialog();
+			}
+		};
+		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
+				gson.toJson(requester));
 	}
 
 	@Override
@@ -229,8 +206,7 @@ public class RegisterActivity extends BaseActivity implements
 					public void onClick(View v) {
 						dialogBuilder.dismiss();
 						startProgressDialog("正在上传...");
-						String personJson = getAllMessage();
-						startUpLoading(personJson);
+						startUpLoading();
 					}
 				}).show();
 	}

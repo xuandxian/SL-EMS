@@ -29,8 +29,8 @@ import com.squareup.okhttp.Response;
 
 /*
  *修改手机号功能（验证登录密码）
- *@author Tony
- *@date change on 2016-01-13
+ *@author Will
+ *@date change on 2016-06-15
  *
  */
 public class ChangePhoneNoValidatePasswordActivity extends BaseActivity implements OnClickListener {
@@ -40,16 +40,18 @@ public class ChangePhoneNoValidatePasswordActivity extends BaseActivity implemen
 	private String mPhoneNo,flag;
 	private EditTextWithDelete mPhone;
 	private EditTextWithDelete mPassword;
-
+	private ChangePhoneNoValidatePasswordActivity activity;
+	public static final String CHANGEPHONE="0";
+	public static final String RESETPASSWORD="1";
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case StatusCode.RESPONSE_VALICATE_PASSWORD_SUCCESS:
-				if (TextUtils.equals("0",flag)){
-					Intent intent = new Intent(ChangePhoneNoValidatePasswordActivity.this,ChangePhoneNoValicateSmsCodeActivity.class);
+				if (TextUtils.equals(CHANGEPHONE,flag)){
+					Intent intent = new Intent(activity,ChangePhoneNoValicateSmsCodeActivity.class);
 					startActivity(intent);
-				}else if(TextUtils.equals("1",flag)){
-					Intent intent = new Intent(ChangePhoneNoValidatePasswordActivity.this,ResetPasswordActivity.class);
+				}else if(TextUtils.equals(RESETPASSWORD,flag)){
+					Intent intent = new Intent(activity,ResetPasswordActivity.class);
 					intent.putExtra("mPhoneNo", mPhoneNo);
 					startActivity(intent);
 				}
@@ -72,7 +74,8 @@ public class ChangePhoneNoValidatePasswordActivity extends BaseActivity implemen
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_change_phoneno_vc);
-		statckInstance.pushActivity(this);
+		activity=this;
+		stackInstance.pushActivity(this);
 		mPhoneNo = getIntent().getStringExtra("phone");
 		flag = getIntent().getStringExtra("flag");
 		initView();
@@ -87,9 +90,9 @@ public class ChangePhoneNoValidatePasswordActivity extends BaseActivity implemen
 
 	private void initView() {
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
-		if (TextUtils.equals("0", flag)){
+		if (TextUtils.equals(CHANGEPHONE, flag)){
 			mHeadContent.setText("更换手机号");
-		}else if (TextUtils.equals("1",flag)){
+		}else if (TextUtils.equals(RESETPASSWORD,flag)){
 			mHeadContent.setText("修改密码");
 		}
 		mDoBack = (ImageView) findViewById(R.id.iv_headBack);

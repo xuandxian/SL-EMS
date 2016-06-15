@@ -49,9 +49,7 @@ public class BaseActivity extends FragmentActivity {
 
 	public NiftyDialogBuilder dialogBuilder;
 
-	public SharedPreferences mSharedPreferences;
-
-	public StackManager statckInstance;
+	public StackManager stackInstance;
 
 	private InputMethodManager imm;
 
@@ -75,8 +73,7 @@ public class BaseActivity extends FragmentActivity {
 		progressDialog.setMessage(context
 				.getString(R.string.loading_public_default));
 		progressDialog.setCanceledOnTouchOutside(false);
-		mSharedPreferences = application.getSharePreference();
-		statckInstance = StackManager.getStackManager();
+		stackInstance = StackManager.getStackManager();
 		if (gson == null) {
 			gson = new Gson();
 		}

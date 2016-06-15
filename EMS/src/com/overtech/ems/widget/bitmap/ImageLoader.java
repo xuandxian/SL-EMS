@@ -5,6 +5,8 @@ import com.overtech.ems.R;
 import com.overtech.ems.picasso.Callback;
 import com.overtech.ems.picasso.Picasso;
 import com.overtech.ems.picasso.Target;
+import com.overtech.ems.picasso.Transformation;
+
 import android.content.Context;
 import android.graphics.Bitmap.Config;
 import android.widget.ImageView;
@@ -12,7 +14,7 @@ import android.widget.ImageView.ScaleType;
 
 public class ImageLoader {
 	public static final int STUB_NULL = -1;// 不设置默认图
-	private static final int STUB_ID = R.drawable.icon_task_none ; // 默认图片（再不设置默认图的情况下用这个）
+	private static final int STUB_ID = R.drawable.icon_task_none; // 默认图片（再不设置默认图的情况下用这个）
 	private static final Config DEFAULT_CONFIG = Config.RGB_565;
 	private static ImageLoader imageLoader = null;
 	private Context context;
@@ -22,7 +24,7 @@ public class ImageLoader {
 	}
 
 	public void initContext(Context context) {
-		this.context=context;
+		this.context = context;
 	}
 
 	public static synchronized ImageLoader getInstance() {
@@ -122,6 +124,18 @@ public class ImageLoader {
 		}
 		Picasso.with(context).load(imageUrl).placeholder(stub_id)
 				.error(stub_id_no_img).config(config).into(imageView);
+	}
+
+	public void displayImage(String imageUrl, ImageView imageView, int stub_id,
+			int stub_id_no_img, Config config, Transformation transformation) {
+		if (imageUrl == null || "".equals(imageUrl)) {
+			imageView.setScaleType(ScaleType.FIT_XY);
+			imageView.setImageResource(stub_id);
+			return;
+		}
+		Picasso.with(context).load(imageUrl).placeholder(stub_id)
+				.error(stub_id_no_img).config(config).transform(transformation)
+				.into(imageView);
 	}
 
 	/**

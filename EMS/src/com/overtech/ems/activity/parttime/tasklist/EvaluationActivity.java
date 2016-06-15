@@ -1,6 +1,7 @@
 package com.overtech.ems.activity.parttime.tasklist;
 
 import java.io.IOException;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,13 +15,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.config.StatusCode;
-import com.overtech.ems.entity.common.ServicesConfig;
-import com.overtech.ems.http.HttpEngine.Param;
+import com.overtech.ems.config.SystemConfig;
+import com.overtech.ems.entity.common.Requester;
 import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.squareup.okhttp.Call;
@@ -34,29 +37,31 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 	private Button mConfirm;
 	private RadioGroup mChecked;
 	private EditText mContent;
+	private String uid;
+	private String certificate;
 	private String evaluateLevel;
 	private String evaluateInfo;
 	private String taskNo;
-	private Handler handler=new Handler(){
+	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case StatusCode.EVALUATEOTHER:
-				boolean state=Boolean.parseBoolean((String) msg.obj);
-				if(state){
-					Intent intent =new Intent(context,MainActivity.class);
+				boolean state = Boolean.parseBoolean((String) msg.obj);
+				if (state) {
+					Intent intent = new Intent(context, MainActivity.class);
 					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					intent.putExtra("flag", "1");
 					startActivity(intent);
 					finish();
-				}else{
+				} else {
 					Utilities.showToast("提交失败，请重新尝试", context);
 				}
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast((String)msg.obj, context);
+				Utilities.showToast((String) msg.obj, context);
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast((String)msg.obj, context);
+				Utilities.showToast((String) msg.obj, context);
 				break;
 			default:
 				break;
@@ -64,11 +69,16 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 			stopProgressDialog();
 		};
 	};
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_evaluation);
+		certificate = (String) SharePreferencesUtils.get(this,
+				SharedPreferencesKeys.CERTIFICATED, "");
+		uid = (String) SharePreferencesUtils.get(this,
+				SharedPreferencesKeys.UID, "");
 		init();
 		initEvent();
 	}
@@ -105,35 +115,37 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 
 	private void startLoading() {
 		startProgressDialog("正在提交...");
-		Param paramLogin = new Param(Constant.LOGINNAME,
-				mSharedPreferences.getString(
-						SharedPreferencesKeys.CURRENT_LOGIN_NAME, ""));
-		Param paramTaskNo = new Param(Constant.TASKNO, taskNo);
-		Param paramLevel = new Param(Constant.EVALUATELEVEL, evaluateLevel);
-		Param paramInfo = new Param(Constant.EVALUATEINFO, evaluateInfo);
-		Request request=httpEngine.createRequest(ServicesConfig.EVALUATION_EACH_OTHER,
-				paramLogin, paramTaskNo, paramLevel, paramInfo);
-		Call call=httpEngine.createRequestCall(request);
+		Requester requester = new Requester();
+		requester.certificate = certificate;
+		requester.uid = uid;
+		requester.cmd = 20058;
+		requester.body.put(Constant.TASKNO, taskNo);
+		requester.body.put(Constant.EVALUATELEVEL, evaluateLevel);
+		requester.body.put(Constant.EVALUATEINFO, evaluateInfo);
+
+		Request request = httpEngine.createRequest(SystemConfig.NEWIP,
+				gson.toJson(requester));
+		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {
-			
+
 			@Override
 			public void onResponse(Response response) throws IOException {
-				Message msg=new Message();
-				if(response.isSuccessful()){
-					msg.what=StatusCode.EVALUATEOTHER;
-					msg.obj=response.body().string();
-				}else{
-					msg.what=StatusCode.RESPONSE_SERVER_EXCEPTION;
-					msg.obj="服务器异常";
+				Message msg = new Message();
+				if (response.isSuccessful()) {
+					msg.what = StatusCode.EVALUATEOTHER;
+					msg.obj = response.body().string();
+				} else {
+					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
+					msg.obj = "服务器异常";
 				}
 				handler.sendMessage(msg);
 			}
-			
+
 			@Override
 			public void onFailure(Request arg0, IOException arg1) {
-				Message msg=new Message();
-				msg.what=StatusCode.RESPONSE_NET_FAILED;
-				msg.obj="网络异常";
+				Message msg = new Message();
+				msg.what = StatusCode.RESPONSE_NET_FAILED;
+				msg.obj = "网络异常";
 				handler.sendMessage(msg);
 			}
 		});

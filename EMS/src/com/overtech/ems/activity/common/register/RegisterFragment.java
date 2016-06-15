@@ -21,6 +21,9 @@ import android.widget.TextView;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
 import com.overtech.ems.config.StatusCode;
+import com.overtech.ems.config.SystemConfig;
+import com.overtech.ems.entity.bean.CommonBean;
+import com.overtech.ems.entity.common.Requester;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
@@ -49,37 +52,28 @@ public class RegisterFragment extends BaseFragment {
 			switch (msg.what) {
 			case StatusCode.SUBMIT_PHONENO_SUCCESS:
 				String json = (String) msg.obj;
-				try {
-					JSONObject jsonObj = new JSONObject(json);
-					String model = jsonObj.getString("model");
-					if (model.equals("0")) {
-						Utilities.showToast("手机号被占用", context);
-					} else if (model.equals("1")) {
-						Utilities.showToast("验证码发送成功", context);
-					} else if (model.equals("2")) {
-						Utilities.showToast("验证码发送失败", context);
-					}
-				} catch (JSONException e) {
-					e.printStackTrace();
+				CommonBean bean = gson.fromJson(json, CommonBean.class);
+				int st = bean.st;
+				if (st != 0) {
+					Utilities.showToast(bean.msg, activity);
+				} else {
+					Utilities.showToast(bean.msg, activity);
 				}
 				break;
 			case StatusCode.COMMOM_SUBMIT_SMS_CODE:
 				String result = (String) msg.obj;
-				try {
-					JSONObject jsonObject2 = new JSONObject(result);
-					String model = jsonObject2.getString("model");
-					if (model.equals("3")) {
-						Utilities.showToast("验证成功", context);
-						if (listener != null) {
-							listener.onRegFraBtnClick();
-						}
-					} else if (model.equals("4")) {
-						Utilities.showToast("验证失败", context);
-					} else if (model.equals("5")) {
-						Utilities.showToast("验证码失效", context);
+				CommonBean validateBean = gson.fromJson(result,
+						CommonBean.class);
+				int validateSt = validateBean.st;
+				if (validateSt == 100) {
+					Utilities.showToast(validateBean.msg, activity);
+					if (listener != null) {
+						listener.onRegFraBtnClick();
 					}
-				} catch (Exception e) {
-					e.printStackTrace();
+				} else if (validateSt == 101) {
+					Utilities.showToast(validateBean.msg, activity);
+				} else if (validateSt == 102) {
+					Utilities.showToast(validateBean.msg, activity);
 				}
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
@@ -119,109 +113,131 @@ public class RegisterFragment extends BaseFragment {
 			}
 		});
 		mRegisterPhone.addTextChangedListener(new TextWatcher() {
-			
+
 			@Override
-			public void onTextChanged(CharSequence arg0, int arg1, int arg2, int arg3) {
-				if(!TextUtils.isEmpty(arg0)&&Utilities.isMobileNO(arg0.toString())){
+			public void onTextChanged(CharSequence arg0, int arg1, int arg2,
+					int arg3) {
+				if (!TextUtils.isEmpty(arg0)
+						&& Utilities.isMobileNO(arg0.toString())) {
 					mGetValidate.setEnabled(true);
-				}else{
+				} else {
 					mGetValidate.setEnabled(false);
 				}
 			}
-			
+
 			@Override
-			public void beforeTextChanged(CharSequence arg0, int arg1, int arg2,
-					int arg3) {
-				
+			public void beforeTextChanged(CharSequence arg0, int arg1,
+					int arg2, int arg3) {
+
 			}
-			
+
 			@Override
 			public void afterTextChanged(Editable arg0) {
-				
+
 			}
 		});
 		mGetValidate.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				mPhoneNo = mRegisterPhone.getText().toString().trim();
-				if (!TextUtils.isEmpty(mPhoneNo)&& Utilities.isMobileNO(mPhoneNo)) {
-					Param param = new Param(Constant.PHONENO, mPhoneNo);
-					Param flag = new Param(Constant.FLAG, "1");// 告诉服务器需要验证该手机是否已经注册
-					Request request = httpEngine.createRequest(ServicesConfig.COMMON_GET_SMS_CODE, param, flag);
-					Call call = httpEngine.createRequestCall(request);
-					call.enqueue(new Callback() {
-
-						@Override
-						public void onResponse(Response response)throws IOException {
-							Message msg = new Message();
-							if (response.isSuccessful()) {
-								msg.what = StatusCode.SUBMIT_PHONENO_SUCCESS;
-								msg.obj = response.body().string();
-							} else {
-								msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
-							}
-							handler.sendMessage(msg);
-						}
-
-						@Override
-						public void onFailure(Request request, IOException ioe) {
-							Message msg = new Message();
-							msg.what = StatusCode.RESPONSE_NET_FAILED;
-							handler.sendMessage(msg);
-						}
-					});
-				} else {
-					Utilities.showToast("请输入正确的手机号", mContext);
-				}
+				getSmsCode();
 			}
 		});
 		mNext.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View view) {
-					validateCode = mEtValidateCode.getText().toString().trim();
-					if (TextUtils.isEmpty(validateCode)) {
-						Utilities.showToast("验证码不能为空", mContext);
-					} else {
-						Param param = new Param(Constant.PHONENO, mPhoneNo);
-						Param smsCode = new Param(Constant.SMSCODE,validateCode);
-						Request request = httpEngine.createRequest(ServicesConfig.COMMON_VARLICATE_SMS_CODE,param, smsCode);
-						Call call = httpEngine.createRequestCall(request);
-						call.enqueue(new Callback() {
-
-							@Override
-							public void onResponse(Response response)throws IOException {
-								Message msg = new Message();
-								if (response.isSuccessful()) {
-									msg.what = StatusCode.COMMOM_SUBMIT_SMS_CODE;
-									msg.obj = response.body().string();
-								} else {
-									msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
-								}
-								handler.sendMessage(msg);
-
-							}
-
-							@Override
-							public void onFailure(Request request,IOException ioe) {
-								Message msg = new Message();
-								msg.what = StatusCode.RESPONSE_NET_FAILED;
-								handler.sendMessage(msg);
-							}
-						});
-					}
+				submitSmsCode();
 			}
 		});
+	}
+
+	protected void getSmsCode() {
+		// TODO Auto-generated method stub
+		mPhoneNo = mRegisterPhone.getText().toString().trim();
+		if (!TextUtils.isEmpty(mPhoneNo) && Utilities.isMobileNO(mPhoneNo)) {
+			Requester requester = new Requester();
+			requester.cmd = 10;
+			requester.body.put(Constant.FLAG, "0");// 当手机号没有注册过时发送验证码
+			requester.body.put("phone", mPhoneNo);
+
+			Request request = httpEngine.createRequest(SystemConfig.NEWIP,
+					gson.toJson(requester));
+			Call call = httpEngine.createRequestCall(request);
+			call.enqueue(new Callback() {
+
+				@Override
+				public void onResponse(Response response) throws IOException {
+					Message msg = new Message();
+					if (response.isSuccessful()) {
+						msg.what = StatusCode.SUBMIT_PHONENO_SUCCESS;
+						msg.obj = response.body().string();
+					} else {
+						msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
+					}
+					handler.sendMessage(msg);
+				}
+
+				@Override
+				public void onFailure(Request request, IOException ioe) {
+					Message msg = new Message();
+					msg.what = StatusCode.RESPONSE_NET_FAILED;
+					handler.sendMessage(msg);
+				}
+			});
+		} else {
+			Utilities.showToast("请输入正确的手机号", mContext);
+		}
+	}
+
+	protected void submitSmsCode() {
+		validateCode = mEtValidateCode.getText().toString().trim();
+		if (TextUtils.isEmpty(validateCode)) {
+			Utilities.showToast("验证码不能为空", mContext);
+		} else {
+			Requester requester = new Requester();
+			requester.cmd = 11;
+			requester.body.put(Constant.SMSCODE, validateCode);
+			requester.body.put(Constant.PHONENO, mPhoneNo);
+
+			Request request = httpEngine.createRequest(SystemConfig.NEWIP,
+					gson.toJson(requester));
+			Call call = httpEngine.createRequestCall(request);
+			call.enqueue(new Callback() {
+
+				@Override
+				public void onResponse(Response response) throws IOException {
+					Message msg = new Message();
+					if (response.isSuccessful()) {
+						msg.what = StatusCode.COMMOM_SUBMIT_SMS_CODE;
+						msg.obj = response.body().string();
+					} else {
+						msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
+					}
+					handler.sendMessage(msg);
+
+				}
+
+				@Override
+				public void onFailure(Request request, IOException ioe) {
+					Message msg = new Message();
+					msg.what = StatusCode.RESPONSE_NET_FAILED;
+					handler.sendMessage(msg);
+				}
+			});
+		}
 	}
 
 	private void findViewById(View view) {
 		mHeadTitle = (TextView) view.findViewById(R.id.tv_headTitle);
 		mDoBack = (ImageView) view.findViewById(R.id.iv_headBack);
 		mNext = (Button) view.findViewById(R.id.btn_next_fragment);
-		mRegisterPhone = (EditTextWithDelete) view.findViewById(R.id.et_register_phone);
-		mGetValidate = (TimeButton) view.findViewById(R.id.btn_get_valicate_code);
-		mEtValidateCode = (EditTextWithDelete) view.findViewById(R.id.et_valicate_code);
+		mRegisterPhone = (EditTextWithDelete) view
+				.findViewById(R.id.et_register_phone);
+		mGetValidate = (TimeButton) view
+				.findViewById(R.id.btn_get_valicate_code);
+		mEtValidateCode = (EditTextWithDelete) view
+				.findViewById(R.id.et_valicate_code);
 	}
 
 	public void setRegFraBtnClickListener(RegFraBtnClickListener listener) {

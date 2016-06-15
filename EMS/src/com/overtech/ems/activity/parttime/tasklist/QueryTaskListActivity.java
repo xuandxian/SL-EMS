@@ -5,8 +5,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import org.json.JSONException;
-import org.json.JSONObject;
+
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -23,21 +22,23 @@ import android.widget.ListView;
 import android.widget.TextView;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
+
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
-import com.google.gson.Gson;
 import com.overtech.ems.R;
-import com.overtech.ems.entity.parttime.ScanResultBean;
-import com.overtech.ems.entity.bean.BeginWorkResult;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.TaskListDetailsAdapter;
 import com.overtech.ems.config.StatusCode;
+import com.overtech.ems.config.SystemConfig;
+import com.overtech.ems.entity.bean.MaintenanceCompleteBean;
 import com.overtech.ems.entity.bean.WorkTypeBean;
-import com.overtech.ems.entity.common.ServicesConfig;
+import com.overtech.ems.entity.common.Requester;
 import com.overtech.ems.entity.parttime.MaintenanceType;
-import com.overtech.ems.http.HttpEngine.Param;
+import com.overtech.ems.entity.parttime.ScanResultBean;
+import com.overtech.ems.entity.parttime.ScanResultBean.BeginWorkResult;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.AppUtils;
+import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
@@ -57,7 +58,8 @@ import com.squareup.okhttp.Response;
  * 
  */
 
-public class QueryTaskListActivity extends BaseActivity implements OnClickListener {
+public class QueryTaskListActivity extends BaseActivity implements
+		OnClickListener {
 	private TextView mHeadContent;
 	private ImageView mHeadBack, mCallPhone;
 	private double mLatitude;
@@ -77,62 +79,69 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 	private final String TYPE2 = "CONFIRM";
 	private Set<String> tagSet;
 	private String TAG = "24梯";
+	private QueryTaskListActivity activity;
+	private String uid;
+	private String certificate;
 	ArrayList<MaintenanceType> list = new ArrayList<MaintenanceType>();
 	private Handler handler = new Handler() {
-		Gson gson = new Gson();
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
-				case StatusCode.QUERY_TASK_PACKAGE_ELEVATOR_SUCCESS:
-					String json = (String) msg.obj;
-					ScanResultBean bean = gson.fromJson(json, ScanResultBean.class);
-					BeginWorkResult currentElevator = null;
-					boolean isTrue = bean.isSuccess();//是否满足维保要求
-					if (isTrue) {
-						List<BeginWorkResult> result = bean.getModel();
-//						int count = 0;// 记录包中完成电梯的数量
-//						for (int i = 0; i < result.size(); i++) {
-//							if (result.get(i).getIsFinish().equals("2")) {
-//								count++;
-//							}
-//						}
-						for (int i = 0; i < result.size(); i++) {//遍历电梯编号，得到当前电梯正在维保的电梯
-							if (mElevatorNo.equals(result.get(i).getElevatorNo())) {
-								currentElevator = result.get(i);
-							}
+			case StatusCode.QUERY_TASK_PACKAGE_ELEVATOR_SUCCESS:
+				String json = (String) msg.obj;
+				ScanResultBean bean = gson.fromJson(json, ScanResultBean.class);
+				BeginWorkResult currentElevator = null;
+				String isMeetRequire = bean.body.isMeetRequire;// 是否满足维保要求
+				if (TextUtils.equals(isMeetRequire, "1")) {// 满足
+					List<BeginWorkResult> result = bean.body.data;
+					// int count = 0;// 记录包中完成电梯的数量
+					// for (int i = 0; i < result.size(); i++) {
+					// if (result.get(i).getIsFinish().equals("2")) {
+					// count++;
+					// }
+					// }
+					for (int i = 0; i < result.size(); i++) {// 遍历电梯编号，得到当前电梯正在维保的电梯
+						if (mElevatorNo.equals(result.get(i).elevatorNo)) {
+							currentElevator = result.get(i);
 						}
-						double latitude = Double.parseDouble(currentElevator.getLatitude());
-						double longitude = Double.parseDouble(currentElevator.getLongitude());
-						LatLng latlng = new LatLng(latitude, longitude);
-						double distance = DistanceUtil.getDistance(mCurrentLocation, latlng);
-						if (distance > 500.0) {
-							Utilities.showToast("您距离维保电梯的距离超出范围", context);
-							finish();
-						}else {
-							if(currentElevator.getIsFinish().equals("2")){
-								Utilities.showToast("你已经完成了该电梯", context);
-								finish();
-							}else {
-								stopProgressDialog();
-								mTaskNo = currentElevator.getTaskNo();
-								mWorktype = currentElevator.getWorkType();
-								mZonePhone = currentElevator.getZonePhone();
-								showNiffyDialog(mTaskNo, mWorktype, mZonePhone);
-							}
-						}
-					} else {
-						Utilities.showToast("您尚未满足维保要求", context);// 维保要求包括，维保时间正确，有维保搭档，维保电梯正确
-						finish();
 					}
-					break;
+					double latitude = Double
+							.parseDouble(currentElevator.latitude);
+					double longitude = Double
+							.parseDouble(currentElevator.longitude);
+					LatLng latlng = new LatLng(latitude, longitude);
+					double distance = DistanceUtil.getDistance(
+							mCurrentLocation, latlng);
+					if (distance > 500.0) {
+						Utilities.showToast("您距离维保电梯的距离超出范围", context);
+						finish();
+					} else {
+						if (currentElevator.isFinish.equals("2")) {
+							Utilities.showToast("你已经完成了该电梯", context);
+							finish();
+						} else {
+							stopProgressDialog();
+							mTaskNo = currentElevator.taskNo;
+							mWorktype = currentElevator.workType;
+							mZonePhone = currentElevator.zonePhone;
+							showNiffyDialog(mTaskNo, mWorktype, mZonePhone);
+						}
+					}
+				} else {
+					Utilities.showToast("您尚未满足维保要求", context);// 维保要求包括，维保时间正确，有维保搭档，维保电梯正确
+					finish();
+				}
+				break;
 			case StatusCode.WORK_DETAILS_SUCCESS:
 				String jsonWorkType = (String) msg.obj;
-				WorkTypeBean beanWorkBean = gson.fromJson(jsonWorkType, WorkTypeBean.class);
-				ArrayList<String> tempList = beanWorkBean.getModel();
+				WorkTypeBean beanWorkBean = gson.fromJson(jsonWorkType,
+						WorkTypeBean.class);
+				List<String> tempList = beanWorkBean.body.data;
 				list.add(new MaintenanceType("0", "Title", "content"));
 				for (int i = 0; i < tempList.size(); i++) {
 					String allString = tempList.get(i);
 					String[] data = allString.split("\\|");
-					MaintenanceType type = new MaintenanceType(String.valueOf(i + 1), data[0], data[1]);
+					MaintenanceType type = new MaintenanceType(
+							String.valueOf(i + 1), data[0], data[1]);
 					list.add(type);
 				}
 				mTaskDetailsTitle.setVisibility(View.VISIBLE);
@@ -141,55 +150,48 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 				break;
 			case StatusCode.MAINTENANCE_COMPLETE_SUCCESS:
 				String maintenanceJson = (String) msg.obj;// 提交电梯完成状态后，后台返回的信息
-				try {
-					JSONObject jsonObject = new JSONObject(maintenanceJson);
-					String updateMsg = jsonObject.getString("msg");// 该电梯完成状态是否已经更新，0，表示更新失败，1表示更新成功
-					boolean completeProgress = jsonObject.getBoolean("success");// 对于维保的单台电梯，true代表该电梯两人都完成，false代表尚未完成或者有一人完成
-					if (updateMsg.equals("1")) {
-						currentElevatorIsFinish = true;
+				MaintenanceCompleteBean mComBean = gson.fromJson(
+						maintenanceJson, MaintenanceCompleteBean.class);
+				String updateMsg = mComBean.body.updateStatus;// 该电梯完成状态是否已经更新，0，表示更新失败，1表示更新成功
+				String isAllCompleted = mComBean.body.isAllCompleted;// 对于维保的单台电梯，true代表该电梯两人都完成，false代表尚未完成或者有一人完成
+				String taskStatus = mComBean.body.taskStatus;
+				if (updateMsg.equals("1")) {
+					currentElevatorIsFinish = true;
+				} else {
+					currentElevatorIsFinish = false;
+				}
+				if (TextUtils.equals(isAllCompleted, "1")) {
+					tagSet.remove(mTaskNo);
+					JPushInterface.setAliasAndTags(getApplicationContext(),
+							null, tagSet, mTagsCallback);
+					if (TextUtils.equals("0", taskStatus)) {
+						// 任务包中还有未完成的
+						Utilities.showToast("您还有未完成的电梯", context);
+						Intent intent = new Intent(QueryTaskListActivity.this,
+								TaskListPackageDetailActivity.class);
+						intent.putExtra(Constant.TASKNO, mTaskNo);
+						startActivity(intent);
+						finish();
 					} else {
-						currentElevatorIsFinish = false;
-					}
-					if (completeProgress) {
-						tagSet.remove(mTaskNo);
-						JPushInterface.setAliasAndTags(getApplicationContext(),null, tagSet, mTagsCallback);
-						if (!jsonObject.isNull("taskState")) {
-							String taskState = jsonObject
-									.getString("taskState");
-							if (taskState.equals("0")) {
-								// 任务包中还有未完成的
-								Utilities.showToast("您还有未完成的电梯", context);
-								Intent intent = new Intent(QueryTaskListActivity.this,TaskListPackageDetailActivity.class);
-								intent.putExtra(Constant.TASKNO, mTaskNo);
-								startActivity(intent);
-								finish();
-							} else {
-								// 任务包中全部都完成了
-								Intent intent = new Intent(QueryTaskListActivity.this,TaskListPackageDetailActivity.class);
-								intent.putExtra(Constant.TASKNO, mTaskNo);
-								startActivity(intent);
-								finish();
-							}
-						} else {
-							Utilities.showToast("查询其他电梯状态失败", context);
-							Intent intent = new Intent(QueryTaskListActivity.this,TaskListPackageDetailActivity.class);
-							intent.putExtra(Constant.TASKNO, mTaskNo);
-							startActivity(intent);
-							finish();
-						}
-					} else {
-						Utilities.showToast("请和搭档确认电梯的完成状态", context);
-						Intent intent = new Intent(QueryTaskListActivity.this,TaskListPackageDetailActivity.class);
+						// 任务包中全部都完成了
+						Intent intent = new Intent(QueryTaskListActivity.this,
+								TaskListPackageDetailActivity.class);
 						intent.putExtra(Constant.TASKNO, mTaskNo);
 						startActivity(intent);
 						finish();
 					}
-				} catch (JSONException e) {
-					e.printStackTrace();
+				} else {
+					Utilities.showToast("请和搭档确认电梯的完成状态", context);
+					Intent intent = new Intent(QueryTaskListActivity.this,
+							TaskListPackageDetailActivity.class);
+					intent.putExtra(Constant.TASKNO, mTaskNo);
+					startActivity(intent);
+					finish();
 				}
 				break;
 			case StatusCode.MSG_SET_TAGS:
-				JPushInterface.setAliasAndTags(getApplicationContext(), null,(Set<String>) msg.obj, mTagsCallback);
+				JPushInterface.setAliasAndTags(getApplicationContext(), null,
+						(Set<String>) msg.obj, mTagsCallback);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
 				Utilities.showToast("网络异常", context);
@@ -209,12 +211,16 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 			switch (code) {
 			case 0:
 				Log.d(TAG, "Set tag and alias success");
-				mSharedPreferences.edit().putStringSet("tagSet", tags).commit();// 成功保存标签后，将标签放到本地
+				SharePreferencesUtils.put(context,
+						SharedPreferencesKeys.TAGSET, tags);// //
+															// 成功保存标签后，将标签放到本地
 				break;
 			case 6002:
-				Log.d(TAG, "Failed to set alias and tags due to timeout. Try again after 60s.");
+				Log.d(TAG,
+						"Failed to set alias and tags due to timeout. Try again after 60s.");
 				if (AppUtils.isConnected(getApplicationContext())) {
-					handler.sendMessageDelayed(handler.obtainMessage(StatusCode.MSG_SET_TAGS, tags), 1000 * 60);
+					handler.sendMessageDelayed(handler.obtainMessage(
+							StatusCode.MSG_SET_TAGS, tags), 1000 * 60);
 				} else {
 					Log.i(TAG, "No network");
 				}
@@ -229,27 +235,30 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_task_details);
+		activity = this;
+		uid = (String) SharePreferencesUtils.get(activity,
+				SharedPreferencesKeys.UID, "");
+		certificate = (String) SharePreferencesUtils.get(activity,
+				SharedPreferencesKeys.CERTIFICATED, "");
 		initTag();
 		init();
 		getExtraDataAndValidate();
 	}
-	
+
 	private void initTag() {
-		Set<String> tempSet = mSharedPreferences.getStringSet("tagSet", null);
-		if (tempSet == null) {
-			tagSet = new LinkedHashSet<String>();
-		} else {
-			tagSet = tempSet;
-		}
+		SharePreferencesUtils.get(activity, SharedPreferencesKeys.TAGSET,
+				new LinkedHashSet<String>());
+		Set<String> tempSet = (Set<String>) SharePreferencesUtils.get(activity,
+				SharedPreferencesKeys.TAGSET, new LinkedHashSet<String>());
 	}
-	
-	
+
 	private void init() {
 		context = QueryTaskListActivity.this;
 		mLatitude = application.latitude;
 		mLongitude = application.longitude;
 		mCurrentLocation = new LatLng(mLatitude, mLongitude);
-		mListFooterView = LayoutInflater.from(context).inflate(R.layout.listview_footer_done, null);
+		mListFooterView = LayoutInflater.from(context).inflate(
+				R.layout.listview_footer_done, null);
 		mDone = (Button) mListFooterView.findViewById(R.id.btn_tasklist_done);
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
 		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
@@ -268,10 +277,14 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 	private void getExtraDataAndValidate() {
 		startProgressDialog("正在查询...");
 		Intent intent = getIntent();
-		mElevatorNo=intent.getStringExtra(Constant.ELEVATORNO);
-		Param param = new Param(Constant.ELEVATORNO, mElevatorNo);
-		Param param2 = new Param(Constant.LOGINNAME, mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, ""));
-		Request request = httpEngine.createRequest(ServicesConfig.QUERY_TASK_PACKAGE_ELEVATOR, param, param2);
+		mElevatorNo = intent.getStringExtra(Constant.ELEVATORNO);
+		Requester requester = new Requester();
+		requester.cmd = 20055;
+		requester.uid = uid;
+		requester.certificate = certificate;
+		requester.body.put(Constant.ELEVATORNO, mElevatorNo);
+		Request request = httpEngine.createRequest(SystemConfig.NEWIP,
+				gson.toJson(requester));
 		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {
 
@@ -296,11 +309,16 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 		});
 	}
 
-	//根据维保类型，获取维保任务列表
+	// 根据维保类型，获取维保任务列表
 	private void getMaintenanceTaskListData() {
 		startProgressDialog("正在加载...");
-		Param param = new Param(Constant.WORKTYPE, mWorktype);
-		Request request = httpEngine.createRequest(ServicesConfig.WORK_TYPE, param);
+		Requester requester = new Requester();
+		requester.uid = uid;
+		requester.certificate = certificate;
+		requester.cmd = 20060;
+		requester.body.put(Constant.WORKTYPE, mWorktype);
+		Request request = httpEngine.createRequest(SystemConfig.NEWIP,
+				gson.toJson(requester));
 		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {
 			@Override
@@ -314,7 +332,7 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 				}
 				handler.sendMessage(msg);
 			}
-			
+
 			@Override
 			public void onFailure(Request request, IOException e) {
 				Message msg = new Message();
@@ -324,10 +342,12 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 		});
 	}
 
-	private void showNiffyDialog(String taskNo, String workType,String zonePhone){
+	private void showNiffyDialog(String taskNo, String workType,
+			String zonePhone) {
 		Effectstype effect = Effectstype.Slideright;
 		dialogBuilder.withTitle("温馨提示").withTitleColor(R.color.main_primary)
-				.withDividerColor("#11000000").withMessage("请将电梯监测设备按钮调至维保状态后开始进行维保工作")
+				.withDividerColor("#11000000")
+				.withMessage("请将电梯监测设备按钮调至维保状态后开始进行维保工作")
 				.withMessageColor(R.color.main_primary)
 				.withDialogColor("#FFFFFFFF").isCancelableOnTouchOutside(false)
 				.withDuration(700).withEffect(effect)
@@ -346,8 +366,9 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 						dialogBuilder.dismiss();
 						getMaintenanceTaskListData();
 					}
-		}).show();
+				}).show();
 	}
+
 	private void showDialog(final String type, String message) {
 		Effectstype effect = Effectstype.Slideright;
 		dialogBuilder.withTitle("温馨提示").withTitleColor(R.color.main_primary)
@@ -368,19 +389,28 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 					public void onClick(View v) {
 						dialogBuilder.dismiss();
 						if (TextUtils.equals(type, TYPE1)) {
-							Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + mZonePhone));
+							Intent intent = new Intent(Intent.ACTION_CALL, Uri
+									.parse("tel:" + mZonePhone));
 							startActivity(intent);
 						} else {
 							if (!currentElevatorIsFinish) {
-								Param taskNoParam = new Param(Constant.TASKNO,mTaskNo);
-								Param elevatorNoParam = new Param(Constant.ELEVATORNO, mElevatorNo);
-								Param loginNameParam = new Param(Constant.LOGINNAME, mSharedPreferences.getString(SharedPreferencesKeys.CURRENT_LOGIN_NAME, ""));
-								Request request = httpEngine.createRequest(ServicesConfig.MAINTENCE_LIST_COMPLETE, taskNoParam,elevatorNoParam,loginNameParam);
-								Call call = httpEngine.createRequestCall(request);
+								Requester requester = new Requester();
+								requester.cmd = 20056;
+								requester.uid = uid;
+								requester.certificate = certificate;
+								requester.body.put(Constant.ELEVATORNO,
+										mElevatorNo);
+								requester.body.put(Constant.TASKNO, mTaskNo);
+								Request request = httpEngine.createRequest(
+										SystemConfig.NEWIP,
+										gson.toJson(requester));
+								Call call = httpEngine
+										.createRequestCall(request);
 								call.enqueue(new Callback() {
-									
+
 									@Override
-									public void onResponse(Response response) throws IOException {
+									public void onResponse(Response response)
+											throws IOException {
 										Message msg = new Message();
 										if (response.isSuccessful()) {
 											msg.what = StatusCode.MAINTENANCE_COMPLETE_SUCCESS;
@@ -390,8 +420,10 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 										}
 										handler.sendMessage(msg);
 									}
+
 									@Override
-									public void onFailure(Request request, IOException e) {
+									public void onFailure(Request request,
+											IOException e) {
 										Message msg = new Message();
 										msg.what = StatusCode.RESPONSE_NET_FAILED;
 										handler.sendMessage(msg);
@@ -402,9 +434,9 @@ public class QueryTaskListActivity extends BaseActivity implements OnClickListen
 							}
 						}
 					}
-		}).show();
+				}).show();
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();

@@ -76,7 +76,7 @@ public class Constant {
 	/**
 	 * 更新手机号
 	 */
-	public static final String PHONENO = "phoneNo";
+	public static final String PHONENO = "phone";
 	/**
 	 * 短信验证码
 	 */
@@ -132,11 +132,11 @@ public class Constant {
 	/**
 	 * 互相评价--分值
 	 */
-	public static final String EVALUATELEVEL = "evaluateLevel";
+	public static final String EVALUATELEVEL = "store";
 	/**
 	 * 互相评价--评价原因
 	 */
-	public static final String EVALUATEINFO = "evaluateInfo";
+	public static final String EVALUATEINFO = "remark";
 	/**
 	 * 更新手机号（新手机号）
 	 */

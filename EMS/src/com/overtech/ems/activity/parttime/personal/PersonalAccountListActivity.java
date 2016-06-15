@@ -1,6 +1,8 @@
 package com.overtech.ems.activity.parttime.personal;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,16 +17,15 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.PersonalAccountHasCountAdapter;
 import com.overtech.ems.activity.adapter.PersonalAccountNoCountAdapter;
 import com.overtech.ems.config.StatusCode;
+import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.BillBean;
-import com.overtech.ems.entity.common.ServicesConfig;
-import com.overtech.ems.http.HttpEngine.Param;
-import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.entity.common.Requester;
+import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.squareup.okhttp.Call;
@@ -42,21 +43,22 @@ public class PersonalAccountListActivity extends BaseActivity implements
 	private BaseAdapter adapter;
 	private static final String HASCOUNT = "1";
 	private static final String NOCOUNT = "0";
-
+	private String uid;
+	private String certificate;
+	private PersonalAccountListActivity activity;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case StatusCode.ACCOUNT_LIST_SUCCESS:
 				String json = (String) msg.obj;
-				Log.e("==w我的账单=="+msg.arg1, json);
-				Gson gson = new Gson();
+				Log.e("==w我的账单==" + msg.arg1, json);
 				BillBean datas = gson.fromJson(json, BillBean.class);
-				if(msg.arg1==1){
-					adapter = new PersonalAccountHasCountAdapter(context,
-							datas.getModel());
-				}else{
-					adapter = new PersonalAccountNoCountAdapter(context,
-							datas.getModel());
+				List<Map<String, Object>> data = (List<Map<String, Object>>) datas.body
+						.get("data");
+				if (msg.arg1 == 1) {
+					adapter = new PersonalAccountHasCountAdapter(context, data);
+				} else {
+					adapter = new PersonalAccountNoCountAdapter(context, data);
 				}
 				mPersonalAccountListView.setAdapter(adapter);
 				break;
@@ -75,6 +77,7 @@ public class PersonalAccountListActivity extends BaseActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+		activity = this;
 		setContentView(R.layout.activity_personal_account_list);
 		findViewById();
 		initData();
@@ -83,12 +86,14 @@ public class PersonalAccountListActivity extends BaseActivity implements
 
 	private void startLoading(final String billState) {
 		startProgressDialog("正在加载...");
-		Param phoneParam = new Param(Constant.LOGINNAME,
-				mSharedPreferences.getString(
-						SharedPreferencesKeys.CURRENT_LOGIN_NAME, null));
-		Param flagParam = new Param(Constant.CLOSINGSTATE, billState);
-		Request requst = httpEngine.createRequest(ServicesConfig.PERSONAL_BILL,
-				phoneParam, flagParam);
+		Requester requester = new Requester();
+		requester.cmd = 20074;
+		requester.certificate = certificate;
+		requester.uid = uid;
+		requester.body.put("closeStatus", billState);// 0未结算
+
+		Request requst = httpEngine.createRequest(SystemConfig.NEWIP,
+				gson.toJson(requester));
 		Call call = httpEngine.createRequestCall(requst);
 		call.enqueue(new Callback() {
 
@@ -97,7 +102,7 @@ public class PersonalAccountListActivity extends BaseActivity implements
 				Message msg = new Message();
 				if (response.isSuccessful()) {
 					msg.what = StatusCode.ACCOUNT_LIST_SUCCESS;
-					msg.arg1=Integer.parseInt(billState);
+					msg.arg1 = Integer.parseInt(billState);
 					msg.obj = response.body().string();
 				} else {
 					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
@@ -123,6 +128,10 @@ public class PersonalAccountListActivity extends BaseActivity implements
 	}
 
 	private void initData() {
+		certificate = (String) SharePreferencesUtils.get(activity,
+				SharedPreferencesKeys.CERTIFICATED, "");
+		uid = (String) SharePreferencesUtils.get(activity,
+				SharedPreferencesKeys.UID, "");
 		mDoBack.setVisibility(View.VISIBLE);
 		mHeadContent.setText("我的账单");
 		context = PersonalAccountListActivity.this;

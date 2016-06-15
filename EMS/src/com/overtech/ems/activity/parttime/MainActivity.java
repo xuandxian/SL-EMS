@@ -31,9 +31,9 @@ import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 
 /**
- * @author Tony
+ * @author Will
  * @description 主界面
- * @date 2015-10-05
+ * @date 2016-06-14
  */
 public class MainActivity extends BaseActivity implements NearByMapCallBack {
 
@@ -64,7 +64,7 @@ public class MainActivity extends BaseActivity implements NearByMapCallBack {
 				SharedPreferencesKeys.UID, "");
 		certificate = (String) SharePreferencesUtils.get(this,
 				SharedPreferencesKeys.CERTIFICATED, "");
-		statckInstance.pushActivity(this);
+		stackInstance.pushActivity(this);
 		setContentView(R.layout.activity_main);
 		findViewById();
 		setDefaultView();
@@ -101,17 +101,7 @@ public class MainActivity extends BaseActivity implements NearByMapCallBack {
 				mGrabTaskFragment = (GrabTaskFragment) currentFragment;
 			}
 		}
-		// 过时
-		// FragmentTransaction transaction = fragmentManager.beginTransaction();
-		// String flag = getIntent().getStringExtra("flag");
-		// if (TextUtils.equals("1", flag)) {
-		// mTaskListFragment = new TaskListFragment();
-		// transaction.replace(R.id.mHomeContent, mTaskListFragment);
-		// } else {
-		// mGrabTaskFragment = new GrabTaskFragment();
-		// transaction.replace(R.id.mHomeContent, mGrabTaskFragment);
-		// }
-		// transaction.commit();
+		
 	}
 
 	private void initEvents() {
@@ -202,7 +192,7 @@ public class MainActivity extends BaseActivity implements NearByMapCallBack {
 				Utilities.showToast("再按一次退出24梯", this);
 				exitTime = System.currentTimeMillis();
 			} else {
-				statckInstance.popAllActivitys();
+				stackInstance.popAllActivitys();
 			}
 			return true;
 		}
