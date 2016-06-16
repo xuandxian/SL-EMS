@@ -1,17 +1,16 @@
 package com.overtech.ems.activity;
 
 import java.util.Map;
+
 import android.app.Application;
-import android.content.Context;
 import android.content.SharedPreferences;
 import cn.jpush.android.api.JPushInterface;
+
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.SDKInitializer;
-import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.service.LocationService;
+import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.Utilities;
 
 public class MyApplication extends Application {
@@ -27,10 +26,6 @@ public class MyApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		if (sp == null) {
-			sp = getSharedPreferences(SystemConfig.PREFERENCES_NAME,
-					Context.MODE_PRIVATE);
-		}
 		SDKInitializer.initialize(getApplicationContext());
 		mMyLocationClient = new MyLocationListener();
 		locationService = new LocationService(getApplicationContext());
@@ -38,10 +33,7 @@ public class MyApplication extends Application {
 		locationService.start();
 		JPushInterface.setDebugMode(true); // 设置开启日志,发布时请关闭日志
 		JPushInterface.init(this); // 初始化 JPush
-	}
-
-	public SharedPreferences getSharePreference() {
-		return sp;
+		Logr.e("==MyApplication= 执行了");
 	}
 
 	public class MyLocationListener implements BDLocationListener {
@@ -54,6 +46,7 @@ public class MyApplication extends Application {
 			} else {
 				latitude = location.getLatitude();
 				longitude = location.getLongitude();
+				Logr.e("latitude==" + latitude + "==longitude==" + longitude);
 				locationService.stop();
 			}
 		}

@@ -1,41 +1,31 @@
 package com.overtech.ems.activity.parttime;
 
-import java.util.List;
-
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.overtech.ems.R;
-import com.overtech.ems.R.id;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.fulltime.maintenance.MaintenanceFragment;
 import com.overtech.ems.activity.parttime.fragment.GrabTaskFragment;
 import com.overtech.ems.activity.parttime.fragment.NearByFragment;
-import com.overtech.ems.activity.parttime.fragment.NearByFragment.NearByMapCallBack;
 import com.overtech.ems.activity.parttime.fragment.PersonalZoneFragment;
 import com.overtech.ems.activity.parttime.fragment.TaskListFragment;
-import com.overtech.ems.entity.bean.TaskPackageBean.TaskPackage;
-import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.FragmentUtils;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
-import com.overtech.ems.widget.dialogeffects.Effectstype;
 
 /**
  * @author Will
  * @description 主界面
  * @date 2016-06-14
  */
-public class MainActivity extends BaseActivity implements NearByMapCallBack {
+public class MainActivity extends BaseActivity {
 
 	private RadioGroup mHomeRadioGroup;
 	private RadioButton mHomeHomeRb;
@@ -51,7 +41,6 @@ public class MainActivity extends BaseActivity implements NearByMapCallBack {
 	private String employeeType;
 	private String uid;
 	private String certificate;
-	public List<TaskPackage> list;
 	public static String JZ = "兼职";
 	public static String QZ = "全职";
 
@@ -101,7 +90,7 @@ public class MainActivity extends BaseActivity implements NearByMapCallBack {
 				mGrabTaskFragment = (GrabTaskFragment) currentFragment;
 			}
 		}
-		
+
 	}
 
 	private void initEvents() {
@@ -212,12 +201,6 @@ public class MainActivity extends BaseActivity implements NearByMapCallBack {
 		if (dialogBuilder.isShowing()) {
 			dialogBuilder.dismiss();
 		}
-	}
-
-	@Override
-	public void getListCallback(List<TaskPackage> list) {
-		// TODO Auto-generated method stub
-		this.list = list;
 	}
 
 	public String getUid() {

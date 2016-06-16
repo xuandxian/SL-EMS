@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,16 +19,17 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.PersonalAnnounceAdapter;
+import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.config.StatusCode;
+import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.AnnouncementBean;
-import com.overtech.ems.entity.common.ServicesConfig;
-import com.overtech.ems.entity.parttime.Announcement;
+import com.overtech.ems.entity.common.Requester;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.SharePreferencesUtils;
+import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
@@ -44,20 +46,31 @@ public class PersonalNoticeActivity extends BaseActivity {
 	private ListView mAnnouncement;
 	private PersonalNoticeActivity activity;
 	private PersonalAnnounceAdapter adapter;
-	private List<Announcement> list;
+	private List<Map<String, Object>> list;
 	private int announceSize;
 	private HashSet<String> announceItemPosition;
 	private final String ANNOUNCEITEMPOSITION = "announce_item_position";
 	private final String ANNOUNCE_SIZE = "announces_size";
+	private String uid;
+	private String certificate;
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case StatusCode.ANNOUNCEMENT_SUCCESS:
 				String json = (String) msg.obj;
-				Gson gson = new Gson();
 				AnnouncementBean bean = gson.fromJson(json,
 						AnnouncementBean.class);
-				list = bean.getModel();
+				int st = bean.st;
+				if (st == -1 || st == -2) {
+					Utilities.showToast(bean.msg, activity);
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent = new Intent(activity, LoginActivity.class);
+					startActivity(intent);
+				}
+				list = (List<Map<String, Object>>) bean.body.get("data");
 				if (null == list || list.size() == 0) {
 					Utilities.showToast("无数据", activity);
 				} else {
@@ -77,16 +90,16 @@ public class PersonalNoticeActivity extends BaseActivity {
 						SharePreferencesUtils.put(activity, ANNOUNCE_SIZE,
 								list.size());// 将集合大小保存
 					}
-					adapter = new PersonalAnnounceAdapter(context, list,
+					adapter = new PersonalAnnounceAdapter(activity, list,
 							announceItemPosition);
 					mAnnouncement.setAdapter(adapter);
 				}
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast((String) msg.obj, context);
+				Utilities.showToast((String) msg.obj, activity);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast((String) msg.obj, context);
+				Utilities.showToast((String) msg.obj, activity);
 				break;
 
 			default:
@@ -100,6 +113,11 @@ public class PersonalNoticeActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		activity = this;
+		stackInstance.pushActivity(activity);
+		uid = (String) SharePreferencesUtils.get(activity,
+				SharedPreferencesKeys.UID, "");
+		certificate = (String) SharePreferencesUtils.get(activity,
+				SharedPreferencesKeys.CERTIFICATED, "");
 		setContentView(R.layout.activity_personal_announcement);
 		initView();
 		initData();
@@ -147,10 +165,11 @@ public class PersonalNoticeActivity extends BaseActivity {
 				 * Iterator iterator=set.iterator(); while(iterator.hasNext()){
 				 * Log.e("=====", iterator.next()+""); }
 				 */
-				Announcement data = (Announcement) parent.getAdapter().getItem(
-						position);
+				Map<String, Object> data = (Map<String, Object>) parent
+						.getAdapter().getItem(position);
 				Bundle bundle = new Bundle();
-				bundle.putString(Constant.ANNOUNCEMENTID, data.getId());
+				bundle.putString(Constant.ANNOUNCEMENTID, data.get("id")
+						.toString());
 				Intent intent = new Intent(activity,
 						PersonalNoticeDetailActivity.class);
 				intent.putExtras(bundle);
@@ -161,8 +180,11 @@ public class PersonalNoticeActivity extends BaseActivity {
 
 	private void initData() {
 		startProgressDialog("正在加载中...");
-		Request request = httpEngine
-				.createRequest(ServicesConfig.PERSONAL_ANNOUNCEMENT);
+		Requester requester = new Requester();
+		requester.cmd = 20077;
+		requester.uid = uid;
+		requester.certificate = certificate;
+		Request request = httpEngine.createRequest(SystemConfig.NEWIP);
 		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {
 
@@ -187,5 +209,12 @@ public class PersonalNoticeActivity extends BaseActivity {
 				handler.sendMessage(msg);
 			}
 		});
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		stackInstance.popActivity(activity);
 	}
 }

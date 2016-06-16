@@ -44,10 +44,10 @@ public class QuestionResponseActivity extends BaseActivity implements
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast((String) msg.obj, context);
+				Utilities.showToast((String) msg.obj, activity);
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast((String) msg.obj, context);
+				Utilities.showToast((String) msg.obj, activity);
 				break;
 			case StatusCode.QUESTIONFEEDBACK:
 				String json = (String) msg.obj;

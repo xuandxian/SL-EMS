@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.common.LoginActivity;
@@ -31,14 +32,15 @@ public class ResetPasswordSuccessActivity extends BaseActivity {
 	private void init() {
 		mHeadContent.setText("密码重置");
 		mHeadBack.setVisibility(View.VISIBLE);
-		Utilities.showToast("2秒后跳转到登录", context);
+		Utilities.showToast("2秒后跳转到登录", this);
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				Intent intent=new Intent(ResetPasswordSuccessActivity.this,LoginActivity.class);
+				Intent intent = new Intent(ResetPasswordSuccessActivity.this,
+						LoginActivity.class);
 				startActivity(intent);
 				progressDialog.dismiss();
-//				finish();
+				// finish();
 			}
 		}, 2000);
 	}

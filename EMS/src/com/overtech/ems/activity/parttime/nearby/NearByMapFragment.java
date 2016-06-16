@@ -1,14 +1,10 @@
 package com.overtech.ems.activity.parttime.nearby;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -29,24 +25,17 @@ import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MarkerOptions.MarkerAnimateType;
 import com.baidu.mapapi.model.LatLng;
-import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
+import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
-import com.overtech.ems.config.StatusCode;
-import com.overtech.ems.entity.bean.TaskPackageBean;
+import com.overtech.ems.activity.parttime.fragment.NearByFragment;
+import com.overtech.ems.activity.parttime.fragment.NearByFragment.NearByMapCallback;
 import com.overtech.ems.entity.bean.TaskPackageBean.TaskPackage;
-import com.overtech.ems.http.HttpEngine.Param;
-import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.Utilities;
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
-public class NearByMapFragment extends BaseFragment {
+public class NearByMapFragment extends BaseFragment implements NearByMapCallback {
 
-	ArrayList<TaskPackageBean> dataList = new ArrayList<TaskPackageBean>();
 	private MapView mMapView = null;
 	private BaiduMap mBaiduMap = null;
 	private BitmapDescriptor bitmap;
@@ -55,30 +44,10 @@ public class NearByMapFragment extends BaseFragment {
 	private Marker mMarker;
 	private View view;
 	private TaskPackage data;
+	private double latitude;
+	private double longitude;
 	private LatLng myLocation, longPressLocation;
-
-	private Handler handler = new Handler() {
-		public void handleMessage(Message msg) {
-			Gson gson = new Gson();
-			switch (msg.what) {
-			case StatusCode.GET_DATA_BY_LOCATION_SUCCESS:
-				String json = (String) msg.obj;
-				TaskPackageBean tasks = gson.fromJson(json,
-						TaskPackageBean.class);
-				List<TaskPackage> newData = (ArrayList<TaskPackage>) tasks.body.data;
-				addOverLay(newData);
-				break;
-			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast("服务器异常", context);
-				break;
-			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast("网络异常", context);
-				break;
-			}
-			stopProgressDialog();
-		};
-	};
-
+	private List<TaskPackage> list;
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -93,51 +62,20 @@ public class NearByMapFragment extends BaseFragment {
 
 	@SuppressWarnings("unchecked")
 	private void getExtralData() {
-		Bundle bundle = getArguments();
-		if (null == bundle) {
+		
+		((NearByFragment) getParentFragment()).setNearByMapCallback(this);
+		latitude = ((MyApplication) getActivity().getApplicationContext()).latitude;
+		longitude = ((MyApplication) getActivity().getApplicationContext()).longitude;
+		if (latitude == 0 || longitude == 0) {
+			Utilities.showToast("定位失败", activity);
 			return;
 		}
-		ArrayList<TaskPackage> list = (ArrayList<TaskPackage>) bundle
-				.getSerializable("taskPackage");
-		myLocation = new LatLng(bundle.getDouble(Constant.LATITUDE),
-				bundle.getDouble(Constant.LONGITUDE));
-		addOverLay(list);
-		setMyLocationMarker(myLocation);
 	}
 
 	private void initView(View view) {
 		mMapView = (MapView) view.findViewById(R.id.bmapView);
 		mBaiduMap = mMapView.getMap();
 		mBaiduMap.animateMapStatus(MapStatusUpdateFactory.zoomTo(13.0f));// 缩放到13
-	}
-
-	private void getDataByLatlng(String url, String flag, Param... params) {
-		if (TextUtils.equals(flag, "1")) {
-			startProgressDialog("正在查询...");
-		}
-		Request request = httpEngine.createRequest(url, params);
-		Call call = httpEngine.createRequestCall(request);
-		call.enqueue(new Callback() {
-
-			@Override
-			public void onResponse(Response response) throws IOException {
-				Message msg = new Message();
-				if (response.isSuccessful()) {
-					msg.what = StatusCode.GET_DATA_BY_LOCATION_SUCCESS;
-					msg.obj = response.body().string();
-				} else {
-					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
-				}
-				handler.sendMessage(msg);
-			}
-
-			@Override
-			public void onFailure(Request request, IOException e) {
-				Message msg = new Message();
-				msg.what = StatusCode.RESPONSE_NET_FAILED;
-				handler.sendMessage(msg);
-			}
-		});
 	}
 
 	private void setMyLocationMarker(LatLng point) {
@@ -170,7 +108,7 @@ public class NearByMapFragment extends BaseFragment {
 			return;
 		}
 		if (null == dataList || dataList.size() == 0) {
-			Utilities.showToast("无数据", context);
+			Utilities.showToast("无数据", activity);
 		} else {
 			// if (null != longPressLocation) {
 			// OverlayOptions ooCircle = new CircleOptions()
@@ -274,5 +212,14 @@ public class NearByMapFragment extends BaseFragment {
 			bitmap.recycle();
 		}
 		super.onDestroy();
+	}
+
+	@Override
+	public void callback() {
+		// TODO Auto-generated method stub
+		list=((NearByFragment)getParentFragment()).getData();
+		myLocation = new LatLng(latitude, longitude);
+		addOverLay(list);
+		setMyLocationMarker(myLocation);
 	}
 }

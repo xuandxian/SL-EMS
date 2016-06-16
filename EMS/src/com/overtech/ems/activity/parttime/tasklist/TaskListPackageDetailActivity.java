@@ -102,7 +102,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	private int mScreenHeight;// 屏幕的高度
 	private String uid;
 	private String certificate;
-
+	private TaskListPackageDetailActivity activity;
 	private Handler handler = new Handler() {
 
 		public void handleMessage(android.os.Message msg) {
@@ -158,7 +158,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 							mDoChargeBack.setVisibility(View.VISIBLE);
 						}
 					}
-					adapter = new TaskListPackageDetailAdapter(context, list);
+					adapter = new TaskListPackageDetailAdapter(activity, list);
 					mTaskListView.setAdapter(adapter);
 				}
 				stopProgressDialog();
@@ -168,10 +168,10 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				CommonBean validateBean = gson.fromJson(time, CommonBean.class);
 				String result = validateBean.body.result;
 				if (result.equals("-1")) {
-					Utilities.showToast("该维保单时间已经过期", context);
+					Utilities.showToast("该维保单时间已经过期", activity);
 					break;
 				} else if (result.equals("0")) {
-					Utilities.showToast("当天的任务不可以被退单", context);
+					Utilities.showToast("当天的任务不可以被退单", activity);
 					break;
 				} else if (result.equals("1")) {
 					dialogBuilder.withMessage("72小时内退单会影响星级评定，你确认要退单？");
@@ -258,11 +258,11 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 						(Set<String>) msg.obj, mTagsCallback);
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast((String) msg.obj, context);
+				Utilities.showToast((String) msg.obj, activity);
 				stopProgressDialog();
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast((String) msg.obj, context);
+				Utilities.showToast((String) msg.obj, activity);
 				stopProgressDialog();
 				break;
 			default:
@@ -284,7 +284,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				SharePreferencesUtils.put(mActivity,
 						SharedPreferencesKeys.TAGSET, tags);// //
 															// 成功保存标签后，将标签放到本地
-				Utilities.showToast("退单成功", context);
+				Utilities.showToast("退单成功", activity);
 				stopProgressDialog();
 				finish();
 				break;
@@ -364,7 +364,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 					int position, long id) {
 				TaskPackage detail = (TaskPackage) parent
 						.getItemAtPosition(position);
-				Intent intent = new Intent(context,
+				Intent intent = new Intent(activity,
 						ElevatorDetailActivity.class);
 				intent.putExtra(Constant.ELEVATORNO, detail.elevatorNo);
 				startActivity(intent);
@@ -375,8 +375,8 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 
 	private void initPopupWindow() {
 		if (popupWindow == null) {
-			mScreenWidth = context.getResources().getDisplayMetrics().widthPixels;
-			mScreenHeight = context.getResources().getDisplayMetrics().heightPixels;
+			mScreenWidth = activity.getResources().getDisplayMetrics().widthPixels;
+			mScreenHeight = activity.getResources().getDisplayMetrics().heightPixels;
 			popupWindow = new PopupWindow(mActivity);
 			popupWindow.setWidth(mScreenWidth / 2);
 			popupWindow.setHeight(LayoutParams.WRAP_CONTENT);

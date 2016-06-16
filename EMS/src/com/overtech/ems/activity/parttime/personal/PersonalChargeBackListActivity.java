@@ -34,6 +34,7 @@ public class PersonalChargeBackListActivity extends BaseActivity {
 	private PersonalChargebackAdapter adapter;
 	private String uid;
 	private String certificate;
+	private PersonalChargeBackListActivity activity;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
@@ -42,23 +43,23 @@ public class PersonalChargeBackListActivity extends BaseActivity {
 				ChargebackBean bean = gson.fromJson(info, ChargebackBean.class);
 				int st = bean.st;
 				if (st != 0) {
-					Utilities.showToast(bean.msg, context);
+					Utilities.showToast(bean.msg, activity);
 				} else {
 					list = (List<Map<String, Object>>) bean.body.get("data");
 					if (list.size() == 0) {
-						Utilities.showToast("无数据", context);
+						Utilities.showToast("无数据", activity);
 					} else {
-						adapter = new PersonalChargebackAdapter(context, list);
+						adapter = new PersonalChargebackAdapter(activity, list);
 						mChargeback.setAdapter(adapter);
 					}
 				}
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
 				String exception = (String) msg.obj;
-				Utilities.showToast(exception, context);
+				Utilities.showToast(exception, activity);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast((String) msg.obj, context);
+				Utilities.showToast((String) msg.obj, activity);
 				break;
 			default:
 				break;
@@ -76,6 +77,7 @@ public class PersonalChargeBackListActivity extends BaseActivity {
 	}
 
 	private void init() {
+		activity = this;
 		mDoBack.setVisibility(View.VISIBLE);
 		mDoBack.setOnClickListener(new OnClickListener() {
 			@Override

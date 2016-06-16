@@ -42,26 +42,27 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 	private String evaluateLevel;
 	private String evaluateInfo;
 	private String taskNo;
+	private EvaluationActivity activity;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case StatusCode.EVALUATEOTHER:
 				boolean state = Boolean.parseBoolean((String) msg.obj);
 				if (state) {
-					Intent intent = new Intent(context, MainActivity.class);
+					Intent intent = new Intent(activity, MainActivity.class);
 					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 					intent.putExtra("flag", "1");
 					startActivity(intent);
 					finish();
 				} else {
-					Utilities.showToast("提交失败，请重新尝试", context);
+					Utilities.showToast("提交失败，请重新尝试", activity);
 				}
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast((String) msg.obj, context);
+				Utilities.showToast((String) msg.obj, activity);
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast((String) msg.obj, context);
+				Utilities.showToast((String) msg.obj, activity);
 				break;
 			default:
 				break;
@@ -97,6 +98,7 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 		mHeadContent.setText("互相评价");
 		mDoBack.setVisibility(View.VISIBLE);
 		taskNo = getIntent().getExtras().getString(Constant.TASKNO);
+		activity = this;
 	}
 
 	@Override

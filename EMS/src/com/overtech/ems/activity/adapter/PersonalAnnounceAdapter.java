@@ -2,11 +2,9 @@ package com.overtech.ems.activity.adapter;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.TreeSet;
+import java.util.Map;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,17 +12,16 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.overtech.ems.R;
-import com.overtech.ems.activity.MyApplication;
-import com.overtech.ems.entity.parttime.Announcement;
 
 public class PersonalAnnounceAdapter extends BaseAdapter {
 
 	private Context ctx;
-	private List<Announcement> list;
+	private List<Map<String, Object>> list;
 	private HashSet<String> announceItemPosition;
-	private final String ANNOUNCEITEMPOSITION="announce_item_position";
+	private final String ANNOUNCEITEMPOSITION = "announce_item_position";
 
-	public PersonalAnnounceAdapter(Context context, List<Announcement> list,HashSet<String> set) {
+	public PersonalAnnounceAdapter(Context context,
+			List<Map<String, Object>> list, HashSet<String> set) {
 		this.ctx = context;
 		this.list = list;
 		announceItemPosition = set;
@@ -59,7 +56,7 @@ public class PersonalAnnounceAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		Announcement data = list.get(position);
+		Map<String, Object> data = list.get(position);
 		ViewHolder vh = null;
 		if (convertView == null) {
 			convertView = LayoutInflater.from(ctx).inflate(
@@ -69,7 +66,7 @@ public class PersonalAnnounceAdapter extends BaseAdapter {
 		} else {
 			vh = (ViewHolder) convertView.getTag();
 		}
-		
+
 		if (announceItemPosition.contains(String.valueOf(position))) {
 			vh.tvAnnouncementSummary.setTextColor(ctx.getResources().getColor(
 					R.color.announce_after));
@@ -85,9 +82,9 @@ public class PersonalAnnounceAdapter extends BaseAdapter {
 			vh.tvAnnouncementTime.setTextColor(ctx.getResources().getColor(
 					R.color.announce_before));
 		}
-		vh.tvAnnouncementSummary.setText(data.getSummary());
-		vh.tvAnnouncementTitle.setText(data.getTheme());
-		vh.tvAnnouncementTime.setText(data.getReleaseDate());
+		vh.tvAnnouncementSummary.setText(data.get("summary").toString());
+		vh.tvAnnouncementTitle.setText(data.get("theme").toString());
+		vh.tvAnnouncementTime.setText(data.get("releaseDate").toString());
 
 		return convertView;
 	}

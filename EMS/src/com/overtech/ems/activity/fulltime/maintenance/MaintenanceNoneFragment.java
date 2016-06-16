@@ -26,6 +26,8 @@ import com.overtech.ems.http.OkHttpClientManager;
 import com.overtech.ems.http.OkHttpClientManager.ResultCallback;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.Logr;
+import com.overtech.ems.utils.SharePreferencesUtils;
+import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.squareup.okhttp.Request;
 
@@ -92,10 +94,11 @@ public class MaintenanceNoneFragment extends BaseFragment {
 					if (st == -1 || st == -2) {
 						if (activity != null) {
 							Utilities.showToast(msg, activity);
+							SharePreferencesUtils.put(activity, SharedPreferencesKeys.UID, "");
+							SharePreferencesUtils.put(activity, SharedPreferencesKeys.CERTIFICATED, "");
 							Intent intent = new Intent(activity,
 									LoginActivity.class);
 							startActivity(intent);
-							getActivity().finish();
 						}
 					} else {
 						Utilities.showToast(msg, activity);

@@ -1,7 +1,6 @@
 package com.overtech.ems.activity.parttime.nearby;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -24,20 +23,22 @@ import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 
 import com.baidu.mapapi.model.LatLng;
-import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
+import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.adapter.GrabTaskAdapter;
 import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
+import com.overtech.ems.activity.parttime.fragment.NearByFragment;
 import com.overtech.ems.config.StatusCode;
+import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.StatusCodeBean;
 import com.overtech.ems.entity.bean.TaskPackageBean.TaskPackage;
-import com.overtech.ems.entity.common.ServicesConfig;
-import com.overtech.ems.http.HttpEngine.Param;
+import com.overtech.ems.entity.common.Requester;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.AppUtils;
+import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
@@ -63,23 +64,37 @@ public class NearByListFragment extends BaseFragment {
 	private GrabTaskAdapter mAdapter;
 	private String tagItem;
 	private Set<String> tagSet;
+	private String uid;
+	private String certificate;
+	private double latitude;
+	private double longitude;
 
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
-			Gson gson = new Gson();
 			switch (msg.what) {
 			case StatusCode.GRAG_RESPONSE_SUCCESS:
 				String status = (String) msg.obj;
 				StatusCodeBean bean = gson.fromJson(status,
 						StatusCodeBean.class);
-				String content = bean.getModel();
+				int st = bean.st;
+				if (st == -1 || st == -2) {
+					Utilities.showToast(bean.msg, activity);
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent = new Intent(activity, LoginActivity.class);
+					startActivity(intent);
+					return;
+				}
+				String content = bean.body.get("status").toString();
 				if (TextUtils.equals(content, "0")) {
-					Utilities.showToast("请不要重复抢单", context);
+					Utilities.showToast("请不要重复抢单", activity);
 				} else if (TextUtils.equals(content, "1")) {
-					Utilities.showToast("抢单成功，等待第二个人抢", context);
-					tagItem = bean.getTaskNo();
+					Utilities.showToast("抢单成功，等待第二个人抢", activity);
+					tagItem = bean.body.get("taskNo").toString();
 					if (!AppUtils.isValidTagAndAlias(tagItem)) {
-						Utilities.showToast("格式不对", context);
+						Utilities.showToast("格式不对", activity);
 					} else {
 						tagSet.add(tagItem);
 						JPushInterface.setAliasAndTags(getActivity()
@@ -87,11 +102,11 @@ public class NearByListFragment extends BaseFragment {
 								mTagsCallback);
 					}
 				} else if (TextUtils.equals(content, "2")) {
-					Utilities.showToast("抢单成功，请到任务中查看", context);
+					Utilities.showToast("抢单成功，请到任务中查看", activity);
 					// 推送业务代码
-					tagItem = bean.getTaskNo();
+					tagItem = bean.body.get("taskNo").toString();
 					if (!AppUtils.isValidTagAndAlias(tagItem)) {
-						Utilities.showToast("格式不对", context);
+						Utilities.showToast("格式不对", activity);
 					} else {
 						tagSet.add(tagItem);
 						JPushInterface.setAliasAndTags(getActivity()
@@ -99,15 +114,14 @@ public class NearByListFragment extends BaseFragment {
 								mTagsCallback);
 					}
 				} else if (TextUtils.equals(content, "3")) {
-					Utilities.showToast("差一点就抢到了", context);
+					Utilities.showToast("差一点就抢到了", activity);
 				} else if (TextUtils.equals(content, "4")) {
-					Utilities.showToast("维保日期的电梯数量已经超过10台，不能够再抢单。", context);
+					Utilities.showToast("维保日期的电梯数量已经超过10台，不能够再抢单。", activity);
 				} else {
-					Utilities.showToast("用户账户异常", context);
+					Utilities.showToast("用户账户异常", activity);
 					Intent intent = new Intent(getActivity(),
 							LoginActivity.class);
 					startActivity(intent);
-					getActivity().finish();
 				}
 				break;
 			case StatusCode.MSG_SET_TAGS:
@@ -117,10 +131,10 @@ public class NearByListFragment extends BaseFragment {
 						mTagsCallback);
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast("服务器异常", context);
+				Utilities.showToast("服务器异常", activity);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast("网络异常", context);
+				Utilities.showToast("网络异常", activity);
 				break;
 			}
 			stopProgressDialog();
@@ -135,7 +149,8 @@ public class NearByListFragment extends BaseFragment {
 			switch (code) {
 			case 0:
 				logs = "Set tag and alias success";
-				mSharedPreferences.edit().putStringSet("tagSet", tags).commit();// 成功保存标签后，将标签放到本地
+				SharePreferencesUtils.put(mActivity,
+						SharedPreferencesKeys.TAGSET, tags);
 				break;
 			case 6002:
 				logs = "Failed to set alias and tags due to timeout. Try again after 60s.";
@@ -165,25 +180,22 @@ public class NearByListFragment extends BaseFragment {
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_nearby_list, container,
 				false);
-		Set<String> tempSet = mSharedPreferences.getStringSet("tagSet", null);
-		if (tempSet == null) {
-			tagSet = new LinkedHashSet<String>();
-		} else {
-			tagSet = tempSet;
-		}
+
+		Set<String> tempSet = (Set<String>) SharePreferencesUtils.get(
+				mActivity, SharedPreferencesKeys.TAGSET,
+				new LinkedHashSet<String>());
 		getExtralData();
 		initListView(view);
 		return view;
 	}
 
 	private void getExtralData() {
-		Bundle bundle = getArguments();
-		if (null == bundle) {
-			return;
-		}
-		list = ((MainActivity) getActivity()).list;
-		myLocation = new LatLng(bundle.getDouble("latitude"),
-				bundle.getDouble("longitude"));
+		uid = ((MainActivity) getActivity()).getUid();
+		certificate = ((MainActivity) getActivity()).getCertificate();
+		latitude = ((MyApplication) getActivity().getApplicationContext()).latitude;
+		longitude = ((MyApplication) getActivity().getApplicationContext()).longitude;
+		list = ((NearByFragment) getParentFragment()).getData();
+		myLocation = new LatLng(latitude, longitude);
 	}
 
 	private void initListView(View view) {
@@ -253,16 +265,15 @@ public class NearByListFragment extends BaseFragment {
 					@Override
 					public void onClick(View v) {
 						dialogBuilder.dismiss();
-						startProgressDialog("正在抢单...");
-						String mLoginName = mSharedPreferences.getString(
-								SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
 						String mTaskNo = list.get(position).taskNo;
-						Param paramPhone = new Param(Constant.LOGINNAME,
-								mLoginName);
-						Param paramTaskNo = new Param(Constant.TASKNO, mTaskNo);
+						startProgressDialog("正在抢单...");
+						Requester requester = new Requester();
+						requester.cmd = 20023;
+						requester.uid = uid;
+						requester.certificate = certificate;
+						requester.body.put(Constant.TASKNO, mTaskNo);
 						Request request = httpEngine.createRequest(
-								ServicesConfig.Do_GRABTASK, paramPhone,
-								paramTaskNo);
+								SystemConfig.NEWIP, gson.toJson(requester));
 						Call call = httpEngine.createRequestCall(request);
 						call.enqueue(new Callback() {
 

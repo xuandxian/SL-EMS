@@ -32,43 +32,48 @@ public class MaintenanceResponseActivity extends BaseActivity {
 	private String uid;
 	private String workorderCode;
 	private MaintenanceResponseActivity activity;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_maintenance_response);
-		certificate=(String) SharePreferencesUtils.get(this, SharedPreferencesKeys.CERTIFICATED, "");
-		uid=(String) SharePreferencesUtils.get(this, SharedPreferencesKeys.UID, "");
-		workorderCode=getIntent().getStringExtra(Constant.WORKORDERCODE);
-		activity=this;
+		stackInstance.pushActivity(activity);
+		certificate = (String) SharePreferencesUtils.get(this,
+				SharedPreferencesKeys.CERTIFICATED, "");
+		uid = (String) SharePreferencesUtils.get(this,
+				SharedPreferencesKeys.UID, "");
+		workorderCode = getIntent().getStringExtra(Constant.WORKORDERCODE);
+		activity = this;
 		initView();
 		initEvent();
 	}
+
 	private void initEvent() {
 		// TODO Auto-generated method stub
 		btSubmit.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				String sit=etCurrentSituation.getText().toString().trim();
-				String solve=etMaintenanceSolve.getText().toString().trim();
-				if(TextUtils.isEmpty(sit)||TextUtils.isEmpty(solve)){
+				String sit = etCurrentSituation.getText().toString().trim();
+				String solve = etMaintenanceSolve.getText().toString().trim();
+				if (TextUtils.isEmpty(sit) || TextUtils.isEmpty(solve)) {
 					Utilities.showToast("输入不能为空", activity);
-					return ;
+					return;
 				}
-				startSubmit(sit,solve);
+				startSubmit(sit, solve);
 			}
 
 			private void startSubmit(String sit, String solve) {
 				// TODO Auto-generated method stub
-				Requester requester=new Requester();
-				requester.certificate=certificate;
-				requester.uid=uid;
+				Requester requester = new Requester();
+				requester.certificate = certificate;
+				requester.uid = uid;
 				requester.body.put("workorderCode", workorderCode);
 				requester.body.put("liveSituation", sit);
 				requester.body.put("repairResult", solve);
-				ResultCallback<MaintenanceBean> callback=new OkHttpClientManager.ResultCallback<MaintenanceBean>() {
+				ResultCallback<MaintenanceBean> callback = new OkHttpClientManager.ResultCallback<MaintenanceBean>() {
 
 					@Override
 					public void onError(Request request, Exception e) {
@@ -79,37 +84,48 @@ public class MaintenanceResponseActivity extends BaseActivity {
 					@Override
 					public void onResponse(MaintenanceBean response) {
 						// TODO Auto-generated method stub
-						if(response==null){
+						if (response == null) {
 							Utilities.showToast("提交失败,请重新尝试", activity);
-							return ;
+							return;
 						}
 						int st = response.st;
 						String msg = response.msg;
 						if (st != 0) {
 							if (st == -1 || st == -2) {
+								Utilities.showToast(msg, activity);
+								SharePreferencesUtils.put(activity,
+										SharedPreferencesKeys.UID, "");
+								SharePreferencesUtils.put(activity,
+										SharedPreferencesKeys.CERTIFICATED, "");
 								Intent intent = new Intent(activity,
 										LoginActivity.class);
 								startActivity(intent);
-								finish();
 							} else {
 								Utilities.showToast(msg, activity);
 							}
 						} else {
 							Utilities.showToast("提交成功", activity);
-							//关闭之前的activity
+							// 关闭之前的activity
 						}
 					}
 				};
 			}
 
-			
 		});
 	}
+
 	private void initView() {
 		// TODO Auto-generated method stub
-		title=(TextView) findViewById(R.id.tv_headTitle);
-		etCurrentSituation=(EditText) findViewById(R.id.et_current_situcation);
-		etMaintenanceSolve=(EditText) findViewById(R.id.et_maintenance_result);
-		btSubmit=(Button) findViewById(R.id.bt_submit);
+		title = (TextView) findViewById(R.id.tv_headTitle);
+		etCurrentSituation = (EditText) findViewById(R.id.et_current_situcation);
+		etMaintenanceSolve = (EditText) findViewById(R.id.et_maintenance_result);
+		btSubmit = (Button) findViewById(R.id.bt_submit);
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		stackInstance.popActivity(activity);
 	}
 }

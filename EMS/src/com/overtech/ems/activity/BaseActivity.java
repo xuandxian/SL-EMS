@@ -1,11 +1,9 @@
 package com.overtech.ems.activity;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
@@ -15,7 +13,6 @@ import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 
-import com.baidu.mapapi.SDKInitializer;
 import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.http.HttpEngine;
@@ -35,11 +32,7 @@ public class BaseActivity extends FragmentActivity {
 	public static final String ACTION_NETWORK_CHANGE = "android.net.conn.CONNECTIVITY_CHANGE";
 	public static final String ACTION_NEW_VERSION = "apk.update.action";
 
-	public MyApplication application;
-
 	public ImageLoader imageLoader;
-
-	public Context context;
 
 	public FragmentManager fragmentManager;
 
@@ -60,17 +53,14 @@ public class BaseActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-		application = (MyApplication) this.getApplication();
-		context = this;
 		fragmentManager = getSupportFragmentManager();
 		dialogBuilder = NiftyDialogBuilder.getInstance(this);
 		// sharePreferencesUtils=SharePreferencesUtils.getInstance();
 		httpEngine = HttpEngine.getInstance();
-		httpEngine.initContext(context);
 		imageLoader = ImageLoader.getInstance();
-		imageLoader.initContext(context);
-		progressDialog = CustomProgressDialog.createDialog(context);
-		progressDialog.setMessage(context
+		imageLoader.initContext(getApplicationContext());
+		progressDialog = CustomProgressDialog.createDialog(this);
+		progressDialog.setMessage(this
 				.getString(R.string.loading_public_default));
 		progressDialog.setCanceledOnTouchOutside(false);
 		stackInstance = StackManager.getStackManager();

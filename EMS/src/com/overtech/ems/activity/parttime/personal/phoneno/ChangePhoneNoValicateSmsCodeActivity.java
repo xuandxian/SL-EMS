@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
+import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.CommonBean;
@@ -60,9 +61,14 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 				String json = (String) msg.obj;
 				CommonBean phoneBean = gson.fromJson(json, CommonBean.class);
 				int st = phoneBean.st;
-				if (st != 0) {
+				if(st==-1||st==-2){
 					Utilities.showToast(phoneBean.msg, activity);
-				} else {
+					SharePreferencesUtils.put(activity, SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(activity, SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent=new Intent(activity,LoginActivity.class);
+					startActivity(intent);
+					return;
+				}else{
 					Utilities.showToast(phoneBean.msg, activity);
 				}
 				break;
@@ -70,6 +76,14 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 				String json2 = (String) msg.obj;
 				CommonBean smsBean = gson.fromJson(json2, CommonBean.class);
 				int smsSt = smsBean.st;
+				if(smsSt==-1||smsSt==-2){
+					Utilities.showToast(smsBean.msg, activity);
+					SharePreferencesUtils.put(activity, SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(activity, SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent=new Intent(activity,LoginActivity.class);
+					startActivity(intent);
+					return;
+				}
 				if (smsSt == 100) {
 					Utilities.showToast(smsBean.msg, activity);
 					updatePhoneNo();
@@ -81,6 +95,15 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 				String json3 = (String) msg.obj;
 				CommonBean updateBean = gson.fromJson(json3, CommonBean.class);
 				int updateSt = updateBean.st;
+				if(updateSt==-1||updateSt==-2){
+					Utilities.showToast(updateBean.msg, activity);
+					SharePreferencesUtils.put(activity, SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(activity, SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent=new Intent(activity,LoginActivity.class);
+					startActivity(intent);
+					return;
+				}
+				
 				if (updateSt == 0) {
 					String success = updateBean.msg;
 					if (success.equals("1")) {
@@ -95,13 +118,13 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 
 				break;
 			case StatusCode.UPDATE_PHONENO_FAILURE:
-				Utilities.showToast("手机号更新失败", context);
+				Utilities.showToast("手机号更新失败", activity);
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast("服务端异常", context);
+				Utilities.showToast("服务端异常", activity);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast("网络异常", context);
+				Utilities.showToast("网络异常", activity);
 				break;
 			}
 			stopProgressDialog();
@@ -215,7 +238,7 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 				}
 			});
 		} else {
-			Utilities.showToast("请输入正确的手机号", context);
+			Utilities.showToast("请输入正确的手机号", activity);
 		}
 	}
 
@@ -223,7 +246,7 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 		startProgressDialog("正在验证...");
 		mSMSCode = mValidateCodeEditText.getText().toString().trim();
 		if (TextUtils.isEmpty(mSMSCode)) {
-			Utilities.showToast("输入不能为空", context);
+			Utilities.showToast("输入不能为空", activity);
 		} else {
 			Requester requester = new Requester();
 			requester.certificate = certificate;
@@ -290,5 +313,12 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 				handler.sendMessage(msg);
 			}
 		});
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		stackInstance.popActivity(activity);
 	}
 }

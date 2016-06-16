@@ -51,11 +51,13 @@ public class ElevatorDetailActivity extends BaseActivity {
 	private String uid;
 	private String certificate;
 	private Activity activity;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_elevator_detail);
-		activity=this;
+		activity = this;
+		stackInstance.pushActivity(activity);
 		findViewById();
 		getExtraData();
 		init();
@@ -132,10 +134,13 @@ public class ElevatorDetailActivity extends BaseActivity {
 					if (st == -1 || st == -2) {
 						if (activity != null) {
 							Utilities.showToast(msg, activity);
+							SharePreferencesUtils.put(activity,
+									SharedPreferencesKeys.UID, "");
+							SharePreferencesUtils.put(activity,
+									SharedPreferencesKeys.CERTIFICATED, "");
 							Intent intent = new Intent(activity,
 									LoginActivity.class);
 							startActivity(intent);
-							finish();
 						}
 					} else {
 						Utilities.showToast(msg, activity);
@@ -169,4 +174,10 @@ public class ElevatorDetailActivity extends BaseActivity {
 				gson.toJson(requester));
 	}
 
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		stackInstance.popActivity(activity);
+	}
 }

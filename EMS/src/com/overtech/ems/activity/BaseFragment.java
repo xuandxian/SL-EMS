@@ -2,7 +2,6 @@ package com.overtech.ems.activity;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -21,13 +20,9 @@ import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
  */
 public class BaseFragment extends Fragment {
 
-	public MyApplication application;
-
 	public ImageLoader imageLoader;
 
 	public Activity activity;
-
-	public Context context;
 
 	public FragmentManager fragmentManager;
 
@@ -39,27 +34,21 @@ public class BaseFragment extends Fragment {
 
 	public NiftyDialogBuilder dialogBuilder;
 
-	public SharedPreferences mSharedPreferences;
-
 	public Gson gson;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		application = (MyApplication) getActivity().getApplication();
 		activity = getActivity();
-		context = getActivity();
 		fragmentManager = getFragmentManager();
 		dialogBuilder = NiftyDialogBuilder.getInstance(activity);
 		httpEngine = HttpEngine.getInstance();
-		httpEngine.initContext(context);
 		imageLoader = ImageLoader.getInstance();
-		imageLoader.initContext(context);
-		progressDialog = CustomProgressDialog.createDialog(context);
-		progressDialog.setMessage(context
+		imageLoader.initContext(getActivity().getApplicationContext());
+		progressDialog = CustomProgressDialog.createDialog(activity);
+		progressDialog.setMessage(activity
 				.getString(R.string.loading_public_default));
 		progressDialog.setCanceledOnTouchOutside(false);
-		mSharedPreferences = application.getSharePreference();
 		if (gson == null) {
 			gson = new Gson();
 		}
@@ -76,7 +65,7 @@ public class BaseFragment extends Fragment {
 
 	public void startProgressDialog(String content) {
 		if (progressDialog == null) {
-			progressDialog = CustomProgressDialog.createDialog(context);
+			progressDialog = CustomProgressDialog.createDialog(activity);
 		}
 		progressDialog.setMessage(content);
 		progressDialog.show();

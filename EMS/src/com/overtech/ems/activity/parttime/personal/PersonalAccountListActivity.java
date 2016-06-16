@@ -56,17 +56,17 @@ public class PersonalAccountListActivity extends BaseActivity implements
 				List<Map<String, Object>> data = (List<Map<String, Object>>) datas.body
 						.get("data");
 				if (msg.arg1 == 1) {
-					adapter = new PersonalAccountHasCountAdapter(context, data);
+					adapter = new PersonalAccountHasCountAdapter(activity, data);
 				} else {
-					adapter = new PersonalAccountNoCountAdapter(context, data);
+					adapter = new PersonalAccountNoCountAdapter(activity, data);
 				}
 				mPersonalAccountListView.setAdapter(adapter);
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast("服务端异常", context);
+				Utilities.showToast("服务端异常", activity);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast("网络异常", context);
+				Utilities.showToast("网络异常", activity);
 				break;
 			}
 			stopProgressDialog();
@@ -134,7 +134,6 @@ public class PersonalAccountListActivity extends BaseActivity implements
 				SharedPreferencesKeys.UID, "");
 		mDoBack.setVisibility(View.VISIBLE);
 		mHeadContent.setText("我的账单");
-		context = PersonalAccountListActivity.this;
 		mDoBack.setOnClickListener(this);
 		mHasCount.setOnClickListener(this);
 		mNoCount.setOnClickListener(this);

@@ -80,12 +80,23 @@ public class PackageDetailActivity extends BaseActivity {
 				String json = (String) msg.obj;
 				TaskPackageDetailBean tasks = gson.fromJson(json,
 						TaskPackageDetailBean.class);
+				int st = tasks.st;
+				if (st == -1 || st == -2) {
+					Utilities.showToast(tasks.msg, activity);
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent = new Intent(activity, LoginActivity.class);
+					startActivity(intent);
+					return;
+				}
 				list = tasks.body.datas;
 				if (null == list || list.size() == 0) {
-					Utilities.showToast("无数据", context);
+					Utilities.showToast("无数据", activity);
 				} else {
 					if (adapter == null) {
-						adapter = new PackageDetailAdapter(context, list);
+						adapter = new PackageDetailAdapter(activity, list);
 						mPackageDetailListView.setAdapter(adapter);
 					} else {
 						adapter.setData(list);
@@ -102,15 +113,26 @@ public class PackageDetailActivity extends BaseActivity {
 				String status = (String) msg.obj;
 				StatusCodeBean bean = gson.fromJson(status,
 						StatusCodeBean.class);
-				String content = bean.getModel();
+				int st2 = bean.st;
+				if (st2 == -1 || st2 == -2) {
+					Utilities.showToast(bean.msg, activity);
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent = new Intent(activity, LoginActivity.class);
+					startActivity(intent);
+					return;
+				}
+				String content = bean.body.get("status").toString();
 				if (TextUtils.equals(content, "0")) {
-					Utilities.showToast("请不要重复抢单", context);
+					Utilities.showToast("请不要重复抢单", activity);
 				} else if (TextUtils.equals(content, "1")) {
-					Utilities.showToast("抢单成功，等待第二个人抢", context);
+					Utilities.showToast("抢单成功，等待第二个人抢", activity);
 					// 推送业务代码
-					tagItem = bean.getTaskNo();
+					tagItem = bean.body.get("taskNo").toString();
 					if (!AppUtils.isValidTagAndAlias(tagItem)) {
-						Utilities.showToast("格式不对", context);
+						Utilities.showToast("格式不对", activity);
 					} else {
 						tagSet.add(tagItem);
 						JPushInterface.setAliasAndTags(getApplicationContext(),
@@ -118,11 +140,11 @@ public class PackageDetailActivity extends BaseActivity {
 					}
 					onActivityForResult();
 				} else if (TextUtils.equals(content, "2")) {
-					Utilities.showToast("抢单成功，请到任务中查看", context);
+					Utilities.showToast("抢单成功，请到任务中查看", activity);
 					// 推送业务代码
-					tagItem = bean.getTaskNo();
+					tagItem = bean.body.get("taskNo").toString();
 					if (!AppUtils.isValidTagAndAlias(tagItem)) {
-						Utilities.showToast("格式不对", context);
+						Utilities.showToast("格式不对", activity);
 					} else {
 						tagSet.add(tagItem);
 						JPushInterface.setAliasAndTags(getApplicationContext(),
@@ -130,11 +152,11 @@ public class PackageDetailActivity extends BaseActivity {
 					}
 					onActivityForResult();
 				} else if (TextUtils.equals(content, "3")) {
-					Utilities.showToast("差一点就抢到了", context);
+					Utilities.showToast("差一点就抢到了", activity);
 				} else if (TextUtils.equals(content, "4")) {
-					Utilities.showToast("维保日期的电梯数量已经超过10台，不能够再抢单。", context);
+					Utilities.showToast("维保日期的电梯数量已经超过10台，不能够再抢单。", activity);
 				} else {
-					Utilities.showToast("用户账户异常", context);
+					Utilities.showToast("用户账户异常", activity);
 					stackInstance.popTopActivitys(PackageDetailActivity.class);
 					Intent intent = new Intent(PackageDetailActivity.this,
 							LoginActivity.class);
@@ -149,12 +171,12 @@ public class PackageDetailActivity extends BaseActivity {
 						(Set<String>) msg.obj, mTagsCallback);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast("网络异常", context);
+				Utilities.showToast("网络异常", activity);
 				mGrabTaskBtn
 						.setText("抢单(￥" + String.valueOf(totalPrice) + "元)");
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast("服务端异常", context);
+				Utilities.showToast("服务端异常", activity);
 				break;
 			}
 			stopProgressDialog();
@@ -198,6 +220,7 @@ public class PackageDetailActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_package_detail);
 		activity = this;
+		stackInstance.pushActivity(activity);
 		Set<String> tempSet = (Set<String>) SharePreferencesUtils.get(activity,
 				"tagSet", new LinkedHashSet<String>());
 		tagSet = tempSet;
@@ -369,6 +392,13 @@ public class PackageDetailActivity extends BaseActivity {
 						});
 					}
 				}).show();
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		stackInstance.popActivity(activity);
 	}
 
 	private void onActivityForResult() {

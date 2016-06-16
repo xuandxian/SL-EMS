@@ -3,6 +3,7 @@ package com.overtech.ems.activity.parttime.grabtask;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -17,17 +18,23 @@ import android.text.TextWatcher;
 import android.util.TypedValue;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.SearchHistoryAdapter;
 import com.overtech.ems.activity.adapter.SearchResultAdapter;
 import com.overtech.ems.config.StatusCode;
-import com.overtech.ems.entity.common.ServicesConfig;
-import com.overtech.ems.http.HttpEngine.Param;
+import com.overtech.ems.config.SystemConfig;
+import com.overtech.ems.entity.bean.StatusCodeBean;
+import com.overtech.ems.entity.common.Requester;
+import com.overtech.ems.utils.Logr;
+import com.overtech.ems.utils.SharePreferencesUtils;
+import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
 import com.overtech.ems.widget.swipemenu.SwipeMenu;
@@ -39,7 +46,6 @@ import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
-import android.view.inputmethod.EditorInfo;
 
 public class KeyWordSerachActivity extends BaseActivity {
 
@@ -56,7 +62,9 @@ public class KeyWordSerachActivity extends BaseActivity {
 	private SharedPreferences sharedPreferences;
 	private ArrayList<String> searchList = new ArrayList<String>();
 	private ArrayList<String> historyList = new ArrayList<String>();
-
+	private KeyWordSerachActivity activity;
+	private String uid;
+	private String certificate;
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
@@ -64,11 +72,14 @@ public class KeyWordSerachActivity extends BaseActivity {
 				if (!searchList.isEmpty()) {
 					searchList.clear();
 				}
-				String data = (String) msg.obj;
-				String[] array = data.split(",");
+				String json = (String) msg.obj;
+				StatusCodeBean bean = gson.fromJson(json, StatusCodeBean.class);
+				List<String> data = (List<String>) bean.body.get("data");
+				Logr.e("后台传过来的数据" + json);
+				String[] array = (String[]) data.toArray();
 				int length = array.length;
 				if (length == 1) {
-					Utilities.showToast("无结果", context);
+					Utilities.showToast("无结果", activity);
 				} else {
 					for (int i = 0; i < array.length; i++) {
 						if (i == 0) {
@@ -81,16 +92,16 @@ public class KeyWordSerachActivity extends BaseActivity {
 							searchList.add(array[i]);
 						}
 					}
-					mResultAdapter = new SearchResultAdapter(context,
+					mResultAdapter = new SearchResultAdapter(activity,
 							searchList, zoneCount);
 					mSearchListView.setAdapter(mResultAdapter);
 				}
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast("服务器异常", context);
+				Utilities.showToast("服务器异常", activity);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast("网络异常", context);
+				Utilities.showToast("网络异常", activity);
 				break;
 			}
 		}
@@ -113,14 +124,19 @@ public class KeyWordSerachActivity extends BaseActivity {
 	}
 
 	private void init() {
+		activity = this;
+		uid = (String) SharePreferencesUtils.get(activity,
+				SharedPreferencesKeys.UID, "");
+		certificate = (String) SharePreferencesUtils.get(activity,
+				SharedPreferencesKeys.CERTIFICATED, "");
 		sharedPreferences = getSharedPreferences("search", MODE_PRIVATE);
 		readHistory();
 		if (null == historyList || historyList.isEmpty()) {
-			Utilities.showToast("无历史记录", context);
+			Utilities.showToast("无历史记录", activity);
 		} else {
 			initHistoryItem();
 			mHistoryTextView.setVisibility(View.VISIBLE);
-			mHistoryAdapter = new SearchHistoryAdapter(context, historyList);
+			mHistoryAdapter = new SearchHistoryAdapter(activity, historyList);
 			mHistoryListView.setAdapter(mHistoryAdapter);
 		}
 		mDoSearch.addTextChangedListener(new TextWatcher() {
@@ -218,13 +234,17 @@ public class KeyWordSerachActivity extends BaseActivity {
 	}
 
 	private void GetAutoCompleteResult(String keyWord) {
-		Param params = new Param("mAutoKeyWord", keyWord);
-		Request request = httpEngine.createRequest(
-				ServicesConfig.KEY_WORD_COMPLETE, params);
+		Requester requester = new Requester();
+		requester.cmd = 20024;
+		requester.certificate = certificate;
+		requester.uid = uid;
+		requester.body.put("mAutoKeyWord", keyWord);
+		Request request = httpEngine.createRequest(SystemConfig.NEWIP,
+				gson.toJson(requester));
 		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {
 			@Override
-			public void onResponse(final Response response) throws IOException {
+			public void onResponse(Response response) throws IOException {
 				Message msg = new Message();
 				if (response.isSuccessful()) {
 					msg.what = StatusCode.KEYWORDS_SUCCESS;
@@ -280,7 +300,7 @@ public class KeyWordSerachActivity extends BaseActivity {
 					historyList.add(historyArray[i]);
 				}
 			}
-		} 
+		}
 		return historyList;
 	}
 
@@ -288,7 +308,7 @@ public class KeyWordSerachActivity extends BaseActivity {
 		creator = new SwipeMenuCreator() {
 			@Override
 			public void create(SwipeMenu menu) {
-				SwipeMenuItem deleteItem = new SwipeMenuItem(context);
+				SwipeMenuItem deleteItem = new SwipeMenuItem(activity);
 				deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
 						0x3F, 0x25)));
 				deleteItem.setWidth(dp2px(60));

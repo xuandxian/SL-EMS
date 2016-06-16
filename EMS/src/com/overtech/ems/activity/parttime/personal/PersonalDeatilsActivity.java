@@ -2,11 +2,7 @@ package com.overtech.ems.activity.parttime.personal;
 
 import java.io.IOException;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.os.Bundle;
@@ -23,17 +19,12 @@ import android.widget.TextView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
-import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.activity.parttime.personal.phoneno.ChangePhoneNoValidatePasswordActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.CommonBean;
 import com.overtech.ems.entity.common.Requester;
-import com.overtech.ems.entity.common.ServicesConfig;
-import com.overtech.ems.http.HttpEngine.Param;
-import com.overtech.ems.http.constant.Constant;
-import com.overtech.ems.picasso.Picasso;
 import com.overtech.ems.picasso.Transformation;
 import com.overtech.ems.utils.ImageUtils;
 import com.overtech.ems.utils.SharePreferencesUtils;
@@ -61,7 +52,6 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 	private TextView mCertificateNo;
 	private TextView mRegisterDate;
 	private RatingBar mRatingBar;
-	private SharedPreferences sp;
 	private String uid;
 	private String certificate;
 	private PersonalDeatilsActivity activity;
@@ -109,10 +99,10 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 				mRatingBar.setRating(rate);
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast((String) msg.obj, context);
+				Utilities.showToast((String) msg.obj, activity);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast((String) msg.obj, context);
+				Utilities.showToast((String) msg.obj, activity);
 				break;
 			default:
 				break;
@@ -169,7 +159,6 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 	}
 
 	private void initViews() {
-		sp = ((MyApplication) getApplication()).getSharePreference();
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
 		mDoBack = (ImageView) findViewById(R.id.iv_headBack);
 		mChangePhoneNo = (RelativeLayout) findViewById(R.id.rl_change_phoneNo);

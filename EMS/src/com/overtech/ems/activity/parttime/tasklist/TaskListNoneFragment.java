@@ -28,17 +28,21 @@ import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.route.BaiduMapRoutePlan;
 import com.baidu.mapapi.utils.route.RouteParaOption;
 import com.baidu.mapapi.utils.route.RouteParaOption.EBusStrategyType;
-import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
 import com.overtech.ems.activity.adapter.TaskListAdapter;
+import com.overtech.ems.activity.common.LoginActivity;
+import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.config.StatusCode;
+import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.TaskPackageBean;
 import com.overtech.ems.entity.bean.TaskPackageBean.TaskPackage;
+import com.overtech.ems.entity.common.Requester;
 import com.overtech.ems.entity.common.ServicesConfig;
-import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.AppUtils;
+import com.overtech.ems.utils.Logr;
+import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
@@ -67,14 +71,28 @@ public class TaskListNoneFragment extends BaseFragment {
 	private Set<String> tagSet;
 	private String TAG = "24梯";
 	private final int REQUESTCODE = 0x11; // 访问任务包详情的请求码
+	private String uid;
+	private String certificate;
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case StatusCode.TASKLIST_NONE_SUCCESS:
 				String json = (String) msg.obj;
-				Gson gson = new Gson();
+				Logr.e("后台传回来的数据===" + json);
 				TaskPackageBean bean = gson.fromJson(json,
 						TaskPackageBean.class);
+				int st = bean.st;
+				if (st == -1 || st == -2) {
+					Utilities.showToast(bean.msg, mActivity);
+					SharePreferencesUtils.put(mActivity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(mActivity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent = new Intent(mActivity, LoginActivity.class);
+					startActivity(intent);
+					mActivity.finish();
+					return;
+				}
 				list = bean.body.data;
 				if (null == list || list.size() == 0) {
 					Utilities.showToast("无数据", mActivity);
@@ -94,10 +112,10 @@ public class TaskListNoneFragment extends BaseFragment {
 			case StatusCode.VALIDATE_TIME_SUCCESS:
 				String time = (String) msg.obj;
 				if (time.equals("-1")) {
-					Utilities.showToast("该维保单时间已经过期", context);
+					Utilities.showToast("该维保单时间已经过期", mActivity);
 					break;
 				} else if (time.equals("0")) {
-					Utilities.showToast("当天的任务不可以退单", context);
+					Utilities.showToast("当天的任务不可以退单", mActivity);
 					break;
 				} else if (time.equals("1")) {
 					dialogBuilder.withMessage("72小时内退单会影响星级评定，你确认要退单？");
@@ -139,7 +157,7 @@ public class TaskListNoneFragment extends BaseFragment {
 							.getApplicationContext(), null, tagSet,
 							mTagsCallback);
 				} else {
-					Utilities.showToast("退单失败", context);
+					Utilities.showToast("退单失败", mActivity);
 				}
 				break;
 			case StatusCode.MSG_SET_TAGS:
@@ -180,8 +198,9 @@ public class TaskListNoneFragment extends BaseFragment {
 			case 0:
 				logs = "Set tag and alias success";
 				Log.d(TAG, logs);
-				Utilities.showToast("退单成功", context);
-				mSharedPreferences.edit().putStringSet("tagSet", tags).commit();// 成功保存标签后，将标签放到本地
+				Utilities.showToast("退单成功", mActivity);
+				SharePreferencesUtils.put(mActivity,
+						SharedPreferencesKeys.TAGSET, tags);
 				stopProgressDialog();
 				break;
 
@@ -223,12 +242,9 @@ public class TaskListNoneFragment extends BaseFragment {
 	}
 
 	private void initTag() {
-		Set<String> tempSet = mSharedPreferences.getStringSet("tagSet", null);
-		if (tempSet == null) {
-			tagSet = new LinkedHashSet<String>();
-		} else {
-			tagSet = tempSet;
-		}
+		Set<String> tempSet = (Set<String>) SharePreferencesUtils.get(
+				mActivity, SharedPreferencesKeys.TAGSET,
+				new LinkedHashSet<String>());
 	}
 
 	private void findViewById(View view) {
@@ -240,8 +256,8 @@ public class TaskListNoneFragment extends BaseFragment {
 	}
 
 	private void init() {
-		loginName = mSharedPreferences.getString(
-				SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
+		uid = ((MainActivity) getActivity()).getUid();
+		certificate = ((MainActivity) getActivity()).getCertificate();
 		initListView();
 		mSwipeListView.setMenuCreator(creator);
 		mSwipeListView
@@ -291,9 +307,12 @@ public class TaskListNoneFragment extends BaseFragment {
 
 	// 侧滑退单，验证该维保单号的时间
 	protected void doChargeBackTaskValidateTime(String taskNo) {
-		Param param = new Param(Constant.TASKNO, mTaskNo);
-		Request request = httpEngine.createRequest(
-				ServicesConfig.CHARGE_BACK_TASK_VALIDATE_TIME, param);
+		Requester requester = new Requester();
+		requester.uid = uid;
+		requester.certificate = certificate;
+		requester.body.put(Constant.TASKNO, mTaskNo);
+		Request request = httpEngine.createRequest(SystemConfig.NEWIP,
+				gson.toJson(requester));
 		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(new com.squareup.okhttp.Callback() {
 
@@ -322,10 +341,13 @@ public class TaskListNoneFragment extends BaseFragment {
 
 	// 处理退单事件
 	private void dealChargeBackTask() {
-		Param param1 = new Param(Constant.TASKNO, mTaskNo);
-		Param param2 = new Param(Constant.LOGINNAME, loginName);
+		Requester requester = new Requester();
+		requester.cmd = 20053;
+		requester.certificate = certificate;
+		requester.uid = uid;
+		requester.body.put("taskNo", mTaskNo);
 		Request request = httpEngine.createRequest(
-				ServicesConfig.CHARGE_BACK_TASK, param1, param2);
+				ServicesConfig.CHARGE_BACK_TASK, gson.toJson(requester));
 		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(new com.squareup.okhttp.Callback() {
 
@@ -354,9 +376,12 @@ public class TaskListNoneFragment extends BaseFragment {
 
 	private void getDataFromServer() {
 		startProgressDialog("正在加载...");
-		Param param = new Param(Constant.LOGINNAME, loginName);
-		Request request = httpEngine.createRequest(
-				ServicesConfig.TASK_LIST_NONE, param);
+		Requester requester = new Requester();
+		requester.certificate = certificate;
+		requester.uid = uid;
+		requester.cmd = 20050;
+		Request request = httpEngine.createRequest(SystemConfig.NEWIP,
+				gson.toJson(requester));
 		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(new com.squareup.okhttp.Callback() {
 

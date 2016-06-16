@@ -1,8 +1,7 @@
 package com.overtech.ems.activity.parttime.fragment;
 
 import java.io.IOException;
-import org.json.JSONException;
-import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -10,17 +9,19 @@ import android.graphics.Bitmap.Config;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ImageView.ScaleType;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
+import com.overtech.ems.activity.common.LoginActivity;
+import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalAccountListActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalBoundsActivity;
 import com.overtech.ems.activity.parttime.personal.PersonalChargeBackListActivity;
@@ -29,14 +30,15 @@ import com.overtech.ems.activity.parttime.personal.notice.PersonalNoticeActivity
 import com.overtech.ems.activity.parttime.personal.others.PersonalAboutAppActivity;
 import com.overtech.ems.activity.parttime.personal.others.PersonalHelpDocActivity;
 import com.overtech.ems.config.StatusCode;
-import com.overtech.ems.entity.common.ServicesConfig;
-import com.overtech.ems.http.HttpEngine.Param;
-import com.overtech.ems.http.constant.Constant;
-import com.overtech.ems.picasso.Picasso;
+import com.overtech.ems.config.SystemConfig;
+import com.overtech.ems.entity.bean.StatusCodeBean;
+import com.overtech.ems.entity.common.Requester;
 import com.overtech.ems.picasso.Transformation;
-import com.overtech.ems.utils.ImageUtils;
+import com.overtech.ems.utils.Logr;
+import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
+import com.overtech.ems.widget.bitmap.ImageLoader;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.Request;
@@ -60,58 +62,52 @@ public class PersonalZoneFragment extends BaseFragment implements
 	private TextView mPhone;
 	private Activity mActivity;
 	private ImageView mAvator;
+	private String uid;
+	private String certificate;
 
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case StatusCode.PERSONAL_ZONE_SUCCESS:
 				String info = (String) msg.obj;
-				Log.e("====", info);
-				try {
-					JSONObject json = new JSONObject(info);
-					if (!json.isNull("model")) {
-						JSONObject model = (JSONObject) json.get("model");
-						if (!model.isNull("name")) {
-							String name = model.getString("name");
-							mName.setText(name);
-						}
-						if (!model.isNull("phoneNo")) {
-							String phone = model.getString("phoneNo");
-							mPhone.setText(phone);
-						}
-						if (!model.isNull("path")) {
-							String imageUrl = model.getString("path");
-							if (imageUrl == null || "".equals(imageUrl)) {
-								mAvator.setScaleType(ScaleType.FIT_XY);
-								mAvator.setImageResource(STUB_ID);
-							} else {
-								// 调用从网络中加载过来的图片
-								Picasso.with(context).load(imageUrl)
-										.placeholder(STUB_ID).error(STUB_ID)
-										.config(DEFAULT_CONFIG)
-										.transform(new Transformation() {
-											// 圆角图片的实现
-											@Override
-											public Bitmap transform(
-													Bitmap source) {
-												return ImageUtils
-														.toRoundBitmap(source);
-											}
-
-											@Override
-											public String key() {
-												return null;
-											}
-										}).into(mAvator);
-							}
-						}
-					} else {
-						mAvator.setImageResource(STUB_ID);
-					}
-				} catch (JSONException e) {
-					e.printStackTrace();
+				Logr.e("====" + info);
+				StatusCodeBean bean = gson.fromJson(info, StatusCodeBean.class);
+				int st = bean.st;
+				if (st == -1 || st == -2) {
+					Utilities.showToast(bean.msg, mActivity);
+					SharePreferencesUtils.put(mActivity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					SharePreferencesUtils.put(mActivity,
+							SharedPreferencesKeys.UID, "");
+					Intent intent = new Intent(mActivity, LoginActivity.class);
+					startActivity(intent);
+					return;
 				}
+				mName.setText(bean.body.get("name").toString());
+				mPhone.setText(bean.body.get("phone").toString());
+				if (TextUtils.isEmpty(bean.body.get("avator").toString())) {
+					mAvator.setImageResource(STUB_ID);
+				} else {
+					ImageLoader.getInstance().displayImage(
+							bean.body.get("avator").toString(), mAvator,
+							STUB_ID, STUB_ID, DEFAULT_CONFIG,
+							new Transformation() {
 
+								@Override
+								public Bitmap transform(Bitmap source) {
+									// TODO Auto-generated method
+									// stub
+									return null;
+								}
+
+								@Override
+								public String key() {
+									// TODO Auto-generated method
+									// stub
+									return null;
+								}
+							});
+				}
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
 				Utilities.showToast("服务器异常", mActivity);
@@ -133,9 +129,10 @@ public class PersonalZoneFragment extends BaseFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-
 		view = inflater.inflate(R.layout.fragment_personal_zone, container,
 				false);
+		uid = ((MainActivity) getActivity()).getUid();
+		certificate = ((MainActivity) getActivity()).getCertificate();
 		initViews();
 		initEvents();
 		onLoading();
@@ -144,11 +141,12 @@ public class PersonalZoneFragment extends BaseFragment implements
 
 	private void onLoading() {
 		startProgressDialog("正在加载...");
-		String mLoginName = mSharedPreferences.getString(
-				SharedPreferencesKeys.CURRENT_LOGIN_NAME, null);
-		Param param = new Param(Constant.LOGINNAME, mLoginName);
-		Request request = httpEngine.createRequest(
-				ServicesConfig.PERSONAL_AVATOR, param);
+		Requester requester = new Requester();
+		requester.cmd = 20070;
+		requester.certificate = certificate;
+		requester.uid = uid;
+		Request request = httpEngine.createRequest(SystemConfig.NEWIP,
+				gson.toJson(requester));
 		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {
 

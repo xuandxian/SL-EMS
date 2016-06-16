@@ -27,6 +27,7 @@ import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
+import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.adapter.TaskListDetailsAdapter;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.config.SystemConfig;
@@ -112,11 +113,11 @@ public class QueryTaskListActivity extends BaseActivity implements
 					double distance = DistanceUtil.getDistance(
 							mCurrentLocation, latlng);
 					if (distance > 500.0) {
-						Utilities.showToast("您距离维保电梯的距离超出范围", context);
+						Utilities.showToast("您距离维保电梯的距离超出范围", activity);
 						finish();
 					} else {
 						if (currentElevator.isFinish.equals("2")) {
-							Utilities.showToast("你已经完成了该电梯", context);
+							Utilities.showToast("你已经完成了该电梯", activity);
 							finish();
 						} else {
 							stopProgressDialog();
@@ -127,7 +128,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 						}
 					}
 				} else {
-					Utilities.showToast("您尚未满足维保要求", context);// 维保要求包括，维保时间正确，有维保搭档，维保电梯正确
+					Utilities.showToast("您尚未满足维保要求", activity);// 维保要求包括，维保时间正确，有维保搭档，维保电梯正确
 					finish();
 				}
 				break;
@@ -145,7 +146,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 					list.add(type);
 				}
 				mTaskDetailsTitle.setVisibility(View.VISIBLE);
-				adapter = new TaskListDetailsAdapter(context, list);
+				adapter = new TaskListDetailsAdapter(activity, list);
 				mTaskListData.setAdapter(adapter);
 				break;
 			case StatusCode.MAINTENANCE_COMPLETE_SUCCESS:
@@ -166,7 +167,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 							null, tagSet, mTagsCallback);
 					if (TextUtils.equals("0", taskStatus)) {
 						// 任务包中还有未完成的
-						Utilities.showToast("您还有未完成的电梯", context);
+						Utilities.showToast("您还有未完成的电梯", activity);
 						Intent intent = new Intent(QueryTaskListActivity.this,
 								TaskListPackageDetailActivity.class);
 						intent.putExtra(Constant.TASKNO, mTaskNo);
@@ -181,7 +182,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 						finish();
 					}
 				} else {
-					Utilities.showToast("请和搭档确认电梯的完成状态", context);
+					Utilities.showToast("请和搭档确认电梯的完成状态", activity);
 					Intent intent = new Intent(QueryTaskListActivity.this,
 							TaskListPackageDetailActivity.class);
 					intent.putExtra(Constant.TASKNO, mTaskNo);
@@ -194,10 +195,10 @@ public class QueryTaskListActivity extends BaseActivity implements
 						(Set<String>) msg.obj, mTagsCallback);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast("网络异常", context);
+				Utilities.showToast("网络异常", activity);
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast("服务器异常", context);
+				Utilities.showToast("服务器异常", activity);
 				break;
 			}
 			stopProgressDialog();
@@ -211,7 +212,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 			switch (code) {
 			case 0:
 				Log.d(TAG, "Set tag and alias success");
-				SharePreferencesUtils.put(context,
+				SharePreferencesUtils.put(activity,
 						SharedPreferencesKeys.TAGSET, tags);// //
 															// 成功保存标签后，将标签放到本地
 				break;
@@ -253,11 +254,10 @@ public class QueryTaskListActivity extends BaseActivity implements
 	}
 
 	private void init() {
-		context = QueryTaskListActivity.this;
-		mLatitude = application.latitude;
-		mLongitude = application.longitude;
+		mLatitude = ((MyApplication)getApplication()).latitude;
+		mLongitude = ((MyApplication)getApplication()).longitude;
 		mCurrentLocation = new LatLng(mLatitude, mLongitude);
-		mListFooterView = LayoutInflater.from(context).inflate(
+		mListFooterView = LayoutInflater.from(activity).inflate(
 				R.layout.listview_footer_done, null);
 		mDone = (Button) mListFooterView.findViewById(R.id.btn_tasklist_done);
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
@@ -430,7 +430,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 									}
 								});
 							} else {
-								Utilities.showToast("该电梯已经完成", context);
+								Utilities.showToast("该电梯已经完成", activity);
 							}
 						}
 					}

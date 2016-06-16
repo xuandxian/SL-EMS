@@ -54,9 +54,17 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+		stackInstance.popAllActivitys();
 		ctx = this;
 		initView();
 		initEvent();
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		// TODO Auto-generated method stub
+		super.onNewIntent(intent);
+		stackInstance.popAllActivitys();
 	}
 
 	private void initView() {
@@ -100,7 +108,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 				sPassword = mPassword.getText().toString().trim();
 				if (TextUtils.isEmpty(sUserName)
 						|| TextUtils.isEmpty(sPassword)) {
-					Utilities.showToast("输入不能为空", context);
+					Utilities.showToast("输入不能为空", ctx);
 				} else {
 					doLogin(sUserName, sPassword);
 				}

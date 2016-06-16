@@ -5,18 +5,19 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
 import com.overtech.ems.activity.parttime.tasklist.ScanCodeActivity;
-import com.overtech.ems.activity.parttime.tasklist.TaskListDonetFragment;
+import com.overtech.ems.activity.parttime.tasklist.TaskListDoneFragment;
 import com.overtech.ems.activity.parttime.tasklist.TaskListNoneFragment;
+import com.overtech.ems.utils.FragmentUtils;
 
 public class TaskListFragment extends BaseFragment implements OnClickListener {
 
@@ -25,9 +26,9 @@ public class TaskListFragment extends BaseFragment implements OnClickListener {
 	private TextView mDonet;
 	private TextView mHead;
 	private ImageView mQrCode;
-	private FragmentTransaction transaction;
-	private Fragment mTaskNone;
-	private Fragment mTaskDonet;
+	private Fragment currentFragment;
+	private TaskListNoneFragment mTaskNone;
+	private TaskListDoneFragment mTaskDone;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -53,31 +54,26 @@ public class TaskListFragment extends BaseFragment implements OnClickListener {
 		mNone.setOnClickListener(this);
 		mDonet.setOnClickListener(this);
 		mQrCode.setOnClickListener(this);
-		mTaskNone = new TaskListNoneFragment();
-		mTaskDonet = new TaskListDonetFragment();
+
 	}
 
 	private void setDefaultView() {
 		mHead.setText("任务单");
 		mQrCode.setVisibility(View.VISIBLE);
-		transaction = fragmentManager.beginTransaction();
-		transaction.replace(R.id.fl_container, mTaskNone).commit();
-	}
-
-	private void switchContent(Fragment from, Fragment to) {
-		transaction = fragmentManager.beginTransaction();
-		if (!to.isAdded()) {
-			transaction.hide(from).add(R.id.fl_container, to).commit();
-		} else {
-			transaction.hide(from).show(to).commit();
-		}
+		currentFragment = FragmentUtils.switchFragment(
+				getChildFragmentManager(), R.id.fl_container, currentFragment,
+				TaskListNoneFragment.class, null);
+		mTaskNone = (TaskListNoneFragment) currentFragment;
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.tv_tasklist_none:
-			switchContent(mTaskDonet, mTaskNone);
+			currentFragment = FragmentUtils.switchFragment(
+					getChildFragmentManager(), R.id.fl_container,
+					currentFragment, TaskListNoneFragment.class, null);
+			mTaskNone = (TaskListNoneFragment) currentFragment;
 			mQrCode.setVisibility(View.VISIBLE);
 			mNone.setBackgroundResource(R.drawable.horizontal_line);
 			mDonet.setBackgroundResource(R.color.main_white);
@@ -85,7 +81,10 @@ public class TaskListFragment extends BaseFragment implements OnClickListener {
 			mDonet.setTextColor(getResources().getColor(R.color.main_secondary));
 			break;
 		case R.id.tv_tasklist_donet:
-			switchContent(mTaskNone, mTaskDonet);
+			currentFragment = FragmentUtils.switchFragment(
+					getChildFragmentManager(), R.id.fl_container,
+					currentFragment, TaskListDoneFragment.class, null);
+			mTaskDone = (TaskListDoneFragment) currentFragment;
 			mQrCode.setVisibility(View.GONE);
 			mNone.setBackgroundResource(R.color.main_white);
 			mDonet.setBackgroundResource(R.drawable.horizontal_line);

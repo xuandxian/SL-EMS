@@ -27,30 +27,24 @@ public class HttpEngine {
 
 	private OkHttpClient mOkHttpClient;
 
-	private Context mContext;
-
 	private Handler mDelivery;
 
 	private Gson mGson;
 
-	public static final MediaType JSON = MediaType.parse("application/json;charset=utf-8");
+	public static final MediaType JSON = MediaType
+			.parse("application/json;charset=utf-8");
 
-	private static int timeOut=40000;
+	private static int timeOut = 40000;
 
 	private HttpEngine() {
 		mOkHttpClient = new OkHttpClient();
-		mOkHttpClient.setConnectTimeout(timeOut, java.util.concurrent.TimeUnit.MILLISECONDS);
-		mOkHttpClient.setReadTimeout(timeOut, java.util.concurrent.TimeUnit.MILLISECONDS);
+		mOkHttpClient.setConnectTimeout(timeOut,
+				java.util.concurrent.TimeUnit.MILLISECONDS);
+		mOkHttpClient.setReadTimeout(timeOut,
+				java.util.concurrent.TimeUnit.MILLISECONDS);
 		mOkHttpClient.setFollowRedirects(true);
 		mDelivery = new Handler(Looper.getMainLooper());
 		mGson = new Gson();
-	}
-
-	public void initContext(Context context){
-		if (null==mContext){
-			mContext=context;
-		}
-
 	}
 
 	public static HttpEngine getInstance() {
@@ -66,9 +60,11 @@ public class HttpEngine {
 
 	/**
 	 * create request
-	 *
-	 * @param url      传入完整的url链接
-	 * @param jsonData 请求数据类型，json格式
+	 * 
+	 * @param url
+	 *            传入完整的url链接
+	 * @param jsonData
+	 *            请求数据类型，json格式
 	 * @return
 	 */
 	public Request createRequest(String url, String jsonData) {
@@ -77,23 +73,31 @@ public class HttpEngine {
 		}
 		Request request;
 		RequestBody body = RequestBody.create(JSON, jsonData);
-		Request.Builder builder = new Request.Builder().cacheControl(CacheControl.FORCE_NETWORK).url(url).post(body);
+		Request.Builder builder = new Request.Builder()
+				.cacheControl(CacheControl.FORCE_NETWORK).url(url).post(body);
 		request = builder.build();
 		return request;
 	}
+
 	/**
 	 * create request
-	 * @param url      传入完整的url链接
+	 * 
+	 * @param url
+	 *            传入完整的url链接
 	 * @return
 	 */
 	public Request createRequest(String url) {
 		Request request = new Request.Builder().url(url).build();
 		return request;
 	}
+
 	/**
 	 * create request
-	 * @param url      传入完整的url链接
-	 * @param params   参数
+	 * 
+	 * @param url
+	 *            传入完整的url链接
+	 * @param params
+	 *            参数
 	 * @return
 	 */
 	public Request createRequest(String url, Param... params) {
@@ -108,12 +112,13 @@ public class HttpEngine {
 		return new Request.Builder().url(url).post(requestBody).build();
 	}
 
-	public Call createRequestCall(Request request){
-		if (null==mOkHttpClient || null==request){
+	public Call createRequestCall(Request request) {
+		if (null == mOkHttpClient || null == request) {
 			return null;
 		}
 		return mOkHttpClient.newCall(request);
 	}
+
 	/**
 	 * 
 	 * @param url
@@ -125,10 +130,9 @@ public class HttpEngine {
 	 */
 	public Request createRequest(String url, File[] files, String[] fileKeys,
 			Param... params) throws IOException {
-		return buildMultipartFormRequest(url, files, fileKeys,
-				params);
+		return buildMultipartFormRequest(url, files, fileKeys, params);
 	}
-	
+
 	private Request buildMultipartFormRequest(String url, File[] files,
 			String[] fileKeys, Param[] params) {
 		params = validateParam(params);
@@ -160,6 +164,7 @@ public class HttpEngine {
 		RequestBody requestBody = builder.build();
 		return new Request.Builder().url(url).post(requestBody).build();
 	}
+
 	private String guessMimeType(String path) {
 		FileNameMap fileNameMap = URLConnection.getFileNameMap();
 		String contentTypeFor = fileNameMap.getContentTypeFor(path);
@@ -168,12 +173,14 @@ public class HttpEngine {
 		}
 		return contentTypeFor;
 	}
+
 	private Param[] validateParam(Param[] params) {
 		if (params == null)
 			return new Param[0];
 		else
 			return params;
 	}
+
 	public static class Param {
 		public Param() {
 		}

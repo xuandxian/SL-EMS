@@ -2,9 +2,6 @@ package com.overtech.ems.activity.common.password;
 
 import java.io.IOException;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -72,10 +69,10 @@ public class LostPasswordActivity extends BaseActivity {
 				}
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast("网络异常", context);
+				Utilities.showToast("网络异常", activity);
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast("服务器异常", context);
+				Utilities.showToast("服务器异常", activity);
 				break;
 			}
 			stopProgressDialog();
@@ -187,7 +184,7 @@ public class LostPasswordActivity extends BaseActivity {
 				}
 			});
 		} else {
-			Utilities.showToast("请输入正确的手机号", context);
+			Utilities.showToast("请输入正确的手机号", activity);
 		}
 	}
 
@@ -195,7 +192,7 @@ public class LostPasswordActivity extends BaseActivity {
 		startProgressDialog("正在验证...");
 		mSMSCode = mSMSCodeEditText.getText().toString().trim();
 		if (TextUtils.isEmpty(mSMSCode)) {
-			Utilities.showToast("输入不能为空", context);
+			Utilities.showToast("输入不能为空", activity);
 		} else {
 			Requester requester = new Requester();
 			requester.cmd = 11;

@@ -63,6 +63,7 @@ public class MaintenanceDetailActivity extends BaseActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_maintenance_detail);
 		activity = this;
+		stackInstance.pushActivity(activity);
 		uid = (String) SharePreferencesUtils.get(this,
 				SharedPreferencesKeys.UID, "");
 		certificate = (String) SharePreferencesUtils.get(this,
@@ -101,10 +102,13 @@ public class MaintenanceDetailActivity extends BaseActivity implements
 					if (st == -1 || st == -2) {
 						if (activity != null) {
 							Utilities.showToast(msg, activity);
+							SharePreferencesUtils.put(activity,
+									SharedPreferencesKeys.UID, "");
+							SharePreferencesUtils.put(activity,
+									SharedPreferencesKeys.CERTIFICATED, "");
 							Intent intent = new Intent(activity,
 									LoginActivity.class);
 							startActivity(intent);
-							finish();
 						}
 					} else {
 						Utilities.showToast(msg, activity);
@@ -211,5 +215,12 @@ public class MaintenanceDetailActivity extends BaseActivity implements
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		stackInstance.popActivity(activity);
 	}
 }

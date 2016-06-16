@@ -61,6 +61,7 @@ public class MaintenanceTaskActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_maintenancetask);
 		activity = this;
+		stackInstance.pushActivity(activity);
 		elevatorNo = getIntent().getStringExtra(Constant.ELEVATORNO);
 		uid = (String) SharePreferencesUtils.get(activity,
 				SharedPreferencesKeys.UID, "");
@@ -96,10 +97,14 @@ public class MaintenanceTaskActivity extends BaseActivity {
 				String msg = response.msg;
 				if (st != 0) {
 					if (st == -1 || st == -2) {
+						Utilities.showToast(msg, activity);
+						SharePreferencesUtils.put(activity,
+								SharedPreferencesKeys.UID, "");
+						SharePreferencesUtils.put(activity,
+								SharedPreferencesKeys.CERTIFICATED, "");
 						Intent intent = new Intent(activity,
 								LoginActivity.class);
 						startActivity(intent);
-						finish();
 					} else {
 						Utilities.showToast(msg, activity);
 					}
@@ -139,10 +144,14 @@ public class MaintenanceTaskActivity extends BaseActivity {
 				String msg = response.msg;
 				if (st != 0) {
 					if (st == -1 || st == -2) {
+						Utilities.showToast(msg, activity);
+						SharePreferencesUtils.put(activity,
+								SharedPreferencesKeys.UID, "");
+						SharePreferencesUtils.put(activity,
+								SharedPreferencesKeys.CERTIFICATED, "");
 						Intent intent = new Intent(activity,
 								LoginActivity.class);
 						startActivity(intent);
-						finish();
 					} else {
 						Utilities.showToast(msg, activity);
 					}
@@ -236,10 +245,14 @@ public class MaintenanceTaskActivity extends BaseActivity {
 						String msg = response.msg;
 						if (st != 0) {
 							if (st == -1 || st == -2) {
+								Utilities.showToast(msg, activity);
+								SharePreferencesUtils.put(activity,
+										SharedPreferencesKeys.UID, "");
+								SharePreferencesUtils.put(activity,
+										SharedPreferencesKeys.CERTIFICATED, "");
 								Intent intent = new Intent(activity,
 										LoginActivity.class);
 								startActivity(intent);
-								finish();
 							} else {
 								Utilities.showToast(msg, activity);
 							}
@@ -314,5 +327,12 @@ public class MaintenanceTaskActivity extends BaseActivity {
 		} else if (arg1 == Activity.RESULT_OK) {
 			Utilities.showToast("confirm", activity);
 		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		stackInstance.popActivity(activity);
 	}
 }

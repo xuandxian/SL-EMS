@@ -50,6 +50,7 @@ public class MaintenanceTaskDetailActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_maintenance_task_detail);
 		activity = this;
+		stackInstance.pushActivity(activity);
 		initView();
 		initEvent();
 		initData();
@@ -130,5 +131,12 @@ public class MaintenanceTaskDetailActivity extends BaseActivity {
 		listView = (ListView) findViewById(R.id.lv_maintenance_task_detail);
 		btNegative = (Button) findViewById(R.id.bt_negative);
 		btPositive = (Button) findViewById(R.id.bt_positive);
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		stackInstance.popActivity(activity);
 	}
 }

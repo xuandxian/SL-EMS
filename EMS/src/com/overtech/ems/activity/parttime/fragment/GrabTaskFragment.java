@@ -32,6 +32,7 @@ import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
 import com.overtech.ems.activity.adapter.GrabTaskAdapter;
 import com.overtech.ems.activity.common.LoginActivity;
+import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
 import com.overtech.ems.activity.parttime.grabtask.GrabTaskDoFilterActivity;
 import com.overtech.ems.activity.parttime.grabtask.KeyWordSerachActivity;
@@ -102,12 +103,12 @@ public class GrabTaskFragment extends BaseFragment implements
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
 				mNoWifi.setVisibility(View.VISIBLE);
 				mNoResultPage.setVisibility(View.GONE);
-				Utilities.showToast("服务器异常", context);
+				Utilities.showToast("服务器异常", activity);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
 				mNoWifi.setVisibility(View.VISIBLE);
 				mNoResultPage.setVisibility(View.GONE);
-				Utilities.showToast("网络异常", context);
+				Utilities.showToast("网络异常", activity);
 				break;
 			}
 			onLoad();
@@ -133,9 +134,13 @@ public class GrabTaskFragment extends BaseFragment implements
 			String msg = response.msg;
 			if (st != 0) {
 				if (st == -1 || st == -2) {
+					Utilities.showToast(msg, mActivity);
+					SharePreferencesUtils.put(mActivity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(mActivity,
+							SharedPreferencesKeys.CERTIFICATED, "");
 					Intent intent = new Intent(mActivity, LoginActivity.class);
 					startActivity(intent);
-					mActivity.finish();
 				} else {
 					Utilities.showToast(msg, mActivity);
 				}
@@ -166,7 +171,8 @@ public class GrabTaskFragment extends BaseFragment implements
 			case 0:
 				logs = "Set tag and alias success";
 				Log.d(TAG, logs);
-				mSharedPreferences.edit().putStringSet("tagSet", tags).commit();// 成功保存标签后，将标签放到本地
+				SharePreferencesUtils.put(mActivity,
+						SharedPreferencesKeys.TAGSET, tags);
 				break;
 			case 6002:
 				logs = "Failed to set alias and tags due to timeout. Try again after 60s.";
@@ -199,10 +205,8 @@ public class GrabTaskFragment extends BaseFragment implements
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_grab_task, container,
 				false);
-		uid = (String) SharePreferencesUtils.get(mActivity,
-				SharedPreferencesKeys.UID, "");
-		certificate = (String) SharePreferencesUtils.get(mActivity,
-				SharedPreferencesKeys.CERTIFICATED, "");
+		uid = ((MainActivity) getActivity()).getUid();
+		certificate = ((MainActivity) getActivity()).getCertificate();
 		// 读取保存在本地的标签
 		readTagSet();
 		findViewById(view);
@@ -215,12 +219,9 @@ public class GrabTaskFragment extends BaseFragment implements
 
 	private void readTagSet() {
 		// TODO Auto-generated method stub
-		Set<String> tempSet = mSharedPreferences.getStringSet("tagSet", null);
-		if (tempSet == null) {
-			tagSet = new LinkedHashSet<String>();
-		} else {
-			tagSet = tempSet;
-		}
+		Set<String> tempSet = (Set<String>) SharePreferencesUtils.get(
+				mActivity, SharedPreferencesKeys.TAGSET,
+				new LinkedHashSet<String>());
 	}
 
 	private void loadingData() {
@@ -407,18 +408,22 @@ public class GrabTaskFragment extends BaseFragment implements
 			String msg = response.msg;
 			if (st != 0) {
 				if (st == -1 || st == -2) {
+					Utilities.showToast(msg, mActivity);
+					SharePreferencesUtils.put(mActivity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(mActivity,
+							SharedPreferencesKeys.CERTIFICATED, "");
 					Intent intent = new Intent(mActivity, LoginActivity.class);
 					startActivity(intent);
-					mActivity.finish();
 				} else {
 					Utilities.showToast(msg, mActivity);
 				}
 			} else {
 				String status = response.body.status;
 				if (TextUtils.equals(status, "0")) {
-					Utilities.showToast("请不要重复抢单", context);
+					Utilities.showToast("请不要重复抢单", activity);
 				} else if (TextUtils.equals(status, "1")) {
-					Utilities.showToast("抢单成功，等待第二个人抢", context);
+					Utilities.showToast("抢单成功，等待第二个人抢", activity);
 
 					// 推送业务代码
 					// tagItem = response.body.taskNo;
@@ -432,7 +437,7 @@ public class GrabTaskFragment extends BaseFragment implements
 					// }
 					onRefresh();
 				} else if (TextUtils.equals(status, "2")) {
-					Utilities.showToast("抢单成功，请到任务中查看", context);
+					Utilities.showToast("抢单成功，请到任务中查看", activity);
 					// 推送业务代码
 					// tagItem = response.body.taskNo;
 					// if (!AppUtils.isValidTagAndAlias(tagItem)) {
@@ -445,11 +450,11 @@ public class GrabTaskFragment extends BaseFragment implements
 					// }
 					onRefresh();
 				} else if (TextUtils.equals(status, "3")) {
-					Utilities.showToast("差一点就抢到了", context);
+					Utilities.showToast("差一点就抢到了", activity);
 				} else if (TextUtils.equals(status, "4")) {
-					Utilities.showToast("维保日期的电梯数量已经超过10台，不能够再抢单。", context);
+					Utilities.showToast("维保日期的电梯数量已经超过10台，不能够再抢单。", activity);
 				} else {
-					Utilities.showToast("用户账户异常", context);
+					Utilities.showToast("用户账户异常", activity);
 					Intent intent = new Intent(getActivity(),
 							LoginActivity.class);
 					startActivity(intent);
