@@ -34,7 +34,8 @@ import com.overtech.ems.activity.parttime.fragment.NearByFragment.NearByMapCallb
 import com.overtech.ems.entity.bean.TaskPackageBean.TaskPackage;
 import com.overtech.ems.utils.Utilities;
 
-public class NearByMapFragment extends BaseFragment implements NearByMapCallback {
+public class NearByMapFragment extends BaseFragment implements
+		NearByMapCallback {
 
 	private MapView mMapView = null;
 	private BaiduMap mBaiduMap = null;
@@ -48,6 +49,7 @@ public class NearByMapFragment extends BaseFragment implements NearByMapCallback
 	private double longitude;
 	private LatLng myLocation, longPressLocation;
 	private List<TaskPackage> list;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -62,7 +64,7 @@ public class NearByMapFragment extends BaseFragment implements NearByMapCallback
 
 	@SuppressWarnings("unchecked")
 	private void getExtralData() {
-		
+
 		((NearByFragment) getParentFragment()).setNearByMapCallback(this);
 		latitude = ((MyApplication) getActivity().getApplicationContext()).latitude;
 		longitude = ((MyApplication) getActivity().getApplicationContext()).longitude;
@@ -139,9 +141,12 @@ public class NearByMapFragment extends BaseFragment implements NearByMapCallback
 							.icon(bitmap).zIndex(0).draggable(false).period(10);
 					mOverlayOptions.animateType(MarkerAnimateType.drop);
 					mMarker = (Marker) (mBaiduMap.addOverlay(mOverlayOptions));
-					// Bundle bundle = new Bundle();
-					// bundle.putSerializable("taskPackage", data);
-					// mMarker.setExtraInfo(bundle);
+					Bundle bundle = new Bundle();
+					bundle.putString("taskPackageName", data.taskPackageName);
+					bundle.putString("taskNo", data.taskNo);
+					bundle.putString("latitude", data.latitude);
+					bundle.putString("longitude", data.longitude);
+					mMarker.setExtraInfo(bundle);
 				}
 			}
 		}
@@ -153,10 +158,15 @@ public class NearByMapFragment extends BaseFragment implements NearByMapCallback
 			@Override
 			public boolean onMarkerClick(final Marker marker) {
 				if (marker.getExtraInfo() != null) {
-					final TaskPackage taskPackage = (TaskPackage) marker
-							.getExtraInfo().get("taskPackage");
+					Bundle markerBundle = marker.getExtraInfo();
+					final String mTaskPackageName = markerBundle
+							.getString("taskPackageName");
+					final String mTaskNo = markerBundle.getString("taskNo");
+					final String mLatitude = markerBundle.getString("latitude");
+					final String mLongitude = markerBundle
+							.getString("longitude");
 					BaiduMapInfoWindow infoWindow = new BaiduMapInfoWindow(
-							getActivity(), taskPackage);
+							getActivity(), mTaskPackageName);
 					mInfoWindow = new InfoWindow(infoWindow, marker
 							.getPosition(), -40);
 					mBaiduMap.showInfoWindow(mInfoWindow);
@@ -167,11 +177,10 @@ public class NearByMapFragment extends BaseFragment implements NearByMapCallback
 							Intent intent = new Intent(activity,
 									PackageDetailActivity.class);
 							Bundle bundle = new Bundle();
-							bundle.putString("CommunityName",
-									taskPackage.taskPackageName);
-							bundle.putString("TaskNo", taskPackage.taskNo);
-							bundle.putString("Longitude", taskPackage.longitude);
-							bundle.putString("Latitude", taskPackage.latitude);
+							bundle.putString("CommunityName", mTaskPackageName);
+							bundle.putString("TaskNo", mTaskNo);
+							bundle.putString("Longitude", mLatitude);
+							bundle.putString("Latitude", mLongitude);
 							intent.putExtras(bundle);
 							startActivity(intent);
 						}
@@ -217,7 +226,7 @@ public class NearByMapFragment extends BaseFragment implements NearByMapCallback
 	@Override
 	public void callback() {
 		// TODO Auto-generated method stub
-		list=((NearByFragment)getParentFragment()).getData();
+		list = ((NearByFragment) getParentFragment()).getData();
 		myLocation = new LatLng(latitude, longitude);
 		addOverLay(list);
 		setMyLocationMarker(myLocation);

@@ -28,6 +28,7 @@ import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.SearchHistoryAdapter;
 import com.overtech.ems.activity.adapter.SearchResultAdapter;
+import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.StatusCodeBean;
@@ -73,23 +74,32 @@ public class KeyWordSerachActivity extends BaseActivity {
 					searchList.clear();
 				}
 				String json = (String) msg.obj;
+				Logr.e(json);
 				StatusCodeBean bean = gson.fromJson(json, StatusCodeBean.class);
+				int st = bean.st;
+				if (st == -1 || st == -2) {
+					stopProgressDialog();
+					Utilities.showToast(bean.msg, activity);
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent = new Intent(activity, LoginActivity.class);
+					startActivity(intent);
+					return;
+				}
 				List<String> data = (List<String>) bean.body.get("data");
-				Logr.e("后台传过来的数据" + json);
-				String[] array = (String[]) data.toArray();
-				int length = array.length;
+				int length = data.size();
 				if (length == 1) {
 					Utilities.showToast("无结果", activity);
 				} else {
-					for (int i = 0; i < array.length; i++) {
+					for (int i = 0; i < length; i++) {
 						if (i == 0) {
-							zoneCount = Integer.valueOf(array[i].substring(1)
-									.replace("\"", ""));
-						} else if (i == array.length - 1) {
-							searchList.add(array[i].substring(0,
-									array[i].length() - 1));
+							zoneCount = Integer.valueOf(data.get(i));
+						} else if (i == length - 1) {
+							searchList.add(data.get(i));
 						} else {
-							searchList.add(array[i]);
+							searchList.add(data.get(i));
 						}
 					}
 					mResultAdapter = new SearchResultAdapter(activity,
@@ -125,6 +135,7 @@ public class KeyWordSerachActivity extends BaseActivity {
 
 	private void init() {
 		activity = this;
+		stackInstance.pushActivity(activity);
 		uid = (String) SharePreferencesUtils.get(activity,
 				SharedPreferencesKeys.UID, "");
 		certificate = (String) SharePreferencesUtils.get(activity,
@@ -180,7 +191,7 @@ public class KeyWordSerachActivity extends BaseActivity {
 							Intent intent = new Intent();
 							intent.putExtra("mKeyWord", mKeyWord);
 							setResult(Activity.RESULT_OK, intent);
-							finish();
+							stackInstance.popActivity(activity);
 						}
 						return true;
 					}
@@ -188,7 +199,7 @@ public class KeyWordSerachActivity extends BaseActivity {
 		mDoCancel.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				finish();
+				stackInstance.popActivity(activity);
 			}
 		});
 		mSearchListView.setOnItemClickListener(new OnItemClickListener() {
@@ -202,7 +213,7 @@ public class KeyWordSerachActivity extends BaseActivity {
 				Intent intent = new Intent();
 				intent.putExtra("mKeyWord", mKeyWord);
 				setResult(Activity.RESULT_OK, intent);
-				finish();
+				stackInstance.popActivity(activity);
 			}
 		});
 		mHistoryListView.setOnItemClickListener(new OnItemClickListener() {
@@ -216,7 +227,7 @@ public class KeyWordSerachActivity extends BaseActivity {
 				Intent intent = new Intent();
 				intent.putExtra("mKeyWord", mKeyWord);
 				setResult(Activity.RESULT_OK, intent);
-				finish();
+				stackInstance.popActivity(activity);
 			}
 		});
 		mHistoryListView
@@ -324,5 +335,12 @@ public class KeyWordSerachActivity extends BaseActivity {
 	private int dp2px(int dp) {
 		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
 				getResources().getDisplayMetrics());
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		stackInstance.popActivity(activity);
 	}
 }

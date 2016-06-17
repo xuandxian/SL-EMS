@@ -26,14 +26,20 @@ public class MyApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		SDKInitializer.initialize(getApplicationContext());
-		mMyLocationClient = new MyLocationListener();
-		locationService = new LocationService(getApplicationContext());
-		locationService.registerListener(mMyLocationClient);
-		locationService.start();
-		JPushInterface.setDebugMode(true); // 设置开启日志,发布时请关闭日志
-		JPushInterface.init(this); // 初始化 JPush
-		Logr.e("==MyApplication= 执行了");
+		String process = Utilities.getCurProcessName(getApplicationContext());
+		Logr.e(process);
+		if (process.equals("com.overtech.ems")) {
+			SDKInitializer.initialize(getApplicationContext());
+			mMyLocationClient = new MyLocationListener();
+			locationService = new LocationService(getApplicationContext());
+			locationService.registerListener(mMyLocationClient);
+			locationService.start();
+			JPushInterface.setDebugMode(true); // 设置开启日志,发布时请关闭日志
+			JPushInterface.init(this); // 初始化 JPush
+			Logr.e("==MyApplication= 执行了");
+		} else {
+			Logr.e("myapplication++++remote进行执行了");
+		}
 	}
 
 	public class MyLocationListener implements BDLocationListener {

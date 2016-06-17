@@ -62,6 +62,10 @@ public class RegisterActivity extends BaseActivity implements
 	 * 上传用户信息
 	 */
 	protected void startUpLoading() {
+		Logr.e(mIdCardFragment.idCardFrontPath);
+		Logr.e(mIdCardFragment.idCardOppositePath);
+		Logr.e(mWorkCertificateFragment.workCertificatePath);
+		Logr.e(mOtherCertificateFragment.otherCertificatePath);
 		startProgressDialog("上传中，请等待上传结果");
 		Requester requester = new Requester();
 		requester.cmd = 3;
@@ -73,7 +77,7 @@ public class RegisterActivity extends BaseActivity implements
 		requester.body.put("zone", mPersonInfoFragment.zoneContent);
 		requester.body.put("eduLevel", mPersonEduWorkFragment.eduLevel);
 		requester.body.put("workUnit", mPersonEduWorkFragment.workUnit);
-		requester.body.put("enterTime", mPersonEduWorkFragment.enterTime);
+		requester.body.put("entryTime", mPersonEduWorkFragment.enterTime);
 		requester.body.put("workYears", mPersonEduWorkFragment.workYears);
 		requester.body.put("elevatorBrand",
 				mPersonEduWorkFragment.elevatorBrand);
@@ -81,33 +85,43 @@ public class RegisterActivity extends BaseActivity implements
 		HashMap<String, Object> front = new HashMap<String, Object>();// 身份证正面
 		front.put("content",
 				ImageUtils.bitmapToString(mIdCardFragment.idCardFrontPath));
-		front.put("name",
+		// front.put("content","123");
+		front.put("attrName",
 				ImageUtils.getBitmapAttrName(mIdCardFragment.idCardFrontPath));
+		Logr.e(ImageUtils.getBitmapAttrName(mIdCardFragment.idCardFrontPath));
 		requester.body.put("frontIdCard", front);
 
 		HashMap<String, Object> opposite = new HashMap<String, Object>();// 身份证反面
-		front.put("content",
+		opposite.put("content",
 				ImageUtils.bitmapToString(mIdCardFragment.idCardOppositePath));
-		front.put("name", ImageUtils
+		// opposite.put("content","123");
+		opposite.put("attrName", ImageUtils
 				.getBitmapAttrName(mIdCardFragment.idCardOppositePath));
+		Logr.e(ImageUtils.getBitmapAttrName(mIdCardFragment.idCardOppositePath));
 		requester.body.put("oppositeIdCard", opposite);
 
 		HashMap<String, Object> workcertificate = new HashMap<String, Object>();// 工作证书
-		front.put("content", ImageUtils
+		workcertificate.put("content", ImageUtils
 				.bitmapToString(mWorkCertificateFragment.workCertificatePath));
-		front.put(
-				"name",
-				ImageUtils
-						.getBitmapAttrName(mWorkCertificateFragment.workCertificatePath));
+		// workcertificate.put("content", "123");
+		workcertificate
+				.put("attrName",
+						ImageUtils
+								.getBitmapAttrName(mWorkCertificateFragment.workCertificatePath));
+		Logr.e(ImageUtils
+				.getBitmapAttrName(mWorkCertificateFragment.workCertificatePath));
 		requester.body.put("workCertificate", workcertificate);
 
 		HashMap<String, Object> other = new HashMap<String, Object>();// 其他证书
-		front.put("content", ImageUtils
+		other.put("content", ImageUtils
 				.bitmapToString(mOtherCertificateFragment.otherCertificatePath));
-		front.put(
-				"name",
+		// other.put("content","123");
+		other.put(
+				"attrName",
 				ImageUtils
 						.getBitmapAttrName(mOtherCertificateFragment.otherCertificatePath));
+		Logr.e(ImageUtils
+				.getBitmapAttrName(mOtherCertificateFragment.otherCertificatePath));
 		requester.body.put("otherCertificate", other);
 
 		// 工作证和 其他证书可有可无需要对其进行判断
@@ -155,7 +169,6 @@ public class RegisterActivity extends BaseActivity implements
 		// fileKeys[0] = "frontIdCard";
 		// fileKeys[1] = "oppositeIdCard";
 		// }
-
 		ResultCallback<LoginBean> callback = new ResultCallback<LoginBean>() {
 
 			@Override
@@ -283,6 +296,7 @@ public class RegisterActivity extends BaseActivity implements
 		transaction.add(R.id.fl_register_container, mRegisterFragment);
 		transaction.addToBackStack(null);
 		transaction.commit();
+
 	}
 
 }

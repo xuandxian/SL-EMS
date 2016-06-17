@@ -197,7 +197,7 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 			submitVerificateSmsCode();
 			break;
 		case R.id.iv_headBack:
-			finish();
+			stackInstance.popActivity(activity);
 			break;
 		}
 	}

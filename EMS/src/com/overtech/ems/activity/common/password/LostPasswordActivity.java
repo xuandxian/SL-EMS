@@ -22,6 +22,7 @@ import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.CommonBean;
 import com.overtech.ems.entity.common.Requester;
 import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
 import com.overtech.ems.widget.TimeButton;
@@ -47,6 +48,7 @@ public class LostPasswordActivity extends BaseActivity {
 			switch (msg.what) {
 			case StatusCode.SUBMIT_PHONENO_SUCCESS:// 首先请求服务器对该手机号进行验证，根据结果确定要不要进行下一步的验证
 				String json = (String) msg.obj;
+				Logr.e(json);
 				CommonBean phoneBean = gson.fromJson(json, CommonBean.class);
 				int phoneSt = phoneBean.st;
 				String phoneMsg = phoneBean.msg;
@@ -55,6 +57,7 @@ public class LostPasswordActivity extends BaseActivity {
 
 			case StatusCode.COMMOM_SUBMIT_SMS_CODE:
 				String json1 = (String) msg.obj;
+				Logr.e(json1);
 				CommonBean smsBean = gson.fromJson(json1, CommonBean.class);
 				int smsSt = smsBean.st;
 				String smsMsg = smsBean.msg;

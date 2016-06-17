@@ -15,10 +15,10 @@ public class BaiduMapInfoWindow extends LinearLayout {
 	private Context mContext = null;
 	private View mView = null;
 	private TextView mCommunityName;
-	private TaskPackage mData;
+	private String mData;
 
 
-	public BaiduMapInfoWindow(Context context, TaskPackage data) {
+	public BaiduMapInfoWindow(Context context, String data) {
 		super(context);
 		mContext = context;
 		mData = data;
@@ -42,7 +42,7 @@ public class BaiduMapInfoWindow extends LinearLayout {
 		LayoutParams params = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
 		this.addView(mView, params);
 		mCommunityName = (TextView) (mView).findViewById(R.id.tv_baidumap_infowindow);
-		mCommunityName.setText(mData.taskPackageName);
+		mCommunityName.setText(mData);
 	}
 
 	public void setBackgroundResource(int resid) {

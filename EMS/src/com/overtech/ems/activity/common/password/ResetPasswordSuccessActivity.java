@@ -40,8 +40,14 @@ public class ResetPasswordSuccessActivity extends BaseActivity {
 						LoginActivity.class);
 				startActivity(intent);
 				progressDialog.dismiss();
-				// finish();
+				finish();
 			}
 		}, 2000);
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		// super.onBackPressed();
 	}
 }

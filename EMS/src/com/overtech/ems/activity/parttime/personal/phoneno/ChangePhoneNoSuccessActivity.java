@@ -13,8 +13,8 @@ import com.overtech.ems.activity.common.LoginActivity;
 
 /*
  *修改手机号功能（更新成功）
- *@author Tony
- *@date change on 2016-01-13
+ *@author Will
+ *@date change on 2016-06-17
  *
  */
 public class ChangePhoneNoSuccessActivity extends BaseActivity {
@@ -27,7 +27,6 @@ public class ChangePhoneNoSuccessActivity extends BaseActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_change_phoneno_success);
 		activity = this;
-		stackInstance.pushActivity(activity);
 		initView();
 	}
 
@@ -44,6 +43,7 @@ public class ChangePhoneNoSuccessActivity extends BaseActivity {
 				Intent intent = new Intent(ChangePhoneNoSuccessActivity.this,
 						LoginActivity.class);
 				startActivity(intent);
+				finish();
 			}
 		}, 2000);
 		stopProgressDialog();
@@ -52,7 +52,6 @@ public class ChangePhoneNoSuccessActivity extends BaseActivity {
 	@Override
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
-		super.onBackPressed();
-		stackInstance.popActivity(activity);
+		// super.onBackPressed();
 	}
 }

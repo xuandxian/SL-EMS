@@ -35,7 +35,7 @@ public class BaseFragment extends Fragment {
 	public NiftyDialogBuilder dialogBuilder;
 
 	public Gson gson;
-
+	public final static String TAG="ems data from server==";
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

@@ -147,7 +147,7 @@ public class PersonalNoticeActivity extends BaseActivity {
 		mDoBack.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				finish();
+				stackInstance.popActivity(activity);
 			}
 		});
 		mAnnouncement.setOnItemClickListener(new OnItemClickListener() {

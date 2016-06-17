@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -16,10 +17,13 @@ import android.widget.TextView;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.PersonalChargebackAdapter;
+import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.ChargebackBean;
 import com.overtech.ems.entity.common.Requester;
+import com.overtech.ems.utils.SharePreferencesUtils;
+import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
@@ -42,8 +46,14 @@ public class PersonalChargeBackListActivity extends BaseActivity {
 				String info = (String) msg.obj;
 				ChargebackBean bean = gson.fromJson(info, ChargebackBean.class);
 				int st = bean.st;
-				if (st != 0) {
+				if (st == -1 || st == -2) {
 					Utilities.showToast(bean.msg, activity);
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent = new Intent(activity, LoginActivity.class);
+					startActivity(intent);
 				} else {
 					list = (List<Map<String, Object>>) bean.body.get("data");
 					if (list.size() == 0) {
@@ -78,11 +88,12 @@ public class PersonalChargeBackListActivity extends BaseActivity {
 
 	private void init() {
 		activity = this;
+		stackInstance.pushActivity(activity);
 		mDoBack.setVisibility(View.VISIBLE);
 		mDoBack.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				finish();
+				stackInstance.popActivity(activity);
 			}
 		});
 		mHeadTitle.setText("退单记录");
@@ -128,5 +139,12 @@ public class PersonalChargeBackListActivity extends BaseActivity {
 		mDoBack = (ImageView) findViewById(R.id.iv_headBack);
 		mHeadTitle = (TextView) findViewById(R.id.tv_headTitle);
 		mChargeback = (ListView) findViewById(R.id.lv_cancle_task_record);
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		stackInstance.popActivity(activity);
 	}
 }

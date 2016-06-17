@@ -44,7 +44,7 @@ public class GrabTaskAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		return list.size() == 0 ? 0 : list.size();
+		return list == null ? 0 : list.size();
 	}
 
 	@Override

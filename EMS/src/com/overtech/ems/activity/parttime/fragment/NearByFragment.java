@@ -28,6 +28,7 @@ import com.overtech.ems.entity.bean.TaskPackageBean;
 import com.overtech.ems.entity.bean.TaskPackageBean.TaskPackage;
 import com.overtech.ems.entity.common.Requester;
 import com.overtech.ems.utils.FragmentUtils;
+import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
@@ -58,6 +59,7 @@ public class NearByFragment extends BaseFragment implements OnClickListener {
 			switch (msg.what) {
 			case StatusCode.GET_DATA_BY_MYLOCATION_SUCCESS:
 				String json = (String) msg.obj;
+				Logr.e(json);
 				TaskPackageBean tasks = gson.fromJson(json,
 						TaskPackageBean.class);
 				int st = tasks.st;

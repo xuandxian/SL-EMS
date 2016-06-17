@@ -29,6 +29,7 @@ import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.adapter.TaskListDetailsAdapter;
+import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.MaintenanceCompleteBean;
@@ -90,6 +91,17 @@ public class QueryTaskListActivity extends BaseActivity implements
 			case StatusCode.QUERY_TASK_PACKAGE_ELEVATOR_SUCCESS:
 				String json = (String) msg.obj;
 				ScanResultBean bean = gson.fromJson(json, ScanResultBean.class);
+				int st = bean.st;
+				if (st == -1 || st == -2) {
+					Utilities.showToast(bean.msg, activity);
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent = new Intent(activity, LoginActivity.class);
+					startActivity(intent);
+					return;
+				}
 				BeginWorkResult currentElevator = null;
 				String isMeetRequire = bean.body.isMeetRequire;// 是否满足维保要求
 				if (TextUtils.equals(isMeetRequire, "1")) {// 满足
@@ -114,11 +126,11 @@ public class QueryTaskListActivity extends BaseActivity implements
 							mCurrentLocation, latlng);
 					if (distance > 500.0) {
 						Utilities.showToast("您距离维保电梯的距离超出范围", activity);
-						finish();
+						stackInstance.popActivity(activity);
 					} else {
 						if (currentElevator.isFinish.equals("2")) {
 							Utilities.showToast("你已经完成了该电梯", activity);
-							finish();
+							stackInstance.popActivity(activity);
 						} else {
 							stopProgressDialog();
 							mTaskNo = currentElevator.taskNo;
@@ -129,13 +141,24 @@ public class QueryTaskListActivity extends BaseActivity implements
 					}
 				} else {
 					Utilities.showToast("您尚未满足维保要求", activity);// 维保要求包括，维保时间正确，有维保搭档，维保电梯正确
-					finish();
+					stackInstance.popActivity(activity);
 				}
 				break;
 			case StatusCode.WORK_DETAILS_SUCCESS:
 				String jsonWorkType = (String) msg.obj;
 				WorkTypeBean beanWorkBean = gson.fromJson(jsonWorkType,
 						WorkTypeBean.class);
+				int st1 = beanWorkBean.st;
+				if (st1 == -1 || st1 == -2) {
+					Utilities.showToast(beanWorkBean.msg, activity);
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent = new Intent(activity, LoginActivity.class);
+					startActivity(intent);
+					return;
+				}
 				List<String> tempList = beanWorkBean.body.data;
 				list.add(new MaintenanceType("0", "Title", "content"));
 				for (int i = 0; i < tempList.size(); i++) {
@@ -153,6 +176,17 @@ public class QueryTaskListActivity extends BaseActivity implements
 				String maintenanceJson = (String) msg.obj;// 提交电梯完成状态后，后台返回的信息
 				MaintenanceCompleteBean mComBean = gson.fromJson(
 						maintenanceJson, MaintenanceCompleteBean.class);
+				int st2 = mComBean.st;
+				if (st2 == -1 || st2 == -2) {
+					Utilities.showToast(mComBean.msg, activity);
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent = new Intent(activity, LoginActivity.class);
+					startActivity(intent);
+					return;
+				}
 				String updateMsg = mComBean.body.updateStatus;// 该电梯完成状态是否已经更新，0，表示更新失败，1表示更新成功
 				String isAllCompleted = mComBean.body.isAllCompleted;// 对于维保的单台电梯，true代表该电梯两人都完成，false代表尚未完成或者有一人完成
 				String taskStatus = mComBean.body.taskStatus;
@@ -172,14 +206,14 @@ public class QueryTaskListActivity extends BaseActivity implements
 								TaskListPackageDetailActivity.class);
 						intent.putExtra(Constant.TASKNO, mTaskNo);
 						startActivity(intent);
-						finish();
+						stackInstance.popActivity(activity);
 					} else {
 						// 任务包中全部都完成了
 						Intent intent = new Intent(QueryTaskListActivity.this,
 								TaskListPackageDetailActivity.class);
 						intent.putExtra(Constant.TASKNO, mTaskNo);
 						startActivity(intent);
-						finish();
+						stackInstance.popActivity(activity);
 					}
 				} else {
 					Utilities.showToast("请和搭档确认电梯的完成状态", activity);
@@ -187,7 +221,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 							TaskListPackageDetailActivity.class);
 					intent.putExtra(Constant.TASKNO, mTaskNo);
 					startActivity(intent);
-					finish();
+					stackInstance.popActivity(activity);
 				}
 				break;
 			case StatusCode.MSG_SET_TAGS:
@@ -237,6 +271,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_task_details);
 		activity = this;
+		stackInstance.pushActivity(activity);
 		uid = (String) SharePreferencesUtils.get(activity,
 				SharedPreferencesKeys.UID, "");
 		certificate = (String) SharePreferencesUtils.get(activity,
@@ -254,8 +289,8 @@ public class QueryTaskListActivity extends BaseActivity implements
 	}
 
 	private void init() {
-		mLatitude = ((MyApplication)getApplication()).latitude;
-		mLongitude = ((MyApplication)getApplication()).longitude;
+		mLatitude = ((MyApplication) getApplication()).latitude;
+		mLongitude = ((MyApplication) getApplication()).longitude;
 		mCurrentLocation = new LatLng(mLatitude, mLongitude);
 		mListFooterView = LayoutInflater.from(activity).inflate(
 				R.layout.listview_footer_done, null);
@@ -358,7 +393,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 					@Override
 					public void onClick(View v) {
 						dialogBuilder.dismiss();
-						finish();
+						stackInstance.popActivity(activity);
 					}
 				}).setButton2Click(new View.OnClickListener() {
 					@Override
@@ -446,7 +481,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.iv_headBack:
-			finish();
+			stackInstance.popActivity(activity);
 			break;
 		case R.id.btn_tasklist_done:
 			showDialog(TYPE2, "请确认维保工作已完成，并将电梯监测设备按钮调至正常状态!!!");
@@ -457,5 +492,12 @@ public class QueryTaskListActivity extends BaseActivity implements
 		default:
 			break;
 		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		stackInstance.popActivity(activity);
 	}
 }

@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -21,6 +22,16 @@ import android.widget.Toast;
  */
 public class Utilities {
 
+	public static String getCurProcessName(Context ctx){
+		int pid=android.os.Process.myPid();
+		ActivityManager am=(ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
+		for(ActivityManager.RunningAppProcessInfo appProcess: am.getRunningAppProcesses()){
+			if(appProcess.pid==pid){
+				return appProcess.processName;
+			}
+		}
+		return "";
+	}
 	/**
 	 * 公用提示框
 	 * 

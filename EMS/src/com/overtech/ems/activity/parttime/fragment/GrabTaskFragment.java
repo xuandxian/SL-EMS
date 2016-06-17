@@ -121,13 +121,21 @@ public class GrabTaskFragment extends BaseFragment implements
 		public void onError(Request request, Exception e) {
 			// TODO Auto-generated method stub
 			Logr.e(request.toString());
+			stopProgressDialog();
+			mSwipeListView.stopRefresh();
 		}
 
 		@Override
 		public void onResponse(TaskPackageBean response) {
 			// TODO Auto-generated method stub
+			stopProgressDialog();
+			mSwipeListView.stopRefresh();
 			if (response == null) {
 				Utilities.showToast("暂时没有数据", mActivity);
+				if (list != null) {
+					list.clear();
+					mAdapter.notifyDataSetChanged();// 清空搜索结果
+				}
 				return;
 			}
 			int st = response.st;
@@ -149,6 +157,8 @@ public class GrabTaskFragment extends BaseFragment implements
 				if (null == list || list.isEmpty()) {
 					mNoWifi.setVisibility(View.GONE);
 					mNoResultPage.setVisibility(View.VISIBLE);
+					mAdapter.setData(list);
+					mAdapter.notifyDataSetChanged();
 				} else {
 					mNoWifi.setVisibility(View.GONE);
 					mNoResultPage.setVisibility(View.GONE);
@@ -156,6 +166,7 @@ public class GrabTaskFragment extends BaseFragment implements
 						mAdapter = new GrabTaskAdapter(list, mActivity);
 						mSwipeListView.setAdapter(mAdapter);
 					} else {
+						mAdapter.setData(list);
 						mAdapter.notifyDataSetChanged();
 					}
 				}
@@ -230,6 +241,7 @@ public class GrabTaskFragment extends BaseFragment implements
 		requester.cmd = 20020;
 		requester.certificate = certificate;
 		requester.uid = uid;
+		requester.body.put("mKeyWord", "0");
 		initData(ServicesConfig.GRABTASK, REFRESH_TYPE_DEFAULT,
 				gson.toJson(requester), mCallBack);
 	}
@@ -347,7 +359,7 @@ public class GrabTaskFragment extends BaseFragment implements
 			String keyWord = data.getStringExtra("mKeyWord");
 
 			Requester requester = new Requester();
-			requester.cmd = 20021;
+			requester.cmd = 20020;
 			requester.certificate = certificate;
 			requester.uid = uid;
 			requester.body.put(Constant.KEYWORD, keyWord);
@@ -399,11 +411,13 @@ public class GrabTaskFragment extends BaseFragment implements
 		public void onError(Request request, Exception e) {
 			// TODO Auto-generated method stub
 			Logr.e(request.toString());
+			stopProgressDialog();
 		}
 
 		@Override
 		public void onResponse(TaskPackageBean response) {
 			// TODO Auto-generated method stub
+			stopProgressDialog();
 			int st = response.st;
 			String msg = response.msg;
 			if (st != 0) {
@@ -487,7 +501,7 @@ public class GrabTaskFragment extends BaseFragment implements
 						startProgressDialog("正在抢单...");
 						String mTaskNo = list.get(position).taskNo;
 						Requester requester = new Requester();
-						requester.cmd = 20021;
+						requester.cmd = 20023;
 						requester.uid = uid;
 						requester.certificate = certificate;
 						requester.body.put(Constant.TASKNO, mTaskNo);

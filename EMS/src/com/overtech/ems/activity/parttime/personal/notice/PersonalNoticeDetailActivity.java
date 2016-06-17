@@ -144,7 +144,7 @@ public class PersonalNoticeDetailActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View arg0) {
-				finish();
+				stackInstance.popActivity(activity);
 			}
 		});
 	}

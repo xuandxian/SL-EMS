@@ -27,6 +27,7 @@ import com.overtech.ems.entity.common.Requester;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
 import com.overtech.ems.widget.TimeButton;
@@ -52,16 +53,13 @@ public class RegisterFragment extends BaseFragment {
 			switch (msg.what) {
 			case StatusCode.SUBMIT_PHONENO_SUCCESS:
 				String json = (String) msg.obj;
+				Logr.e(TAG + json);
 				CommonBean bean = gson.fromJson(json, CommonBean.class);
-				int st = bean.st;
-				if (st != 0) {
-					Utilities.showToast(bean.msg, activity);
-				} else {
-					Utilities.showToast(bean.msg, activity);
-				}
+				Utilities.showToast(bean.msg, activity);
 				break;
 			case StatusCode.COMMOM_SUBMIT_SMS_CODE:
 				String result = (String) msg.obj;
+				Logr.e(result);
 				CommonBean validateBean = gson.fromJson(result,
 						CommonBean.class);
 				int validateSt = validateBean.st;

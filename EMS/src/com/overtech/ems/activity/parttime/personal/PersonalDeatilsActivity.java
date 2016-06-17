@@ -25,8 +25,11 @@ import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.CommonBean;
 import com.overtech.ems.entity.common.Requester;
+import com.overtech.ems.http.OkHttpClientManager;
+import com.overtech.ems.http.OkHttpClientManager.ResultCallback;
 import com.overtech.ems.picasso.Transformation;
 import com.overtech.ems.utils.ImageUtils;
+import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
@@ -63,6 +66,17 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 			case StatusCode.PERSONAL_DETAIL_SUCCESS:
 				String json = (String) msg.obj;
 				CommonBean bean = gson.fromJson(json, CommonBean.class);
+				int st = bean.st;
+				if (st == -1 || st == -2) {
+					Utilities.showToast(bean.msg, activity);
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent = new Intent(activity, LoginActivity.class);
+					startActivity(intent);
+					return;
+				}
 				String avatorUrl = bean.body.avator;
 				float rate = Float.parseFloat(bean.body.employeeRate);
 				String id = bean.body.id;
@@ -192,7 +206,7 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.iv_headBack:
-			this.finish();
+			stackInstance.popActivity(activity);
 			break;
 		case R.id.rl_change_phoneNo:
 			Intent intent = new Intent(PersonalDeatilsActivity.this,
@@ -212,12 +226,54 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 			break;
 
 		case R.id.btn_exit:
-			Intent intent3 = new Intent(PersonalDeatilsActivity.this,
-					LoginActivity.class);
-			startActivity(intent3);
-			stackInstance.popAllActivitys();
+			Requester requester = new Requester();
+			requester.cmd = 2;
+			requester.uid = uid;
+			requester.certificate = certificate;
+			ResultCallback<CommonBean> callback = new ResultCallback<CommonBean>() {
 
+				@Override
+				public void onError(Request request, Exception e) {
+					// TODO Auto-generated method stub
+					Logr.e(request.toString());
+				}
+
+				@Override
+				public void onResponse(CommonBean response) {
+					// TODO Auto-generated method stub
+					int st = response.st;
+					if (st == 0) {
+						Utilities.showToast(response.msg, activity);
+						SharePreferencesUtils.put(activity,
+								SharedPreferencesKeys.UID, "");
+						SharePreferencesUtils.put(activity,
+								SharedPreferencesKeys.CERTIFICATED, "");
+						Intent intent = new Intent(activity,
+								LoginActivity.class);
+						startActivity(intent);
+					} else if (st == -1 || st == -2) {
+						Utilities.showToast(response.msg, activity);
+						Utilities.showToast(response.msg, activity);
+						SharePreferencesUtils.put(activity,
+								SharedPreferencesKeys.UID, "");
+						SharePreferencesUtils.put(activity,
+								SharedPreferencesKeys.CERTIFICATED, "");
+						Intent intent = new Intent(activity,
+								LoginActivity.class);
+						startActivity(intent);
+					}
+				}
+			};
+			OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
+					gson.toJson(requester));
 			break;
 		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		stackInstance.popActivity(activity);
 	}
 }

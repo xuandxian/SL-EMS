@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.PersonalBonusListAdapter;
+import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.BonusBean;
@@ -39,7 +40,7 @@ public class PersonalBoundsActivity extends BaseActivity implements
 	private ListView mPersonalAccountListView;
 	private PersonalBonusListAdapter adapter;
 	private List<Map<String, Object>> list;
-	private Context context;
+	private PersonalBoundsActivity activity;
 	private String uid;
 	private String certificate;
 	private Handler handler = new Handler() {
@@ -49,25 +50,31 @@ public class PersonalBoundsActivity extends BaseActivity implements
 				String json = (String) msg.obj;
 				BonusBean bean = gson.fromJson(json, BonusBean.class);
 				int st = bean.st;
-				if (st != 0) {
-					Utilities.showToast(bean.msg, context);
+				if (st == -1 || st == -2) {
+					Utilities.showToast(bean.msg, activity);
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent = new Intent(activity, LoginActivity.class);
+					startActivity(intent);
 					return;
 				} else {
 					list = (List<Map<String, Object>>) bean.body.get("data");
 					if (list == null || list.size() == 0) {
-						Utilities.showToast("无数据", context);
+						Utilities.showToast("无数据", activity);
 					} else {
-						adapter = new PersonalBonusListAdapter(list, context);
+						adapter = new PersonalBonusListAdapter(list, activity);
 						mPersonalAccountListView.setAdapter(adapter);
 					}
 				}
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
 				String exception = (String) msg.obj;
-				Utilities.showToast(exception, context);
+				Utilities.showToast(exception, activity);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast((String) msg.obj, context);
+				Utilities.showToast((String) msg.obj, activity);
 				break;
 			default:
 				break;
@@ -93,13 +100,14 @@ public class PersonalBoundsActivity extends BaseActivity implements
 	}
 
 	private void initData() {
-		uid = (String) SharePreferencesUtils.get(context,
+		uid = (String) SharePreferencesUtils.get(activity,
 				SharedPreferencesKeys.UID, "");
-		certificate = (String) SharePreferencesUtils.get(context,
+		certificate = (String) SharePreferencesUtils.get(activity,
 				SharedPreferencesKeys.CERTIFICATED, "");
 		mDoBack.setVisibility(View.VISIBLE);
 		mHeadContent.setText("奖励记录");
-		context = PersonalBoundsActivity.this;
+		activity = PersonalBoundsActivity.this;
+		stackInstance.pushActivity(activity);
 		mDoBack.setOnClickListener(this);
 		startLoading();
 	}
@@ -143,11 +151,18 @@ public class PersonalBoundsActivity extends BaseActivity implements
 	public void onClick(View view) {
 		switch (view.getId()) {
 		case R.id.iv_headBack:
-			finish();
+			stackInstance.popActivity(activity);
 			break;
 		default:
 			break;
 		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		stackInstance.popActivity(activity);
 	}
 
 }

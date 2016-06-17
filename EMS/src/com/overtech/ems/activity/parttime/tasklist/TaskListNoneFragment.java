@@ -90,7 +90,6 @@ public class TaskListNoneFragment extends BaseFragment {
 							SharedPreferencesKeys.CERTIFICATED, "");
 					Intent intent = new Intent(mActivity, LoginActivity.class);
 					startActivity(intent);
-					mActivity.finish();
 					return;
 				}
 				list = bean.body.data;

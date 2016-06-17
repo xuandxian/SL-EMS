@@ -17,4 +17,10 @@ public class Requester {
 	public String pwd;
 	public String certificate;
 	public Map<String,Object> body=new HashMap<String, Object>();
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return "cmd="+cmd+"=body="+body.toString();
+		
+	}
 }

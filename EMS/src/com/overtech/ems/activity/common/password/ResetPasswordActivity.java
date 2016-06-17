@@ -22,6 +22,7 @@ import com.overtech.ems.entity.bean.CommonBean;
 import com.overtech.ems.entity.common.Requester;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.security.MD5Util;
+import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
 import com.squareup.okhttp.Call;
@@ -46,6 +47,7 @@ public class ResetPasswordActivity extends BaseActivity {
 			switch (msg.what) {
 			case StatusCode.RESET_PASSWORD_SUCCESS:
 				String json = (String) msg.obj;
+				Logr.e(json);
 				CommonBean bean = gson.fromJson(json, CommonBean.class);
 				int st = bean.st;
 				String beanMsg = bean.msg;
@@ -54,7 +56,7 @@ public class ResetPasswordActivity extends BaseActivity {
 					Intent intent = new Intent(activity,
 							ResetPasswordSuccessActivity.class);
 					startActivity(intent);
-				}else{
+				} else {
 					Utilities.showToast(beanMsg, activity);
 				}
 				// finish();
@@ -158,8 +160,15 @@ public class ResetPasswordActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View arg0) {
-				finish();
+				stackInstance.popActivity(activity);
 			}
 		});
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		stackInstance.popActivity(activity);
 	}
 }

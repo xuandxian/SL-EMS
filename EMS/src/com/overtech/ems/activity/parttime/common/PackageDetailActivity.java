@@ -36,6 +36,7 @@ import com.overtech.ems.entity.common.Requester;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.AppUtils;
+import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
@@ -78,6 +79,7 @@ public class PackageDetailActivity extends BaseActivity {
 			switch (msg.what) {
 			case StatusCode.PACKAGE_DETAILS_SUCCESS:
 				String json = (String) msg.obj;
+				Logr.e(json);
 				TaskPackageDetailBean tasks = gson.fromJson(json,
 						TaskPackageDetailBean.class);
 				int st = tasks.st;
@@ -93,7 +95,9 @@ public class PackageDetailActivity extends BaseActivity {
 				}
 				list = tasks.body.datas;
 				if (null == list || list.size() == 0) {
+					stopProgressDialog();
 					Utilities.showToast("无数据", activity);
+					return;
 				} else {
 					if (adapter == null) {
 						adapter = new PackageDetailAdapter(activity, list);
@@ -110,7 +114,9 @@ public class PackageDetailActivity extends BaseActivity {
 						.setText("抢单(￥" + String.valueOf(totalPrice) + "元)");
 				break;
 			case StatusCode.GRAG_RESPONSE_SUCCESS:
+				stopProgressDialog();
 				String status = (String) msg.obj;
+				Logr.e(status);
 				StatusCodeBean bean = gson.fromJson(status,
 						StatusCodeBean.class);
 				int st2 = bean.st;
@@ -161,8 +167,6 @@ public class PackageDetailActivity extends BaseActivity {
 					Intent intent = new Intent(PackageDetailActivity.this,
 							LoginActivity.class);
 					startActivity(intent);
-					finish();
-					System.exit(0);
 				}
 				break;
 			case StatusCode.MSG_SET_TAGS:
@@ -320,7 +324,7 @@ public class PackageDetailActivity extends BaseActivity {
 
 			@Override
 			public void onClick(View arg0) {
-				finish();
+				stackInstance.popActivity(activity);
 			}
 		});
 		mRightContent.setOnClickListener(new OnClickListener() {
@@ -404,6 +408,6 @@ public class PackageDetailActivity extends BaseActivity {
 	private void onActivityForResult() {
 		Intent intent = new Intent();
 		setResult(Activity.RESULT_OK, intent);
-		finish();
+		stackInstance.popActivity(activity);
 	}
 }

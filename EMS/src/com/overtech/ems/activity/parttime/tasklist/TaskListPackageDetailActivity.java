@@ -42,6 +42,7 @@ import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.adapter.TaskListPackageDetailAdapter;
+import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.activity.parttime.common.ElevatorDetailActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.config.SystemConfig;
@@ -82,7 +83,6 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	private String sPartnerName;
 	private String sTaskNo;
 	private String mLoginName;
-	private Context mActivity;
 	private Effectstype effect;
 	private ImageView mDoMore;
 	private PopupWindow popupWindow;
@@ -111,6 +111,17 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				String json = (String) msg.obj;
 				TaskPackageDetailBean bean = gson.fromJson(json,
 						TaskPackageDetailBean.class);
+				int st = bean.st;
+				if (st == -1 || st == -2) {
+					Utilities.showToast(bean.msg, activity);
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent = new Intent(activity, LoginActivity.class);
+					startActivity(intent);
+					return;
+				}
 				list = bean.body.datas;
 				sPhone = bean.body.partnerPhone;
 				sTaskPackageName = bean.body.taskPackageName;
@@ -131,7 +142,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 					dialToPartner.setVisibility(View.VISIBLE);
 				}
 				if (null == list || list.size() == 0) {
-					Utilities.showToast("无数据", mActivity);
+					Utilities.showToast("无数据", activity);
 					mDoChargeBack.setVisibility(View.GONE);
 					mDoResponse.setVisibility(View.GONE);
 				} else {
@@ -166,6 +177,17 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			case StatusCode.VALIDATE_TIME_SUCCESS:
 				String time = (String) msg.obj;
 				CommonBean validateBean = gson.fromJson(time, CommonBean.class);
+				int st1 = validateBean.st;
+				if (st1 == -1 || st1 == -2) {
+					Utilities.showToast(validateBean.msg, activity);
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent = new Intent(activity, LoginActivity.class);
+					startActivity(intent);
+					return;
+				}
 				String result = validateBean.body.result;
 				if (result.equals("-1")) {
 					Utilities.showToast("该维保单时间已经过期", activity);
@@ -242,11 +264,18 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				String state = (String) msg.obj;
 				CommonBean chargebackBean = gson.fromJson(state,
 						CommonBean.class);
-				int st = chargebackBean.st;
-				if (st != 0) {
-					Utilities.showToast(chargebackBean.msg, mActivity);
+				int st2 = chargebackBean.st;
+				if (st2 ==-1||st2==-2 ) {
+					Utilities.showToast(chargebackBean.msg, activity);
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent = new Intent(activity, LoginActivity.class);
+					startActivity(intent);
+					return;
 				} else {
-					Utilities.showToast(chargebackBean.msg, mActivity);
+					Utilities.showToast(chargebackBean.msg, activity);
 					tagSet.remove(sTaskNo);
 					JPushInterface.setAliasAndTags(getApplicationContext(),
 							null, tagSet, mTagsCallback);
@@ -281,12 +310,12 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			case 0:
 				logs = "Set tag and alias success";
 				Log.d(TAG, logs);
-				SharePreferencesUtils.put(mActivity,
+				SharePreferencesUtils.put(activity,
 						SharedPreferencesKeys.TAGSET, tags);// //
 															// 成功保存标签后，将标签放到本地
 				Utilities.showToast("退单成功", activity);
 				stopProgressDialog();
-				finish();
+				stackInstance.popActivity(activity);
 				break;
 			case 6002:
 				logs = "Failed to set alias and tags due to timeout. Try again after 60s.";
@@ -316,9 +345,8 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	}
 
 	private void initTag() {
-		Set<String> tempSet = (Set<String>) SharePreferencesUtils.get(
-				mActivity, SharedPreferencesKeys.TAGSET,
-				new LinkedHashSet<String>());
+		Set<String> tempSet = (Set<String>) SharePreferencesUtils.get(activity,
+				SharedPreferencesKeys.TAGSET, new LinkedHashSet<String>());
 	}
 
 	private void initView() {
@@ -340,15 +368,17 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	private void getExtraDataAndInit() {
 		Intent intent = getIntent();
 		sTaskNo = intent.getStringExtra(Constant.TASKNO);
-		uid = (String) SharePreferencesUtils.get(mActivity,
+		uid = (String) SharePreferencesUtils.get(activity,
 				SharedPreferencesKeys.UID, "");
-		certificate = (String) SharePreferencesUtils.get(mActivity,
+		certificate = (String) SharePreferencesUtils.get(activity,
 				SharedPreferencesKeys.CERTIFICATED, "");
 		getDataFromServer();
 	}
 
 	private void initEvent() {
-		mActivity = TaskListPackageDetailActivity.this;
+		activity = TaskListPackageDetailActivity.this;
+		stackInstance.pushActivity(activity);
+
 		mSwipeLayout.setOnRefreshListener(this);
 		mSwipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
 				android.R.color.holo_green_light,
@@ -377,7 +407,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 		if (popupWindow == null) {
 			mScreenWidth = activity.getResources().getDisplayMetrics().widthPixels;
 			mScreenHeight = activity.getResources().getDisplayMetrics().heightPixels;
-			popupWindow = new PopupWindow(mActivity);
+			popupWindow = new PopupWindow(activity);
 			popupWindow.setWidth(mScreenWidth / 2);
 			popupWindow.setHeight(LayoutParams.WRAP_CONTENT);
 			popupWindow.setFocusable(true);
@@ -472,7 +502,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				.busStrategyType(EBusStrategyType.bus_recommend_way);
 		try {
 			BaiduMapRoutePlan.setSupportWebRoute(true);
-			BaiduMapRoutePlan.openBaiduMapTransitRoute(para, mActivity);
+			BaiduMapRoutePlan.openBaiduMapTransitRoute(para, activity);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -535,7 +565,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.iv_grab_headBack:
-			finish();
+			stackInstance.popActivity(activity);
 			break;
 		case R.id.bt_cancle_task:
 			Requester requester = new Requester();
@@ -583,5 +613,12 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			showPopupWindow(v);
 			break;
 		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		stackInstance.popActivity(activity);
 	}
 }

@@ -41,7 +41,7 @@ public class MaintenanceFragment extends BaseFragment implements
 				.findViewById(R.id.bt_maintenance_done);
 
 		title.setText("维修单");
-		currentFragment = FragmentUtils.switchFragment(fragmentManager,
+		currentFragment = FragmentUtils.switchFragment(getChildFragmentManager(),
 				R.id.fl_maintenance_content, currentFragment,
 				MaintenanceNoneFragment.class, null);
 		mMaintenanceNoneFragment = (MaintenanceNoneFragment) currentFragment;
@@ -56,13 +56,13 @@ public class MaintenanceFragment extends BaseFragment implements
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.bt_maintenance_none:
-			currentFragment = FragmentUtils.switchFragment(fragmentManager,
+			currentFragment = FragmentUtils.switchFragment(getChildFragmentManager(),
 					R.id.fl_maintenance_content, currentFragment,
 					MaintenanceNoneFragment.class, null);
 			mMaintenanceNoneFragment = (MaintenanceNoneFragment) currentFragment;
 			break;
 		case R.id.bt_maintenance_done:
-			currentFragment = FragmentUtils.switchFragment(fragmentManager,
+			currentFragment = FragmentUtils.switchFragment(getChildFragmentManager(),
 					R.id.fl_maintenance_content, currentFragment,
 					MaintenanceDoneFragment.class, null);
 			mMaintenanceDoneFragment = (MaintenanceDoneFragment) currentFragment;

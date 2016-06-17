@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
+import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.bean.CommonBean;
 import com.overtech.ems.entity.common.Requester;
@@ -53,8 +54,13 @@ public class QuestionResponseActivity extends BaseActivity implements
 				String json = (String) msg.obj;
 				CommonBean bean = gson.fromJson(json, CommonBean.class);
 				int st = bean.st;
-				if (st != 0) {
+				if (st ==-1||st==-2) {
 					Utilities.showToast(bean.msg, activity);
+					SharePreferencesUtils.put(activity, SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(activity, SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent=new Intent(activity,LoginActivity.class);
+					startActivity(intent);
+					return;
 				} else {
 					Intent intent = new Intent(QuestionResponseActivity.this,
 							EvaluationActivity.class);
@@ -92,6 +98,8 @@ public class QuestionResponseActivity extends BaseActivity implements
 		mHeadContent.setText("问题反馈");
 		mDoBack.setVisibility(View.VISIBLE);
 		taskNo = getIntent().getExtras().getString(Constant.TASKNO, "");
+		activity = this;
+		stackInstance.pushActivity(activity);
 		uid = (String) SharePreferencesUtils.get(activity,
 				SharedPreferencesKeys.UID, "");
 		certificate = (String) SharePreferencesUtils.get(activity,
@@ -102,7 +110,7 @@ public class QuestionResponseActivity extends BaseActivity implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.iv_headBack:
-			finish();
+			stackInstance.popActivity(activity);
 			break;
 		case R.id.bt_confirm:
 			feedBackInfo = mFeedbackInfo.getText().toString();
@@ -157,5 +165,11 @@ public class QuestionResponseActivity extends BaseActivity implements
 				handler.sendMessage(msg);
 			}
 		});
+	}
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		stackInstance.popActivity(activity);
 	}
 }

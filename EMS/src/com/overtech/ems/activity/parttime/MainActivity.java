@@ -53,7 +53,9 @@ public class MainActivity extends BaseActivity {
 				SharedPreferencesKeys.UID, "");
 		certificate = (String) SharePreferencesUtils.get(this,
 				SharedPreferencesKeys.CERTIFICATED, "");
-		stackInstance.pushActivity(this);
+		if(!stackInstance.isExistActivity(this)){
+			stackInstance.pushActivity(this);
+		}
 		setContentView(R.layout.activity_main);
 		findViewById();
 		setDefaultView();

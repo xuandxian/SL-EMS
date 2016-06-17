@@ -56,7 +56,6 @@ public class TaskListDoneFragment extends BaseFragment {
 								SharedPreferencesKeys.CERTIFICATED, "");
 						Intent intent = new Intent(activity, LoginActivity.class);
 						startActivity(intent);
-						activity.finish();
 					}
 				}
 				if (list == null || list.size() == 0) {
