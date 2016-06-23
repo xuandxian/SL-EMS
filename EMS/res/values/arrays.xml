@@ -1,34 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string-array name="city">
+
+   <!--  <string-array name="city">
         <item>城市选择</item>
-        <item>北京市</item>
-        <item>上海市</item>
-        <item>广州省</item>
-        <item>江苏省</item>
     </string-array>
     <string-array name="sh_zone">
         <item>所在区域</item>
-        <item>黄浦区</item>
-        <item>徐汇区</item>
-        <item>长宁区</item>
-        <item>静安区</item>
-        <item>普陀区</item>
-        <item>虹口区</item>
-        <item>杨浦区</item>
-        <item>闵行区</item>
-        <item>宝山区</item>
-        <item>嘉定区</item>
-        <item>浦东新区</item>
-        <item>金山区</item>
-        <item>松江区</item>
-        <item>青浦区</item>
-        <item>奉贤区</item>
-        <item>崇明县</item>
-        <item>闸北区</item>
-        <item>卢湾区</item>
-        <item>南汇区</item>
-    </string-array>
+    </string-array> -->
     <string-array name="education">
         <item>学历</item>
         <item>初中</item>
@@ -37,4 +15,5 @@
         <item>高职</item>
         <item>本科及以上</item>
     </string-array>
+
 </resources>

@@ -40,6 +40,7 @@ import com.overtech.ems.entity.parttime.ScanResultBean;
 import com.overtech.ems.entity.parttime.ScanResultBean.BeginWorkResult;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.AppUtils;
+import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
@@ -89,7 +90,9 @@ public class QueryTaskListActivity extends BaseActivity implements
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case StatusCode.QUERY_TASK_PACKAGE_ELEVATOR_SUCCESS:
+				stopProgressDialog();
 				String json = (String) msg.obj;
+				Logr.e(json);
 				ScanResultBean bean = gson.fromJson(json, ScanResultBean.class);
 				int st = bean.st;
 				if (st == -1 || st == -2) {
@@ -132,7 +135,6 @@ public class QueryTaskListActivity extends BaseActivity implements
 							Utilities.showToast("你已经完成了该电梯", activity);
 							stackInstance.popActivity(activity);
 						} else {
-							stopProgressDialog();
 							mTaskNo = currentElevator.taskNo;
 							mWorktype = currentElevator.workType;
 							mZonePhone = currentElevator.zonePhone;
@@ -145,7 +147,9 @@ public class QueryTaskListActivity extends BaseActivity implements
 				}
 				break;
 			case StatusCode.WORK_DETAILS_SUCCESS:
+				stopProgressDialog();
 				String jsonWorkType = (String) msg.obj;
+				Logr.e(jsonWorkType);
 				WorkTypeBean beanWorkBean = gson.fromJson(jsonWorkType,
 						WorkTypeBean.class);
 				int st1 = beanWorkBean.st;
@@ -174,6 +178,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 				break;
 			case StatusCode.MAINTENANCE_COMPLETE_SUCCESS:
 				String maintenanceJson = (String) msg.obj;// 提交电梯完成状态后，后台返回的信息
+				Logr.e(maintenanceJson);
 				MaintenanceCompleteBean mComBean = gson.fromJson(
 						maintenanceJson, MaintenanceCompleteBean.class);
 				int st2 = mComBean.st;
@@ -282,9 +287,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 	}
 
 	private void initTag() {
-		SharePreferencesUtils.get(activity, SharedPreferencesKeys.TAGSET,
-				new LinkedHashSet<String>());
-		Set<String> tempSet = (Set<String>) SharePreferencesUtils.get(activity,
+		tagSet = (Set<String>) SharePreferencesUtils.get(activity,
 				SharedPreferencesKeys.TAGSET, new LinkedHashSet<String>());
 	}
 
@@ -317,7 +320,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 		requester.cmd = 20055;
 		requester.uid = uid;
 		requester.certificate = certificate;
-		requester.body.put(Constant.ELEVATORNO, mElevatorNo);
+		requester.body.put(Constant.QRCODE, mElevatorNo);
 		Request request = httpEngine.createRequest(SystemConfig.NEWIP,
 				gson.toJson(requester));
 		Call call = httpEngine.createRequestCall(request);

@@ -34,7 +34,7 @@ public class MaintenanceReportBean {
 		public List<GrandSon> children;
 	}
 
-	public class GrandSon {
+	public class GrandSon implements Serializable{
 		public String checked;
 		public String code;
 		public String lv;

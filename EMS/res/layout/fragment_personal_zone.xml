@@ -37,9 +37,8 @@
                     android:src="@drawable/icon_personal_my" />
 
                 <TextView
+                    style="@style/tv_title_primary_style"
                     android:id="@+id/tv_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:layout_alignTop="@id/imageView1"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="8dp"
@@ -47,9 +46,8 @@
                     android:textSize="17sp" />
 
                 <TextView
+                    style="@style/tv_title_primary_style"
                     android:id="@+id/textViewPhone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:layout_alignBottom="@+id/iv_headview"
                     android:layout_alignLeft="@+id/tv_name"
                     android:layout_marginBottom="8dp"
@@ -73,8 +71,7 @@
                 android:background="@color/main_white" >
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/tv_title_primary_style"
                     android:padding="10dip"
                     android:text="我的账单"
                     android:textSize="17sp" />
@@ -97,8 +94,7 @@
                 android:background="@color/main_white" >
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/tv_title_primary_style"
                     android:padding="10dip"
                     android:text="奖励记录"
                     android:textSize="17sp" />
@@ -121,8 +117,7 @@
                 android:background="@color/main_white" >
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/tv_title_primary_style"
                     android:padding="10dip"
                     android:text="退单记录"
                     android:textSize="17sp" />
@@ -145,8 +140,7 @@
                 android:background="@color/main_white" >
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/tv_title_primary_style"
                     android:padding="10dip"
                     android:text="@string/about_app"
                     android:textSize="17sp" />
@@ -169,8 +163,7 @@
                 android:background="@color/main_white" >
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/tv_title_primary_style"
                     android:padding="10dip"
                     android:text="公告"
                     android:textSize="17sp" />
@@ -193,8 +186,7 @@
                 android:background="@color/main_white" >
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/tv_title_primary_style"
                     android:padding="10dip"
                     android:text="帮助文档"
                     android:textSize="17sp" />

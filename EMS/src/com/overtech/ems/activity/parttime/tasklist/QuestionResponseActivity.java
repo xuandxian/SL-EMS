@@ -18,10 +18,12 @@ import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.config.StatusCode;
+import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.CommonBean;
 import com.overtech.ems.entity.common.Requester;
 import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
@@ -51,14 +53,22 @@ public class QuestionResponseActivity extends BaseActivity implements
 				Utilities.showToast((String) msg.obj, activity);
 				break;
 			case StatusCode.QUESTIONFEEDBACK:
+				stopProgressDialog();
 				String json = (String) msg.obj;
+				Logr.e(json);
 				CommonBean bean = gson.fromJson(json, CommonBean.class);
+				if (bean == null) {
+					Utilities.showToast("无数据", activity);
+					return;
+				}
 				int st = bean.st;
-				if (st ==-1||st==-2) {
+				if (st == -1 || st == -2) {
 					Utilities.showToast(bean.msg, activity);
-					SharePreferencesUtils.put(activity, SharedPreferencesKeys.UID, "");
-					SharePreferencesUtils.put(activity, SharedPreferencesKeys.CERTIFICATED, "");
-					Intent intent=new Intent(activity,LoginActivity.class);
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent = new Intent(activity, LoginActivity.class);
 					startActivity(intent);
 					return;
 				} else {
@@ -140,7 +150,7 @@ public class QuestionResponseActivity extends BaseActivity implements
 		requester.body.put(Constant.TASKNO, taskNo);
 		requester.body.put(Constant.FEEDBACKINFO, feedBackInfo);
 		Request request = httpEngine.createRequest(
-				ServicesConfig.PROBLEMS_FEEDBACK, gson.toJson(requester));
+				SystemConfig.NEWIP, gson.toJson(requester));
 		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {
 
@@ -166,6 +176,7 @@ public class QuestionResponseActivity extends BaseActivity implements
 			}
 		});
 	}
+
 	@Override
 	public void onBackPressed() {
 		// TODO Auto-generated method stub

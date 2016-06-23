@@ -25,6 +25,7 @@ import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.CommonBean;
 import com.overtech.ems.entity.common.Requester;
 import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
@@ -49,8 +50,14 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case StatusCode.EVALUATEOTHER:
+				stopProgressDialog();
 				String json = (String) msg.obj;
+				Logr.e(json);
 				CommonBean bean = gson.fromJson(json, CommonBean.class);
+				if (bean == null) {
+					Utilities.showToast("互评失败", activity);
+					return;
+				}
 				int st = bean.st;
 				if (st == -1 || st == -2) {
 					Utilities.showToast(bean.msg, activity);

@@ -1,8 +1,8 @@
 package com.overtech.ems.activity.parttime.tasklist;
 
-import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import android.app.Activity;
@@ -12,6 +12,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,10 +37,10 @@ import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.config.SystemConfig;
-import com.overtech.ems.entity.bean.TaskPackageBean;
-import com.overtech.ems.entity.bean.TaskPackageBean.TaskPackage;
+import com.overtech.ems.entity.bean.Bean;
 import com.overtech.ems.entity.common.Requester;
-import com.overtech.ems.entity.common.ServicesConfig;
+import com.overtech.ems.http.OkHttpClientManager;
+import com.overtech.ems.http.OkHttpClientManager.ResultCallback;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.AppUtils;
 import com.overtech.ems.utils.Logr;
@@ -51,17 +53,16 @@ import com.overtech.ems.widget.swipemenu.SwipeMenuCreator;
 import com.overtech.ems.widget.swipemenu.SwipeMenuItem;
 import com.overtech.ems.widget.swipemenu.SwipeMenuListView;
 import com.overtech.ems.widget.swipemenu.SwipeMenuListView.OnMenuItemClickListener;
-import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
 public class TaskListNoneFragment extends BaseFragment {
+	private SwipeRefreshLayout swipeRefresh;
 	private SwipeMenuListView mSwipeListView;
 	private SwipeMenuCreator creator;
 	private Activity mActivity;
 	private Effectstype effect;
 	private TaskListAdapter adapter;
-	private List<TaskPackage> list;
+	private List<Map<String, Object>> list;
 	private LinearLayout mNoPage;
 	private LinearLayout mNoWifi;
 	private Button reLoad;
@@ -76,110 +77,11 @@ public class TaskListNoneFragment extends BaseFragment {
 	private Handler handler = new Handler() {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-			case StatusCode.TASKLIST_NONE_SUCCESS:
-				String json = (String) msg.obj;
-				Logr.e("后台传回来的数据===" + json);
-				TaskPackageBean bean = gson.fromJson(json,
-						TaskPackageBean.class);
-				int st = bean.st;
-				if (st == -1 || st == -2) {
-					Utilities.showToast(bean.msg, mActivity);
-					SharePreferencesUtils.put(mActivity,
-							SharedPreferencesKeys.UID, "");
-					SharePreferencesUtils.put(mActivity,
-							SharedPreferencesKeys.CERTIFICATED, "");
-					Intent intent = new Intent(mActivity, LoginActivity.class);
-					startActivity(intent);
-					return;
-				}
-				list = bean.body.data;
-				if (null == list || list.size() == 0) {
-					Utilities.showToast("无数据", mActivity);
-					mNoPage.setVisibility(View.VISIBLE);
-					mNoWifi.setVisibility(View.GONE);
-					if (adapter != null) {
-						adapter.clearAdapter();
-					}
-				} else {
-					mNoPage.setVisibility(View.GONE);
-					mNoWifi.setVisibility(View.GONE);
-					adapter = new TaskListAdapter(list, mActivity,
-							StatusCode.TASK_NO);
-					mSwipeListView.setAdapter(adapter);
-				}
-				break;
-			case StatusCode.VALIDATE_TIME_SUCCESS:
-				String time = (String) msg.obj;
-				if (time.equals("-1")) {
-					Utilities.showToast("该维保单时间已经过期", mActivity);
-					break;
-				} else if (time.equals("0")) {
-					Utilities.showToast("当天的任务不可以退单", mActivity);
-					break;
-				} else if (time.equals("1")) {
-					dialogBuilder.withMessage("72小时内退单会影响星级评定，你确认要退单？");
-				} else {
-					dialogBuilder.withMessage("你确认要退单？");
-				}
-				effect = Effectstype.Slideright;
-				dialogBuilder.withTitle("温馨提示")
-						.withTitleColor(R.color.main_primary)
-						.withDividerColor("#11000000")
-						.withMessageColor(R.color.main_primary)
-						.withDialogColor("#FFFFFFFF")
-						.isCancelableOnTouchOutside(true).withDuration(700)
-						.withEffect(effect)
-						.withButtonDrawable(R.color.main_white)
-						.withButton1Text("取消").withButton1Color("#DD47BEE9")
-						.withButton2Text("确认").withButton2Color("#DD47BEE9")
-						.setButton1Click(new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								dialogBuilder.dismiss();
-							}
-						}).setButton2Click(new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								dialogBuilder.dismiss();
-								startProgressDialog("正在退单...");
-								dealChargeBackTask();
-							}
-						}).show();
-				break;
-			case StatusCode.CHARGEBACK_SUCCESS:
-				String state = (String) msg.obj;
-				if (state.equals("true")) {
-					list.remove(mPosition);
-					adapter.notifyDataSetChanged();
-					tagSet.remove(mTaskNo);
-					JPushInterface.setAliasAndTags(getActivity()
-							.getApplicationContext(), null, tagSet,
-							mTagsCallback);
-				} else {
-					Utilities.showToast("退单失败", mActivity);
-				}
-				break;
 			case StatusCode.MSG_SET_TAGS:
 				Log.d("24梯", "Set tags in handler.");
 				JPushInterface.setAliasAndTags(getActivity()
 						.getApplicationContext(), null, (Set<String>) msg.obj,
 						mTagsCallback);
-				break;
-			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast((String) msg.obj, mActivity);
-				mNoPage.setVisibility(View.VISIBLE);
-				mNoWifi.setVisibility(View.GONE);
-				if (adapter != null) {
-					adapter.clearAdapter();
-				}
-				break;
-			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast((String) msg.obj, mActivity);
-				mNoPage.setVisibility(View.GONE);
-				mNoWifi.setVisibility(View.VISIBLE);
-				if (adapter != null) {
-					adapter.clearAdapter();
-				}
 				break;
 			default:
 				break;
@@ -247,6 +149,8 @@ public class TaskListNoneFragment extends BaseFragment {
 	}
 
 	private void findViewById(View view) {
+		swipeRefresh = (SwipeRefreshLayout) view
+				.findViewById(R.id.swipeRefresh);
 		mSwipeListView = (SwipeMenuListView) view
 				.findViewById(R.id.sl_task_list_listview);
 		mNoPage = (LinearLayout) view.findViewById(R.id.page_no_result);
@@ -257,6 +161,14 @@ public class TaskListNoneFragment extends BaseFragment {
 	private void init() {
 		uid = ((MainActivity) getActivity()).getUid();
 		certificate = ((MainActivity) getActivity()).getCertificate();
+		swipeRefresh.setOnRefreshListener(new OnRefreshListener() {
+
+			@Override
+			public void onRefresh() {
+				// TODO Auto-generated method stub
+				getDataFromServer();
+			}
+		});
 		initListView();
 		mSwipeListView.setMenuCreator(creator);
 		mSwipeListView
@@ -272,9 +184,9 @@ public class TaskListNoneFragment extends BaseFragment {
 							startNavicate(startPoint, endPoint, endName);
 							break;
 						case 1:// t退单
-							TaskPackage data = (TaskPackage) adapter
+							Map<String, Object> data = (Map<String, Object>) adapter
 									.getItem(position);
-							mTaskNo = data.taskNo;
+							mTaskNo = data.get("taskNo").toString();
 							mPosition = position;
 							doChargeBackTaskValidateTime(mTaskNo);
 							break;
@@ -286,11 +198,11 @@ public class TaskListNoneFragment extends BaseFragment {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				TaskPackage data = (TaskPackage) parent.getAdapter().getItem(
-						position);
+				Map<String, Object> data = (Map<String, Object>) parent
+						.getAdapter().getItem(position);
 				Intent intent = new Intent(mActivity,
 						TaskListPackageDetailActivity.class);
-				intent.putExtra(Constant.TASKNO, data.taskNo);
+				intent.putExtra(Constant.TASKNO, data.get("taskNo").toString());
 				startActivityForResult(intent, REQUESTCODE);
 			}
 		});
@@ -301,6 +213,7 @@ public class TaskListNoneFragment extends BaseFragment {
 				getDataFromServer();
 			}
 		});
+		startProgressDialog("正在加载...");
 		getDataFromServer();
 	}
 
@@ -308,34 +221,75 @@ public class TaskListNoneFragment extends BaseFragment {
 	protected void doChargeBackTaskValidateTime(String taskNo) {
 		Requester requester = new Requester();
 		requester.uid = uid;
+		requester.cmd = 20052;
 		requester.certificate = certificate;
 		requester.body.put(Constant.TASKNO, mTaskNo);
-		Request request = httpEngine.createRequest(SystemConfig.NEWIP,
-				gson.toJson(requester));
-		Call call = httpEngine.createRequestCall(request);
-		call.enqueue(new com.squareup.okhttp.Callback() {
+		ResultCallback<Bean> callback = new ResultCallback<Bean>() {
 
 			@Override
-			public void onResponse(Response response) throws IOException {
-				Message msg = new Message();
-				if (response.isSuccessful()) {
-					msg.what = StatusCode.VALIDATE_TIME_SUCCESS;
-					msg.obj = response.body().string();
-				} else {
-					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
-					msg.obj = "服务器异常";
+			public void onError(Request request, Exception e) {
+				// TODO Auto-generated method stub
+				stopProgressDialog();
+				Logr.e(request.toString());
+			}
+
+			@Override
+			public void onResponse(Bean response) {
+				// TODO Auto-generated method stub
+				stopProgressDialog();
+				if (response == null) {
+					Utilities.showToast("无数据", activity);
+					return;
 				}
-				handler.sendMessage(msg);
+				int st = response.st;
+				if (st == -1 || st == -2) {
+					Utilities.showToast(response.msg, mActivity);
+					SharePreferencesUtils.put(mActivity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(mActivity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent = new Intent(mActivity, LoginActivity.class);
+					startActivity(intent);
+					return;
+				}
+				String time = response.body.get("result").toString();
+				if (time.equals("-1")) {
+					Utilities.showToast(response.msg, mActivity);
+				} else if (time.equals("0")) {
+					Utilities.showToast(response.msg, mActivity);
+				} else if (time.equals("1")) {
+					dialogBuilder.withMessage(response.msg);
+				} else {
+					dialogBuilder.withMessage("你确认要退单？");
+				}
+				effect = Effectstype.Slideright;
+				dialogBuilder.withTitle("温馨提示")
+						.withTitleColor(R.color.main_primary)
+						.withDividerColor("#11000000")
+						.withMessageColor(R.color.main_primary)
+						.withDialogColor("#FFFFFFFF")
+						.isCancelableOnTouchOutside(true).withDuration(700)
+						.withEffect(effect)
+						.withButtonDrawable(R.color.main_white)
+						.withButton1Text("取消").withButton1Color("#DD47BEE9")
+						.withButton2Text("确认").withButton2Color("#DD47BEE9")
+						.setButton1Click(new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								dialogBuilder.dismiss();
+							}
+						}).setButton2Click(new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								dialogBuilder.dismiss();
+								startProgressDialog("正在退单...");
+								dealChargeBackTask();
+							}
+						}).show();
 			}
-
-			@Override
-			public void onFailure(Request request, IOException e) {
-				Message msg = new Message();
-				msg.what = StatusCode.RESPONSE_NET_FAILED;
-				msg.obj = "网络异常";
-				handler.sendMessage(msg);
-			}
-		});
+		};
+		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
+				gson.toJson(requester));
 	}
 
 	// 处理退单事件
@@ -345,66 +299,108 @@ public class TaskListNoneFragment extends BaseFragment {
 		requester.certificate = certificate;
 		requester.uid = uid;
 		requester.body.put("taskNo", mTaskNo);
-		Request request = httpEngine.createRequest(
-				ServicesConfig.CHARGE_BACK_TASK, gson.toJson(requester));
-		Call call = httpEngine.createRequestCall(request);
-		call.enqueue(new com.squareup.okhttp.Callback() {
+		ResultCallback<Bean> callback = new ResultCallback<Bean>() {
 
 			@Override
-			public void onFailure(Request request, IOException e) {
-				Message msg = new Message();
-				msg.what = StatusCode.RESPONSE_NET_FAILED;
-				msg.obj = "网络异常";
-				handler.sendMessage(msg);
+			public void onError(Request request, Exception e) {
+				// TODO Auto-generated method stub
+				stopProgressDialog();
+				Logr.e(request.toString());
 			}
 
 			@Override
-			public void onResponse(Response response) throws IOException {
-				Message msg = new Message();
-				if (response.isSuccessful()) {
-					msg.what = StatusCode.CHARGEBACK_SUCCESS;
-					msg.obj = response.body().string();
-				} else {
-					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
-					msg.obj = "服务器异常";
+			public void onResponse(Bean response) {
+				// TODO Auto-generated method stub
+				if (response == null) {
+					Utilities.showToast("无数据", activity);
+					return;
 				}
-				handler.sendMessage(msg);
+				int st = response.st;
+				if (st == -1 || st == -2) {
+					Utilities.showToast(response.msg, mActivity);
+					SharePreferencesUtils.put(mActivity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(mActivity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent = new Intent(mActivity, LoginActivity.class);
+					startActivity(intent);
+					return;
+				}
+				if (st == 0) {
+					list.remove(mPosition);
+					adapter.notifyDataSetChanged();
+					tagSet.remove(mTaskNo);
+					JPushInterface.setAliasAndTags(getActivity()
+							.getApplicationContext(), null, tagSet,
+							mTagsCallback);
+				} else {
+					Utilities.showToast(response.msg, activity);
+				}
+
 			}
-		});
+		};
+		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
+				gson.toJson(requester));
 	}
 
 	private void getDataFromServer() {
-		startProgressDialog("正在加载...");
 		Requester requester = new Requester();
 		requester.certificate = certificate;
 		requester.uid = uid;
 		requester.cmd = 20050;
-		Request request = httpEngine.createRequest(SystemConfig.NEWIP,
-				gson.toJson(requester));
-		Call call = httpEngine.createRequestCall(request);
-		call.enqueue(new com.squareup.okhttp.Callback() {
+		ResultCallback<Bean> callback = new ResultCallback<Bean>() {
 
 			@Override
-			public void onFailure(Request request, IOException e) {
-				Message msg = new Message();
-				msg.what = StatusCode.RESPONSE_NET_FAILED;
-				msg.obj = "网络异常";
-				handler.sendMessage(msg);
-			}
-
-			@Override
-			public void onResponse(Response response) throws IOException {
-				Message msg = new Message();
-				if (response.isSuccessful()) {
-					msg.what = StatusCode.TASKLIST_NONE_SUCCESS;
-					msg.obj = response.body().string();
-				} else {
-					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
-					msg.obj = "服务器异常";
+			public void onError(Request request, Exception e) {
+				// TODO Auto-generated method stub
+				stopProgressDialog();
+				if (swipeRefresh.isRefreshing()) {
+					swipeRefresh.setRefreshing(false);
 				}
-				handler.sendMessage(msg);
+				Logr.e(request.toString());
 			}
-		});
+
+			@Override
+			public void onResponse(Bean response) {
+				// TODO Auto-generated method stub
+				stopProgressDialog();
+				if (swipeRefresh.isRefreshing()) {
+					swipeRefresh.setRefreshing(false);
+				}
+				if (response == null) {
+					Utilities.showToast("无数据", activity);
+					return;
+				}
+				int st = response.st;
+				if (st == -1 || st == -2) {
+					Utilities.showToast(response.msg, mActivity);
+					SharePreferencesUtils.put(mActivity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(mActivity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent = new Intent(mActivity, LoginActivity.class);
+					startActivity(intent);
+					return;
+				}
+				list = (List<Map<String, Object>>) response.body.get("data");
+				if (null == list || list.size() == 0) {
+					Utilities.showToast("无数据", mActivity);
+					mNoPage.setVisibility(View.VISIBLE);
+					mNoWifi.setVisibility(View.GONE);
+					if (adapter != null) {
+						adapter.clearAdapter();
+					}
+				} else {
+					mNoPage.setVisibility(View.GONE);
+					mNoWifi.setVisibility(View.GONE);
+					adapter = new TaskListAdapter(list, mActivity,
+							StatusCode.TASK_NO);
+					mSwipeListView.setAdapter(adapter);
+				}
+			}
+		};
+		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
+				gson.toJson(requester));
 
 	}
 

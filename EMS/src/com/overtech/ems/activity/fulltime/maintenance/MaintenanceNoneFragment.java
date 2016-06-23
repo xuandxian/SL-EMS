@@ -5,6 +5,8 @@ import java.util.List;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +34,7 @@ import com.overtech.ems.utils.Utilities;
 import com.squareup.okhttp.Request;
 
 public class MaintenanceNoneFragment extends BaseFragment {
+	private SwipeRefreshLayout swipeRefresh;
 	private ListView listview;
 	private String uid;
 	private String certificate;
@@ -44,6 +47,8 @@ public class MaintenanceNoneFragment extends BaseFragment {
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		View view = inflater.inflate(R.layout.fragment_maintenance_none, null);
+		swipeRefresh = (SwipeRefreshLayout) view
+				.findViewById(R.id.swipeRefresh);
 		listview = (ListView) view.findViewById(R.id.lv_maintenance_none);
 		uid = ((MainActivity) getActivity()).getUid();
 		certificate = ((MainActivity) getActivity()).getCertificate();
@@ -55,6 +60,14 @@ public class MaintenanceNoneFragment extends BaseFragment {
 
 	private void initEvent() {
 		// TODO Auto-generated method stub
+		swipeRefresh.setOnRefreshListener(new OnRefreshListener() {
+
+			@Override
+			public void onRefresh() {
+				// TODO Auto-generated method stub
+				requestLoading();
+			}
+		});
 		listview.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -83,9 +96,12 @@ public class MaintenanceNoneFragment extends BaseFragment {
 			@Override
 			public void onResponse(MaintenanceBean response) {
 				// TODO Auto-generated method stub
+				stopProgressDialog();
+				if (swipeRefresh.isRefreshing()) {
+					swipeRefresh.setRefreshing(false);
+				}
 				if (response == null) {
 					Utilities.showToast("暂时没有数据", activity);
-					stopProgressDialog();
 					return;
 				}
 				int st = response.st;
@@ -94,8 +110,10 @@ public class MaintenanceNoneFragment extends BaseFragment {
 					if (st == -1 || st == -2) {
 						if (activity != null) {
 							Utilities.showToast(msg, activity);
-							SharePreferencesUtils.put(activity, SharedPreferencesKeys.UID, "");
-							SharePreferencesUtils.put(activity, SharedPreferencesKeys.CERTIFICATED, "");
+							SharePreferencesUtils.put(activity,
+									SharedPreferencesKeys.UID, "");
+							SharePreferencesUtils.put(activity,
+									SharedPreferencesKeys.CERTIFICATED, "");
 							Intent intent = new Intent(activity,
 									LoginActivity.class);
 							startActivity(intent);
@@ -118,6 +136,10 @@ public class MaintenanceNoneFragment extends BaseFragment {
 			@Override
 			public void onError(Request request, Exception e) {
 				// TODO Auto-generated method stub
+				stopProgressDialog();
+				if (swipeRefresh.isRefreshing()) {
+					swipeRefresh.setRefreshing(false);
+				}
 				Logr.e(request.toString());
 			}
 		};

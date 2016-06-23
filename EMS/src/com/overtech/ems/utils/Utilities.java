@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,7 +22,11 @@ import android.widget.Toast;
  * @author Tony 2015-10-08
  */
 public class Utilities {
-
+	public static String format2decimal(double num){
+		NumberFormat format=NumberFormat.getInstance();
+		format.setMaximumFractionDigits(2);
+		return format.format(num);
+	}
 	public static String getCurProcessName(Context ctx){
 		int pid=android.os.Process.myPid();
 		ActivityManager am=(ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);

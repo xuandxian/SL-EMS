@@ -44,13 +44,13 @@ public class MaintenanceDoneFragment extends BaseFragment {
 		listview = (ListView) view.findViewById(R.id.lv_maintenance_done);
 		uid = ((MainActivity) getActivity()).getUid();
 		certificate = ((MainActivity) getActivity()).getCertificate();
-		startProgressDialog("加载中...");
 		requestLoading();
 		return view;
 	}
 
 	private void requestLoading() {
 		// TODO Auto-generated method stub
+		startProgressDialog("加载中...");
 		Requester requester = new Requester();
 		requester.cmd = 20001;
 		requester.uid = uid;
@@ -68,6 +68,7 @@ public class MaintenanceDoneFragment extends BaseFragment {
 			@Override
 			public void onResponse(MaintenanceBean response) {
 				// TODO Auto-generated method stub
+				stopProgressDialog();
 				if (response == null) {
 					Utilities.showToast("暂时没有数据", activity);
 					stopProgressDialog();
@@ -92,6 +93,10 @@ public class MaintenanceDoneFragment extends BaseFragment {
 					}
 				} else {
 					list = response.body.data;
+					if (list == null || list.size() == 0) {
+						Utilities.showToast("无数据", activity);
+						return;
+					}
 					if (adapter == null) {
 						adapter = new MaintenanceDoneAdapter(getActivity(),
 								list);
@@ -101,7 +106,7 @@ public class MaintenanceDoneFragment extends BaseFragment {
 						adapter.notifyDataSetChanged();
 					}
 				}
-				stopProgressDialog();
+
 			}
 
 		};

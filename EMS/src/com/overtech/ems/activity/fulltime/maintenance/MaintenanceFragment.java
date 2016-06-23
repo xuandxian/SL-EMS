@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.baidu.mapapi.map.ArcOptions;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
 import com.overtech.ems.activity.parttime.tasklist.ScanCodeActivity;
@@ -33,22 +34,32 @@ public class MaintenanceFragment extends BaseFragment implements
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		View view = inflater.inflate(R.layout.fragment_maintenance, null);
+		initView(view);
+		initEvent();
+		return view;
+	}
+
+	private void initEvent() {
+		// TODO Auto-generated method stub
+		title.setText("维修单");
+		currentFragment = FragmentUtils.switchFragment(
+				getChildFragmentManager(), R.id.fl_maintenance_content,
+				currentFragment, MaintenanceNoneFragment.class, null);
+		mMaintenanceNoneFragment = (MaintenanceNoneFragment) currentFragment;
+		qrCode.setVisibility(View.VISIBLE);
+		qrCode.setOnClickListener(this);
+		btMaintenanceNone.setOnClickListener(this);
+		btMaintenanceDone.setOnClickListener(this);
+	}
+
+	private void initView(View view) {
+		// TODO Auto-generated method stub
 		title = (TextView) view.findViewById(R.id.tv_tasklist_title);
 		qrCode = (ImageView) view.findViewById(R.id.iv_common_qrcode);
 		btMaintenanceNone = (Button) view
 				.findViewById(R.id.bt_maintenance_none);
 		btMaintenanceDone = (Button) view
 				.findViewById(R.id.bt_maintenance_done);
-
-		title.setText("维修单");
-		currentFragment = FragmentUtils.switchFragment(getChildFragmentManager(),
-				R.id.fl_maintenance_content, currentFragment,
-				MaintenanceNoneFragment.class, null);
-		mMaintenanceNoneFragment = (MaintenanceNoneFragment) currentFragment;
-		qrCode.setOnClickListener(this);
-		btMaintenanceNone.setOnClickListener(this);
-		btMaintenanceDone.setOnClickListener(this);
-		return view;
 	}
 
 	@Override
@@ -56,16 +67,22 @@ public class MaintenanceFragment extends BaseFragment implements
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.bt_maintenance_none:
-			currentFragment = FragmentUtils.switchFragment(getChildFragmentManager(),
-					R.id.fl_maintenance_content, currentFragment,
-					MaintenanceNoneFragment.class, null);
+			currentFragment = FragmentUtils.switchFragment(
+					getChildFragmentManager(), R.id.fl_maintenance_content,
+					currentFragment, MaintenanceNoneFragment.class, null);
 			mMaintenanceNoneFragment = (MaintenanceNoneFragment) currentFragment;
+			qrCode.setVisibility(View.VISIBLE);
+			btMaintenanceNone.setBackgroundResource(R.drawable.horizontal_line);
+			btMaintenanceDone.setBackgroundResource(R.color.main_white);
 			break;
 		case R.id.bt_maintenance_done:
-			currentFragment = FragmentUtils.switchFragment(getChildFragmentManager(),
-					R.id.fl_maintenance_content, currentFragment,
-					MaintenanceDoneFragment.class, null);
+			currentFragment = FragmentUtils.switchFragment(
+					getChildFragmentManager(), R.id.fl_maintenance_content,
+					currentFragment, MaintenanceDoneFragment.class, null);
 			mMaintenanceDoneFragment = (MaintenanceDoneFragment) currentFragment;
+			qrCode.setVisibility(View.GONE);
+			btMaintenanceNone.setBackgroundResource(R.color.main_white);
+			btMaintenanceDone.setBackgroundResource(R.drawable.horizontal_line);
 			break;
 		case R.id.iv_common_qrcode:
 			Intent intent = new Intent(getActivity(), ScanCodeActivity.class);

@@ -118,6 +118,10 @@ public class Constant {
 	 */
 	public static final String ELEVATORNO = "elevatorNo";
 	/**
+	 * 二维码
+	 */
+	public static final String QRCODE="qrCode";
+	/**
 	 * 技术支持电话
 	 */
 	public static final String ZONEPHONE = "zonePhone";
@@ -132,7 +136,7 @@ public class Constant {
 	/**
 	 * 互相评价--分值
 	 */
-	public static final String EVALUATELEVEL = "store";
+	public static final String EVALUATELEVEL = "score";
 	/**
 	 * 互相评价--评价原因
 	 */

@@ -59,7 +59,6 @@ public class ResetPasswordActivity extends BaseActivity {
 				} else {
 					Utilities.showToast(beanMsg, activity);
 				}
-				// finish();
 				break;
 			case StatusCode.RESET_PASSWORD_FAILED:
 				Utilities.showToast("重置密码失败", context);
@@ -78,6 +77,7 @@ public class ResetPasswordActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_reset_password);
+		stackInstance.pushActivity(this);
 		findViewById();
 		init();
 	}

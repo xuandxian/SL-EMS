@@ -21,7 +21,7 @@ import com.overtech.ems.activity.adapter.PersonalBonusListAdapter;
 import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.config.SystemConfig;
-import com.overtech.ems.entity.bean.BonusBean;
+import com.overtech.ems.entity.bean.Bean;
 import com.overtech.ems.entity.common.Requester;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
@@ -48,7 +48,7 @@ public class PersonalBoundsActivity extends BaseActivity implements
 			switch (msg.what) {
 			case StatusCode.PERSONAL_BOUNDS_SUCCESS:
 				String json = (String) msg.obj;
-				BonusBean bean = gson.fromJson(json, BonusBean.class);
+				Bean bean = gson.fromJson(json, Bean.class);
 				int st = bean.st;
 				if (st == -1 || st == -2) {
 					Utilities.showToast(bean.msg, activity);

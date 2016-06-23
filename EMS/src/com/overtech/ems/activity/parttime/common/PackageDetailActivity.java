@@ -93,7 +93,7 @@ public class PackageDetailActivity extends BaseActivity {
 					startActivity(intent);
 					return;
 				}
-				list = tasks.body.datas;
+				list = tasks.body.data;
 				if (null == list || list.size() == 0) {
 					stopProgressDialog();
 					Utilities.showToast("无数据", activity);

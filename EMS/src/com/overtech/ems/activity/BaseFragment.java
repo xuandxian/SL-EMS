@@ -1,7 +1,6 @@
 package com.overtech.ems.activity;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,7 +9,6 @@ import android.util.TypedValue;
 import com.google.gson.Gson;
 import com.overtech.ems.R;
 import com.overtech.ems.http.HttpEngine;
-import com.overtech.ems.http.OkHttpClientManager;
 import com.overtech.ems.widget.CustomProgressDialog;
 import com.overtech.ems.widget.bitmap.ImageLoader;
 import com.overtech.ems.widget.dialogeffects.NiftyDialogBuilder;
@@ -25,8 +23,6 @@ public class BaseFragment extends Fragment {
 	public Activity activity;
 
 	public FragmentManager fragmentManager;
-
-	public OkHttpClientManager okHttpClientManager;
 
 	public HttpEngine httpEngine;
 

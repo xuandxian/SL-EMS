@@ -14,6 +14,7 @@ import com.overtech.ems.R;
 import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.entity.fulltime.MaintenanceBean.Workorder;
+import com.overtech.ems.utils.Utilities;
 
 public class MaintenaceNoneAdapter extends BaseAdapter {
 	private Context ctx;
@@ -70,7 +71,7 @@ public class MaintenaceNoneAdapter extends BaseAdapter {
 					curLatLng,
 					new LatLng(Double.parseDouble(workorder.latitude), Double
 							.parseDouble(workorder.longitude)));
-			vh.tvMaintenanceNoneDistance.setText(distance / 1000.0 + "km");
+			vh.tvMaintenanceNoneDistance.setText(Utilities.format2decimal(distance / 1000.0) + "km");
 		}
 		vh.tvMaintenancePublishTime.setText(workorder.publishDatetime);
 		return convertView;

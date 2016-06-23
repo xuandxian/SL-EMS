@@ -41,6 +41,7 @@ import com.squareup.okhttp.Request;
  */
 public class MaintenanceTaskActivity extends BaseActivity {
 	private TextView title;
+	private ImageView ivBack;
 	private ImageView ivRightMore;
 	private ExpandableListView expand;
 	private Button btChangeParts;
@@ -78,6 +79,7 @@ public class MaintenanceTaskActivity extends BaseActivity {
 		requester.certificate = certificate;
 		requester.uid = uid;
 		requester.cmd = 20004;
+		requester.body.put("qrcode", elevatorNo);
 		ResultCallback<MaintenanceBean> callback = new ResultCallback<MaintenanceBean>() {
 
 			@Override
@@ -170,6 +172,16 @@ public class MaintenanceTaskActivity extends BaseActivity {
 
 	private void initEvent() {
 		// TODO Auto-generated method stub
+		title.setText("维修");
+		ivBack.setVisibility(View.VISIBLE);
+		ivBack.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				stackInstance.popActivity(activity);
+			}
+		});
 		expand.setOnGroupClickListener(new OnGroupClickListener() {
 
 			@Override
@@ -271,6 +283,8 @@ public class MaintenanceTaskActivity extends BaseActivity {
 
 			}
 		});
+		ivRightMore.setVisibility(View.VISIBLE);
+		ivRightMore.setImageResource(R.drawable.icon_common_more);
 		ivRightMore.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -287,6 +301,7 @@ public class MaintenanceTaskActivity extends BaseActivity {
 		btChangeParts = (Button) findViewById(R.id.bt_change_parts);
 		btSubmit = (Button) findViewById(R.id.bt_submit);
 		title = (TextView) findViewById(R.id.tv_headTitle);
+		ivBack=(ImageView) findViewById(R.id.iv_headBack);
 		ivRightMore = (ImageView) findViewById(R.id.iv_headTitleRight);
 	}
 

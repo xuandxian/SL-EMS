@@ -2,14 +2,15 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:padding="8dp" >
 
     <TextView
         android:id="@+id/tv_fault_type"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="default" />
+        android:text="default"
+        android:textColor="@color/main_primary" />
 
     <LinearLayout
         android:id="@+id/ll_anchor"
@@ -24,7 +25,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="8"
-            android:text="address default" />
+            android:text="address default"
+            android:textColor="@color/main_primary" />
 
         <TextView
             android:id="@+id/tv_maintenance_none_distance"
@@ -38,7 +40,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
-            android:text="2016/??/??" />
+            android:text="2016/??/??"
+            android:textColor="@color/main_primary" />
     </LinearLayout>
 
     <ImageView

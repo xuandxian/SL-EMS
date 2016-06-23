@@ -2,15 +2,23 @@ package com.overtech.ems.activity.parttime.personal;
 
 import java.io.IOException;
 
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatEditText;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 import android.widget.RatingBar;
@@ -23,6 +31,7 @@ import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.activity.parttime.personal.phoneno.ChangePhoneNoValidatePasswordActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.config.SystemConfig;
+import com.overtech.ems.entity.bean.Bean;
 import com.overtech.ems.entity.bean.CommonBean;
 import com.overtech.ems.entity.common.Requester;
 import com.overtech.ems.http.OkHttpClientManager;
@@ -47,6 +56,7 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 	private ImageView mDoBack;
 	private RelativeLayout mChangePhoneNo;
 	private RelativeLayout mChangePassword;
+	private RelativeLayout mWorkLicense;
 	private Button mDoExit;
 	private TextView mPhone;
 	private ImageView avator;
@@ -55,6 +65,10 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 	private TextView mCertificateNo;
 	private TextView mRegisterDate;
 	private RatingBar mRatingBar;
+	private AlertDialog.Builder builder;// 上岗证dialog
+	private View workLicenseView;// 上岗证view
+	private AppCompatEditText etWorkLicenseNo;// 上岗证编号
+	private DatePicker dpWorkLicenseDue;// 上岗证到期时间
 	private String uid;
 	private String certificate;
 	private PersonalDeatilsActivity activity;
@@ -179,6 +193,7 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 		mDoExit = (Button) findViewById(R.id.btn_exit);
 		mPhone = (TextView) findViewById(R.id.tv_personal_phone);
 		mChangePassword = (RelativeLayout) findViewById(R.id.rl_change_password);
+		mWorkLicense = (RelativeLayout) findViewById(R.id.rl_worklicense);
 		avator = (ImageView) findViewById(R.id.iv_avator);
 		mId = (TextView) findViewById(R.id.tv_id);
 		mName = (TextView) findViewById(R.id.tv_username);
@@ -199,6 +214,7 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 		mDoBack.setOnClickListener(this);
 		mChangePhoneNo.setOnClickListener(this);
 		mChangePassword.setOnClickListener(this);
+		mWorkLicense.setOnClickListener(this);
 		mDoExit.setOnClickListener(this);
 	}
 
@@ -224,52 +240,182 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 			intent2.putExtra("phone", phone2);
 			startActivity(intent2);
 			break;
-
+		case R.id.rl_worklicense:
+			showWorklicenseDialog();
+			break;
 		case R.id.btn_exit:
-			Requester requester = new Requester();
-			requester.cmd = 2;
-			requester.uid = uid;
-			requester.certificate = certificate;
-			ResultCallback<CommonBean> callback = new ResultCallback<CommonBean>() {
-
-				@Override
-				public void onError(Request request, Exception e) {
-					// TODO Auto-generated method stub
-					Logr.e(request.toString());
-				}
-
-				@Override
-				public void onResponse(CommonBean response) {
-					// TODO Auto-generated method stub
-					int st = response.st;
-					if (st == 0) {
-						Utilities.showToast(response.msg, activity);
-						SharePreferencesUtils.put(activity,
-								SharedPreferencesKeys.UID, "");
-						SharePreferencesUtils.put(activity,
-								SharedPreferencesKeys.CERTIFICATED, "");
-						Intent intent = new Intent(activity,
-								LoginActivity.class);
-						startActivity(intent);
-					} else if (st == -1 || st == -2) {
-						Utilities.showToast(response.msg, activity);
-						Utilities.showToast(response.msg, activity);
-						SharePreferencesUtils.put(activity,
-								SharedPreferencesKeys.UID, "");
-						SharePreferencesUtils.put(activity,
-								SharedPreferencesKeys.CERTIFICATED, "");
-						Intent intent = new Intent(activity,
-								LoginActivity.class);
-						startActivity(intent);
-					}
-				}
-			};
-			OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
-					gson.toJson(requester));
+			exitDialog();
 			break;
 		}
 	}
 
+	private void showWorklicenseDialog() {
+		// TODO Auto-generated method stub
+		if (workLicenseView == null) {
+			workLicenseView = LayoutInflater.from(activity).inflate(
+					R.layout.layout_worklicense, null);
+			etWorkLicenseNo = (AppCompatEditText) workLicenseView
+					.findViewById(R.id.et_worklicense_no);
+			dpWorkLicenseDue = (DatePicker) workLicenseView
+					.findViewById(R.id.datepicker_worklicense_due);
+		}
+		if (builder == null) {
+			builder = new AlertDialog.Builder(activity)
+					.setTitle("更新上岗证书及到期时间")
+					.setView(workLicenseView)
+					.setNegativeButton("取消",
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									// TODO Auto-generated method stub
+								}
+							})
+					.setPositiveButton("确认",
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									// TODO Auto-generated method stub
+									String worklicenseNo = etWorkLicenseNo
+											.getText().toString().trim();
+									int selectYear = dpWorkLicenseDue.getYear();
+									int selectMonth = dpWorkLicenseDue
+											.getMonth() + 1;// java month start
+															// from 0
+									int selectDay = dpWorkLicenseDue
+											.getDayOfMonth();
+									Logr.e(selectYear + "年" + selectMonth + "月"
+											+ selectDay + "日");
+									if (TextUtils.isEmpty(worklicenseNo)) {
+										Utilities
+												.showToast("上岗证不能为空", activity);
+										return;
+									}
+									startUpload(worklicenseNo, selectYear + "-"
+											+ selectMonth + "-" + selectDay);
+								}
+
+							}).setOnDismissListener(new OnDismissListener() {
+
+						@Override
+						public void onDismiss(DialogInterface dialog) {
+							// TODO Auto-generated method stub
+							((ViewGroup) workLicenseView.getParent())
+									.removeAllViews();// 去除会报异常
+						}
+					});
+		}
+		builder.show();
+
+	}
+
+	private void startUpload(final String worklicenseNo, String date) {
+		// TODO Auto-generated method stub
+		Requester requester = new Requester();
+		requester.cmd = 20080;
+		requester.uid = uid;
+		requester.certificate = certificate;
+		requester.body.put("workLicenseNo", worklicenseNo);
+		requester.body.put("workLicenseDueDate", date);
+		ResultCallback<Bean> callback = new ResultCallback<Bean>() {
+
+			@Override
+			public void onError(Request request, Exception e) {
+				// TODO Auto-generated method stub
+				Logr.e(request.toString());
+			}
+
+			@Override
+			public void onResponse(Bean response) {
+				// TODO Auto-generated method stub
+				if (response == null) {
+					Utilities.showToast("无数据", activity);
+					return;
+				}
+				int st = response.st;
+				if (st == -1 || st == -2) {
+					Utilities.showToast(response.msg, activity);
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent = new Intent(activity, LoginActivity.class);
+					startActivity(intent);
+				}
+				if (st == 0) {
+					mCertificateNo.setText(worklicenseNo);
+					Utilities.showToast(response.msg, activity);
+				}
+			}
+		};
+		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
+				gson.toJson(requester));
+	}
+
+	private void exitDialog() {
+		// TODO Auto-generated method stub
+
+		new AlertDialog.Builder(activity).setTitle("退出?")
+				.setPositiveButton("退出", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						exit();
+					}
+				})
+				.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+
+					}
+				}).show();
+	}
+	private void exit() {
+		// TODO Auto-generated method stub
+		Requester requester = new Requester();
+		requester.cmd = 2;
+		requester.uid = uid;
+		requester.certificate = certificate;
+		ResultCallback<CommonBean> callback = new ResultCallback<CommonBean>() {
+
+			@Override
+			public void onError(Request request, Exception e) {
+				// TODO Auto-generated method stub
+				Logr.e(request.toString());
+			}
+
+			@Override
+			public void onResponse(CommonBean response) {
+				// TODO Auto-generated method stub
+				int st = response.st;
+				if (st == 0) {
+					Utilities.showToast(response.msg, activity);
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent = new Intent(activity, LoginActivity.class);
+					startActivity(intent);
+				} else if (st == -1 || st == -2) {
+					Utilities.showToast(response.msg, activity);
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent = new Intent(activity, LoginActivity.class);
+					startActivity(intent);
+				}
+			}
+		};
+		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
+				gson.toJson(requester));
+	}
 	@Override
 	public void onBackPressed() {
 		// TODO Auto-generated method stub

@@ -19,6 +19,7 @@ import com.overtech.ems.activity.fulltime.adapter.MaintenanceGrandSonAdapter.Gra
 import com.overtech.ems.entity.fulltime.MaintenanceReportBean.Children;
 import com.overtech.ems.entity.fulltime.MaintenanceReportBean.Parent;
 import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.utils.Logr;
 
 /**
  * 维修报告单详细信息
@@ -60,6 +61,7 @@ public class MaintenanceTaskDetailActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		Bundle bundle = getIntent().getExtras();
 		type = bundle.getInt(Constant.TYPE);
+		Logr.e("type=="+type);
 		if (type == PARENT) {// parent
 			maintenanceParent = (Parent) bundle
 					.getSerializable(Constant.MAINTENANCEDETAIL);
@@ -71,6 +73,7 @@ public class MaintenanceTaskDetailActivity extends BaseActivity {
 					.getSerializable(Constant.MAINTENANCEDETAIL);
 			grandSonAdapter = new MaintenanceGrandSonAdapter(this,
 					maintenanceChild.children);
+			listView.setAdapter(grandSonAdapter);
 		}
 		name = bundle.getString(Constant.MAINTENANCENAME);
 

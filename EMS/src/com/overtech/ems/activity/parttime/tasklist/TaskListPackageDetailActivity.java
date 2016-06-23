@@ -5,7 +5,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
@@ -52,6 +51,7 @@ import com.overtech.ems.entity.bean.TaskPackageDetailBean.TaskPackage;
 import com.overtech.ems.entity.common.Requester;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.AppUtils;
+import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
@@ -100,6 +100,8 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	private final int[] mLocation = new int[2];// 坐标的位置（x、y）
 	private int mScreenWidth;// 屏幕的宽度
 	private int mScreenHeight;// 屏幕的高度
+	private final String ALLCOMPLETE = "allComplete";
+	private final String NOTCOMPLETE = "notComplete";
 	private String uid;
 	private String certificate;
 	private TaskListPackageDetailActivity activity;
@@ -109,6 +111,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			switch (msg.what) {
 			case StatusCode.PACKAGE_DETAILS_SUCCESS:
 				String json = (String) msg.obj;
+				Logr.e(json);
 				TaskPackageDetailBean bean = gson.fromJson(json,
 						TaskPackageDetailBean.class);
 				int st = bean.st;
@@ -122,7 +125,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 					startActivity(intent);
 					return;
 				}
-				list = bean.body.datas;
+				list = bean.body.data;
 				sPhone = bean.body.partnerPhone;
 				sTaskPackageName = bean.body.taskPackageName;
 				latitude = bean.body.latitude;
@@ -155,14 +158,14 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 					if (count == list.size()) {
 						mDoResponse.setVisibility(View.VISIBLE);
 						mDoResponse.setBackgroundColor(0xff00b9ef);
-						mDoResponse.setClickable(true);
+						mDoResponse.setTag(ALLCOMPLETE);
 						mDoChargeBack.setVisibility(View.GONE);
 					} else {
 						isToday = Utilities.isToday(maintenanceDate);
 						if (true == isToday) {
 							mDoResponse.setVisibility(View.VISIBLE);
 							mDoResponse.setBackgroundColor(0xffcccccc);
-							mDoResponse.setClickable(false);
+							mDoResponse.setTag(NOTCOMPLETE);
 							mDoChargeBack.setVisibility(View.GONE);
 						} else {
 							mDoResponse.setVisibility(View.GONE);
@@ -265,7 +268,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				CommonBean chargebackBean = gson.fromJson(state,
 						CommonBean.class);
 				int st2 = chargebackBean.st;
-				if (st2 ==-1||st2==-2 ) {
+				if (st2 == -1 || st2 == -2) {
 					Utilities.showToast(chargebackBean.msg, activity);
 					SharePreferencesUtils.put(activity,
 							SharedPreferencesKeys.UID, "");
@@ -338,6 +341,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tasklist_package_detail);
+		activity = TaskListPackageDetailActivity.this;
 		initTag();
 		initView();
 		getExtraDataAndInit();
@@ -376,7 +380,6 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	}
 
 	private void initEvent() {
-		activity = TaskListPackageDetailActivity.this;
 		stackInstance.pushActivity(activity);
 
 		mSwipeLayout.setOnRefreshListener(this);
@@ -602,12 +605,19 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			});
 			break;
 		case R.id.bt_next_response:
-			Intent intent = new Intent(TaskListPackageDetailActivity.this,
-					QuestionResponseActivity.class);
-			Bundle bundle = new Bundle();
-			bundle.putString(Constant.TASKNO, sTaskNo);
-			intent.putExtras(bundle);
-			startActivity(intent);
+			if (mDoResponse.getTag().equals(ALLCOMPLETE)) {
+				Intent intent = new Intent(TaskListPackageDetailActivity.this,
+						QuestionResponseActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putString(Constant.TASKNO, sTaskNo);
+				intent.putExtras(bundle);
+				startActivity(intent);
+			} else if (mDoResponse.getTag().equals(NOTCOMPLETE)) {
+				Utilities.showToast("您还有未完成的电梯", activity);
+			}else{
+				Utilities.showToast("请查看所有电梯是否完成", activity);
+				
+			}
 			break;
 		case R.id.iv_navicate_right:
 			showPopupWindow(v);

@@ -91,6 +91,8 @@ public class MaintenanceReportExpandAdapter extends BaseExpandableListAdapter {
 					R.layout.item_expand_maintenance_group, parent, false);
 		}
 		TextView tvGroup = (TextView) convertView.findViewById(R.id.tv_group);
+		Parent data=datas.get(groupPosition);
+		tvGroup.setText(data.name);
 		if (isExpanded) {
 			tvGroup.setTextColor(ctx.getResources().getColor(
 					R.color.accent_material_light));

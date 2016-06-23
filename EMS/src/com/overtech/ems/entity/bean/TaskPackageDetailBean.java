@@ -8,7 +8,7 @@ public class TaskPackageDetailBean {
 	public Body body;
 
 	public class Body {
-		public List<TaskPackage> datas;
+		public List<TaskPackage> data;
 		public String partnerPhone;
 		public String partnerName;
 		public String zone;//区域

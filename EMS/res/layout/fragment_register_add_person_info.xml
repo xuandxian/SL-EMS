@@ -43,9 +43,9 @@
                     android:layout_alignParentRight="true"
                     android:layout_marginLeft="20dp"
                     android:layout_marginRight="20dp"
-                    android:singleLine="true"
                     android:background="@drawable/shape_input"
-                    android:hint="姓名" />
+                    android:hint="姓名"
+                    android:singleLine="true" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -101,11 +101,16 @@
                 android:layout_marginTop="1px"
                 android:background="@color/main_white" >
 
-                <Spinner
-                    android:id="@+id/sp_add_city"
-                    style="@style/spinner_style"
-                    android:entries="@array/city" >
-                </Spinner>
+                <TextView
+                    android:id="@+id/tv_add_city"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="20dp"
+                    android:alpha="0.7"
+                    android:gravity="center_vertical"
+                    android:text="城市选择"
+                    android:textSize="18sp" >
+                </TextView>
             </RelativeLayout>
 
             <RelativeLayout
@@ -113,15 +118,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="55dp"
                 android:layout_alignParentLeft="true"
-                android:layout_marginTop="1px"
                 android:layout_below="@+id/rl_register_add_info_4"
+                android:layout_marginTop="1px"
                 android:background="@color/main_white" >
 
-                <Spinner
+                <TextView
+                    android:id="@+id/tv_anchor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:alpha="0.7"
+                    android:text="区域选择"
+                    android:textSize="18sp" />
+
+                <android.support.v7.widget.AppCompatSpinner
                     android:id="@+id/sp_add_zone"
-                    style="@style/spinner_style"
-                    android:entries="@array/sh_zone" >
-                </Spinner>
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="8dp"
+                    android:layout_toRightOf="@id/tv_anchor" >
+                </android.support.v7.widget.AppCompatSpinner>
             </RelativeLayout>
 
             <Button

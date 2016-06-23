@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <android.support.v7.widget.AppCompatEditText
+        android:id="@+id/et_worklicense_no"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="24dp"
+        android:layout_marginRight="18dp"
+        android:hint="工作证编号" >
+    </android.support.v7.widget.AppCompatEditText>
+
+    <!--
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="16dp"
+        android:text="更新到期时间"
+        android:textColor="@android:color/black"
+        android:textSize="18sp" >
+    </TextView>
+    -->
+
+
+    <DatePicker
+        android:id="@+id/datepicker_worklicense_due"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:calendarViewShown="false"
+        android:datePickerMode="spinner" />
+
+</LinearLayout>

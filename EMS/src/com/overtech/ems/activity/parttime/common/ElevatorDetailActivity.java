@@ -112,20 +112,22 @@ public class ElevatorDetailActivity extends BaseActivity {
 		requester.cmd = 20003;
 		requester.certificate = certificate;
 		requester.uid = uid;
+		requester.body.put("elevatorNo", sElevatorNo);
 		ResultCallback<ElevatorBean> callback = new ResultCallback<ElevatorBean>() {
 
 			@Override
 			public void onError(Request request, Exception e) {
 				// TODO Auto-generated method stub
+				stopProgressDialog();
 				Logr.e(request.toString());
 			}
 
 			@Override
 			public void onResponse(ElevatorBean response) {
 				// TODO Auto-generated method stub
+				stopProgressDialog();
 				if (response == null) {
 					Utilities.showToast("暂时没有数据", activity);
-					stopProgressDialog();
 					return;
 				}
 				int st = response.st;

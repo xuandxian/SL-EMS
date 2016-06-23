@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="取消"
-            android:background="@drawable/abc_dialog_material_background_light"
+            android:background="@drawable/horizontal_line"
             />
         <Button 
             android:id="@+id/bt_positive"
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="确认"
-            android:background="@drawable/abc_btn_borderless_material"
+            android:background="@drawable/horizontal_line"
             />
     </LinearLayout>
 	

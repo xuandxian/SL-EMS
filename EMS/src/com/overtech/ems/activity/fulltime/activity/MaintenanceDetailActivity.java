@@ -28,6 +28,7 @@ import com.overtech.ems.entity.fulltime.MaintenanceBean;
 import com.overtech.ems.http.OkHttpClientManager;
 import com.overtech.ems.http.OkHttpClientManager.ResultCallback;
 import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
@@ -36,6 +37,7 @@ import com.squareup.okhttp.Request;
 public class MaintenanceDetailActivity extends BaseActivity implements
 		OnClickListener {
 	private TextView title;
+	private ImageView ivBack;
 	private ImageView more;
 	private RelativeLayout elevatorDetail;
 	private TextView address;
@@ -69,6 +71,7 @@ public class MaintenanceDetailActivity extends BaseActivity implements
 		certificate = (String) SharePreferencesUtils.get(this,
 				SharedPreferencesKeys.CERTIFICATED, "");
 		workorderCode = getIntent().getStringExtra(Constant.WORKORDERCODE);
+		Logr.e(workorderCode);
 		initView();
 		initEvent();
 		loadingData();
@@ -80,12 +83,14 @@ public class MaintenanceDetailActivity extends BaseActivity implements
 		requester.cmd = 20002;
 		requester.uid = uid;
 		requester.certificate = certificate;
+		requester.body.put("workorderCode", workorderCode);
 		ResultCallback<MaintenanceBean> callback = new ResultCallback<MaintenanceBean>() {
 
 			@Override
 			public void onError(Request request, Exception e) {
 				// TODO Auto-generated method stub
 				stopProgressDialog();
+				Logr.e(request.toString());
 			}
 
 			@Override
@@ -136,8 +141,11 @@ public class MaintenanceDetailActivity extends BaseActivity implements
 	private void initEvent() {
 		// TODO Auto-generated method stub
 		title.setText(workorderCode);
+		ivBack.setVisibility(View.VISIBLE);
 		more.setVisibility(View.VISIBLE);
+		ivBack.setOnClickListener(this);
 		more.setOnClickListener(this);
+		elevatorDetail.setOnClickListener(this);
 		double latitude = ((MyApplication) getApplicationContext()).latitude;
 		double longitude = ((MyApplication) getApplicationContext()).longitude;
 		curLatLng = new LatLng(latitude, longitude);
@@ -146,6 +154,7 @@ public class MaintenanceDetailActivity extends BaseActivity implements
 	private void initView() {
 		// TODO Auto-generated method stub
 		title = (TextView) findViewById(R.id.tv_headTitle);
+		ivBack=(ImageView) findViewById(R.id.iv_headBack);
 		more = (ImageView) findViewById(R.id.iv_headTitleRight);
 		elevatorDetail = (RelativeLayout) findViewById(R.id.rl_elevator_detail);
 		address = (TextView) findViewById(R.id.tv_adderss);
@@ -160,6 +169,9 @@ public class MaintenanceDetailActivity extends BaseActivity implements
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
+		case R.id.iv_headBack:
+			stackInstance.popActivity(activity);
+			break;
 		case R.id.iv_headTitleRight:
 			if (morePopupWindow == null) {
 				View contentView = getLayoutInflater().inflate(
@@ -173,7 +185,7 @@ public class MaintenanceDetailActivity extends BaseActivity implements
 				llPop1.setOnClickListener(this);
 				llPop3.setOnClickListener(this);
 				morePopupWindow = new PopupWindow(contentView,
-						LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+						getResources().getDisplayMetrics().widthPixels/2, LayoutParams.WRAP_CONTENT);
 				morePopupWindow.setFocusable(true);
 				morePopupWindow.setOutsideTouchable(true);
 				morePopupWindow.setBackgroundDrawable(new ColorDrawable(

@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_main">
+    android:background="@color/bg_main" >
 
     <include
         android:id="@+id/include_parttime_main"
@@ -11,12 +11,12 @@
     <com.overtech.ems.widget.ReboundScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/include_parttime_main">
+        android:layout_below="@id/include_parttime_main" >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical" >
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -26,7 +26,7 @@
                 android:paddingBottom="8dip"
                 android:paddingLeft="15dip"
                 android:paddingRight="15dip"
-                android:paddingTop="8dip">
+                android:paddingTop="8dip" >
 
                 <TextView
                     style="@style/tv_title_primary_style"
@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dip"
                 android:background="@color/main_white"
-                android:padding="15dip">
+                android:padding="15dip" >
 
                 <TextView
                     style="@style/tv_title_primary_style"
@@ -65,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dip"
                 android:background="@color/main_white"
-                android:padding="15dip">
+                android:padding="15dip" >
 
                 <TextView
                     style="@style/tv_title_primary_style"
@@ -84,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dip"
                 android:background="@color/main_white"
-                android:padding="15dip">
+                android:padding="15dip" >
 
                 <TextView
                     style="@style/tv_title_primary_style"
@@ -103,7 +103,9 @@
                     android:id="@+id/tv_personal_phone"
                     style="@style/tv_list_primary_style"
                     android:layout_alignTop="@+id/imageView1"
-                    android:layout_toLeftOf="@+id/imageView1" />
+                    android:layout_toLeftOf="@+id/imageView1"
+                    android:text="0000"
+                     />
             </RelativeLayout>
 
             <RelativeLayout
@@ -112,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dip"
                 android:background="@color/main_white"
-                android:padding="15dip">
+                android:padding="15dip" >
 
                 <TextView
                     style="@style/tv_title_primary_style"
@@ -126,25 +128,35 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:src="@drawable/icon_arrow_right" />
-
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/rl_worklicense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dip"
                 android:background="@color/main_white"
-                android:padding="15dip">
+                android:padding="15dip" >
 
                 <TextView
                     style="@style/tv_title_primary_style"
                     android:layout_alignParentLeft="true"
                     android:text="上岗证编号" />
 
+                <ImageView
+                    android:id="@+id/iv_anchor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/icon_arrow_right" />
+
                 <TextView
                     android:id="@+id/tv_certificate_no"
                     style="@style/tv_list_primary_style"
-                    android:layout_alignParentRight="true" />
+      				android:layout_toLeftOf="@id/iv_anchor"
+      				android:text="dfd"
+                     />
             </RelativeLayout>
 
             <RelativeLayout
@@ -152,7 +164,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dip"
                 android:background="@color/main_white"
-                android:padding="15dip">
+                android:padding="15dip" >
 
                 <TextView
                     style="@style/tv_title_primary_style"
@@ -170,7 +182,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dip"
                 android:background="@color/main_white"
-                android:padding="15dip">
+                android:padding="15dip" >
 
                 <TextView
                     android:id="@+id/tv_ratingbar"

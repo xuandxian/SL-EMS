@@ -49,7 +49,7 @@
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/Theme.AppCompat.Light" >
         <activity
             android:name=".activity.common.SplashActivity"
             android:theme="@android:style/Theme.NoTitleBar" >
@@ -96,6 +96,7 @@
         <activity android:name=".activity.common.password.ResetPasswordActivity" />
         <activity android:name=".activity.common.password.ResetPasswordSuccessActivity" />
         <activity android:name=".activity.common.register.RegisterActivity" />
+        <activity android:name=".activity.common.register.SelectCityActivity" />
         <activity android:name=".activity.common.register.RegisterSuccessActivity" />
         <activity android:name=".activity.parttime.personal.PersonalDeatilsActivity" />
         <activity android:name=".activity.parttime.grabtask.GrabTaskDoFilterActivity" />

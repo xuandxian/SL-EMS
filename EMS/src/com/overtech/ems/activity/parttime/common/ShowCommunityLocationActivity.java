@@ -22,6 +22,7 @@ import com.baidu.mapapi.map.MarkerOptions.MarkerAnimateType;
 import com.baidu.mapapi.model.LatLng;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
+import com.overtech.ems.utils.Logr;
 
 public class ShowCommunityLocationActivity extends BaseActivity {
 	private TextView mHeadContent;
@@ -58,6 +59,7 @@ public class ShowCommunityLocationActivity extends BaseActivity {
 		mCommunityName = bundle.getString("CommunityName");
 		mLongitude = bundle.getString("Longitude");
 		mLatitude = bundle.getString("Latitude");
+		Logr.e("longitude=="+mLongitude+"==latitude=="+mLatitude);
 	}
 
 	private void getLocationData() {
@@ -97,15 +99,7 @@ public class ShowCommunityLocationActivity extends BaseActivity {
 	}
 
 	private void setCommunityMarker(LatLng ll) {
-		if (mMapView == null) {
-			mMapView = (MapView) findViewById(R.id.bmapView);
-		}
-		mBaiduMap = mMapView.getMap();
-		if (null != mBaiduMap) {
-			mBaiduMap.clear();
-		} else {
-			return;
-		}
+		
 		BitmapDescriptor bitmap = BitmapDescriptorFactory
 				.fromResource(R.drawable.icon_map_community);
 		MarkerOptions option = new MarkerOptions().position(ll).icon(bitmap)
@@ -114,10 +108,10 @@ public class ShowCommunityLocationActivity extends BaseActivity {
 		mBaiduMap.addOverlay(option);
 		MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
 		mBaiduMap.animateMapStatus(u);
-		// BaiduMapInfoWindow infoWindow = new
-		// BaiduMapInfoWindow(context,mCommunityName);
-		// mInfoWindow = new InfoWindow(infoWindow, communituLocation, -40);
-		// mBaiduMap.showInfoWindow(mInfoWindow);
+		BaiduMapInfoWindow infoWindow = new BaiduMapInfoWindow(context,
+				mCommunityName);
+		mInfoWindow = new InfoWindow(infoWindow, communituLocation, -40);
+		mBaiduMap.showInfoWindow(mInfoWindow);
 	}
 
 	@Override

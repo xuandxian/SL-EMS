@@ -2,6 +2,7 @@ package com.overtech.ems.activity.adapter;
 
 import java.text.NumberFormat;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.view.View;
@@ -15,12 +16,12 @@ import com.overtech.ems.R;
 import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.bean.TaskPackageBean.TaskPackage;
+import com.overtech.ems.utils.Utilities;
 
 public class TaskListAdapter extends BaseAdapter {
 
-	private List<TaskPackage> list;
+	private List<Map<String,Object>> list;
 	private Context context;
-	private NumberFormat numFormat = NumberFormat.getNumberInstance();
 	private double latitude;
 	private double longitude;
 	private LatLng mLatLng;
@@ -29,11 +30,11 @@ public class TaskListAdapter extends BaseAdapter {
 	 */
 	private int state;
 
-	public List<TaskPackage> getData() {
+	public List<Map<String,Object>> getData() {
 		return list;
 	}
 
-	public TaskListAdapter(List<TaskPackage> list, Context context, int state) {
+	public TaskListAdapter(List<Map<String,Object>> list, Context context, int state) {
 		super();
 		this.list = list;
 		this.context = context;
@@ -73,27 +74,26 @@ public class TaskListAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		TaskPackage data = list.get(position);
+		Map<String,Object> data = list.get(position);
 		if (convertView == null) {
 			convertView = View.inflate(context, R.layout.item_list_tasklist,
 					null);
 			new ViewHolder(convertView);
 		}
 		ViewHolder holder = (ViewHolder) convertView.getTag();
-		holder.taskPackageName.setText(data.taskPackageName);
-		holder.elevatorAmounts.setText(data.elevatorAmounts);
-		holder.maintenanceAddress.setText(data.maintenanceAddress);
-		holder.maintenanceDate.setText(data.maintenanceDate);
+		holder.taskPackageName.setText(data.get("taskPackageName").toString());
+		holder.elevatorAmounts.setText(data.get("elevatorAmounts").toString());
+		holder.maintenanceAddress.setText(data.get("maintenanceAddress").toString());
+		holder.maintenanceDate.setText(data.get("maintenanceDate").toString());
 		if (state == StatusCode.TASK_NO) {
 			holder.taskNo.setVisibility(View.GONE);
 		} else if (state == StatusCode.TASK_DO) {
 			holder.taskNo.setVisibility(View.VISIBLE);
-			holder.taskNo.setText(data.taskNo);
+			holder.taskNo.setText(data.get("taskNo").toString());
 		}
-		LatLng latlng = new LatLng(Double.parseDouble(data.latitude),
-				Double.parseDouble(data.longitude));
-		numFormat.setMaximumFractionDigits(2);
-		holder.distance.setText(numFormat.format(DistanceUtil.getDistance(
+		LatLng latlng = new LatLng(Double.parseDouble(data.get("latitude").toString()),
+				Double.parseDouble(data.get("longitude").toString()));
+		holder.distance.setText(Utilities.format2decimal(DistanceUtil.getDistance(
 				mLatLng, latlng) / 1000.0) + "km");
 		return convertView;
 	}
@@ -114,9 +114,9 @@ public class TaskListAdapter extends BaseAdapter {
 	 * @return
 	 */
 	public LatLng getDestination(int position) {
-		TaskPackage data = list.get(position);
-		String desLat = data.latitude;
-		String desLng = data.longitude;
+		Map<String,Object> data = list.get(position);
+		String desLat = data.get("latitude").toString();
+		String desLng = data.get("longitude").toString();
 		return new LatLng(Double.parseDouble(desLat),
 				Double.parseDouble(desLng));
 	}
@@ -128,7 +128,7 @@ public class TaskListAdapter extends BaseAdapter {
 	 * @return
 	 */
 	public String getDesName(int position) {
-		return list.get(position).taskPackageName;
+		return list.get(position).get("taskPackageName").toString();
 	}
 
 	class ViewHolder {

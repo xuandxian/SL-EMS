@@ -54,6 +54,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+		Logr.e("Loginactivity====oncreate===执行了");
 		stackInstance.popAllActivitys();
 		ctx = this;
 		initView();
@@ -64,6 +65,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	protected void onNewIntent(Intent intent) {
 		// TODO Auto-generated method stub
 		super.onNewIntent(intent);
+		Logr.e("loginactivity===onNewIntent===执行了");
 		stackInstance.popAllActivitys();
 	}
 
