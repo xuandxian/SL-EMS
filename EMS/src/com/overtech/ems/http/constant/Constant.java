@@ -132,7 +132,7 @@ public class Constant {
 	/**
 	 * 问题反馈
 	 */
-	public static final String FEEDBACKINFO = "feedBackInfo";
+	public static final String FEEDBACKINFO = "feedbackInfo";
 	/**
 	 * 互相评价--分值
 	 */

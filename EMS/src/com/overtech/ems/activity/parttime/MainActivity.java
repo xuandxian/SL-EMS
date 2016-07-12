@@ -15,6 +15,7 @@ import com.overtech.ems.activity.parttime.fragment.GrabTaskFragment;
 import com.overtech.ems.activity.parttime.fragment.NearByFragment;
 import com.overtech.ems.activity.parttime.fragment.PersonalZoneFragment;
 import com.overtech.ems.activity.parttime.fragment.TaskListFragment;
+import com.overtech.ems.activity.parttime.tasklist.TaskListNoneFragment;
 import com.overtech.ems.utils.FragmentUtils;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
@@ -73,10 +74,21 @@ public class MainActivity extends BaseActivity {
 	private void setDefaultView() {
 		if (TextUtils.equals(QZ, employeeType)) {
 			mHomeHomeRb.setText("维修");
-			currentFragment = FragmentUtils.switchFragment(fragmentManager,
-					R.id.mHomeContent, currentFragment,
-					MaintenanceFragment.class, null);
-			mMaintenanceFragment = (MaintenanceFragment) currentFragment;
+			String flag=getIntent().getStringExtra("flag");
+			if(TextUtils.equals(flag, "1")){
+				currentFragment = FragmentUtils.switchFragment(fragmentManager,
+						R.id.mHomeContent, currentFragment,
+						TaskListFragment.class, null);
+				mTaskListFragment = (TaskListFragment) currentFragment;
+				
+				
+				mHomeSearchRb.setChecked(true);
+			}else{
+				currentFragment = FragmentUtils.switchFragment(fragmentManager,
+						R.id.mHomeContent, currentFragment,
+						MaintenanceFragment.class, null);
+				mMaintenanceFragment = (MaintenanceFragment) currentFragment;
+			}
 		} else {
 			String flag = getIntent().getStringExtra("flag");
 			mHomeHomeRb.setText("抢单");
@@ -85,6 +97,9 @@ public class MainActivity extends BaseActivity {
 						R.id.mHomeContent, currentFragment,
 						TaskListFragment.class, null);
 				mTaskListFragment = (TaskListFragment) currentFragment;
+				
+				
+				mHomeSearchRb.setChecked(true);
 			} else {
 				currentFragment = FragmentUtils.switchFragment(fragmentManager,
 						R.id.mHomeContent, currentFragment,

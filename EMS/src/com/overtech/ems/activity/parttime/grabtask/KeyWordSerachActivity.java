@@ -87,11 +87,16 @@ public class KeyWordSerachActivity extends BaseActivity {
 					Intent intent = new Intent(activity, LoginActivity.class);
 					startActivity(intent);
 					return;
+				}else if(st==1){
+					Utilities.showToast(bean.msg, activity);
+					stackInstance.popActivity(activity);
+				}else{
+					
 				}
 				List<String> data = (List<String>) bean.body.get("data");
 				int length = data.size();
 				if (length == 1) {
-					Utilities.showToast("无结果", activity);
+					Utilities.showToast(bean.msg, activity);
 				} else {
 					for (int i = 0; i < length; i++) {
 						if (i == 0) {
@@ -108,10 +113,10 @@ public class KeyWordSerachActivity extends BaseActivity {
 				}
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast("服务器异常", activity);
+				Utilities.showToast(R.string.response_failure_msg, activity);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast("网络异常", activity);
+				Utilities.showToast(R.string.request_error_msg, activity);
 				break;
 			}
 		}

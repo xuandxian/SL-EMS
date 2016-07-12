@@ -82,7 +82,8 @@ public class TaskListAdapter extends BaseAdapter {
 		}
 		ViewHolder holder = (ViewHolder) convertView.getTag();
 		holder.taskPackageName.setText(data.get("taskPackageName").toString());
-		holder.elevatorAmounts.setText(data.get("elevatorAmounts").toString());
+		String amounts=data.get("elevatorAmounts").toString();
+		holder.elevatorAmounts.setText(amounts.substring(0, amounts.indexOf(".")));
 		holder.maintenanceAddress.setText(data.get("maintenanceAddress").toString());
 		holder.maintenanceDate.setText(data.get("maintenanceDate").toString());
 		if (state == StatusCode.TASK_NO) {

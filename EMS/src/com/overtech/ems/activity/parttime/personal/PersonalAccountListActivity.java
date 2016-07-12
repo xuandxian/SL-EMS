@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -42,7 +41,9 @@ public class PersonalAccountListActivity extends BaseActivity implements
 	private ListView mPersonalAccountListView;
 	private TextView mHasCount;
 	private TextView mNoCount;
-	private BaseAdapter adapter;
+	private TextView tvNoData;
+	private PersonalAccountHasCountAdapter hasCountAdapter;
+	private PersonalAccountNoCountAdapter noCountAdapter;
 	private static final String HASCOUNT = "1";
 	private static final String NOCOUNT = "0";
 	private String uid;
@@ -50,6 +51,7 @@ public class PersonalAccountListActivity extends BaseActivity implements
 	private PersonalAccountListActivity activity;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
+			stopProgressDialog();
 			switch (msg.what) {
 			case StatusCode.ACCOUNT_LIST_SUCCESS:
 				String json = (String) msg.obj;
@@ -68,21 +70,41 @@ public class PersonalAccountListActivity extends BaseActivity implements
 				}
 				List<Map<String, Object>> data = (List<Map<String, Object>>) datas.body
 						.get("data");
-				if (msg.arg1 == 1) {
-					adapter = new PersonalAccountHasCountAdapter(activity, data);
-				} else {
-					adapter = new PersonalAccountNoCountAdapter(activity, data);
+				if(data==null||data.size()==0){
+					mPersonalAccountListView.setVisibility(View.GONE);
+					tvNoData.setVisibility(View.VISIBLE);
+				}else{
+					mPersonalAccountListView.setVisibility(View.VISIBLE);
+					tvNoData.setVisibility(View.GONE);
 				}
-				mPersonalAccountListView.setAdapter(adapter);
+				if (msg.arg1 == 1) {// 已结算
+					if (hasCountAdapter == null) {
+						hasCountAdapter = new PersonalAccountHasCountAdapter(
+								activity, data);
+						mPersonalAccountListView.setAdapter(hasCountAdapter);
+					} else {
+						hasCountAdapter.setData(data);
+						mPersonalAccountListView.setAdapter(hasCountAdapter);
+					}
+				} else {
+					if (noCountAdapter == null) {
+						noCountAdapter = new PersonalAccountNoCountAdapter(
+								activity, data);
+						mPersonalAccountListView.setAdapter(noCountAdapter);
+					} else {
+						noCountAdapter.setData(data);
+						mPersonalAccountListView.setAdapter(noCountAdapter);
+					}
+
+				}
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast("服务端异常", activity);
+				Utilities.showToast(R.string.response_failure_msg, activity);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast("网络异常", activity);
+				Utilities.showToast(R.string.request_error_msg, activity);
 				break;
 			}
-			stopProgressDialog();
 		};
 	};
 
@@ -99,7 +121,8 @@ public class PersonalAccountListActivity extends BaseActivity implements
 	}
 
 	private void startLoading(final String billState) {
-		startProgressDialog("正在加载...");
+		startProgressDialog(getResources().getString(
+				R.string.loading_public_default));
 		Requester requester = new Requester();
 		requester.cmd = 20074;
 		requester.certificate = certificate;
@@ -139,6 +162,7 @@ public class PersonalAccountListActivity extends BaseActivity implements
 		mPersonalAccountListView = (ListView) findViewById(R.id.lv_personal_account_list);
 		mHasCount = (TextView) findViewById(R.id.tv_account_donet);
 		mNoCount = (TextView) findViewById(R.id.tv_account_none);
+		tvNoData = (TextView) findViewById(R.id.tv_no_data);
 	}
 
 	private void initData() {

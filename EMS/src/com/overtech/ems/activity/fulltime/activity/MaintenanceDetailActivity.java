@@ -39,7 +39,7 @@ public class MaintenanceDetailActivity extends BaseActivity implements
 	private TextView title;
 	private ImageView ivBack;
 	private ImageView more;
-	private RelativeLayout elevatorDetail;
+	private LinearLayout elevatorDetail;
 	private TextView address;
 	private TextView elevatorBrand;
 	private TextView elevatorStoreySite;
@@ -154,9 +154,9 @@ public class MaintenanceDetailActivity extends BaseActivity implements
 	private void initView() {
 		// TODO Auto-generated method stub
 		title = (TextView) findViewById(R.id.tv_headTitle);
-		ivBack=(ImageView) findViewById(R.id.iv_headBack);
+		ivBack = (ImageView) findViewById(R.id.iv_headBack);
 		more = (ImageView) findViewById(R.id.iv_headTitleRight);
-		elevatorDetail = (RelativeLayout) findViewById(R.id.rl_elevator_detail);
+		elevatorDetail = (LinearLayout) findViewById(R.id.rl_elevator_detail);
 		address = (TextView) findViewById(R.id.tv_adderss);
 		elevatorBrand = (TextView) findViewById(R.id.tv_elevator_brand);
 		elevatorStoreySite = (TextView) findViewById(R.id.tv_elevator_storey_site);
@@ -184,8 +184,9 @@ public class MaintenanceDetailActivity extends BaseActivity implements
 				llPop3.setVisibility(View.VISIBLE);
 				llPop1.setOnClickListener(this);
 				llPop3.setOnClickListener(this);
-				morePopupWindow = new PopupWindow(contentView,
-						getResources().getDisplayMetrics().widthPixels/2, LayoutParams.WRAP_CONTENT);
+				morePopupWindow = new PopupWindow(contentView, getResources()
+						.getDisplayMetrics().widthPixels / 2,
+						LayoutParams.WRAP_CONTENT);
 				morePopupWindow.setFocusable(true);
 				morePopupWindow.setOutsideTouchable(true);
 				morePopupWindow.setBackgroundDrawable(new ColorDrawable(

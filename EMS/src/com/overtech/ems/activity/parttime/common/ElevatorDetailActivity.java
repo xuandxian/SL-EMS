@@ -107,7 +107,7 @@ public class ElevatorDetailActivity extends BaseActivity {
 	}
 
 	private void getDataByElevatorNo() {
-		startProgressDialog("正在加载...");
+		startProgressDialog(getResources().getString(R.string.loading_public_default));
 		Requester requester = new Requester();
 		requester.cmd = 20003;
 		requester.certificate = certificate;
@@ -127,7 +127,7 @@ public class ElevatorDetailActivity extends BaseActivity {
 				// TODO Auto-generated method stub
 				stopProgressDialog();
 				if (response == null) {
-					Utilities.showToast("暂时没有数据", activity);
+					Utilities.showToast(R.string.response_no_object, activity);
 					return;
 				}
 				int st = response.st;

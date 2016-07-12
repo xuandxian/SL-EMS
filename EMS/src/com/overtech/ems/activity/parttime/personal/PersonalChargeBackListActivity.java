@@ -22,6 +22,7 @@ import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.ChargebackBean;
 import com.overtech.ems.entity.common.Requester;
+import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
@@ -34,6 +35,7 @@ public class PersonalChargeBackListActivity extends BaseActivity {
 	private ImageView mDoBack;
 	private TextView mHeadTitle;
 	private ListView mChargeback;
+	private TextView tvNoData;
 	private List<Map<String, Object>> list;
 	private PersonalChargebackAdapter adapter;
 	private String uid;
@@ -41,9 +43,11 @@ public class PersonalChargeBackListActivity extends BaseActivity {
 	private PersonalChargeBackListActivity activity;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
+			stopProgressDialog();
 			switch (msg.what) {
 			case StatusCode.PERSONAL_CHARGEBACK_SUCCESS:
 				String info = (String) msg.obj;
+				Logr.e(info);
 				ChargebackBean bean = gson.fromJson(info, ChargebackBean.class);
 				int st = bean.st;
 				if (st == -1 || st == -2) {
@@ -56,9 +60,14 @@ public class PersonalChargeBackListActivity extends BaseActivity {
 					startActivity(intent);
 				} else {
 					list = (List<Map<String, Object>>) bean.body.get("data");
-					if (list.size() == 0) {
-						Utilities.showToast("无数据", activity);
+					if (list == null || list.size() == 0) {
+						Utilities.showToast(
+								getString(R.string.response_no_data), activity);
+						tvNoData.setVisibility(View.VISIBLE);
+						mChargeback.setVisibility(View.GONE);
 					} else {
+						tvNoData.setVisibility(View.GONE);
+						mChargeback.setVisibility(View.VISIBLE);
 						adapter = new PersonalChargebackAdapter(activity, list);
 						mChargeback.setAdapter(adapter);
 					}
@@ -66,15 +75,14 @@ public class PersonalChargeBackListActivity extends BaseActivity {
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
 				String exception = (String) msg.obj;
-				Utilities.showToast(exception, activity);
+				Utilities.showToast(R.string.response_failure_msg, activity);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast((String) msg.obj, activity);
+				Utilities.showToast(R.string.request_error_msg, activity);
 				break;
 			default:
 				break;
 			}
-			stopProgressDialog();
 		};
 	};
 
@@ -89,6 +97,10 @@ public class PersonalChargeBackListActivity extends BaseActivity {
 	private void init() {
 		activity = this;
 		stackInstance.pushActivity(activity);
+		certificate = (String) SharePreferencesUtils.get(activity,
+				SharedPreferencesKeys.CERTIFICATED, "");
+		uid = (String) SharePreferencesUtils.get(activity,
+				SharedPreferencesKeys.UID, "");
 		mDoBack.setVisibility(View.VISIBLE);
 		mDoBack.setOnClickListener(new OnClickListener() {
 			@Override
@@ -101,7 +113,8 @@ public class PersonalChargeBackListActivity extends BaseActivity {
 	}
 
 	private void startLoading() {
-		startProgressDialog("正在加载中...");
+		startProgressDialog(getResources().getString(
+				R.string.loading_public_default));
 		Requester requester = new Requester();
 		requester.cmd = 20076;
 		requester.certificate = certificate;
@@ -139,6 +152,7 @@ public class PersonalChargeBackListActivity extends BaseActivity {
 		mDoBack = (ImageView) findViewById(R.id.iv_headBack);
 		mHeadTitle = (TextView) findViewById(R.id.tv_headTitle);
 		mChargeback = (ListView) findViewById(R.id.lv_cancle_task_record);
+		tvNoData = (TextView) findViewById(R.id.tv_no_data);
 	}
 
 	@Override

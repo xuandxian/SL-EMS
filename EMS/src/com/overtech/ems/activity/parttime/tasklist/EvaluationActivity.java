@@ -48,14 +48,14 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 	private EvaluationActivity activity;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
+			stopProgressDialog();
 			switch (msg.what) {
 			case StatusCode.EVALUATEOTHER:
-				stopProgressDialog();
 				String json = (String) msg.obj;
 				Logr.e(json);
 				CommonBean bean = gson.fromJson(json, CommonBean.class);
 				if (bean == null) {
-					Utilities.showToast("互评失败", activity);
+					Utilities.showToast(R.string.response_no_object, activity);
 					return;
 				}
 				int st = bean.st;
@@ -75,19 +75,18 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 					intent.putExtra("flag", "1");
 					startActivity(intent);
 				} else {
-					Utilities.showToast("提交失败，请重新尝试", activity);
+					Utilities.showToast(bean.msg, activity);
 				}
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast((String) msg.obj, activity);
+				Utilities.showToast(R.string.request_error_msg, activity);
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast((String) msg.obj, activity);
+				Utilities.showToast(R.string.response_failure_msg, activity);
 				break;
 			default:
 				break;
 			}
-			stopProgressDialog();
 		};
 	};
 
@@ -137,7 +136,7 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 	}
 
 	private void startLoading() {
-		startProgressDialog("正在提交...");
+		startProgressDialog(getResources().getString(R.string.loading_public_default));
 		Requester requester = new Requester();
 		requester.certificate = certificate;
 		requester.uid = uid;

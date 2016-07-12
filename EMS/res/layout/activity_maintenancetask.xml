@@ -6,11 +6,33 @@
 
     <include layout="@layout/headview" />
 
-    <ExpandableListView
-        android:id="@+id/elv_maintenance_report"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:orientation="horizontal" >
+
+        <ExpandableListView
+            android:id="@+id/elv_maintenance_report"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:indicatorLeft="8dp" />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="?android:attr/listDivider" />
+
+        <ListView
+            android:id="@+id/lv_maintenance_detail"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1.618"
+            android:divider="@android:color/transparent"
+            android:listSelector="@android:color/transparent" >
+        </ListView>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,17 +43,23 @@
             android:id="@+id/bt_change_parts"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
             android:layout_weight="1"
+            android:background="@color/material_deep_teal_200"
             android:text="换配件"
-             />
+            android:textColor="@color/main_white" />
 
         <Button
             android:id="@+id/bt_submit"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
             android:layout_weight="1"
-            android:text="完成"
-             />
+            android:background="@color/material_deep_teal_500"
+            android:text="保存"
+            android:textColor="@color/main_white" />
     </LinearLayout>
 
 </LinearLayout>

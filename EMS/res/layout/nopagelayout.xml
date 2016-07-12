@@ -3,22 +3,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
+
     <LinearLayout
         android:id="@+id/page_no_result"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
         android:orientation="vertical"
         android:visibility="gone" >
 
         <TextView
             android:id="@+id/load_tv_noresult"
-            style="@style/tv_warning_info_null_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:drawablePadding="28dp"
             android:drawableTop="@drawable/icon_no_result_melt"
             android:gravity="center"
             android:text="@string/common_search_noresult"
+            android:textColor="@color/main_null"
             android:textSize="@dimen/text_size_list" />
 
         <Button
@@ -26,40 +29,43 @@
             style="@style/btn_title_white_style"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
+            android:layout_gravity="center"
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
             android:layout_marginTop="18dp"
             android:background="@drawable/shape_button_visiable"
             android:text="重新搜索" />
     </LinearLayout>
-    
+
     <LinearLayout
         android:id="@+id/page_no_wifi"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="70dp"
-        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
         android:orientation="vertical"
-        android:visibility="gone">
+        android:visibility="gone" >
 
         <TextView
             android:id="@+id/load_tv_nowifi"
-            style="@style/tv_warning_info_null_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:drawablePadding="28dp"
             android:drawableTop="@drawable/icon_no_result_network"
-            android:textSize="@dimen/text_size_list"
             android:gravity="center"
-            android:text="@string/common_no_network_msg"/>
+            android:text="@string/common_no_network_msg"
+            android:textColor="@color/main_null"
+            android:textSize="@dimen/text_size_list" />
 
         <Button
             android:id="@+id/load_btn_refresh_net"
             style="@style/btn_err_layout_white_style"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
-            android:layout_marginTop="18dp"
-            android:text="再试试"
             android:layout_marginLeft="39dp"
-            android:layout_marginRight="39dp"/>
+            android:layout_marginRight="39dp"
+            android:layout_marginTop="18dp"
+            android:text="再试试" />
     </LinearLayout>
 
 </LinearLayout>

@@ -3,6 +3,7 @@ package com.overtech.ems.activity.adapter;
 import java.util.HashMap;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,8 @@ public class ElevatorBrandAdapter extends BaseAdapter {
 
 	private String[] data;
 	private Context context;
-	public static HashMap<Integer,Boolean> isSelected=new HashMap<Integer, Boolean>();
+	public static HashMap<Integer, Boolean> isSelected = new HashMap<Integer, Boolean>();
+
 	public ElevatorBrandAdapter(String[] data, Context context) {
 		this.data = data;
 		this.context = context;
@@ -40,6 +42,7 @@ public class ElevatorBrandAdapter extends BaseAdapter {
 	}
 
 	ViewHolder vh = null;
+
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
@@ -51,19 +54,20 @@ public class ElevatorBrandAdapter extends BaseAdapter {
 			vh = (ViewHolder) convertView.getTag();
 		}
 		vh.cbElevator.setText(data[position]);
-		if(isSelected.get(position)==null){
+		if (isSelected.get(position) == null) {
 			vh.cbElevator.setChecked(false);
-		}else{
+		} else {
 			vh.cbElevator.setChecked(isSelected.get(position));
 		}
 		return convertView;
 	}
 
-	
 	class ViewHolder {
-		CheckBox cbElevator;
+		AppCompatCheckBox cbElevator;
+
 		ViewHolder(View view) {
-			cbElevator = (CheckBox) view.findViewById(R.id.cb_elevator);
+			cbElevator = (AppCompatCheckBox) view
+					.findViewById(R.id.cb_elevator);
 		}
 	}
 

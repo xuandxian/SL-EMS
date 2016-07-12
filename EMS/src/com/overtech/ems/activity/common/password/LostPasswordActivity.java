@@ -72,10 +72,10 @@ public class LostPasswordActivity extends BaseActivity {
 				}
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast("网络异常", activity);
+				Utilities.showToast(R.string.request_error_msg, activity);
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast("服务器异常", activity);
+				Utilities.showToast(R.string.response_failure_msg, activity);
 				break;
 			}
 			stopProgressDialog();
@@ -156,6 +156,7 @@ public class LostPasswordActivity extends BaseActivity {
 	private void getSmsCode() {
 		mPhoneNo = mPhoneNoEditText.getText().toString().trim();
 		if (Utilities.isMobileNO(mPhoneNo)) {
+			startProgressDialog(getResources().getString(R.string.loading_public_default));
 			Requester requester = new Requester();
 			requester.cmd = 10;
 			requester.body.put(Constant.PHONENO, mPhoneNo);
@@ -192,7 +193,7 @@ public class LostPasswordActivity extends BaseActivity {
 	}
 
 	public void submitVerificationCode() {
-		startProgressDialog("正在验证...");
+		startProgressDialog(getResources().getString(R.string.loading_public_sms));
 		mSMSCode = mSMSCodeEditText.getText().toString().trim();
 		if (TextUtils.isEmpty(mSMSCode)) {
 			Utilities.showToast("输入不能为空", activity);

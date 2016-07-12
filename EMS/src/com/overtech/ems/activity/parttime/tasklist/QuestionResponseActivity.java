@@ -21,7 +21,6 @@ import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.CommonBean;
 import com.overtech.ems.entity.common.Requester;
-import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.SharePreferencesUtils;
@@ -45,6 +44,7 @@ public class QuestionResponseActivity extends BaseActivity implements
 	private QuestionResponseActivity activity;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
+			stopProgressDialog();
 			switch (msg.what) {
 			case StatusCode.RESPONSE_NET_FAILED:
 				Utilities.showToast((String) msg.obj, activity);
@@ -58,7 +58,7 @@ public class QuestionResponseActivity extends BaseActivity implements
 				Logr.e(json);
 				CommonBean bean = gson.fromJson(json, CommonBean.class);
 				if (bean == null) {
-					Utilities.showToast("无数据", activity);
+					Utilities.showToast(R.string.response_no_object, activity);
 					return;
 				}
 				int st = bean.st;
@@ -71,6 +71,9 @@ public class QuestionResponseActivity extends BaseActivity implements
 					Intent intent = new Intent(activity, LoginActivity.class);
 					startActivity(intent);
 					return;
+				} else if (st == 1) {
+					Utilities.showToast(bean.msg, activity);
+					return;
 				} else {
 					Intent intent = new Intent(QuestionResponseActivity.this,
 							EvaluationActivity.class);
@@ -79,7 +82,6 @@ public class QuestionResponseActivity extends BaseActivity implements
 					intent.putExtras(bundle);
 					startActivity(intent);
 				}
-				stopProgressDialog();
 				break;
 			default:
 				break;
@@ -132,7 +134,6 @@ public class QuestionResponseActivity extends BaseActivity implements
 				intent.putExtras(bundle);
 				startActivity(intent);
 			} else {
-				startProgressDialog("正在提交...");
 				startLoading();
 			}
 			break;
@@ -143,14 +144,15 @@ public class QuestionResponseActivity extends BaseActivity implements
 	}
 
 	private void startLoading() {
+		startProgressDialog(getResources().getString(R.string.loading_public_default));
 		Requester requester = new Requester();
 		requester.uid = uid;
 		requester.certificate = certificate;
 		requester.cmd = 20057;
 		requester.body.put(Constant.TASKNO, taskNo);
 		requester.body.put(Constant.FEEDBACKINFO, feedBackInfo);
-		Request request = httpEngine.createRequest(
-				SystemConfig.NEWIP, gson.toJson(requester));
+		Request request = httpEngine.createRequest(SystemConfig.NEWIP,
+				gson.toJson(requester));
 		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {
 

@@ -1,8 +1,8 @@
 package com.overtech.ems.activity.parttime.tasklist;
 
-import java.io.IOException;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import android.content.Intent;
@@ -11,9 +11,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -37,6 +37,8 @@ import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.route.BaiduMapRoutePlan;
 import com.baidu.mapapi.utils.route.RouteParaOption;
 import com.baidu.mapapi.utils.route.RouteParaOption.EBusStrategyType;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.MyApplication;
@@ -45,10 +47,11 @@ import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.activity.parttime.common.ElevatorDetailActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.config.SystemConfig;
-import com.overtech.ems.entity.bean.CommonBean;
-import com.overtech.ems.entity.bean.TaskPackageDetailBean;
+import com.overtech.ems.entity.bean.Bean;
 import com.overtech.ems.entity.bean.TaskPackageDetailBean.TaskPackage;
 import com.overtech.ems.entity.common.Requester;
+import com.overtech.ems.http.OkHttpClientManager;
+import com.overtech.ems.http.OkHttpClientManager.ResultCallback;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.AppUtils;
 import com.overtech.ems.utils.Logr;
@@ -56,9 +59,7 @@ import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
-import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
 /*
  *任务包详情(任务单模块)
@@ -92,7 +93,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	private boolean isToday;
 	private SwipeRefreshLayout mSwipeLayout;
 	private TaskListPackageDetailAdapter adapter;
-	private List<TaskPackage> list;
+	private List<Map<String, Object>> list;
 	private Set<String> tagSet;
 	private String TAG = "24梯";
 	protected final int LIST_PADDING = 10;// 列表弹窗的间隔
@@ -106,201 +107,16 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	private String certificate;
 	private TaskListPackageDetailActivity activity;
 	private Handler handler = new Handler() {
-
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
-			case StatusCode.PACKAGE_DETAILS_SUCCESS:
-				String json = (String) msg.obj;
-				Logr.e(json);
-				TaskPackageDetailBean bean = gson.fromJson(json,
-						TaskPackageDetailBean.class);
-				int st = bean.st;
-				if (st == -1 || st == -2) {
-					Utilities.showToast(bean.msg, activity);
-					SharePreferencesUtils.put(activity,
-							SharedPreferencesKeys.UID, "");
-					SharePreferencesUtils.put(activity,
-							SharedPreferencesKeys.CERTIFICATED, "");
-					Intent intent = new Intent(activity, LoginActivity.class);
-					startActivity(intent);
-					return;
-				}
-				list = bean.body.data;
-				sPhone = bean.body.partnerPhone;
-				sTaskPackageName = bean.body.taskPackageName;
-				latitude = bean.body.latitude;
-				longitude = bean.body.longitude;
-				destination = new LatLng(Double.valueOf(latitude),
-						Double.valueOf(longitude));
-				maintenanceDate = bean.body.maintenanceDate;
-				sPartnerName = bean.body.partnerName;
-				sZone = bean.body.zone;
-				mTaskNo.setText(sTaskNo);
-				mTaskPackageName.setText(sTaskPackageName);
-				if (sPartnerName == null || sPhone == null) {
-					shareToFriends.setVisibility(View.VISIBLE);
-					dialToPartner.setVisibility(View.GONE);
-				} else {
-					shareToFriends.setVisibility(View.GONE);
-					dialToPartner.setVisibility(View.VISIBLE);
-				}
-				if (null == list || list.size() == 0) {
-					Utilities.showToast("无数据", activity);
-					mDoChargeBack.setVisibility(View.GONE);
-					mDoResponse.setVisibility(View.GONE);
-				} else {
-					int count = 0;// 记录完成电梯的数量
-					for (TaskPackage data : list) {
-						if (data.isFinish.equals("2")) {
-							count++;
-						}
-					}
-					if (count == list.size()) {
-						mDoResponse.setVisibility(View.VISIBLE);
-						mDoResponse.setBackgroundColor(0xff00b9ef);
-						mDoResponse.setTag(ALLCOMPLETE);
-						mDoChargeBack.setVisibility(View.GONE);
-					} else {
-						isToday = Utilities.isToday(maintenanceDate);
-						if (true == isToday) {
-							mDoResponse.setVisibility(View.VISIBLE);
-							mDoResponse.setBackgroundColor(0xffcccccc);
-							mDoResponse.setTag(NOTCOMPLETE);
-							mDoChargeBack.setVisibility(View.GONE);
-						} else {
-							mDoResponse.setVisibility(View.GONE);
-							mDoChargeBack.setVisibility(View.VISIBLE);
-						}
-					}
-					adapter = new TaskListPackageDetailAdapter(activity, list);
-					mTaskListView.setAdapter(adapter);
-				}
-				stopProgressDialog();
-				break;
-			case StatusCode.VALIDATE_TIME_SUCCESS:
-				String time = (String) msg.obj;
-				CommonBean validateBean = gson.fromJson(time, CommonBean.class);
-				int st1 = validateBean.st;
-				if (st1 == -1 || st1 == -2) {
-					Utilities.showToast(validateBean.msg, activity);
-					SharePreferencesUtils.put(activity,
-							SharedPreferencesKeys.UID, "");
-					SharePreferencesUtils.put(activity,
-							SharedPreferencesKeys.CERTIFICATED, "");
-					Intent intent = new Intent(activity, LoginActivity.class);
-					startActivity(intent);
-					return;
-				}
-				String result = validateBean.body.result;
-				if (result.equals("-1")) {
-					Utilities.showToast("该维保单时间已经过期", activity);
-					break;
-				} else if (result.equals("0")) {
-					Utilities.showToast("当天的任务不可以被退单", activity);
-					break;
-				} else if (result.equals("1")) {
-					dialogBuilder.withMessage("72小时内退单会影响星级评定，你确认要退单？");
-				} else {
-					dialogBuilder.withMessage("你确认要退单？");
-				}
-				effect = Effectstype.Slideright;
-				dialogBuilder.withTitle("温馨提示")
-						.withTitleColor(R.color.main_primary)
-						.withDividerColor("#11000000")
-						.withMessageColor(R.color.main_primary)
-						.withDialogColor("#FFFFFFFF")
-						.isCancelableOnTouchOutside(true).withDuration(700)
-						.withEffect(effect)
-						.withButtonDrawable(R.color.main_white)
-						.withButton1Text("取消").withButton1Color("#DD47BEE9")
-						.withButton2Text("确认").withButton2Color("#DD47BEE9")
-						.setButton1Click(new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								dialogBuilder.dismiss();
-							}
-						}).setButton2Click(new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								dialogBuilder.dismiss();
-								startProgressDialog("正在退单...");
-								Requester requester = new Requester();
-								requester.cmd = 20053;
-								requester.certificate = certificate;
-								requester.uid = uid;
-								requester.body.put(Constant.TASKNO, sTaskNo);
-
-								Request request = httpEngine.createRequest(
-										SystemConfig.NEWIP,
-										gson.toJson(requester));
-								Call call = httpEngine
-										.createRequestCall(request);
-								call.enqueue(new com.squareup.okhttp.Callback() {
-
-									@Override
-									public void onResponse(Response response)
-											throws IOException {
-										Message msg = new Message();
-										if (response.isSuccessful()) {
-											msg.what = StatusCode.CHARGEBACK_SUCCESS;
-											msg.obj = response.body().string();
-										} else {
-											msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
-											msg.obj = "服务器异常";
-										}
-										handler.sendMessage(msg);
-									}
-
-									@Override
-									public void onFailure(Request request,
-											IOException e) {
-										Message msg = new Message();
-										msg.what = StatusCode.RESPONSE_NET_FAILED;
-										msg.obj = "网络异常";
-										handler.sendMessage(msg);
-									}
-								});
-							}
-						}).show();
-				break;
-			case StatusCode.CHARGEBACK_SUCCESS:
-				String state = (String) msg.obj;
-				CommonBean chargebackBean = gson.fromJson(state,
-						CommonBean.class);
-				int st2 = chargebackBean.st;
-				if (st2 == -1 || st2 == -2) {
-					Utilities.showToast(chargebackBean.msg, activity);
-					SharePreferencesUtils.put(activity,
-							SharedPreferencesKeys.UID, "");
-					SharePreferencesUtils.put(activity,
-							SharedPreferencesKeys.CERTIFICATED, "");
-					Intent intent = new Intent(activity, LoginActivity.class);
-					startActivity(intent);
-					return;
-				} else {
-					Utilities.showToast(chargebackBean.msg, activity);
-					tagSet.remove(sTaskNo);
-					JPushInterface.setAliasAndTags(getApplicationContext(),
-							null, tagSet, mTagsCallback);
-				}
-				break;
 			case StatusCode.MSG_SET_TAGS:
 				Log.d("24梯", "Set tags in handler.");
 				JPushInterface.setAliasAndTags(getApplicationContext(), null,
 						(Set<String>) msg.obj, mTagsCallback);
 				break;
-			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast((String) msg.obj, activity);
-				stopProgressDialog();
-				break;
-			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast((String) msg.obj, activity);
-				stopProgressDialog();
-				break;
 			default:
 				break;
 			}
-			mSwipeLayout.setRefreshing(false);
 		};
 	};
 
@@ -342,6 +158,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tasklist_package_detail);
 		activity = TaskListPackageDetailActivity.this;
+		stackInstance.pushActivity(activity);
 		initTag();
 		initView();
 		getExtraDataAndInit();
@@ -380,8 +197,6 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	}
 
 	private void initEvent() {
-		stackInstance.pushActivity(activity);
-
 		mSwipeLayout.setOnRefreshListener(this);
 		mSwipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
 				android.R.color.holo_green_light,
@@ -395,11 +210,12 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				TaskPackage detail = (TaskPackage) parent
+				Map<String, Object> detail = (Map<String, Object>) parent
 						.getItemAtPosition(position);
 				Intent intent = new Intent(activity,
 						ElevatorDetailActivity.class);
-				intent.putExtra(Constant.ELEVATORNO, detail.elevatorNo);
+				intent.putExtra(Constant.ELEVATORNO, detail.get("elevatorNo")
+						.toString());
 				startActivity(intent);
 			}
 		});
@@ -529,39 +345,237 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	}
 
 	private void getDataFromServer() {
-		startProgressDialog("正在加载...");
+		startProgressDialog(getResources().getString(
+				R.string.loading_public_default));
 		Requester requester = new Requester();
 		requester.cmd = 20051;
 		requester.certificate = certificate;
 		requester.uid = uid;
 		requester.body.put(Constant.TASKNO, sTaskNo);
-		Request request = httpEngine.createRequest(SystemConfig.NEWIP,
-				gson.toJson(requester));
-		Call call = httpEngine.createRequestCall(request);
-		call.enqueue(new com.squareup.okhttp.Callback() {
+		ResultCallback<Bean> callback = new ResultCallback<Bean>() {
 
 			@Override
-			public void onResponse(Response response) throws IOException {
-				Message msg = new Message();
-				if (response.isSuccessful()) {
-					msg.what = StatusCode.PACKAGE_DETAILS_SUCCESS;
-					msg.obj = response.body().string();
-				} else {
-					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
-					msg.obj = "服务器异常";
+			public void onError(Request request, Exception e) {
+				// TODO Auto-generated method stub
+				stopProgressDialog();
+				if (mSwipeLayout.isRefreshing()) {
+					mSwipeLayout.setRefreshing(false);
 				}
-				handler.sendMessage(msg);
+				Logr.e(request.toString());
 			}
 
 			@Override
-			public void onFailure(Request arg0, IOException arg1) {
-				Message msg = new Message();
-				msg.what = StatusCode.RESPONSE_NET_FAILED;
-				msg.obj = "网络异常";
-				handler.sendMessage(msg);
+			public void onResponse(Bean response) {
+				// TODO Auto-generated method stub
+				stopProgressDialog();
+				if (mSwipeLayout.isRefreshing()) {
+					mSwipeLayout.setRefreshing(false);
+				}
+				int st = response.st;
+				if (st == -1 || st == -2) {
+					Utilities.showToast(response.msg, activity);
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent = new Intent(activity, LoginActivity.class);
+					startActivity(intent);
+					return;
+				} else if (st == 1) {
+					Utilities.showToast(response.msg, activity);
+					return;
+				}
+				list = (List<Map<String, Object>>) response.body.get("data");
+				sPhone = response.body.get("partnerPhone").toString();
+				sTaskPackageName = response.body.get("taskPackageName")
+						.toString();
+				latitude = response.body.get("latitude").toString();
+				longitude = response.body.get("longitude").toString();
+				destination = new LatLng(Double.valueOf(latitude),
+						Double.valueOf(longitude));
+				maintenanceDate = response.body.get("maintenanceDate")
+						.toString();
+				sPartnerName = response.body.get("partnerName").toString();
+				sZone = response.body.get("zone").toString();
+				mTaskNo.setText(sTaskNo);
+				mTaskPackageName.setText(sTaskPackageName);
+				if (TextUtils.isEmpty(sPartnerName)
+						|| TextUtils.isEmpty(sPhone)) {
+					shareToFriends.setVisibility(View.VISIBLE);
+					dialToPartner.setVisibility(View.GONE);
+				} else {
+					shareToFriends.setVisibility(View.GONE);
+					dialToPartner.setVisibility(View.VISIBLE);
+				}
+				if (null == list || list.size() == 0) {
+					Utilities
+							.showToast(
+									getResources().getString(
+											R.string.response_no_data),
+									activity);
+					mDoChargeBack.setVisibility(View.GONE);
+					mDoResponse.setVisibility(View.GONE);
+				} else {
+
+					adapter = new TaskListPackageDetailAdapter(activity, list);
+					mTaskListView.setAdapter(adapter);
+					int count = 0;// 记录完成电梯的数量
+					for (Map<String, Object> data : list) {
+						if (data.get("isFinish").equals("2")) {
+							count++;
+						}
+					}
+					if (count == list.size()) {
+						mDoResponse.setVisibility(View.VISIBLE);
+						mDoResponse.setBackgroundColor(0xff00b9ef);
+						mDoResponse.setTag(ALLCOMPLETE);
+						mDoChargeBack.setVisibility(View.GONE);
+					} else {
+						isToday = Utilities.isToday(maintenanceDate);
+						Logr.e("==是不是当天==" + isToday);
+						if (isToday) {
+							mDoResponse.setVisibility(View.VISIBLE);
+							mDoResponse.setBackgroundColor(0xffcccccc);
+							mDoResponse.setTag(NOTCOMPLETE);
+							mDoChargeBack.setVisibility(View.GONE);
+						} else {
+							mDoResponse.setVisibility(View.GONE);
+							mDoChargeBack.setVisibility(View.VISIBLE);
+						}
+					}
+
+				}
+			}
+		};
+		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
+				gson.toJson(requester));
+	}
+
+	private void validateChargebackTime() {
+		startProgressDialog(getResources().getString(
+				R.string.loading_public_default));
+		Requester requestVali = new Requester();
+		requestVali.cmd = 20052;
+		requestVali.certificate = certificate;
+		requestVali.uid = uid;
+		requestVali.body.put(Constant.TASKNO, sTaskNo);
+		ResultCallback<Bean> callback = new ResultCallback<Bean>() {
+
+			@Override
+			public void onError(Request request, Exception e) {
+				// TODO Auto-generated method stub
+				stopProgressDialog();
+				if (mSwipeLayout.isRefreshing()) {
+					mSwipeLayout.setRefreshing(false);
+				}
+				Logr.e(request.toString());
 			}
 
-		});
+			@Override
+			public void onResponse(Bean response) {
+				// TODO Auto-generated method stub
+				stopProgressDialog();
+				if (mSwipeLayout.isRefreshing()) {
+					mSwipeLayout.setRefreshing(false);
+				}
+				int st = response.st;
+				if (st == -1 || st == -2) {
+					Utilities.showToast(response.msg, activity);
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent = new Intent(activity, LoginActivity.class);
+					startActivity(intent);
+					return;
+				} else if (st == 1) {
+					Utilities.showToast(response.msg, activity);
+					return;
+				}
+				String result = response.body.get("result").toString();
+				if (result.equals("-1")) {
+					Utilities.showToast(response.msg, activity);
+					return;
+				} else if (result.equals("0")) {
+					Utilities.showToast(response.msg, activity);
+					return;
+				} else if (result.equals("1")) {
+					dialogBuilder.withMessage("72小时内退单会影响星级评定，你确认要退单？");
+				} else {
+					dialogBuilder.withMessage("你确认要退单？");
+				}
+				effect = Effectstype.Slideright;
+				dialogBuilder.withTitle("温馨提示")
+						.withTitleColor(R.color.main_primary)
+						.withDividerColor("#11000000")
+						.withMessageColor(R.color.main_primary)
+						.withDialogColor("#FFFFFFFF")
+						.isCancelableOnTouchOutside(true).withDuration(700)
+						.withEffect(effect)
+						.withButtonDrawable(R.color.main_white)
+						.withButton1Text("取消").withButton1Color("#DD47BEE9")
+						.withButton2Text("确认").withButton2Color("#DD47BEE9")
+						.setButton1Click(new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								dialogBuilder.dismiss();
+							}
+						}).setButton2Click(new View.OnClickListener() {
+							@Override
+							public void onClick(View v) {
+								dialogBuilder.dismiss();
+								chargeback();
+							}
+						}).show();
+			}
+		};
+		String jsonData = gson.toJson(requestVali);
+		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback, jsonData);
+	}
+
+	private void chargeback() {
+		startProgressDialog("正在退单...");
+		Requester requester = new Requester();
+		requester.cmd = 20053;
+		requester.certificate = certificate;
+		requester.uid = uid;
+		requester.body.put(Constant.TASKNO, sTaskNo);
+		ResultCallback<Bean> callback = new ResultCallback<Bean>() {
+
+			@Override
+			public void onError(Request request, Exception e) {
+				// TODO Auto-generated method stub
+				stopProgressDialog();
+				Logr.e(request.toString());
+			}
+
+			@Override
+			public void onResponse(Bean response) {
+				// TODO Auto-generated method stub
+				stopProgressDialog();
+				int st = response.st;
+				if (st == -1 || st == -2) {
+					Utilities.showToast(response.msg, activity);
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent = new Intent(activity, LoginActivity.class);
+					startActivity(intent);
+					return;
+				} else if (st == 1) {
+					Utilities.showToast(response.msg, activity);
+					return;
+				} else {
+					Utilities.showToast(response.msg, activity);
+					tagSet.remove(sTaskNo);
+					JPushInterface.setAliasAndTags(getApplicationContext(),
+							null, tagSet, mTagsCallback);
+				}
+			}
+		};
+		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
+				gson.toJson(requester));
 	}
 
 	@Override
@@ -571,38 +585,9 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			stackInstance.popActivity(activity);
 			break;
 		case R.id.bt_cancle_task:
-			Requester requester = new Requester();
-			requester.cmd = 20052;
-			requester.certificate = certificate;
-			requester.uid = uid;
-			requester.body.put(Constant.TASKNO, mTaskNo);
+			Logr.e("退单验证时间==");
+			validateChargebackTime();
 
-			Request request = httpEngine.createRequest(SystemConfig.NEWIP,
-					gson.toJson(requester));
-			Call call = httpEngine.createRequestCall(request);
-			call.enqueue(new com.squareup.okhttp.Callback() {
-
-				@Override
-				public void onFailure(Request request, IOException e) {
-					Message msg = new Message();
-					msg.what = StatusCode.RESPONSE_NET_FAILED;
-					msg.obj = "网络异常";
-					handler.sendMessage(msg);
-				}
-
-				@Override
-				public void onResponse(Response response) throws IOException {
-					Message msg = new Message();
-					if (response.isSuccessful()) {
-						msg.what = StatusCode.VALIDATE_TIME_SUCCESS;
-						msg.obj = response.body().string();
-					} else {
-						msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
-						msg.obj = "服务器异常";
-					}
-					handler.sendMessage(msg);
-				}
-			});
 			break;
 		case R.id.bt_next_response:
 			if (mDoResponse.getTag().equals(ALLCOMPLETE)) {
@@ -614,9 +599,9 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				startActivity(intent);
 			} else if (mDoResponse.getTag().equals(NOTCOMPLETE)) {
 				Utilities.showToast("您还有未完成的电梯", activity);
-			}else{
+			} else {
 				Utilities.showToast("请查看所有电梯是否完成", activity);
-				
+
 			}
 			break;
 		case R.id.iv_navicate_right:

@@ -71,11 +71,13 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 	private DatePicker dpWorkLicenseDue;// 上岗证到期时间
 	private String uid;
 	private String certificate;
+	private String mWorkNo;
 	private PersonalDeatilsActivity activity;
 	private final String CHANGEPHONE = "0";
 	private final String RESETPASSWORD = "1";
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
+			stopProgressDialog();
 			switch (msg.what) {
 			case StatusCode.PERSONAL_DETAIL_SUCCESS:
 				String json = (String) msg.obj;
@@ -97,7 +99,7 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 				String name = bean.body.name;
 				String phone = bean.body.phone;
 				String registerTime = bean.body.registerTime;
-				String workNo = bean.body.workNo;
+				mWorkNo = bean.body.workNo;
 				if (avatorUrl == null || "none".equals(avatorUrl)) {
 					avator.setScaleType(ScaleType.FIT_XY);
 					avator.setImageResource(STUB_ID);
@@ -122,20 +124,19 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 				mPhone.setText(phone);
 				mId.setText(id);
 				mName.setText(name);
-				mCertificateNo.setText(workNo);
+				mCertificateNo.setText(mWorkNo);
 				mRegisterDate.setText(registerTime);
 				mRatingBar.setRating(rate);
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast((String) msg.obj, activity);
+				Utilities.showToast(R.string.response_failure_msg, activity);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast((String) msg.obj, activity);
+				Utilities.showToast(R.string.request_error_msg, activity);
 				break;
 			default:
 				break;
 			}
-			stopProgressDialog();
 		}
 
 		;
@@ -152,7 +153,7 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 	}
 
 	private void startLoading() {
-		startProgressDialog("正在加载...");
+		startProgressDialog(getResources().getString(R.string.loading_public_default));
 		Requester requester = new Requester();
 		requester.uid = uid;
 		requester.certificate = certificate;
@@ -259,6 +260,7 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 			dpWorkLicenseDue = (DatePicker) workLicenseView
 					.findViewById(R.id.datepicker_worklicense_due);
 		}
+		etWorkLicenseNo.setText(mWorkNo);
 		if (builder == null) {
 			builder = new AlertDialog.Builder(activity)
 					.setTitle("更新上岗证书及到期时间")
@@ -314,6 +316,7 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 
 	private void startUpload(final String worklicenseNo, String date) {
 		// TODO Auto-generated method stub
+		startProgressDialog(getResources().getString(R.string.loading_public_default));
 		Requester requester = new Requester();
 		requester.cmd = 20080;
 		requester.uid = uid;
@@ -325,14 +328,16 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 			@Override
 			public void onError(Request request, Exception e) {
 				// TODO Auto-generated method stub
+				stopProgressDialog();
 				Logr.e(request.toString());
 			}
 
 			@Override
 			public void onResponse(Bean response) {
 				// TODO Auto-generated method stub
+				stopProgressDialog();
 				if (response == null) {
-					Utilities.showToast("无数据", activity);
+					Utilities.showToast(R.string.response_no_data, activity);
 					return;
 				}
 				int st = response.st;

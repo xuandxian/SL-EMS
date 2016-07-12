@@ -1,26 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal" >
 
-    <TextView
-        android:id="@+id/tv_maintenance_item_name"
-        android:layout_width="0dp"
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
-        android:layout_weight="1"
-        android:text="fj" />
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        app:contentPadding="16dp" >
 
-    <CheckBox
-        android:id="@+id/cb_maintenance_detail"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="8dp"
-        android:clickable="false" 
-        android:focusable="false"
-        />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_maintenance_item_name"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="fj"
+                android:textColor="@color/material_deep_teal_200"
+                android:textSize="18sp" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_maintenance_item_code"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="hg"
+                android:textColor="@color/material_deep_teal_200"
+                android:textSize="18sp" />
+
+            <android.support.v7.widget.AppCompatCheckBox
+                android:id="@+id/cb_maintenance_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:clickable="false"
+                android:focusable="false" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
 
 </LinearLayout>

@@ -22,4 +22,5 @@
     <dimen name="maintenance_task_size">36sp</dimen>
     <dimen name="maintenance_task_sub_size">24sp</dimen>
 
+    <dimen name="text_size_no_data">32sp</dimen>
 </resources>

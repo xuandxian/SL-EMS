@@ -12,7 +12,9 @@
         <ListView
             android:id="@+id/lv_maintenance_none"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:divider="@android:color/transparent"
+            android:listSelector="@android:color/transparent" >
         </ListView>
     </android.support.v4.widget.SwipeRefreshLayout>
 

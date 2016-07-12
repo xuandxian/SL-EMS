@@ -38,6 +38,7 @@ public class PersonalBoundsActivity extends BaseActivity implements
 	private TextView mHeadContent;
 	// private ExpandableListView mPersonalAccountListView;
 	private ListView mPersonalAccountListView;
+	private TextView tvNoData;
 	private PersonalBonusListAdapter adapter;
 	private List<Map<String, Object>> list;
 	private PersonalBoundsActivity activity;
@@ -45,6 +46,7 @@ public class PersonalBoundsActivity extends BaseActivity implements
 	private String certificate;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
+			stopProgressDialog();
 			switch (msg.what) {
 			case StatusCode.PERSONAL_BOUNDS_SUCCESS:
 				String json = (String) msg.obj;
@@ -62,24 +64,27 @@ public class PersonalBoundsActivity extends BaseActivity implements
 				} else {
 					list = (List<Map<String, Object>>) bean.body.get("data");
 					if (list == null || list.size() == 0) {
-						Utilities.showToast("无数据", activity);
+						tvNoData.setVisibility(View.VISIBLE);
+						mPersonalAccountListView.setVisibility(View.GONE);
+						Utilities.showToast(
+								getString(R.string.response_no_data), activity);
 					} else {
+						tvNoData.setVisibility(View.GONE);
+						mPersonalAccountListView.setVisibility(View.VISIBLE);
 						adapter = new PersonalBonusListAdapter(list, activity);
 						mPersonalAccountListView.setAdapter(adapter);
 					}
 				}
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				String exception = (String) msg.obj;
-				Utilities.showToast(exception, activity);
+				Utilities.showToast(R.string.response_failure_msg, activity);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast((String) msg.obj, activity);
+				Utilities.showToast(R.string.request_error_msg, activity);
 				break;
 			default:
 				break;
 			}
-			stopProgressDialog();// 加载完成后dialog消失
 		};
 	};
 
@@ -97,23 +102,25 @@ public class PersonalBoundsActivity extends BaseActivity implements
 		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
 		// mPersonalAccountListView=(ExpandableListView)findViewById(R.id.lv_personal_account_list);
 		mPersonalAccountListView = (ListView) findViewById(R.id.lv_personal_account_list);
+		tvNoData = (TextView) findViewById(R.id.tv_no_data);
 	}
 
 	private void initData() {
+		activity = PersonalBoundsActivity.this;
 		uid = (String) SharePreferencesUtils.get(activity,
 				SharedPreferencesKeys.UID, "");
 		certificate = (String) SharePreferencesUtils.get(activity,
 				SharedPreferencesKeys.CERTIFICATED, "");
 		mDoBack.setVisibility(View.VISIBLE);
 		mHeadContent.setText("奖励记录");
-		activity = PersonalBoundsActivity.this;
 		stackInstance.pushActivity(activity);
 		mDoBack.setOnClickListener(this);
 		startLoading();
 	}
 
 	private void startLoading() {
-		startProgressDialog("正在加载...");
+		startProgressDialog(getResources().getString(
+				R.string.loading_public_default));
 		Requester requester = new Requester();
 		requester.cmd = 20075;
 		requester.certificate = certificate;

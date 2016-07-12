@@ -22,21 +22,25 @@ import android.widget.Toast;
  * @author Tony 2015-10-08
  */
 public class Utilities {
-	public static String format2decimal(double num){
-		NumberFormat format=NumberFormat.getInstance();
+	public static String format2decimal(double num) {
+		NumberFormat format = NumberFormat.getInstance();
 		format.setMaximumFractionDigits(2);
 		return format.format(num);
 	}
-	public static String getCurProcessName(Context ctx){
-		int pid=android.os.Process.myPid();
-		ActivityManager am=(ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
-		for(ActivityManager.RunningAppProcessInfo appProcess: am.getRunningAppProcesses()){
-			if(appProcess.pid==pid){
+
+	public static String getCurProcessName(Context ctx) {
+		int pid = android.os.Process.myPid();
+		ActivityManager am = (ActivityManager) ctx
+				.getSystemService(Context.ACTIVITY_SERVICE);
+		for (ActivityManager.RunningAppProcessInfo appProcess : am
+				.getRunningAppProcesses()) {
+			if (appProcess.pid == pid) {
 				return appProcess.processName;
 			}
 		}
 		return "";
 	}
+
 	/**
 	 * 公用提示框
 	 * 
@@ -46,9 +50,19 @@ public class Utilities {
 	public static void showToast(CharSequence message, Context context) {
 		int duration = Toast.LENGTH_SHORT;
 
-		Toast toast = Toast.makeText(context.getApplicationContext(), message,
-				duration);
+		Toast toast = Toast.makeText(context, message, duration);
 		toast.show();
+	}
+
+	/**
+	 * 公用提示框
+	 * 
+	 * @param resId
+	 * @param context
+	 */
+	public static void showToast(int resId, Context context) {
+		String res = context.getResources().getString(resId);
+		Toast.makeText(context, res, Toast.LENGTH_LONG).show();
 	}
 
 	@SuppressLint("SimpleDateFormat")
@@ -194,7 +208,7 @@ public class Utilities {
 		}
 		return ret;
 	}
-	
+
 	public static boolean isAllChinese(String s) {
 		String string = "([\\u4E00-\\u9FA5\\\\P{p}]){2,4}";
 		Pattern p = Pattern.compile(string);
@@ -208,41 +222,41 @@ public class Utilities {
 	 * @param c
 	 * @return
 	 */
-//	public static boolean isChinese(char c) {
-//		boolean flag = false;
-//		Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
-//		if (ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS
-//				|| ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS
-//				|| ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A
-//				|| ub == Character.UnicodeBlock.GENERAL_PUNCTUATION
-//				|| ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
-//				|| ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS) {
-//			flag = true;
-//		} else {
-//			flag = false;
-//		}
-//		return flag;
-//	}
-//
-//	// 完整的判断中文汉字和符号
-//	public static boolean isChinese(String strName) {
-//		boolean flag = false;
-//		int count = 0;
-//		if (strName.length()>=2&&strName.length()<=4) {
-//			char[] ch = strName.toCharArray();
-//			for (int i = 0; i < ch.length; i++) {
-//				char c = ch[i];
-//				if (isChinese(c)) {
-//					count++;
-//				}
-//			}
-//			if (count == strName.length()) {
-//				flag = true;
-//			}
-//		}else {
-//			flag=false;
-//		}
-//		return flag;
-//	}
+	// public static boolean isChinese(char c) {
+	// boolean flag = false;
+	// Character.UnicodeBlock ub = Character.UnicodeBlock.of(c);
+	// if (ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS
+	// || ub == Character.UnicodeBlock.CJK_COMPATIBILITY_IDEOGRAPHS
+	// || ub == Character.UnicodeBlock.CJK_UNIFIED_IDEOGRAPHS_EXTENSION_A
+	// || ub == Character.UnicodeBlock.GENERAL_PUNCTUATION
+	// || ub == Character.UnicodeBlock.CJK_SYMBOLS_AND_PUNCTUATION
+	// || ub == Character.UnicodeBlock.HALFWIDTH_AND_FULLWIDTH_FORMS) {
+	// flag = true;
+	// } else {
+	// flag = false;
+	// }
+	// return flag;
+	// }
+	//
+	// // 完整的判断中文汉字和符号
+	// public static boolean isChinese(String strName) {
+	// boolean flag = false;
+	// int count = 0;
+	// if (strName.length()>=2&&strName.length()<=4) {
+	// char[] ch = strName.toCharArray();
+	// for (int i = 0; i < ch.length; i++) {
+	// char c = ch[i];
+	// if (isChinese(c)) {
+	// count++;
+	// }
+	// }
+	// if (count == strName.length()) {
+	// flag = true;
+	// }
+	// }else {
+	// flag=false;
+	// }
+	// return flag;
+	// }
 
 }

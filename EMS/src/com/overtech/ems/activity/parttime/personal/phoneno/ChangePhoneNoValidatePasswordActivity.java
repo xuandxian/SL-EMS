@@ -53,6 +53,7 @@ public class ChangePhoneNoValidatePasswordActivity extends BaseActivity
 	private String certificate;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
+			stopProgressDialog();
 			switch (msg.what) {
 			case StatusCode.RESPONSE_VALICATE_PASSWORD_SUCCESS:
 				String json = (String) msg.obj;
@@ -89,14 +90,11 @@ public class ChangePhoneNoValidatePasswordActivity extends BaseActivity
 					}
 				}
 				break;
-			case StatusCode.RESPONSE_VALICATE_PASSWORD_FAILURE:
-				Utilities.showToast("密码错误", activity);
-				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast("服务端异常", activity);
+				Utilities.showToast(R.string.response_failure_msg, activity);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast("网络异常", activity);
+				Utilities.showToast(R.string.response_no_data, activity);
 				break;
 			}
 			stopProgressDialog();
@@ -156,7 +154,7 @@ public class ChangePhoneNoValidatePasswordActivity extends BaseActivity
 	}
 
 	private void valicatePassword(String phoneNo, String password) {
-		startProgressDialog("正在验证...");
+		startProgressDialog(getResources().getString(R.string.loading_public_default));
 		Requester requester = new Requester();
 		requester.cmd = 20072;
 		requester.uid = uid;

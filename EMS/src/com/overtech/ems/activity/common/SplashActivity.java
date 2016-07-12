@@ -1,29 +1,18 @@
 package com.overtech.ems.activity.common;
 
-import java.io.IOException;
-import java.util.Date;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Message;
 import android.text.TextUtils;
 import android.view.WindowManager;
 import cn.jpush.android.api.JPushInterface;
-import com.google.gson.Gson;
+
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
-import com.overtech.ems.config.StatusCode;
-import com.overtech.ems.entity.common.ServicesConfig;
-import com.overtech.ems.entity.parttime.Employee;
 import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
-import com.overtech.ems.utils.Utilities;
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
 /**
  * @author Will

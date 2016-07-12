@@ -63,7 +63,7 @@ public class PersonalAccountNoCountAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		holder.mTaskName.setText(data.get("projectName").toString());
+		holder.mTaskName.setText(data.get("taskPackageName").toString());
 		holder.mMaintenanceTime.setText(data.get("maintenanceDate").toString());
 		holder.mTaskNo.setText(data.get("taskNo").toString());
 		holder.mTaskMoney.setText("￥" + data.get("totalPrice"));
@@ -75,5 +75,10 @@ public class PersonalAccountNoCountAdapter extends BaseAdapter {
 		public TextView mMaintenanceTime;
 		public TextView mTaskNo;
 		public TextView mTaskMoney;
+	}
+
+	public void setData(List<Map<String, Object>> data) {
+		// TODO Auto-generated method stub
+		this.list=data;
 	}
 }

@@ -56,6 +56,7 @@ public class NearByFragment extends BaseFragment implements OnClickListener {
 	private Handler handler = new Handler() {
 
 		public void handleMessage(android.os.Message msg) {
+			stopProgressDialog();
 			switch (msg.what) {
 			case StatusCode.GET_DATA_BY_MYLOCATION_SUCCESS:
 				String json = (String) msg.obj;
@@ -72,6 +73,8 @@ public class NearByFragment extends BaseFragment implements OnClickListener {
 					Intent intent = new Intent(activity, LoginActivity.class);
 					startActivity(intent);
 					return;
+				}else if(st==1){//上岗证相关
+					Utilities.showToast(tasks.msg, activity);
 				}
 				list = tasks.body.data;
 				if (listener != null) {
@@ -79,13 +82,12 @@ public class NearByFragment extends BaseFragment implements OnClickListener {
 				}
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast("服务器异常", activity);
+				Utilities.showToast(R.string.response_failure_msg, activity);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast("网络异常", activity);
+				Utilities.showToast(R.string.request_error_msg, activity);
 				break;
 			}
-			stopProgressDialog();
 		};
 	};
 
@@ -107,6 +109,7 @@ public class NearByFragment extends BaseFragment implements OnClickListener {
 			Utilities.showToast("定位失败！！！", activity);
 			return;
 		} else {
+			startProgressDialog("正在加载中...");
 			Requester requester = new Requester();
 			requester.cmd = 20030;
 			requester.certificate = certificate;
@@ -129,7 +132,24 @@ public class NearByFragment extends BaseFragment implements OnClickListener {
 				currentFragment, NearByMapFragment.class, null);
 		mNearByMap = (NearByMapFragment) currentFragment;
 	}
-
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		// TODO Auto-generated method stub
+		super.onHiddenChanged(hidden);
+		Logr.e("当前的隐藏状态=="+hidden);
+		if(!hidden){
+			if(list==null||list.size()==0){
+				startProgressDialog("加载中...");
+				Requester requester = new Requester();
+				requester.cmd = 20030;
+				requester.certificate = certificate;
+				requester.uid = uid;
+				requester.body.put("latitude", String.valueOf(mLatitude));
+				requester.body.put("longitude", String.valueOf(mLongitude));
+				getDataByLocation(SystemConfig.NEWIP, gson.toJson(requester));
+			}
+		}
+	}
 	private void getDataByLocation(String url, String jsonData) {
 		Request request = httpEngine.createRequest(url, jsonData);
 		Call call = httpEngine.createRequestCall(request);

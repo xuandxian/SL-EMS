@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TextView;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 
@@ -38,6 +39,7 @@ import com.overtech.ems.entity.bean.TaskPackageBean.TaskPackage;
 import com.overtech.ems.entity.common.Requester;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.AppUtils;
+import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
@@ -57,6 +59,7 @@ public class NearByListFragment extends BaseFragment {
 
 	private SwipeMenuListView mNearBySwipeListView;
 	private SwipeMenuCreator creator;
+	private TextView tvNoData;
 	private Activity mActivity;
 	private Effectstype effect;
 	private List<TaskPackage> list;
@@ -73,6 +76,7 @@ public class NearByListFragment extends BaseFragment {
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case StatusCode.GRAG_RESPONSE_SUCCESS:
+				stopProgressDialog();
 				String status = (String) msg.obj;
 				StatusCodeBean bean = gson.fromJson(status,
 						StatusCodeBean.class);
@@ -89,9 +93,9 @@ public class NearByListFragment extends BaseFragment {
 				}
 				String content = bean.body.get("status").toString();
 				if (TextUtils.equals(content, "0")) {
-					Utilities.showToast("请不要重复抢单", activity);
+					Utilities.showToast(bean.msg, activity);
 				} else if (TextUtils.equals(content, "1")) {
-					Utilities.showToast("抢单成功，等待第二个人抢", activity);
+					Utilities.showToast(bean.msg, activity);
 					tagItem = bean.body.get("taskNo").toString();
 					if (!AppUtils.isValidTagAndAlias(tagItem)) {
 						Utilities.showToast("格式不对", activity);
@@ -102,7 +106,7 @@ public class NearByListFragment extends BaseFragment {
 								mTagsCallback);
 					}
 				} else if (TextUtils.equals(content, "2")) {
-					Utilities.showToast("抢单成功，请到任务中查看", activity);
+					Utilities.showToast(bean.msg, activity);
 					// 推送业务代码
 					tagItem = bean.body.get("taskNo").toString();
 					if (!AppUtils.isValidTagAndAlias(tagItem)) {
@@ -114,11 +118,11 @@ public class NearByListFragment extends BaseFragment {
 								mTagsCallback);
 					}
 				} else if (TextUtils.equals(content, "3")) {
-					Utilities.showToast("差一点就抢到了", activity);
+					Utilities.showToast(bean.msg, activity);
 				} else if (TextUtils.equals(content, "4")) {
-					Utilities.showToast("维保日期的电梯数量已经超过10台，不能够再抢单。", activity);
+					Utilities.showToast(bean.msg, activity);
 				} else {
-					Utilities.showToast("用户账户异常", activity);
+					Utilities.showToast(bean.msg, activity);
 					Intent intent = new Intent(getActivity(),
 							LoginActivity.class);
 					startActivity(intent);
@@ -131,10 +135,10 @@ public class NearByListFragment extends BaseFragment {
 						mTagsCallback);
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast("服务器异常", activity);
+				Utilities.showToast(R.string.response_failure_msg, activity);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast("网络异常", activity);
+				Utilities.showToast(R.string.request_error_msg, activity);
 				break;
 			}
 			stopProgressDialog();
@@ -184,6 +188,10 @@ public class NearByListFragment extends BaseFragment {
 		Set<String> tempSet = (Set<String>) SharePreferencesUtils.get(
 				mActivity, SharedPreferencesKeys.TAGSET,
 				new LinkedHashSet<String>());
+
+		mNearBySwipeListView = (SwipeMenuListView) view
+				.findViewById(R.id.sl_nearby_listview);
+		tvNoData = (TextView) view.findViewById(R.id.tv_no_data);
 		getExtralData();
 		initListView(view);
 		return view;
@@ -198,9 +206,41 @@ public class NearByListFragment extends BaseFragment {
 		myLocation = new LatLng(latitude, longitude);
 	}
 
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		// TODO Auto-generated method stub
+		super.onHiddenChanged(hidden);
+		Logr.e("nearbylist fragment=="+hidden);
+		if (!hidden) {
+			if (list == null || list.size() == 0) {
+				list = ((NearByFragment) getParentFragment()).getData();
+				if (list == null || list.size() == 0) {
+					mNearBySwipeListView.setVisibility(View.GONE);
+					tvNoData.setVisibility(View.VISIBLE);
+				} else {
+					mNearBySwipeListView.setVisibility(View.VISIBLE);
+					tvNoData.setVisibility(View.GONE);
+				}
+				if (mAdapter != null) {
+					mAdapter.setData(list);
+					mAdapter.notifyDataSetChanged();
+				} else {
+					mAdapter = new GrabTaskAdapter(list, mActivity);
+					mNearBySwipeListView.setAdapter(mAdapter);
+				}
+			}
+		}
+	}
+
 	private void initListView(View view) {
-		mNearBySwipeListView = (SwipeMenuListView) view
-				.findViewById(R.id.sl_nearby_listview);
+		if (list == null || list.size() == 0) {
+			tvNoData.setVisibility(View.VISIBLE);
+			mNearBySwipeListView.setVisibility(View.GONE);
+		} else {
+			tvNoData.setVisibility(View.GONE);
+			mNearBySwipeListView.setVisibility(View.VISIBLE);
+		}
+
 		creator = new SwipeMenuCreator() {
 			@Override
 			public void create(SwipeMenu menu) {
@@ -266,7 +306,8 @@ public class NearByListFragment extends BaseFragment {
 					public void onClick(View v) {
 						dialogBuilder.dismiss();
 						String mTaskNo = list.get(position).taskNo;
-						startProgressDialog("正在抢单...");
+						startProgressDialog(getResources().getString(
+								R.string.loading_public_default));
 						Requester requester = new Requester();
 						requester.cmd = 20023;
 						requester.uid = uid;

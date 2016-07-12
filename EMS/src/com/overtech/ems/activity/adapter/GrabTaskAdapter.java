@@ -41,7 +41,6 @@ public class GrabTaskAdapter extends BaseAdapter {
 		curLongitude = ((MyApplication) context.getApplicationContext()).longitude;
 		mLocation = new LatLng(curLatitude, curLongitude);
 	}
-
 	@Override
 	public int getCount() {
 		return list == null ? 0 : list.size();

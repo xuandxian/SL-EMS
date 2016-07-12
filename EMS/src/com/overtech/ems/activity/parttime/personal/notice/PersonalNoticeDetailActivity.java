@@ -19,6 +19,7 @@ import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.AnnouncementBean;
 import com.overtech.ems.entity.common.Requester;
 import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
@@ -43,9 +44,11 @@ public class PersonalNoticeDetailActivity extends BaseActivity {
 	private String certificate;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
+			stopProgressDialog();
 			switch (msg.what) {
 			case StatusCode.ANNOUNCEMENT_SUCCESS:
 				String json = (String) msg.obj;
+				Logr.e(json);
 				AnnouncementBean bean = gson.fromJson(json,
 						AnnouncementBean.class);
 				int st = bean.st;
@@ -68,11 +71,11 @@ public class PersonalNoticeDetailActivity extends BaseActivity {
 				mAnnouncementTheme.setText(bean.body.get("theme").toString());
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast((String) msg.obj,
+				Utilities.showToast(R.string.response_failure_msg,
 						PersonalNoticeDetailActivity.this);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast((String) msg.obj,
+				Utilities.showToast(R.string.request_error_msg,
 						PersonalNoticeDetailActivity.this);
 				break;
 			default:
@@ -97,12 +100,13 @@ public class PersonalNoticeDetailActivity extends BaseActivity {
 	}
 
 	private void initData() {
-		startProgressDialog("正在加载中...");
+		startProgressDialog(getResources().getString(R.string.loading_public_default));
 		String id = getIntent().getExtras().getString(Constant.ANNOUNCEMENTID);
 		Requester requester = new Requester();
 		requester.cmd = 20078;
 		requester.uid = uid;
 		requester.certificate = certificate;
+		requester.body.put("id", id);
 		Request request = httpEngine.createRequest(SystemConfig.NEWIP,
 				gson.toJson(requester));
 		Call call = httpEngine.createRequestCall(request);

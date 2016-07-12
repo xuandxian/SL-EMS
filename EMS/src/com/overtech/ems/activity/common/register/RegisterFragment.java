@@ -1,8 +1,7 @@
 package com.overtech.ems.activity.common.register;
 
 import java.io.IOException;
-import org.json.JSONException;
-import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -18,14 +17,13 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.CommonBean;
 import com.overtech.ems.entity.common.Requester;
-import com.overtech.ems.entity.common.ServicesConfig;
-import com.overtech.ems.http.HttpEngine.Param;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.Utilities;
@@ -50,6 +48,7 @@ public class RegisterFragment extends BaseFragment {
 	private RegFraBtnClickListener listener;
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
+			stopProgressDialog();
 			switch (msg.what) {
 			case StatusCode.SUBMIT_PHONENO_SUCCESS:
 				String json = (String) msg.obj;
@@ -75,10 +74,10 @@ public class RegisterFragment extends BaseFragment {
 				}
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast("服务器异常", mContext);
+				Utilities.showToast(R.string.response_failure_msg, mContext);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast("网络异常", mContext);
+				Utilities.showToast(R.string.request_error_msg, mContext);
 				break;
 			default:
 				break;
@@ -154,6 +153,7 @@ public class RegisterFragment extends BaseFragment {
 		// TODO Auto-generated method stub
 		mPhoneNo = mRegisterPhone.getText().toString().trim();
 		if (!TextUtils.isEmpty(mPhoneNo) && Utilities.isMobileNO(mPhoneNo)) {
+			startProgressDialog("获取中...");
 			Requester requester = new Requester();
 			requester.cmd = 10;
 			requester.body.put(Constant.FLAG, "0");// 当手机号没有注册过时发送验证码
@@ -193,6 +193,7 @@ public class RegisterFragment extends BaseFragment {
 		if (TextUtils.isEmpty(validateCode)) {
 			Utilities.showToast("验证码不能为空", mContext);
 		} else {
+			startProgressDialog("提交中...");
 			Requester requester = new Requester();
 			requester.cmd = 11;
 			requester.body.put(Constant.SMSCODE, validateCode);

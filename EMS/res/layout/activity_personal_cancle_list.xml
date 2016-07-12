@@ -10,6 +10,15 @@
         android:id="@+id/lv_cancle_task_record"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        ></ListView>
+        />
+    <TextView 
+        android:id="@+id/tv_no_data"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:textSize="@dimen/text_size_no_data"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="暂无退单信息"
+        />
 
 </LinearLayout>

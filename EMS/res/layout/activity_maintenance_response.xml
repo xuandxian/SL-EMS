@@ -6,16 +6,18 @@
 
     <include layout="@layout/headview" />
 
-    <EditText
+    <android.support.v7.widget.AppCompatEditText
         android:id="@+id/et_current_situcation"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_weight="2"
+        android:background="@drawable/shape_input_search"
+        android:gravity="top"
         android:hint="输入现场情况" />
 
-    <EditText
+    <android.support.v7.widget.AppCompatEditText
         android:id="@+id/et_maintenance_result"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -23,14 +25,21 @@
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:layout_weight="3"
+        android:background="@drawable/shape_input_search"
+        android:gravity="top"
         android:hint="输入维修结果" />
 
     <Button
         android:id="@+id/bt_submit"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:background="@drawable/abc_btn_colored_material"
+        android:layout_marginLeft="32dp"
+        android:layout_marginRight="32dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/shape_button_visiable"
+        android:textColor="@color/main_white"
         android:text="提交" />
 
 </LinearLayout>

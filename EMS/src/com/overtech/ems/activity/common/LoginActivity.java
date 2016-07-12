@@ -124,7 +124,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
-		startProgressDialog("正在登录...");
+		startProgressDialog(getResources().getString(R.string.loading_public_login));
 		Requester requester = new Requester();
 		requester.cmd = 1;
 		requester.pwd = encryptPassword;
@@ -135,7 +135,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			public void onError(Request request, Exception e) {
 				// TODO Auto-generated method stub
 				stopProgressDialog();
-				Utilities.showToast("服务器维护中，请稍后重新尝试", ctx);
+				Utilities.showToast(R.string.request_error_msg, ctx);
 				Logr.e(request.toString(), ctx);
 			}
 
@@ -144,7 +144,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 				// TODO Auto-generated method stub
 				stopProgressDialog();
 				if (response == null) {
-					Utilities.showToast("登录失败，请重试", ctx);
+					Utilities.showToast(R.string.response_no_object, ctx);
 					return;
 				}
 				int st = response.st;

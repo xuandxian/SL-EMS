@@ -4,5 +4,4 @@
     <item
         android:id="@+id/menu_site_tel"
         android:title="@string/site_tel"/>
-
 </menu>

@@ -88,9 +88,9 @@ public class QueryTaskListActivity extends BaseActivity implements
 	ArrayList<MaintenanceType> list = new ArrayList<MaintenanceType>();
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
+			stopProgressDialog();
 			switch (msg.what) {
 			case StatusCode.QUERY_TASK_PACKAGE_ELEVATOR_SUCCESS:
-				stopProgressDialog();
 				String json = (String) msg.obj;
 				Logr.e(json);
 				ScanResultBean bean = gson.fromJson(json, ScanResultBean.class);
@@ -103,6 +103,9 @@ public class QueryTaskListActivity extends BaseActivity implements
 							SharedPreferencesKeys.CERTIFICATED, "");
 					Intent intent = new Intent(activity, LoginActivity.class);
 					startActivity(intent);
+					return;
+				}else if(st==1){
+					Utilities.showToast(bean.msg, activity);
 					return;
 				}
 				BeginWorkResult currentElevator = null;
@@ -191,6 +194,9 @@ public class QueryTaskListActivity extends BaseActivity implements
 					Intent intent = new Intent(activity, LoginActivity.class);
 					startActivity(intent);
 					return;
+				}else if(st2==1){
+					Utilities.showToast(mComBean.msg, activity);
+					return;
 				}
 				String updateMsg = mComBean.body.updateStatus;// 该电梯完成状态是否已经更新，0，表示更新失败，1表示更新成功
 				String isAllCompleted = mComBean.body.isAllCompleted;// 对于维保的单台电梯，true代表该电梯两人都完成，false代表尚未完成或者有一人完成
@@ -234,10 +240,10 @@ public class QueryTaskListActivity extends BaseActivity implements
 						(Set<String>) msg.obj, mTagsCallback);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast("网络异常", activity);
+				Utilities.showToast(R.string.request_error_msg, activity);
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast("服务器异常", activity);
+				Utilities.showToast(R.string.response_failure_msg, activity);
 				break;
 			}
 			stopProgressDialog();
@@ -313,7 +319,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 	}
 
 	private void getExtraDataAndValidate() {
-		startProgressDialog("正在查询...");
+		startProgressDialog(getResources().getString(R.string.loading_public_default));
 		Intent intent = getIntent();
 		mElevatorNo = intent.getStringExtra(Constant.ELEVATORNO);
 		Requester requester = new Requester();
@@ -349,7 +355,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 
 	// 根据维保类型，获取维保任务列表
 	private void getMaintenanceTaskListData() {
-		startProgressDialog("正在加载...");
+		startProgressDialog(getResources().getString(R.string.loading_public_default));
 		Requester requester = new Requester();
 		requester.uid = uid;
 		requester.certificate = certificate;
@@ -432,6 +438,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 							startActivity(intent);
 						} else {
 							if (!currentElevatorIsFinish) {
+								startProgressDialog(getResources().getString(R.string.loading_public_default));
 								Requester requester = new Requester();
 								requester.cmd = 20056;
 								requester.uid = uid;

@@ -213,12 +213,12 @@ public class TaskListNoneFragment extends BaseFragment {
 				getDataFromServer();
 			}
 		});
-		startProgressDialog("正在加载...");
 		getDataFromServer();
 	}
 
 	// 侧滑退单，验证该维保单号的时间
 	protected void doChargeBackTaskValidateTime(String taskNo) {
+		startProgressDialog(getResources().getString(R.string.loading_public_default));
 		Requester requester = new Requester();
 		requester.uid = uid;
 		requester.cmd = 20052;
@@ -238,7 +238,7 @@ public class TaskListNoneFragment extends BaseFragment {
 				// TODO Auto-generated method stub
 				stopProgressDialog();
 				if (response == null) {
-					Utilities.showToast("无数据", activity);
+					Utilities.showToast(R.string.response_no_object, activity);
 					return;
 				}
 				int st = response.st;
@@ -250,6 +250,9 @@ public class TaskListNoneFragment extends BaseFragment {
 							SharedPreferencesKeys.CERTIFICATED, "");
 					Intent intent = new Intent(mActivity, LoginActivity.class);
 					startActivity(intent);
+					return;
+				}else if(st==1){
+					Utilities.showToast(response.msg, mActivity);
 					return;
 				}
 				String time = response.body.get("result").toString();
@@ -282,7 +285,6 @@ public class TaskListNoneFragment extends BaseFragment {
 							@Override
 							public void onClick(View v) {
 								dialogBuilder.dismiss();
-								startProgressDialog("正在退单...");
 								dealChargeBackTask();
 							}
 						}).show();
@@ -294,6 +296,7 @@ public class TaskListNoneFragment extends BaseFragment {
 
 	// 处理退单事件
 	private void dealChargeBackTask() {
+		startProgressDialog("正在退单...");
 		Requester requester = new Requester();
 		requester.cmd = 20053;
 		requester.certificate = certificate;
@@ -312,7 +315,7 @@ public class TaskListNoneFragment extends BaseFragment {
 			public void onResponse(Bean response) {
 				// TODO Auto-generated method stub
 				if (response == null) {
-					Utilities.showToast("无数据", activity);
+					Utilities.showToast(R.string.response_no_object, activity);
 					return;
 				}
 				int st = response.st;
@@ -344,6 +347,7 @@ public class TaskListNoneFragment extends BaseFragment {
 	}
 
 	private void getDataFromServer() {
+		startProgressDialog(getResources().getString(R.string.loading_public_default));
 		Requester requester = new Requester();
 		requester.certificate = certificate;
 		requester.uid = uid;
@@ -368,7 +372,7 @@ public class TaskListNoneFragment extends BaseFragment {
 					swipeRefresh.setRefreshing(false);
 				}
 				if (response == null) {
-					Utilities.showToast("无数据", activity);
+					Utilities.showToast(R.string.response_no_object, activity);
 					return;
 				}
 				int st = response.st;
@@ -381,16 +385,21 @@ public class TaskListNoneFragment extends BaseFragment {
 					Intent intent = new Intent(mActivity, LoginActivity.class);
 					startActivity(intent);
 					return;
+				}else if(st==1){
+					Utilities.showToast(response.msg, activity);
+					return;
 				}
 				list = (List<Map<String, Object>>) response.body.get("data");
 				if (null == list || list.size() == 0) {
-					Utilities.showToast("无数据", mActivity);
+					Utilities.showToast(getResources().getString(R.string.response_no_data), mActivity);
+					swipeRefresh.setVisibility(View.GONE);
 					mNoPage.setVisibility(View.VISIBLE);
 					mNoWifi.setVisibility(View.GONE);
 					if (adapter != null) {
 						adapter.clearAdapter();
 					}
 				} else {
+					swipeRefresh.setVisibility(View.VISIBLE);
 					mNoPage.setVisibility(View.GONE);
 					mNoWifi.setVisibility(View.GONE);
 					adapter = new TaskListAdapter(list, mActivity,

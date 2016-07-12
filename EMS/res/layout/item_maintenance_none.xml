@@ -1,54 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:padding="8dp" >
+    android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/tv_fault_type"
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="default"
-        android:textColor="@color/main_primary" />
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        app:contentPadding="12dp" >
 
-    <LinearLayout
-        android:id="@+id/ll_anchor"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_fault_type"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal" >
-
-        <TextView
-            android:id="@+id/tv_maintenance_none_address"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="8"
-            android:text="address default"
-            android:textColor="@color/main_primary" />
+            android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/tv_maintenance_none_distance"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:text="8km" />
+            <TextView
+                android:id="@+id/tv_fault_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="default"
+                android:textColor="@color/material_deep_teal_500"
+                android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/tv_maintenance_publish_time"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:text="2016/??/??"
-            android:textColor="@color/main_primary" />
-    </LinearLayout>
+            <LinearLayout
+                android:id="@+id/ll_anchor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal" >
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:src="@drawable/icon_arrow_right" />
+                <TextView
+                    android:id="@+id/tv_maintenance_none_address"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="address default"
+                    android:textColor="@color/main_primary" />
 
-</RelativeLayout>
+                <TextView
+                    android:id="@+id/tv_maintenance_none_distance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="8km" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="8dp"
+                    android:src="@drawable/icon_arrow_right" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_maintenance_publish_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2016/??/??"
+                android:textColor="@color/main_primary" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+</LinearLayout>

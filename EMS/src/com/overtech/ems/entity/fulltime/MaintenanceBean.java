@@ -31,6 +31,7 @@ public class MaintenanceBean {
 
 		public String workorderCode;// 维修单二维码部分
 		public String siteTel;
+		public String isMain;//是否是主修人员
 	}
 
 	public class Workorder {

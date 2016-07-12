@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
@@ -40,6 +41,7 @@ public class TaskListDoneFragment extends BaseFragment {
 	private ListView mDonet;
 	private Activity mActivity;
 	private List<Map<String,Object>> list;
+	private TextView tvNoData;
 	private TaskListAdapter adapter;
 	private String uid;
 	private String certificate;
@@ -63,7 +65,7 @@ public class TaskListDoneFragment extends BaseFragment {
 	}
 
 	private void startLoading() {
-		startProgressDialog("加载中...");
+		startProgressDialog(getResources().getString(R.string.loading_public_default));
 		Requester requester = new Requester();
 		requester.certificate = certificate;
 		requester.uid = uid;
@@ -82,7 +84,7 @@ public class TaskListDoneFragment extends BaseFragment {
 				// TODO Auto-generated method stub
 				stopProgressDialog();
 				if (response == null) {
-					Utilities.showToast("无数据", activity);
+					Utilities.showToast(R.string.response_no_object, activity);
 					return;
 				}
 				list = (List<Map<String, Object>>) response.body.get("data");
@@ -100,8 +102,12 @@ public class TaskListDoneFragment extends BaseFragment {
 					}
 				}
 				if (list == null || list.size() == 0) {
-					Utilities.showToast("无数据", mActivity);
+					Utilities.showToast(getResources().getString(R.string.response_no_data), mActivity);
+					tvNoData.setVisibility(View.VISIBLE);
+					mDonet.setVisibility(View.GONE);
 				} else {
+					tvNoData.setVisibility(View.GONE);
+					mDonet.setVisibility(View.VISIBLE);
 					adapter = new TaskListAdapter(list, mActivity,
 							StatusCode.TASK_DO);
 					mDonet.setAdapter(adapter);
@@ -115,5 +121,6 @@ public class TaskListDoneFragment extends BaseFragment {
 
 	private void findViewById(View view) {
 		mDonet = (ListView) view.findViewById(R.id.donet_task_list_listview);
+		tvNoData=(TextView) view.findViewById(R.id.tv_no_data);
 	}
 }

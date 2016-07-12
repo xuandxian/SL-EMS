@@ -7,11 +7,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.common.LoginActivity;
+import com.overtech.ems.activity.parttime.MainActivity;
+import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.common.Requester;
 import com.overtech.ems.entity.fulltime.MaintenanceBean;
 import com.overtech.ems.http.OkHttpClientManager;
@@ -25,12 +28,14 @@ import com.squareup.okhttp.Request;
 
 public class MaintenanceResponseActivity extends BaseActivity {
 	private TextView title;
+	private ImageView ivBack;
 	private EditText etCurrentSituation;
 	private EditText etMaintenanceSolve;
 	private Button btSubmit;
 	private String certificate;
 	private String uid;
 	private String workorderCode;
+	private String isMain;
 	private MaintenanceResponseActivity activity;
 
 	@Override
@@ -38,19 +43,30 @@ public class MaintenanceResponseActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_maintenance_response);
+		activity = this;
 		stackInstance.pushActivity(activity);
 		certificate = (String) SharePreferencesUtils.get(this,
 				SharedPreferencesKeys.CERTIFICATED, "");
 		uid = (String) SharePreferencesUtils.get(this,
 				SharedPreferencesKeys.UID, "");
 		workorderCode = getIntent().getStringExtra(Constant.WORKORDERCODE);
-		activity = this;
+		isMain=getIntent().getStringExtra("isMain");
 		initView();
 		initEvent();
 	}
 
 	private void initEvent() {
 		// TODO Auto-generated method stub
+		title.setText("问题反馈");
+		ivBack.setVisibility(View.VISIBLE);
+		ivBack.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				stackInstance.popActivity(activity);
+			}
+		});
 		btSubmit.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -70,7 +86,9 @@ public class MaintenanceResponseActivity extends BaseActivity {
 				Requester requester = new Requester();
 				requester.certificate = certificate;
 				requester.uid = uid;
+				requester.cmd = 20006;
 				requester.body.put("workorderCode", workorderCode);
+				requester.body.put("isMain", isMain);
 				requester.body.put("liveSituation", sit);
 				requester.body.put("repairResult", solve);
 				ResultCallback<MaintenanceBean> callback = new OkHttpClientManager.ResultCallback<MaintenanceBean>() {
@@ -100,15 +118,23 @@ public class MaintenanceResponseActivity extends BaseActivity {
 								Intent intent = new Intent(activity,
 										LoginActivity.class);
 								startActivity(intent);
-							} else {
+							} else if(st==1){//上岗证过期
+								Utilities.showToast(msg, activity);
+								stackInstance.popActivity(activity);
+							}else{
 								Utilities.showToast(msg, activity);
 							}
 						} else {
-							Utilities.showToast("提交成功", activity);
+							Utilities.showToast(msg, activity);
 							// 关闭之前的activity
+							Intent intent = new Intent(activity,
+									MainActivity.class);
+							startActivity(intent);
 						}
 					}
 				};
+				OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
+						gson.toJson(requester));
 			}
 
 		});
@@ -117,6 +143,7 @@ public class MaintenanceResponseActivity extends BaseActivity {
 	private void initView() {
 		// TODO Auto-generated method stub
 		title = (TextView) findViewById(R.id.tv_headTitle);
+		ivBack = (ImageView) findViewById(R.id.iv_headBack);
 		etCurrentSituation = (EditText) findViewById(R.id.et_current_situcation);
 		etMaintenanceSolve = (EditText) findViewById(R.id.et_maintenance_result);
 		btSubmit = (Button) findViewById(R.id.bt_submit);

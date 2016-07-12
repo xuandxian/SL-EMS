@@ -33,7 +33,6 @@ import com.overtech.ems.entity.bean.StatusCodeBean;
 import com.overtech.ems.entity.bean.TaskPackageDetailBean;
 import com.overtech.ems.entity.bean.TaskPackageDetailBean.TaskPackage;
 import com.overtech.ems.entity.common.Requester;
-import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.AppUtils;
 import com.overtech.ems.utils.Logr;
@@ -78,6 +77,7 @@ public class PackageDetailActivity extends BaseActivity {
 		public void handleMessage(android.os.Message msg) {
 			switch (msg.what) {
 			case StatusCode.PACKAGE_DETAILS_SUCCESS:
+				stopProgressDialog();
 				String json = (String) msg.obj;
 				Logr.e(json);
 				TaskPackageDetailBean tasks = gson.fromJson(json,
@@ -92,11 +92,14 @@ public class PackageDetailActivity extends BaseActivity {
 					Intent intent = new Intent(activity, LoginActivity.class);
 					startActivity(intent);
 					return;
+				}else if(st==1){
+					Utilities.showToast(tasks.msg, activity);
+					return;
 				}
 				list = tasks.body.data;
 				if (null == list || list.size() == 0) {
 					stopProgressDialog();
-					Utilities.showToast("无数据", activity);
+					Utilities.showToast(tasks.msg, activity);
 					return;
 				} else {
 					if (adapter == null) {
@@ -129,12 +132,15 @@ public class PackageDetailActivity extends BaseActivity {
 					Intent intent = new Intent(activity, LoginActivity.class);
 					startActivity(intent);
 					return;
+				}else if(st2==1){
+					Utilities.showToast(bean.msg, activity);
+					return;
 				}
 				String content = bean.body.get("status").toString();
 				if (TextUtils.equals(content, "0")) {
-					Utilities.showToast("请不要重复抢单", activity);
+					Utilities.showToast(bean.msg, activity);
 				} else if (TextUtils.equals(content, "1")) {
-					Utilities.showToast("抢单成功，等待第二个人抢", activity);
+					Utilities.showToast(bean.msg, activity);
 					// 推送业务代码
 					tagItem = bean.body.get("taskNo").toString();
 					if (!AppUtils.isValidTagAndAlias(tagItem)) {
@@ -146,7 +152,7 @@ public class PackageDetailActivity extends BaseActivity {
 					}
 					onActivityForResult();
 				} else if (TextUtils.equals(content, "2")) {
-					Utilities.showToast("抢单成功，请到任务中查看", activity);
+					Utilities.showToast(bean.msg, activity);
 					// 推送业务代码
 					tagItem = bean.body.get("taskNo").toString();
 					if (!AppUtils.isValidTagAndAlias(tagItem)) {
@@ -158,11 +164,11 @@ public class PackageDetailActivity extends BaseActivity {
 					}
 					onActivityForResult();
 				} else if (TextUtils.equals(content, "3")) {
-					Utilities.showToast("差一点就抢到了", activity);
+					Utilities.showToast(bean.msg, activity);
 				} else if (TextUtils.equals(content, "4")) {
-					Utilities.showToast("维保日期的电梯数量已经超过10台，不能够再抢单。", activity);
+					Utilities.showToast(bean.msg, activity);
 				} else {
-					Utilities.showToast("用户账户异常", activity);
+					Utilities.showToast(bean.msg, activity);
 					stackInstance.popTopActivitys(PackageDetailActivity.class);
 					Intent intent = new Intent(PackageDetailActivity.this,
 							LoginActivity.class);
@@ -175,12 +181,12 @@ public class PackageDetailActivity extends BaseActivity {
 						(Set<String>) msg.obj, mTagsCallback);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast("网络异常", activity);
+				Utilities.showToast(R.string.request_error_msg, activity);
 				mGrabTaskBtn
 						.setText("抢单(￥" + String.valueOf(totalPrice) + "元)");
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast("服务端异常", activity);
+				Utilities.showToast(R.string.response_failure_msg, activity);
 				break;
 			}
 			stopProgressDialog();
@@ -261,7 +267,7 @@ public class PackageDetailActivity extends BaseActivity {
 	}
 
 	private void getDataByTaskNo(String url) {
-		startProgressDialog("正在查询...");
+		startProgressDialog(getResources().getString(R.string.loading_public_default));
 		Requester requester = new Requester();
 		requester.cmd = 20051;
 		requester.uid = uid;
@@ -362,14 +368,14 @@ public class PackageDetailActivity extends BaseActivity {
 					@Override
 					public void onClick(View v) {
 						dialogBuilder.dismiss();
-						startProgressDialog("正在抢单...");
+						startProgressDialog(getResources().getString(R.string.loading_public_grabing));
 						Requester requester = new Requester();
 						requester.certificate = certificate;
 						requester.uid = uid;
 						requester.cmd = 20023;
 						requester.body.put(Constant.TASKNO, mTaskNo);
 						Request request = httpEngine.createRequest(
-								ServicesConfig.Do_GRABTASK,
+								SystemConfig.NEWIP,
 								gson.toJson(requester));
 						Call call = httpEngine.createRequestCall(request);
 						call.enqueue(new Callback() {

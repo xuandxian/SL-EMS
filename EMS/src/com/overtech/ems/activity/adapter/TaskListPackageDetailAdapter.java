@@ -1,6 +1,7 @@
 package com.overtech.ems.activity.adapter;
 
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,14 +13,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.overtech.ems.R;
-import com.overtech.ems.entity.bean.TaskPackageDetailBean.TaskPackage;
 
 public class TaskListPackageDetailAdapter extends BaseAdapter {
 
 	private Context context;
-	private List<TaskPackage> list;
+	private List<Map<String, Object>> list;
 
-	public TaskListPackageDetailAdapter(Context context, List<TaskPackage> list) {
+	public TaskListPackageDetailAdapter(Context context,
+			List<Map<String, Object>> list) {
 		super();
 		this.context = context;
 		this.list = list;
@@ -43,7 +44,7 @@ public class TaskListPackageDetailAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder = null;
-		TaskPackage data = list.get(position);
+		Map<String, Object> data = list.get(position);
 		if (convertView == null) {
 			holder = new ViewHolder();
 			convertView = LayoutInflater.from(context).inflate(
@@ -67,7 +68,7 @@ public class TaskListPackageDetailAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		String temp = data.elevatorName;
+		String temp = data.get("elevatorName").toString();
 		// if (temp.contains("号")) {
 		// if(temp.split("号").length==2){
 		// holder.mElevtorName.setText(temp.split("号")[1]);
@@ -77,27 +78,27 @@ public class TaskListPackageDetailAdapter extends BaseAdapter {
 		// }else {
 		holder.mElevtorName.setText(temp);
 		// }
-		if (data.workType.equals("0")) {
+		if (data.get("workType").equals("0")) {
 			holder.mWorkType.setText("(半月保)");
-		} else if (data.workType.equals("1")) {
+		} else if (data.get("workType").equals("1")) {
 			holder.mWorkType.setText("(季度保)");
-		} else if (data.workType.equals("2")) {
+		} else if (data.get("workType").equals("2")) {
 			holder.mWorkType.setText("(半年保)");
 		} else {
 			holder.mWorkType.setText("(年保)");
 		}
-		holder.mElevtorProductor.setText(data.elevatorBrand);
-		holder.mElevtorNo.setText(data.elevatorNo);
-		String contentFloor = data.storeySite;
+		holder.mElevtorProductor.setText(data.get("elevatorBrand").toString());
+		holder.mElevtorNo.setText(data.get("elevatorNo").toString());
+		String contentFloor = data.get("storeySite").toString();
 		if (contentFloor.contains("/")) {
-			String[] floor = data.storeySite.split("/");
+			String[] floor = data.get("storeySite").toString().split("/");
 			holder.mElevtorType.setText(floor[0] + "层/" + floor[1] + "站");
 		} else {
 			holder.mElevtorType.setText(contentFloor);
 		}
-		if (data.isFinish.equals("2")) {// isFinish
-										// 的值等于1表示有一人完成，等于2表示两人都已完成 等于0
-										// 是默认值，都没有完成
+		if (data.get("isFinish").equals("2")) {// isFinish
+			// 的值等于1表示有一人完成，等于2表示两人都已完成 等于0
+			// 是默认值，都没有完成
 			// holder.mRelativeLayout.setBackgroundResource(R.color.package_detail);
 			holder.mElevatorComplete
 					.setImageResource(R.drawable.icon_elevator_complete);
@@ -115,8 +116,9 @@ public class TaskListPackageDetailAdapter extends BaseAdapter {
 	 */
 	public boolean isAllCompleted() {
 		for (int i = 0; i < getCount(); i++) {
-			TaskPackage item = list.get(i);
-			if ("0".equals(item.isFinish) || "1".equals(item.isFinish)) {
+			Map<String, Object> item = list.get(i);
+			if ("0".equals(item.get("isFinish"))
+					|| "1".equals(item.get("isFinish"))) {
 				return false;
 			}
 		}

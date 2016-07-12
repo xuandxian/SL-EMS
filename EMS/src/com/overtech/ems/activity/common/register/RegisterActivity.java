@@ -62,19 +62,18 @@ public class RegisterActivity extends BaseActivity implements
 	 * 上传用户信息
 	 */
 	protected void startUpLoading() {
-		Logr.e(mIdCardFragment.idCardFrontPath);
-		Logr.e(mIdCardFragment.idCardOppositePath);
-		Logr.e(mWorkCertificateFragment.workCertificatePath);
-		Logr.e(mOtherCertificateFragment.otherCertificatePath);
-		startProgressDialog("上传中，请等待上传结果");
+		startProgressDialog(getResources().getString(
+				R.string.loading_public_upload));
 		Requester requester = new Requester();
 		requester.cmd = 3;
 		requester.body.put("phone", mPhoneNo);
 		requester.body.put("name", mPersonInfoFragment.nameContent);
 		requester.body.put("idcard", mPersonInfoFragment.idNumContent);
 		requester.body.put("workNo", mPersonInfoFragment.workNumContent);
-		requester.body.put("city", mPersonInfoFragment.cityContent);
-		requester.body.put("zone", mPersonInfoFragment.zoneContent);
+		requester.body.put("cityCode", mPersonInfoFragment.cityCode);
+		requester.body.put("cityName", mPersonInfoFragment.cityName);
+		requester.body.put("zoneCode", mPersonInfoFragment.zoneCode);
+		requester.body.put("zoneCode", mPersonInfoFragment.zoneName);
 		requester.body.put("eduLevel", mPersonEduWorkFragment.eduLevel);
 		requester.body.put("workUnit", mPersonEduWorkFragment.workUnit);
 		requester.body.put("entryTime", mPersonEduWorkFragment.enterTime);
@@ -85,7 +84,7 @@ public class RegisterActivity extends BaseActivity implements
 		HashMap<String, Object> front = new HashMap<String, Object>();// 身份证正面
 		front.put("content",
 				ImageUtils.bitmapToString(mIdCardFragment.idCardFrontPath));
-		// front.put("content","123");
+		// front.put("content","123");//test
 		front.put("attrName",
 				ImageUtils.getBitmapAttrName(mIdCardFragment.idCardFrontPath));
 		Logr.e(ImageUtils.getBitmapAttrName(mIdCardFragment.idCardFrontPath));
@@ -94,7 +93,7 @@ public class RegisterActivity extends BaseActivity implements
 		HashMap<String, Object> opposite = new HashMap<String, Object>();// 身份证反面
 		opposite.put("content",
 				ImageUtils.bitmapToString(mIdCardFragment.idCardOppositePath));
-		// opposite.put("content","123");
+		// opposite.put("content","123");//test
 		opposite.put("attrName", ImageUtils
 				.getBitmapAttrName(mIdCardFragment.idCardOppositePath));
 		Logr.e(ImageUtils.getBitmapAttrName(mIdCardFragment.idCardOppositePath));
@@ -103,7 +102,7 @@ public class RegisterActivity extends BaseActivity implements
 		HashMap<String, Object> workcertificate = new HashMap<String, Object>();// 工作证书
 		workcertificate.put("content", ImageUtils
 				.bitmapToString(mWorkCertificateFragment.workCertificatePath));
-		// workcertificate.put("content", "123");
+		// workcertificate.put("content", "123");//test
 		workcertificate
 				.put("attrName",
 						ImageUtils
@@ -115,7 +114,7 @@ public class RegisterActivity extends BaseActivity implements
 		HashMap<String, Object> other = new HashMap<String, Object>();// 其他证书
 		other.put("content", ImageUtils
 				.bitmapToString(mOtherCertificateFragment.otherCertificatePath));
-		// other.put("content","123");
+		// other.put("content","123");//test
 		other.put(
 				"attrName",
 				ImageUtils
@@ -174,8 +173,9 @@ public class RegisterActivity extends BaseActivity implements
 			@Override
 			public void onResponse(LoginBean response) {
 				// TODO Auto-generated method stub
+				stopProgressDialog();
 				if (response == null) {
-					Utilities.showToast("上传失败，请重新尝试", activity);
+					Utilities.showToast(R.string.response_no_object, activity);
 					return;
 				}
 				int st = response.st;
@@ -218,7 +218,6 @@ public class RegisterActivity extends BaseActivity implements
 					@Override
 					public void onClick(View v) {
 						dialogBuilder.dismiss();
-						startProgressDialog("正在上传...");
 						startUpLoading();
 					}
 				}).show();
@@ -231,9 +230,12 @@ public class RegisterActivity extends BaseActivity implements
 			mOtherCertificateFragment = new RegisterOtherCertificateFragment();
 		}
 		mOtherCertificateFragment.setRegOthFrgListener(this);
-		transaction.add(R.id.fl_register_container, mOtherCertificateFragment);
-		transaction.addToBackStack(null);
-		transaction.commit();
+		if (!mOtherCertificateFragment.isAdded()) {
+			transaction.add(R.id.fl_register_container,
+					mOtherCertificateFragment);
+			transaction.addToBackStack(null);
+			transaction.commit();
+		}
 	}
 
 	@Override
@@ -243,9 +245,12 @@ public class RegisterActivity extends BaseActivity implements
 			mWorkCertificateFragment = new RegisterAddWorkCertificateFragment();
 		}
 		mWorkCertificateFragment.setRegAddWorkCerFrgClickListener(this);
-		transaction.add(R.id.fl_register_container, mWorkCertificateFragment);
-		transaction.addToBackStack(null);
-		transaction.commit();
+		if (!mWorkCertificateFragment.isAdded()) {
+			transaction.add(R.id.fl_register_container,
+					mWorkCertificateFragment);
+			transaction.addToBackStack(null);
+			transaction.commit();
+		}
 	}
 
 	@Override
@@ -255,9 +260,11 @@ public class RegisterActivity extends BaseActivity implements
 			mIdCardFragment = new RegisterAddIdCardFragment();
 		}
 		mIdCardFragment.setRegAddIdCardClickListener(this);
-		transaction.add(R.id.fl_register_container, mIdCardFragment);
-		transaction.addToBackStack(null);
-		transaction.commit();
+		if (!mIdCardFragment.isAdded()) {
+			transaction.add(R.id.fl_register_container, mIdCardFragment);
+			transaction.addToBackStack(null);
+			transaction.commit();
+		}
 	}
 
 	@Override
@@ -267,9 +274,11 @@ public class RegisterActivity extends BaseActivity implements
 			mPersonEduWorkFragment = new RegisterAddPersonEduAndWorkFragment();
 		}
 		mPersonEduWorkFragment.setRegAddPerEduWorkFrgClickListener(this);
-		transaction.add(R.id.fl_register_container, mPersonEduWorkFragment);
-		transaction.addToBackStack(null);
-		transaction.commit();
+		if (!mPersonEduWorkFragment.isAdded()) {
+			transaction.add(R.id.fl_register_container, mPersonEduWorkFragment);
+			transaction.addToBackStack(null);
+			transaction.commit();
+		}
 	}
 
 	@Override
@@ -280,9 +289,11 @@ public class RegisterActivity extends BaseActivity implements
 			mPersonInfoFragment = new RegisterAddPersonInfoFragment();
 		}
 		mPersonInfoFragment.setRegAddPerInfoFrgClickListener(this);
-		transaction.add(R.id.fl_register_container, mPersonInfoFragment);
-		transaction.addToBackStack(null);
-		transaction.commit();
+		if (!mPersonInfoFragment.isAdded()) {
+			transaction.add(R.id.fl_register_container, mPersonInfoFragment);
+			transaction.addToBackStack(null);
+			transaction.commit();
+		}
 	}
 
 	@Override
@@ -293,10 +304,20 @@ public class RegisterActivity extends BaseActivity implements
 			mRegisterFragment = new RegisterFragment();
 		}
 		mRegisterFragment.setRegFraBtnClickListener(this);
-		transaction.add(R.id.fl_register_container, mRegisterFragment);
-		transaction.addToBackStack(null);
-		transaction.commit();
+		if (!mRegisterFragment.isAdded()) {
+			transaction.add(R.id.fl_register_container, mRegisterFragment);
+			transaction.addToBackStack(null);
+			transaction.commit();
+		}
 
+		// FragmentTransaction transaction = manager.beginTransaction();
+		// if (mPersonInfoFragment == null) {
+		// mPersonInfoFragment = new RegisterAddPersonInfoFragment();
+		// }
+		// mPersonInfoFragment.setRegAddPerInfoFrgClickListener(this);
+		// transaction.add(R.id.fl_register_container, mPersonInfoFragment);
+		// transaction.addToBackStack(null);
+		// transaction.commit();
 	}
 
 }

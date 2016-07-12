@@ -34,6 +34,7 @@ import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.StatusCodeBean;
 import com.overtech.ems.entity.common.Requester;
 import com.overtech.ems.picasso.Transformation;
+import com.overtech.ems.utils.ImageUtils;
 import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
@@ -69,6 +70,7 @@ public class PersonalZoneFragment extends BaseFragment implements
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
 			case StatusCode.PERSONAL_ZONE_SUCCESS:
+				stopProgressDialog();
 				String info = (String) msg.obj;
 				Logr.e("====" + info);
 				StatusCodeBean bean = gson.fromJson(info, StatusCodeBean.class);
@@ -97,7 +99,7 @@ public class PersonalZoneFragment extends BaseFragment implements
 								public Bitmap transform(Bitmap source) {
 									// TODO Auto-generated method
 									// stub
-									return null;
+									return ImageUtils.toRoundBitmap(source);
 								}
 
 								@Override
@@ -110,10 +112,10 @@ public class PersonalZoneFragment extends BaseFragment implements
 				}
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast("服务器异常", mActivity);
+				Utilities.showToast(R.string.response_failure_msg, mActivity);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast("网络异常", mActivity);
+				Utilities.showToast(R.string.request_error_msg, mActivity);
 				break;
 			}
 			stopProgressDialog();// 图片加载完成后停止进度框
@@ -140,7 +142,7 @@ public class PersonalZoneFragment extends BaseFragment implements
 	}
 
 	private void onLoading() {
-		startProgressDialog("正在加载...");
+		startProgressDialog(getResources().getString(R.string.loading_public_default));
 		Requester requester = new Requester();
 		requester.cmd = 20070;
 		requester.certificate = certificate;

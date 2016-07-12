@@ -27,6 +27,7 @@ import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.AnnouncementBean;
 import com.overtech.ems.entity.common.Requester;
+import com.overtech.ems.http.OkHttpClientManager;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
@@ -72,7 +73,7 @@ public class PersonalNoticeActivity extends BaseActivity {
 				}
 				list = (List<Map<String, Object>>) bean.body.get("data");
 				if (null == list || list.size() == 0) {
-					Utilities.showToast("无数据", activity);
+					Utilities.showToast(getString(R.string.response_no_data), activity);
 				} else {
 					int newItems = list.size() - announceSize;// 计算最新的数据集合的大小与之前的数据集合大小
 					if (newItems > 0) {
@@ -96,10 +97,10 @@ public class PersonalNoticeActivity extends BaseActivity {
 				}
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast((String) msg.obj, activity);
+				Utilities.showToast(R.string.response_failure_msg, activity);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast((String) msg.obj, activity);
+				Utilities.showToast(R.string.request_error_msg, activity);
 				break;
 
 			default:
@@ -130,8 +131,8 @@ public class PersonalNoticeActivity extends BaseActivity {
 		Log.e("onResume", "onresume");
 		announceSize = (Integer) SharePreferencesUtils.get(activity,
 				ANNOUNCE_SIZE, 0);// 获取保存的公告条目的长度
-		SharePreferencesUtils.get(activity, ANNOUNCEITEMPOSITION,
-				new HashSet<String>());// 获取已经点击过的公告条目的position集合
+		announceItemPosition = (HashSet<String>) SharePreferencesUtils.get(
+				activity, ANNOUNCEITEMPOSITION, new HashSet<String>());// 获取已经点击过的公告条目的position集合
 		if (adapter != null) {
 			adapter.setHashSet(announceItemPosition);
 			adapter.notifyDataSetChanged();
@@ -179,12 +180,14 @@ public class PersonalNoticeActivity extends BaseActivity {
 	}
 
 	private void initData() {
-		startProgressDialog("正在加载中...");
+		startProgressDialog(getResources().getString(
+				R.string.loading_public_default));
 		Requester requester = new Requester();
 		requester.cmd = 20077;
 		requester.uid = uid;
 		requester.certificate = certificate;
-		Request request = httpEngine.createRequest(SystemConfig.NEWIP);
+		Request request = httpEngine.createRequest(SystemConfig.NEWIP,
+				gson.toJson(requester));
 		Call call = httpEngine.createRequestCall(request);
 		call.enqueue(new Callback() {
 

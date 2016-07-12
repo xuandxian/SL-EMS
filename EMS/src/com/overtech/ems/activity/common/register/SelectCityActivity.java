@@ -96,7 +96,7 @@ public class SelectCityActivity extends BaseActivity {
 
 	private void initData() {
 		// TODO Auto-generated method stub
-		startProgressDialog("初始化中...");
+		startProgressDialog(getResources().getString(R.string.loading_public_default));
 		Requester requester = new Requester();
 		requester.cmd = 4;
 		ResultCallback<Bean> callback = new ResultCallback<Bean>() {
@@ -113,7 +113,7 @@ public class SelectCityActivity extends BaseActivity {
 				// TODO Auto-generated method stub
 				stopProgressDialog();
 				if (response == null) {
-					Utilities.showToast("无数据", activity);
+					Utilities.showToast(R.string.response_no_object, activity);
 					return;
 				}
 				adapter = new SelectCityAdapter(activity, response.body);

@@ -9,9 +9,12 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.overtech.ems.R;
@@ -36,6 +39,8 @@ import com.squareup.okhttp.Request;
 public class MaintenanceNoneFragment extends BaseFragment {
 	private SwipeRefreshLayout swipeRefresh;
 	private ListView listview;
+	private LinearLayout llNoPage;
+	private Button reLoad;
 	private String uid;
 	private String certificate;
 	private List<Workorder> list;
@@ -50,9 +55,10 @@ public class MaintenanceNoneFragment extends BaseFragment {
 		swipeRefresh = (SwipeRefreshLayout) view
 				.findViewById(R.id.swipeRefresh);
 		listview = (ListView) view.findViewById(R.id.lv_maintenance_none);
+		llNoPage = (LinearLayout) view.findViewById(R.id.page_no_result);
+		reLoad = (Button) view.findViewById(R.id.load_btn_retry);
 		uid = ((MainActivity) getActivity()).getUid();
 		certificate = ((MainActivity) getActivity()).getCertificate();
-		startProgressDialog("加载中...");
 		requestLoading();
 		initEvent();
 		return view;
@@ -83,10 +89,20 @@ public class MaintenanceNoneFragment extends BaseFragment {
 			}
 
 		});
+		reLoad.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				requestLoading();
+			}
+		});
 	}
 
 	private void requestLoading() {
 		// TODO Auto-generated method stub
+		startProgressDialog(getResources().getString(
+				R.string.loading_public_default));
 		Requester requester = new Requester();
 		requester.cmd = 20000;
 		requester.uid = uid;
@@ -101,7 +117,7 @@ public class MaintenanceNoneFragment extends BaseFragment {
 					swipeRefresh.setRefreshing(false);
 				}
 				if (response == null) {
-					Utilities.showToast("暂时没有数据", activity);
+					Utilities.showToast(R.string.response_no_object, activity);
 					return;
 				}
 				int st = response.st;
@@ -123,13 +139,22 @@ public class MaintenanceNoneFragment extends BaseFragment {
 					}
 				} else {
 					list = response.body.data;
-					if (adapter == null) {
-						adapter = new MaintenaceNoneAdapter(getActivity(), list);
-						listview.setAdapter(adapter);
+					if (list == null || list.size() == 0) {
+						llNoPage.setVisibility(View.VISIBLE);
+						swipeRefresh.setVisibility(View.GONE);
 					} else {
-						adapter.setData(list);
-						adapter.notifyDataSetChanged();
+						llNoPage.setVisibility(View.GONE);
+						swipeRefresh.setVisibility(View.VISIBLE);
+						if (adapter == null) {
+							adapter = new MaintenaceNoneAdapter(getActivity(),
+									list);
+							listview.setAdapter(adapter);
+						} else {
+							adapter.setData(list);
+							adapter.notifyDataSetChanged();
+						}
 					}
+
 				}
 			}
 

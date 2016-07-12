@@ -41,7 +41,6 @@ import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.TaskPackageBean;
 import com.overtech.ems.entity.bean.TaskPackageBean.TaskPackage;
 import com.overtech.ems.entity.common.Requester;
-import com.overtech.ems.entity.common.ServicesConfig;
 import com.overtech.ems.http.OkHttpClientManager;
 import com.overtech.ems.http.OkHttpClientManager.ResultCallback;
 import com.overtech.ems.http.constant.Constant;
@@ -103,12 +102,12 @@ public class GrabTaskFragment extends BaseFragment implements
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
 				mNoWifi.setVisibility(View.VISIBLE);
 				mNoResultPage.setVisibility(View.GONE);
-				Utilities.showToast("服务器异常", activity);
+				Utilities.showToast(R.string.response_failure_msg, activity);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
 				mNoWifi.setVisibility(View.VISIBLE);
 				mNoResultPage.setVisibility(View.GONE);
-				Utilities.showToast("网络异常", activity);
+				Utilities.showToast(R.string.request_error_msg, activity);
 				break;
 			}
 			onLoad();
@@ -149,7 +148,7 @@ public class GrabTaskFragment extends BaseFragment implements
 							SharedPreferencesKeys.CERTIFICATED, "");
 					Intent intent = new Intent(mActivity, LoginActivity.class);
 					startActivity(intent);
-				} else {
+				} else {//包含上岗证过期
 					Utilities.showToast(msg, mActivity);
 				}
 			} else {
@@ -157,8 +156,10 @@ public class GrabTaskFragment extends BaseFragment implements
 				if (null == list || list.isEmpty()) {
 					mNoWifi.setVisibility(View.GONE);
 					mNoResultPage.setVisibility(View.VISIBLE);
-					mAdapter.setData(list);
-					mAdapter.notifyDataSetChanged();
+					if(mAdapter!=null){
+						mAdapter.setData(list);
+						mAdapter.notifyDataSetChanged();
+					}
 				} else {
 					mNoWifi.setVisibility(View.GONE);
 					mNoResultPage.setVisibility(View.GONE);
@@ -242,7 +243,7 @@ public class GrabTaskFragment extends BaseFragment implements
 		requester.certificate = certificate;
 		requester.uid = uid;
 		requester.body.put("mKeyWord", "0");
-		initData(ServicesConfig.GRABTASK, REFRESH_TYPE_DEFAULT,
+		initData(SystemConfig.NEWIP, REFRESH_TYPE_DEFAULT,
 				gson.toJson(requester), mCallBack);
 	}
 
@@ -258,9 +259,9 @@ public class GrabTaskFragment extends BaseFragment implements
 	public <T> void initData(String url, String flag, String jsonData,
 			ResultCallback<T> callback) {
 		if (TextUtils.equals(REFRESH_TYPE_DEFAULT, flag)) {
-			startProgressDialog("正在查询...");
+			startProgressDialog(getResources().getString(R.string.loading_public_default));
 		} else if (TextUtils.equals(REFRESH_TYPE_FILTER, flag)) {
-			startProgressDialog("正在查询...");
+			startProgressDialog(getResources().getString(R.string.loading_public_default));
 			// mSwipeListView.setPullRefreshEnable(false);
 		}
 		mSwipeListView.setFooterViewInvisible();
@@ -435,9 +436,9 @@ public class GrabTaskFragment extends BaseFragment implements
 			} else {
 				String status = response.body.status;
 				if (TextUtils.equals(status, "0")) {
-					Utilities.showToast("请不要重复抢单", activity);
+					Utilities.showToast(response.msg, activity);
 				} else if (TextUtils.equals(status, "1")) {
-					Utilities.showToast("抢单成功，等待第二个人抢", activity);
+					Utilities.showToast(response.msg, activity);
 
 					// 推送业务代码
 					// tagItem = response.body.taskNo;
@@ -451,7 +452,7 @@ public class GrabTaskFragment extends BaseFragment implements
 					// }
 					onRefresh();
 				} else if (TextUtils.equals(status, "2")) {
-					Utilities.showToast("抢单成功，请到任务中查看", activity);
+					Utilities.showToast(response.msg, activity);
 					// 推送业务代码
 					// tagItem = response.body.taskNo;
 					// if (!AppUtils.isValidTagAndAlias(tagItem)) {
@@ -464,15 +465,14 @@ public class GrabTaskFragment extends BaseFragment implements
 					// }
 					onRefresh();
 				} else if (TextUtils.equals(status, "3")) {
-					Utilities.showToast("差一点就抢到了", activity);
+					Utilities.showToast(response.msg, activity);
 				} else if (TextUtils.equals(status, "4")) {
-					Utilities.showToast("维保日期的电梯数量已经超过10台，不能够再抢单。", activity);
+					Utilities.showToast(response.msg, activity);
 				} else {
-					Utilities.showToast("用户账户异常", activity);
+					Utilities.showToast(response.msg, activity);
 					Intent intent = new Intent(getActivity(),
 							LoginActivity.class);
 					startActivity(intent);
-					getActivity().finish();
 				}
 			}
 		}
@@ -498,7 +498,7 @@ public class GrabTaskFragment extends BaseFragment implements
 					@Override
 					public void onClick(View v) {
 						dialogBuilder.dismiss();
-						startProgressDialog("正在抢单...");
+						startProgressDialog(getResources().getString(R.string.loading_public_grabing));
 						String mTaskNo = list.get(position).taskNo;
 						Requester requester = new Requester();
 						requester.cmd = 20023;

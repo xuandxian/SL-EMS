@@ -1,6 +1,7 @@
 package com.overtech.ems.activity.fulltime.adapter;
 
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,8 +11,6 @@ import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
 import com.overtech.ems.R;
-import com.overtech.ems.entity.fulltime.MaintenanceReportBean.Children;
-import com.overtech.ems.entity.fulltime.MaintenanceReportBean.Parent;
 
 /**
  * 维保单数据适配器
@@ -21,9 +20,10 @@ import com.overtech.ems.entity.fulltime.MaintenanceReportBean.Parent;
  */
 public class MaintenanceReportExpandAdapter extends BaseExpandableListAdapter {
 	private Context ctx;
-	private List<Parent> datas;
+	private List<Map<String, Object>> datas;
 
-	public MaintenanceReportExpandAdapter(Context ctx, List<Parent> datas) {
+	public MaintenanceReportExpandAdapter(Context ctx,
+			List<Map<String, Object>> datas) {
 		this.ctx = ctx;
 		this.datas = datas;
 	}
@@ -31,7 +31,9 @@ public class MaintenanceReportExpandAdapter extends BaseExpandableListAdapter {
 	@Override
 	public Object getChild(int groupPosition, int childPosition) {
 		// TODO Auto-generated method stub
-		return datas.get(groupPosition).children.get(childPosition).name;
+		List<Map<String, Object>> children = (List<Map<String, Object>>) datas
+				.get(groupPosition).get("children");
+		return children.get(childPosition);
 	}
 
 	@Override
@@ -48,26 +50,36 @@ public class MaintenanceReportExpandAdapter extends BaseExpandableListAdapter {
 			convertView = LayoutInflater.from(ctx).inflate(
 					R.layout.item_expand_maintenance_child, parent, false);
 		}
-		TextView tvChild = (TextView) convertView
+		TextView tvChildName = (TextView) convertView
 				.findViewById(R.id.tv_child_view);
-		tvChild.setText(datas.get(groupPosition).children.get(childPosition).name);
+		TextView tvChildCode = (TextView) convertView
+				.findViewById(R.id.tv_child_code);
+		List<Map<String, Object>> children = (List<Map<String, Object>>) datas
+				.get(groupPosition).get("children");
+		tvChildName.setText(children.get(childPosition).get("name").toString());
+		tvChildCode.setText(children.get(childPosition).get("code").toString());
 		return convertView;
 	}
 
 	@Override
 	public int getChildrenCount(int groupPosition) {
 		// TODO Auto-generated method stub
-		if (datas.get(groupPosition).children.get(0).children == null) {
+		List<Map<String, Object>> children = (List<Map<String, Object>>) datas
+				.get(groupPosition).get("children");
+		if (children.get(0).get("children") == null) {
+			return 0;
+		} else if (((List<Map<String, Object>>) children.get(0).get("children"))
+				.size() == 0) {
 			return 0;
 		} else {
-			return datas.get(groupPosition).children.size();
+			return children.size();
 		}
 	}
 
 	@Override
 	public Object getGroup(int groupPosition) {
 		// TODO Auto-generated method stub
-		return datas.get(groupPosition).name;
+		return datas.get(groupPosition).get("name");
 	}
 
 	@Override
@@ -91,8 +103,8 @@ public class MaintenanceReportExpandAdapter extends BaseExpandableListAdapter {
 					R.layout.item_expand_maintenance_group, parent, false);
 		}
 		TextView tvGroup = (TextView) convertView.findViewById(R.id.tv_group);
-		Parent data=datas.get(groupPosition);
-		tvGroup.setText(data.name);
+		Map<String, Object> data = datas.get(groupPosition);
+		tvGroup.setText(data.get("name").toString());
 		if (isExpanded) {
 			tvGroup.setTextColor(ctx.getResources().getColor(
 					R.color.accent_material_light));
@@ -125,27 +137,36 @@ public class MaintenanceReportExpandAdapter extends BaseExpandableListAdapter {
 		if (datas == null) {
 			return false;
 		}
-		if (datas.get(groupPosition).children.get(0).children == null) {
+		List<Map<String, Object>> children = (List<Map<String, Object>>) datas
+				.get(groupPosition).get("children");
+		if (children.get(0).get("children") == null) {
 			return false;
-		} else if (datas.get(groupPosition).children.get(0).children.size() == 0) {
+		} else if (((List<Map<String, Object>>) children.get(0).get("children"))
+				.size() == 0) {
 			return false;
 		} else {
 			return true;
 		}
 	}
 
-	public Parent getParent(int groupPosition) {
+	public List<Map<String, Object>> getData() {
+		return datas;
+	}
+
+	public Map<String, Object> getParent(int groupPosition) {
 		if (datas == null) {
 			return null;
 		}
 		return datas.get(groupPosition);
 	}
 
-	public Children getChildren(int groupPosition, int childPosition) {
+	public Map<String, Object> getChildren(int groupPosition, int childPosition) {
 		if (datas == null) {
 			return null;
 		}
-		return datas.get(groupPosition).children.get(childPosition);
+		List<Map<String, Object>> children = (List<Map<String, Object>>) datas
+				.get(groupPosition).get("children");
+		return children.get(childPosition);
 	}
 
 }

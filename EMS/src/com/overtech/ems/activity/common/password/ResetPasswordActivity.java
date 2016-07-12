@@ -61,10 +61,10 @@ public class ResetPasswordActivity extends BaseActivity {
 				}
 				break;
 			case StatusCode.RESET_PASSWORD_FAILED:
-				Utilities.showToast("重置密码失败", context);
+				Utilities.showToast(R.string.response_failure_msg, context);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast("网络异常", context);
+				Utilities.showToast(R.string.request_error_msg, context);
 				break;
 			default:
 				break;
@@ -109,7 +109,7 @@ public class ResetPasswordActivity extends BaseActivity {
 					if (sPasswordNew.length() >= 6
 							&& sPasswordNew.length() <= 18) {
 						if (TextUtils.equals(sPasswordNew, sPasswordConfirm)) {
-							startProgressDialog("正在更新...");
+							startProgressDialog(getResources().getString(R.string.loading_public_default));
 							Requester requester = new Requester();
 							requester.cmd = 20043;
 							requester.body.put(Constant.PHONENO, mPhoneNo);

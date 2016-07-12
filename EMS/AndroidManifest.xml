@@ -122,7 +122,6 @@
         <activity android:name=".activity.parttime.personal.others.PersonalAboutCompanyActivity" />
         <activity android:name="com.overtech.ems.activity.fulltime.activity.MaintenanceDetailActivity" />
         <activity android:name="com.overtech.ems.activity.fulltime.activity.MaintenanceTaskActivity" />
-        <activity android:name="com.overtech.ems.activity.fulltime.activity.MaintenanceTaskDetailActivity" />
         <activity android:name="com.overtech.ems.activity.fulltime.activity.MaintenanceResponseActivity" />
         <!-- Required SDK核心功能 -->
         <activity
@@ -223,7 +222,7 @@
             android:value="developer-default" />
         <meta-data
             android:name="JPUSH_APPKEY"
-            android:value="a2bef218730286d3c4aa7ade" />
+            android:value="47e3c96e973c115a5d204187" />
         <!-- </>值来自开发者平台取得的AppKey -->
         <activity
             android:name="com.mob.tools.MobUIShell"

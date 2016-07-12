@@ -31,8 +31,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="非常好(+3分)"
-                android:checked="true"
-                
                 android:textSize="@dimen/text_size_list"
                 />
             <android.support.v7.widget.AppCompatRadioButton  

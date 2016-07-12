@@ -31,6 +31,10 @@
     <string name="scan_text">将二维码放入框内, 即可自动扫描</string>
     <string name="common_search_noresult">暂无结果</string>
     <string name="common_no_network_msg">网络不给力，再试试</string>
+    <string name="request_error_msg">网络连接错误</string>
+    <string name="response_no_object">网络连接错误</string>
+    <string name="response_failure_msg">网络连接错误</string>
+    <string name="response_no_data">无数据</string>
     <string name="xlistview_header_hint_normal">下拉刷新</string>
     <string name="xlistview_header_hint_ready">松开刷新数据</string>
     <string name="xlistview_header_hint_loading">正在加载...</string>
@@ -38,6 +42,10 @@
     <string name="xlistview_footer_hint_normal">查看更多</string>
     <string name="xlistview_footer_hint_ready">松开载入更多</string>
     <string name="loading_public_default">正在加载...</string>
+    <string name="loading_public_sms">正在验证...</string>
+    <string name="loading_public_upload">正在上传...</string>
+    <string name="loading_public_login">正在登录...</string>
+    <string name="loading_public_grabing">正在抢单...</string>
     <string name="day_name_format">EEE</string>
     <string name="invalid_date">Date must be between %1$s and %2$s.</string>
     <string name="month_name_format">MMMM yyyy</string>
@@ -51,5 +59,6 @@
     <string name="fault_duty">故障责任</string>
     <string name="fault_attention">注意事项</string>
     <string name="site_tel">站点电话</string>
+    <string name="navigation">地图导航</string>
 
 </resources>

@@ -56,6 +56,7 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
+			stopProgressDialog();
 			switch (msg.what) {
 			case StatusCode.SUBMIT_PHONENO_SUCCESS:
 				String json = (String) msg.obj;
@@ -117,14 +118,11 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 				}
 
 				break;
-			case StatusCode.UPDATE_PHONENO_FAILURE:
-				Utilities.showToast("手机号更新失败", activity);
-				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast("服务端异常", activity);
+				Utilities.showToast(R.string.response_failure_msg, activity);
 				break;
 			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast("网络异常", activity);
+				Utilities.showToast(R.string.request_error_msg, activity);
 				break;
 			}
 			stopProgressDialog();
@@ -206,6 +204,7 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 		// TODO Auto-generated method stub
 		mPhoneNo = mPhoneNoEditText.getText().toString().trim();
 		if (Utilities.isMobileNO(mPhoneNo)) {
+			startProgressDialog(getResources().getString(R.string.loading_public_default));
 			Requester requester = new Requester();
 			requester.uid = uid;
 			requester.certificate = certificate;
@@ -243,11 +242,11 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 	}
 
 	private void submitVerificateSmsCode() {
-		startProgressDialog("正在验证...");
 		mSMSCode = mValidateCodeEditText.getText().toString().trim();
 		if (TextUtils.isEmpty(mSMSCode)) {
 			Utilities.showToast("输入不能为空", activity);
 		} else {
+			startProgressDialog(getResources().getString(R.string.loading_public_sms));
 			Requester requester = new Requester();
 			requester.certificate = certificate;
 			requester.uid = uid;
@@ -282,6 +281,7 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 	}
 
 	private void updatePhoneNo() {
+		startProgressDialog(getResources().getString(R.string.loading_public_default));
 		Requester requester = new Requester();
 		requester.uid = uid;
 		requester.certificate = certificate;
