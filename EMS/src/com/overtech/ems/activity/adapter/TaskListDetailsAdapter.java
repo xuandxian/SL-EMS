@@ -22,7 +22,9 @@ public class TaskListDetailsAdapter extends BaseAdapter {
 		this.context = context;
 		this.list = list;
 	}
-
+	public void setData(ArrayList<MaintenanceType> list){
+		this.list=list;
+	}
 	@Override
 	public int getViewTypeCount() {
 		return 2;

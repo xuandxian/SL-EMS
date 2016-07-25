@@ -104,20 +104,21 @@ public class QueryTaskListActivity extends BaseActivity implements
 					Intent intent = new Intent(activity, LoginActivity.class);
 					startActivity(intent);
 					return;
-				}else if(st==1){
-					Utilities.showToast(bean.msg, activity);
-					return;
 				}
 				BeginWorkResult currentElevator = null;
 				String isMeetRequire = bean.body.isMeetRequire;// 是否满足维保要求
 				if (TextUtils.equals(isMeetRequire, "1")) {// 满足
+					// 判断是否已经做过该电梯了
+					if (TextUtils.equals(bean.body.feedbacked, "1")) {//当完成了该电梯后就直接跳转到任务包详情里
+						Intent tasklistPackage = new Intent(activity,
+								TaskListPackageDetailActivity.class);
+						tasklistPackage.putExtra(Constant.TASKNO, mTaskNo);
+						startActivity(tasklistPackage);
+						stackInstance.popActivity(activity);
+						return;
+					}
+
 					List<BeginWorkResult> result = bean.body.data;
-					// int count = 0;// 记录包中完成电梯的数量
-					// for (int i = 0; i < result.size(); i++) {
-					// if (result.get(i).getIsFinish().equals("2")) {
-					// count++;
-					// }
-					// }
 					for (int i = 0; i < result.size(); i++) {// 遍历电梯编号，得到当前电梯正在维保的电梯
 						if (mElevatorNo.equals(result.get(i).elevatorNo)) {
 							currentElevator = result.get(i);
@@ -176,8 +177,13 @@ public class QueryTaskListActivity extends BaseActivity implements
 					list.add(type);
 				}
 				mTaskDetailsTitle.setVisibility(View.VISIBLE);
-				adapter = new TaskListDetailsAdapter(activity, list);
-				mTaskListData.setAdapter(adapter);
+				if (adapter == null) {
+					adapter = new TaskListDetailsAdapter(activity, list);
+					mTaskListData.setAdapter(adapter);
+				} else {
+					adapter.setData(list);
+					adapter.notifyDataSetChanged();
+				}
 				break;
 			case StatusCode.MAINTENANCE_COMPLETE_SUCCESS:
 				String maintenanceJson = (String) msg.obj;// 提交电梯完成状态后，后台返回的信息
@@ -194,7 +200,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 					Intent intent = new Intent(activity, LoginActivity.class);
 					startActivity(intent);
 					return;
-				}else if(st2==1){
+				} else if (st2 == 1) {
 					Utilities.showToast(mComBean.msg, activity);
 					return;
 				}
@@ -213,24 +219,29 @@ public class QueryTaskListActivity extends BaseActivity implements
 					if (TextUtils.equals("0", taskStatus)) {
 						// 任务包中还有未完成的
 						Utilities.showToast("您还有未完成的电梯", activity);
+						// TODO
 						Intent intent = new Intent(QueryTaskListActivity.this,
-								TaskListPackageDetailActivity.class);
+								QuestionResponseActivity.class);
 						intent.putExtra(Constant.TASKNO, mTaskNo);
+						intent.putExtra(Constant.ELEVATORNO, mElevatorNo);
 						startActivity(intent);
 						stackInstance.popActivity(activity);
 					} else {
 						// 任务包中全部都完成了
+						// TODO
 						Intent intent = new Intent(QueryTaskListActivity.this,
-								TaskListPackageDetailActivity.class);
+								QuestionResponseActivity.class);
 						intent.putExtra(Constant.TASKNO, mTaskNo);
+						intent.putExtra(Constant.ELEVATORNO, mElevatorNo);
 						startActivity(intent);
 						stackInstance.popActivity(activity);
 					}
 				} else {
 					Utilities.showToast("请和搭档确认电梯的完成状态", activity);
 					Intent intent = new Intent(QueryTaskListActivity.this,
-							TaskListPackageDetailActivity.class);
+							QuestionResponseActivity.class);
 					intent.putExtra(Constant.TASKNO, mTaskNo);
+					intent.putExtra(Constant.ELEVATORNO, mElevatorNo);
 					startActivity(intent);
 					stackInstance.popActivity(activity);
 				}
@@ -281,23 +292,23 @@ public class QueryTaskListActivity extends BaseActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_task_details);
-		activity = this;
-		stackInstance.pushActivity(activity);
-		uid = (String) SharePreferencesUtils.get(activity,
-				SharedPreferencesKeys.UID, "");
-		certificate = (String) SharePreferencesUtils.get(activity,
-				SharedPreferencesKeys.CERTIFICATED, "");
 		initTag();
 		init();
 		getExtraDataAndValidate();
 	}
 
 	private void initTag() {
+		activity = this;
 		tagSet = (Set<String>) SharePreferencesUtils.get(activity,
 				SharedPreferencesKeys.TAGSET, new LinkedHashSet<String>());
 	}
 
 	private void init() {
+		stackInstance.pushActivity(activity);
+		uid = (String) SharePreferencesUtils.get(activity,
+				SharedPreferencesKeys.UID, "");
+		certificate = (String) SharePreferencesUtils.get(activity,
+				SharedPreferencesKeys.CERTIFICATED, "");
 		mLatitude = ((MyApplication) getApplication()).latitude;
 		mLongitude = ((MyApplication) getApplication()).longitude;
 		mCurrentLocation = new LatLng(mLatitude, mLongitude);
@@ -318,8 +329,9 @@ public class QueryTaskListActivity extends BaseActivity implements
 		mDone.setOnClickListener(this);
 	}
 
-	private void getExtraDataAndValidate() {
-		startProgressDialog(getResources().getString(R.string.loading_public_default));
+	private void getExtraDataAndValidate() {// 验证维保数据，要求
+		startProgressDialog(getResources().getString(
+				R.string.loading_public_default));
 		Intent intent = getIntent();
 		mElevatorNo = intent.getStringExtra(Constant.ELEVATORNO);
 		Requester requester = new Requester();
@@ -355,7 +367,8 @@ public class QueryTaskListActivity extends BaseActivity implements
 
 	// 根据维保类型，获取维保任务列表
 	private void getMaintenanceTaskListData() {
-		startProgressDialog(getResources().getString(R.string.loading_public_default));
+		startProgressDialog(getResources().getString(
+				R.string.loading_public_default));
 		Requester requester = new Requester();
 		requester.uid = uid;
 		requester.certificate = certificate;
@@ -438,7 +451,8 @@ public class QueryTaskListActivity extends BaseActivity implements
 							startActivity(intent);
 						} else {
 							if (!currentElevatorIsFinish) {
-								startProgressDialog(getResources().getString(R.string.loading_public_default));
+								startProgressDialog(getResources().getString(
+										R.string.loading_public_default));
 								Requester requester = new Requester();
 								requester.cmd = 20056;
 								requester.uid = uid;

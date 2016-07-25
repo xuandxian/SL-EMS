@@ -48,9 +48,10 @@ public class Utilities {
 	 * @param context
 	 */
 	public static void showToast(CharSequence message, Context context) {
-		int duration = Toast.LENGTH_SHORT;
+		int duration = Toast.LENGTH_LONG;
 
-		Toast toast = Toast.makeText(context, message, duration);
+		Toast toast = Toast.makeText(context, message,duration);
+		toast.setDuration(3000);
 		toast.show();
 	}
 

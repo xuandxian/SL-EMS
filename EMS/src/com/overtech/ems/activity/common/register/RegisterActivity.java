@@ -73,7 +73,7 @@ public class RegisterActivity extends BaseActivity implements
 		requester.body.put("cityCode", mPersonInfoFragment.cityCode);
 		requester.body.put("cityName", mPersonInfoFragment.cityName);
 		requester.body.put("zoneCode", mPersonInfoFragment.zoneCode);
-		requester.body.put("zoneCode", mPersonInfoFragment.zoneName);
+		requester.body.put("zoneName", mPersonInfoFragment.zoneName);
 		requester.body.put("eduLevel", mPersonEduWorkFragment.eduLevel);
 		requester.body.put("workUnit", mPersonEduWorkFragment.workUnit);
 		requester.body.put("entryTime", mPersonEduWorkFragment.enterTime);

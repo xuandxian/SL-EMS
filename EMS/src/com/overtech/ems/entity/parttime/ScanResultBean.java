@@ -14,6 +14,7 @@ public class ScanResultBean {
 	public class Body{
 		public List<BeginWorkResult> data;
 		public String isMeetRequire;
+		public String feedbacked;//是否已经完成了维修的电梯
 	}
 	public class BeginWorkResult{
 		public String elevatorNo;

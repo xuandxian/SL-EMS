@@ -97,11 +97,22 @@ public class NearByFragment extends BaseFragment implements OnClickListener {
 		view = inflater.inflate(R.layout.fragment_nearby, container, false);
 		uid = ((MainActivity) getActivity()).getUid();
 		certificate = ((MainActivity) getActivity()).getCertificate();
-		initBaiduMapView(view);
 		init();
+		initBaiduMapView(view);
 		return view;
 	}
-
+	private void init() {
+		mNearByMapTextView = (TextView) view.findViewById(R.id.tv_nearby_map);
+		mNearByListTextView = (TextView) view.findViewById(R.id.tv_nearby_list);
+		mHeadTitle = (TextView) view.findViewById(R.id.tv_headTitle);
+		mHeadTitle.setText("附近");
+		mNearByMapTextView.setOnClickListener(this);
+		mNearByListTextView.setOnClickListener(this);
+		currentFragment = FragmentUtils.switchFragment(
+				getChildFragmentManager(), R.id.rl_nearby_content,
+				currentFragment, NearByMapFragment.class, null);
+		mNearByMap = (NearByMapFragment) currentFragment;
+	}
 	private void initBaiduMapView(View v) {
 		mLatitude = ((MyApplication) getActivity().getApplicationContext()).latitude;
 		mLongitude = ((MyApplication) getActivity().getApplicationContext()).longitude;
@@ -120,18 +131,6 @@ public class NearByFragment extends BaseFragment implements OnClickListener {
 		}
 	}
 
-	private void init() {
-		mNearByMapTextView = (TextView) view.findViewById(R.id.tv_nearby_map);
-		mNearByListTextView = (TextView) view.findViewById(R.id.tv_nearby_list);
-		mHeadTitle = (TextView) view.findViewById(R.id.tv_headTitle);
-		mHeadTitle.setText("附近");
-		mNearByMapTextView.setOnClickListener(this);
-		mNearByListTextView.setOnClickListener(this);
-		currentFragment = FragmentUtils.switchFragment(
-				getChildFragmentManager(), R.id.rl_nearby_content,
-				currentFragment, NearByMapFragment.class, null);
-		mNearByMap = (NearByMapFragment) currentFragment;
-	}
 	@Override
 	public void onHiddenChanged(boolean hidden) {
 		// TODO Auto-generated method stub

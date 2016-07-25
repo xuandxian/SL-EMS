@@ -131,8 +131,8 @@ public class GrabTaskFragment extends BaseFragment implements
 			mSwipeListView.stopRefresh();
 			if (response == null) {
 				Utilities.showToast("暂时没有数据", mActivity);
-				if (list != null) {
-					list.clear();
+				if (mAdapter != null) {
+					mAdapter.getData().clear();
 					mAdapter.notifyDataSetChanged();// 清空搜索结果
 				}
 				return;
@@ -148,16 +148,22 @@ public class GrabTaskFragment extends BaseFragment implements
 							SharedPreferencesKeys.CERTIFICATED, "");
 					Intent intent = new Intent(mActivity, LoginActivity.class);
 					startActivity(intent);
-				} else {//包含上岗证过期
+				} else {// 包含上岗证过期
 					Utilities.showToast(msg, mActivity);
+					if (mAdapter != null) {
+						mAdapter.getData().clear();
+						mAdapter.notifyDataSetChanged();
+					}
+					mNoResultPage.setVisibility(View.VISIBLE);
+					mNoWifi.setVisibility(View.GONE);
 				}
 			} else {
 				list = response.body.data;
 				if (null == list || list.isEmpty()) {
 					mNoWifi.setVisibility(View.GONE);
 					mNoResultPage.setVisibility(View.VISIBLE);
-					if(mAdapter!=null){
-						mAdapter.setData(list);
+					if (mAdapter != null) {
+						mAdapter.getData().clear();
 						mAdapter.notifyDataSetChanged();
 					}
 				} else {
@@ -173,6 +179,81 @@ public class GrabTaskFragment extends BaseFragment implements
 				}
 			}
 		}
+	};
+	private ResultCallback<TaskPackageBean> grabCallback = new ResultCallback<TaskPackageBean>() {
+
+		@Override
+		public void onError(Request request, Exception e) {
+			// TODO Auto-generated method stub
+			Logr.e(request.toString());
+			stopProgressDialog();
+		}
+
+		@Override
+		public void onResponse(TaskPackageBean response) {
+			// TODO Auto-generated method stub
+			stopProgressDialog();
+			int st = response.st;
+			String msg = response.msg;
+			if (st != 0) {
+				if (st == -1 || st == -2) {
+					Utilities.showToast(msg, mActivity);
+					SharePreferencesUtils.put(mActivity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(mActivity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent = new Intent(mActivity, LoginActivity.class);
+					startActivity(intent);
+				} else {
+					Utilities.showToast(msg, mActivity);
+				}
+			} else {
+				String status = response.body.status;
+				if (TextUtils.equals(status, "0")) {// 重复抢单
+					Utilities.showToast(response.msg, activity);
+					onRefresh();
+				} else if (TextUtils.equals(status, "1")) {// 抢单成功，等待第二个人抢
+					Utilities.showToast(response.msg, activity);
+
+					// 推送业务代码
+					// tagItem = response.body.taskNo;
+					// if (!AppUtils.isValidTagAndAlias(tagItem)) {
+					// Utilities.showToast("格式不对", context);
+					// } else {
+					// tagSet.add(tagItem);
+					// JPushInterface.setAliasAndTags(getActivity()
+					// .getApplicationContext(), null, tagSet,
+					// mTagsCallback);
+					// }
+					onRefresh();
+				} else if (TextUtils.equals(status, "2")) {// 抢单成功，到任务单中查看
+					Utilities.showToast(response.msg, activity);
+					// 推送业务代码
+					// tagItem = response.body.taskNo;
+					// if (!AppUtils.isValidTagAndAlias(tagItem)) {
+					// Utilities.showToast("格式不对", context);
+					// } else {
+					// tagSet.add(tagItem);
+					// JPushInterface.setAliasAndTags(getActivity()
+					// .getApplicationContext(), null, tagSet,
+					// mTagsCallback);
+					// }
+					onRefresh();
+				} else if (TextUtils.equals(status, "3")) {// 差一点抢到
+					Utilities.showToast(response.msg, activity);
+					onRefresh();
+				} else if (TextUtils.equals(status, "4")) {// 维保日期内的电梯已经超过10台
+					Utilities.showToast(response.msg, activity);
+					onRefresh();
+				} else {
+					Utilities.showToast(response.msg, activity);
+					Intent intent = new Intent(getActivity(),
+							LoginActivity.class);
+					startActivity(intent);
+				}
+			}
+		}
+
 	};
 	private final TagAliasCallback mTagsCallback = new TagAliasCallback() {
 
@@ -221,9 +302,9 @@ public class GrabTaskFragment extends BaseFragment implements
 		certificate = ((MainActivity) getActivity()).getCertificate();
 		// 读取保存在本地的标签
 		readTagSet();
-		findViewById(view);
-		init();
-		loadingData();
+		initView(view);
+		initEvent();
+		onRefresh();
 		Log.e("GrabTaskFragment", "onCretateView");
 
 		return view;
@@ -236,18 +317,7 @@ public class GrabTaskFragment extends BaseFragment implements
 				new LinkedHashSet<String>());
 	}
 
-	private void loadingData() {
-		// TODO Auto-generated method stub
-		Requester requester = new Requester();
-		requester.cmd = 20020;
-		requester.certificate = certificate;
-		requester.uid = uid;
-		requester.body.put("mKeyWord", "0");
-		initData(SystemConfig.NEWIP, REFRESH_TYPE_DEFAULT,
-				gson.toJson(requester), mCallBack);
-	}
-
-	private void findViewById(View view) {
+	private void initView(View view) {
 		mSwipeListView = (PullToRefreshSwipeMenuListView) view
 				.findViewById(R.id.sl_qiandan_listview);
 		mHeadTitle = (TextView) view.findViewById(R.id.tv_headTitle);
@@ -256,34 +326,9 @@ public class GrabTaskFragment extends BaseFragment implements
 		mRetrySearch = (Button) view.findViewById(R.id.load_btn_retry);
 	}
 
-	public <T> void initData(String url, String flag, String jsonData,
-			ResultCallback<T> callback) {
-		if (TextUtils.equals(REFRESH_TYPE_DEFAULT, flag)) {
-			startProgressDialog(getResources().getString(R.string.loading_public_default));
-		} else if (TextUtils.equals(REFRESH_TYPE_FILTER, flag)) {
-			startProgressDialog(getResources().getString(R.string.loading_public_default));
-			// mSwipeListView.setPullRefreshEnable(false);
-		}
-		mSwipeListView.setFooterViewInvisible();
-		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback, jsonData);
-	}
-
-	private void init() {
+	private void initEvent() {
 		mHeadTitle.setText("抢单");
 		initListView();
-		mSwipeListView.setRefreshTime(RefreshTime.getRefreshTime(mActivity));
-		mSwipeListView.setMenuCreator(creator);
-		mSwipeListView.setPullRefreshEnable(true);
-		mSwipeListView.setPullLoadEnable(true);
-		mSwipeListView.setXListViewListener(this);
-		mHeadView = LayoutInflater.from(mActivity).inflate(
-				R.layout.listview_header_filter, null);
-		mHeadView.setOnClickListener(null);
-		mSwipeListView.addHeaderView(mHeadView);
-		mPartTimeDoFifter = (LinearLayout) mHeadView
-				.findViewById(R.id.ll_grab_task);
-		mKeyWordSearch = (TextView) mHeadView
-				.findViewById(R.id.et_do_parttime_search);
 		mSwipeListView
 				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
@@ -334,9 +379,52 @@ public class GrabTaskFragment extends BaseFragment implements
 
 			@Override
 			public void onClick(View view) {
-				loadingData();
+				onRefresh();
 			}
 		});
+	}
+
+	private void initListView() {
+		creator = new SwipeMenuCreator() {
+			@Override
+			public void create(SwipeMenu menu) {
+				SwipeMenuItem openItem = new SwipeMenuItem(mActivity);
+				openItem.setBackground(new ColorDrawable(Color.rgb(0xFF, 0x3A,
+						0x30)));
+				openItem.setWidth(dp2px(90));
+				openItem.setTitle("抢");
+				openItem.setTitleSize(18);
+				openItem.setTitleColor(Color.WHITE);
+				menu.addMenuItem(openItem);
+			}
+		};
+		mSwipeListView.setRefreshTime(RefreshTime.getRefreshTime(mActivity));
+		mSwipeListView.setMenuCreator(creator);
+		mSwipeListView.setPullRefreshEnable(true);
+		mSwipeListView.setPullLoadEnable(true);
+		mSwipeListView.setXListViewListener(this);
+		mHeadView = LayoutInflater.from(mActivity).inflate(
+				R.layout.listview_header_filter, null);
+		mHeadView.setOnClickListener(null);
+		mSwipeListView.addHeaderView(mHeadView);
+		mPartTimeDoFifter = (LinearLayout) mHeadView
+				.findViewById(R.id.ll_grab_task);
+		mKeyWordSearch = (TextView) mHeadView
+				.findViewById(R.id.et_do_parttime_search);
+	}
+
+	public <T> void initData(String url, String flag, String jsonData,
+			ResultCallback<T> callback) {
+		if (TextUtils.equals(REFRESH_TYPE_DEFAULT, flag)) {
+			startProgressDialog(getResources().getString(
+					R.string.loading_public_default));
+		} else if (TextUtils.equals(REFRESH_TYPE_FILTER, flag)) {
+			startProgressDialog(getResources().getString(
+					R.string.loading_public_default));
+			// mSwipeListView.setPullRefreshEnable(false);
+		}
+		mSwipeListView.setFooterViewInvisible();
+		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback, jsonData);
 	}
 
 	@Override
@@ -372,26 +460,18 @@ public class GrabTaskFragment extends BaseFragment implements
 		}
 	}
 
-	private void initListView() {
-		creator = new SwipeMenuCreator() {
-			@Override
-			public void create(SwipeMenu menu) {
-				SwipeMenuItem openItem = new SwipeMenuItem(mActivity);
-				openItem.setBackground(new ColorDrawable(Color.rgb(0xFF, 0x3A,
-						0x30)));
-				openItem.setWidth(dp2px(90));
-				openItem.setTitle("抢");
-				openItem.setTitleSize(18);
-				openItem.setTitleColor(Color.WHITE);
-				menu.addMenuItem(openItem);
-			}
-		};
-	}
-
+	@Override
 	public void onRefresh() {
-		loadingData();
+		Requester requester = new Requester();
+		requester.cmd = 20020;
+		requester.certificate = certificate;
+		requester.uid = uid;
+		requester.body.put("mKeyWord", "0");
+		initData(SystemConfig.NEWIP, REFRESH_TYPE_DEFAULT,
+				gson.toJson(requester), mCallBack);
 	}
 
+	@Override
 	public void onLoadMore() {
 		// 此处暂时关闭，等待后台分页数据
 		mSwipeListView.stopLoadMore();
@@ -405,80 +485,14 @@ public class GrabTaskFragment extends BaseFragment implements
 		mSwipeListView.stopRefresh();
 		mSwipeListView.stopLoadMore();
 	}
-
-	private ResultCallback<TaskPackageBean> grabCallback = new ResultCallback<TaskPackageBean>() {
-
-		@Override
-		public void onError(Request request, Exception e) {
-			// TODO Auto-generated method stub
-			Logr.e(request.toString());
-			stopProgressDialog();
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		// TODO Auto-generated method stub
+		super.onHiddenChanged(hidden);
+		if(!hidden){
+			onRefresh();
 		}
-
-		@Override
-		public void onResponse(TaskPackageBean response) {
-			// TODO Auto-generated method stub
-			stopProgressDialog();
-			int st = response.st;
-			String msg = response.msg;
-			if (st != 0) {
-				if (st == -1 || st == -2) {
-					Utilities.showToast(msg, mActivity);
-					SharePreferencesUtils.put(mActivity,
-							SharedPreferencesKeys.UID, "");
-					SharePreferencesUtils.put(mActivity,
-							SharedPreferencesKeys.CERTIFICATED, "");
-					Intent intent = new Intent(mActivity, LoginActivity.class);
-					startActivity(intent);
-				} else {
-					Utilities.showToast(msg, mActivity);
-				}
-			} else {
-				String status = response.body.status;
-				if (TextUtils.equals(status, "0")) {
-					Utilities.showToast(response.msg, activity);
-				} else if (TextUtils.equals(status, "1")) {
-					Utilities.showToast(response.msg, activity);
-
-					// 推送业务代码
-					// tagItem = response.body.taskNo;
-					// if (!AppUtils.isValidTagAndAlias(tagItem)) {
-					// Utilities.showToast("格式不对", context);
-					// } else {
-					// tagSet.add(tagItem);
-					// JPushInterface.setAliasAndTags(getActivity()
-					// .getApplicationContext(), null, tagSet,
-					// mTagsCallback);
-					// }
-					onRefresh();
-				} else if (TextUtils.equals(status, "2")) {
-					Utilities.showToast(response.msg, activity);
-					// 推送业务代码
-					// tagItem = response.body.taskNo;
-					// if (!AppUtils.isValidTagAndAlias(tagItem)) {
-					// Utilities.showToast("格式不对", context);
-					// } else {
-					// tagSet.add(tagItem);
-					// JPushInterface.setAliasAndTags(getActivity()
-					// .getApplicationContext(), null, tagSet,
-					// mTagsCallback);
-					// }
-					onRefresh();
-				} else if (TextUtils.equals(status, "3")) {
-					Utilities.showToast(response.msg, activity);
-				} else if (TextUtils.equals(status, "4")) {
-					Utilities.showToast(response.msg, activity);
-				} else {
-					Utilities.showToast(response.msg, activity);
-					Intent intent = new Intent(getActivity(),
-							LoginActivity.class);
-					startActivity(intent);
-				}
-			}
-		}
-
-	};
-
+	}
 	private void showDialog(final int position) {
 		effect = Effectstype.Slideright;
 		dialogBuilder.withTitle("温馨提示").withTitleColor(R.color.main_primary)
@@ -498,7 +512,8 @@ public class GrabTaskFragment extends BaseFragment implements
 					@Override
 					public void onClick(View v) {
 						dialogBuilder.dismiss();
-						startProgressDialog(getResources().getString(R.string.loading_public_grabing));
+						startProgressDialog(getResources().getString(
+								R.string.loading_public_grabing));
 						String mTaskNo = list.get(position).taskNo;
 						Requester requester = new Requester();
 						requester.cmd = 20023;

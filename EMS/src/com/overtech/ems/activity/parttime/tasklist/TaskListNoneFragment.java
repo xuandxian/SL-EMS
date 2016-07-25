@@ -12,8 +12,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,23 +46,24 @@ import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
-import com.overtech.ems.widget.swipemenu.SwipeMenu;
-import com.overtech.ems.widget.swipemenu.SwipeMenuCreator;
-import com.overtech.ems.widget.swipemenu.SwipeMenuItem;
-import com.overtech.ems.widget.swipemenu.SwipeMenuListView;
-import com.overtech.ems.widget.swipemenu.SwipeMenuListView.OnMenuItemClickListener;
+import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView;
+import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView.IXListViewListener;
+import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView.OnMenuItemClickListener;
+import com.overtech.ems.widget.swiperefreshlistview.pulltorefresh.RefreshTime;
+import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenu;
+import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuCreator;
+import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuItem;
 import com.squareup.okhttp.Request;
 
-public class TaskListNoneFragment extends BaseFragment {
-	private SwipeRefreshLayout swipeRefresh;
-	private SwipeMenuListView mSwipeListView;
+public class TaskListNoneFragment extends BaseFragment implements
+		IXListViewListener {
+	private PullToRefreshSwipeMenuListView mSwipeListView;
 	private SwipeMenuCreator creator;
 	private Activity mActivity;
 	private Effectstype effect;
 	private TaskListAdapter adapter;
 	private List<Map<String, Object>> list;
 	private LinearLayout mNoPage;
-	private LinearLayout mNoWifi;
 	private Button reLoad;
 	private String mTaskNo;
 	private String loginName;
@@ -139,6 +138,7 @@ public class TaskListNoneFragment extends BaseFragment {
 		initTag();
 		findViewById(view);
 		init();
+		getDataFromServer();
 		return view;
 	}
 
@@ -149,33 +149,23 @@ public class TaskListNoneFragment extends BaseFragment {
 	}
 
 	private void findViewById(View view) {
-		swipeRefresh = (SwipeRefreshLayout) view
-				.findViewById(R.id.swipeRefresh);
-		mSwipeListView = (SwipeMenuListView) view
+		mSwipeListView = (PullToRefreshSwipeMenuListView) view
 				.findViewById(R.id.sl_task_list_listview);
 		mNoPage = (LinearLayout) view.findViewById(R.id.page_no_result);
-		mNoWifi = (LinearLayout) view.findViewById(R.id.page_no_wifi);
 		reLoad = (Button) view.findViewById(R.id.load_btn_retry);
 	}
 
 	private void init() {
 		uid = ((MainActivity) getActivity()).getUid();
 		certificate = ((MainActivity) getActivity()).getCertificate();
-		swipeRefresh.setOnRefreshListener(new OnRefreshListener() {
-
-			@Override
-			public void onRefresh() {
-				// TODO Auto-generated method stub
-				getDataFromServer();
-			}
-		});
 		initListView();
-		mSwipeListView.setMenuCreator(creator);
 		mSwipeListView
 				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
 					@Override
 					public void onMenuItemClick(int position, SwipeMenu menu,
 							int index) {
+						// TODO Auto-generated method stub
 						switch (index) {
 						case 0:// 导航
 							LatLng startPoint = adapter.getCurrentLocation();
@@ -213,12 +203,42 @@ public class TaskListNoneFragment extends BaseFragment {
 				getDataFromServer();
 			}
 		});
-		getDataFromServer();
+	}
+
+	private void initListView() {
+		creator = new SwipeMenuCreator() {
+			@Override
+			public void create(SwipeMenu menu) {
+				SwipeMenuItem navicateItem = new SwipeMenuItem(mActivity);
+				navicateItem.setBackground(new ColorDrawable(Color.rgb(0xFF,
+						0x9D, 0x00)));
+				navicateItem.setWidth(dp2px(90));
+				navicateItem.setTitle("导航");
+				navicateItem.setTitleSize(18);
+				navicateItem.setTitleColor(Color.WHITE);
+				menu.addMenuItem(navicateItem);
+				SwipeMenuItem deleteItem = new SwipeMenuItem(mActivity);
+				deleteItem.setBackground(new ColorDrawable(Color.rgb(0xFF,
+						0x3A, 0x30)));
+				deleteItem.setWidth(dp2px(90));
+				deleteItem.setTitle("退单");
+				deleteItem.setTitleSize(18);
+				deleteItem.setTitleColor(Color.WHITE);
+				menu.addMenuItem(deleteItem);
+			}
+		};
+		mSwipeListView.setRefreshTime(RefreshTime.getRefreshTime(mActivity));
+		mSwipeListView.setMenuCreator(creator);
+		mSwipeListView.setPullRefreshEnable(true);
+		mSwipeListView.setPullLoadEnable(true);
+		mSwipeListView.setXListViewListener(this);
+		mSwipeListView.setFooterViewInvisible();
 	}
 
 	// 侧滑退单，验证该维保单号的时间
 	protected void doChargeBackTaskValidateTime(String taskNo) {
-		startProgressDialog(getResources().getString(R.string.loading_public_default));
+		startProgressDialog(getResources().getString(
+				R.string.loading_public_default));
 		Requester requester = new Requester();
 		requester.uid = uid;
 		requester.cmd = 20052;
@@ -251,7 +271,7 @@ public class TaskListNoneFragment extends BaseFragment {
 					Intent intent = new Intent(mActivity, LoginActivity.class);
 					startActivity(intent);
 					return;
-				}else if(st==1){
+				} else if (st == 1) {
 					Utilities.showToast(response.msg, mActivity);
 					return;
 				}
@@ -347,7 +367,8 @@ public class TaskListNoneFragment extends BaseFragment {
 	}
 
 	private void getDataFromServer() {
-		startProgressDialog(getResources().getString(R.string.loading_public_default));
+		startProgressDialog(getResources().getString(
+				R.string.loading_public_default));
 		Requester requester = new Requester();
 		requester.certificate = certificate;
 		requester.uid = uid;
@@ -358,9 +379,7 @@ public class TaskListNoneFragment extends BaseFragment {
 			public void onError(Request request, Exception e) {
 				// TODO Auto-generated method stub
 				stopProgressDialog();
-				if (swipeRefresh.isRefreshing()) {
-					swipeRefresh.setRefreshing(false);
-				}
+				mSwipeListView.stopRefresh();
 				Logr.e(request.toString());
 			}
 
@@ -368,11 +387,11 @@ public class TaskListNoneFragment extends BaseFragment {
 			public void onResponse(Bean response) {
 				// TODO Auto-generated method stub
 				stopProgressDialog();
-				if (swipeRefresh.isRefreshing()) {
-					swipeRefresh.setRefreshing(false);
-				}
+				mSwipeListView.stopRefresh();
 				if (response == null) {
 					Utilities.showToast(R.string.response_no_object, activity);
+					mSwipeListView.setVisibility(View.GONE);
+					mNoPage.setVisibility(View.VISIBLE);
 					return;
 				}
 				int st = response.st;
@@ -385,56 +404,45 @@ public class TaskListNoneFragment extends BaseFragment {
 					Intent intent = new Intent(mActivity, LoginActivity.class);
 					startActivity(intent);
 					return;
-				}else if(st==1){
+				} else if (st == 1) {
 					Utilities.showToast(response.msg, activity);
+					if (adapter != null) {
+						adapter.getData().clear();
+						adapter.notifyDataSetChanged();
+					}
+					mSwipeListView.setVisibility(View.GONE);
+					mNoPage.setVisibility(View.VISIBLE);
 					return;
 				}
 				list = (List<Map<String, Object>>) response.body.get("data");
 				if (null == list || list.size() == 0) {
-					Utilities.showToast(getResources().getString(R.string.response_no_data), mActivity);
-					swipeRefresh.setVisibility(View.GONE);
+					Utilities
+							.showToast(
+									getResources().getString(
+											R.string.response_no_data),
+									mActivity);
+					mSwipeListView.setVisibility(View.GONE);
 					mNoPage.setVisibility(View.VISIBLE);
-					mNoWifi.setVisibility(View.GONE);
 					if (adapter != null) {
 						adapter.clearAdapter();
 					}
 				} else {
-					swipeRefresh.setVisibility(View.VISIBLE);
+					mSwipeListView.setVisibility(View.VISIBLE);
 					mNoPage.setVisibility(View.GONE);
-					mNoWifi.setVisibility(View.GONE);
-					adapter = new TaskListAdapter(list, mActivity,
-							StatusCode.TASK_NO);
-					mSwipeListView.setAdapter(adapter);
+					if (adapter == null) {
+						adapter = new TaskListAdapter(list, mActivity,
+								StatusCode.TASK_NO);
+						mSwipeListView.setAdapter(adapter);
+					} else {
+						adapter.setData(list);
+						adapter.notifyDataSetChanged();
+					}
 				}
 			}
 		};
 		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
 				gson.toJson(requester));
 
-	}
-
-	private void initListView() {
-		creator = new SwipeMenuCreator() {
-			@Override
-			public void create(SwipeMenu menu) {
-				SwipeMenuItem navicateItem = new SwipeMenuItem(mActivity);
-				navicateItem.setBackground(new ColorDrawable(Color.rgb(0xFF,
-						0x9D, 0x00)));
-				navicateItem.setWidth(dp2px(90));
-				navicateItem.setTitle("导航");
-				navicateItem.setTitleSize(18);
-				navicateItem.setTitleColor(Color.WHITE);
-				menu.addMenuItem(navicateItem);
-				SwipeMenuItem deleteItem = new SwipeMenuItem(mActivity);
-				deleteItem.setBackground(new ColorDrawable(Color.rgb(0xFF,
-						0x3A, 0x30)));
-				deleteItem.setWidth(dp2px(90));
-				deleteItem.setTitle("退单");
-				deleteItem.setTitleSize(18);
-				deleteItem.setTitleColor(Color.WHITE);
-				menu.addMenuItem(deleteItem);
-			}
-		};
 	}
 
 	public void startNavicate(LatLng startPoint, LatLng endPoint, String endName) {// endName暂时不使用
@@ -456,6 +464,25 @@ public class TaskListNoneFragment extends BaseFragment {
 		if (requestCode == REQUESTCODE) {
 			getDataFromServer();
 		}
+	}
+
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		// TODO Auto-generated method stub
+		super.onHiddenChanged(hidden);
+		Logr.e("tasklistnone" + hidden);
+	}
+
+	@Override
+	public void onRefresh() {
+		// TODO Auto-generated method stub
+		getDataFromServer();
+	}
+
+	@Override
+	public void onLoadMore() {
+		// TODO Auto-generated method stub
+		mSwipeListView.stopLoadMore();
 	}
 
 }

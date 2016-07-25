@@ -18,6 +18,7 @@ import com.overtech.ems.activity.parttime.tasklist.ScanCodeActivity;
 import com.overtech.ems.activity.parttime.tasklist.TaskListDoneFragment;
 import com.overtech.ems.activity.parttime.tasklist.TaskListNoneFragment;
 import com.overtech.ems.utils.FragmentUtils;
+import com.overtech.ems.utils.Logr;
 
 public class TaskListFragment extends BaseFragment implements OnClickListener {
 
@@ -66,6 +67,20 @@ public class TaskListFragment extends BaseFragment implements OnClickListener {
 		mTaskNone = (TaskListNoneFragment) currentFragment;
 	}
 
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		// TODO Auto-generated method stub
+		super.onHiddenChanged(hidden);
+		Logr.e("TaskListFragment=="+hidden);
+		if(!hidden){
+			if(mTaskNone.isVisible()){
+				mTaskNone.onRefresh();
+			}else if(mTaskDone.isVisible()){
+				mTaskDone.onRefresh();
+			}
+		}
+	}
+	
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {

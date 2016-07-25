@@ -210,24 +210,22 @@ public class NearByListFragment extends BaseFragment {
 	public void onHiddenChanged(boolean hidden) {
 		// TODO Auto-generated method stub
 		super.onHiddenChanged(hidden);
-		Logr.e("nearbylist fragment=="+hidden);
+		Logr.e("nearbylist fragment==" + hidden);
 		if (!hidden) {
+			list = ((NearByFragment) getParentFragment()).getData();
 			if (list == null || list.size() == 0) {
-				list = ((NearByFragment) getParentFragment()).getData();
-				if (list == null || list.size() == 0) {
-					mNearBySwipeListView.setVisibility(View.GONE);
-					tvNoData.setVisibility(View.VISIBLE);
-				} else {
-					mNearBySwipeListView.setVisibility(View.VISIBLE);
-					tvNoData.setVisibility(View.GONE);
-				}
-				if (mAdapter != null) {
-					mAdapter.setData(list);
-					mAdapter.notifyDataSetChanged();
-				} else {
-					mAdapter = new GrabTaskAdapter(list, mActivity);
-					mNearBySwipeListView.setAdapter(mAdapter);
-				}
+				mNearBySwipeListView.setVisibility(View.GONE);
+				tvNoData.setVisibility(View.VISIBLE);
+			} else {
+				mNearBySwipeListView.setVisibility(View.VISIBLE);
+				tvNoData.setVisibility(View.GONE);
+			}
+			if (mAdapter != null) {
+				mAdapter.setData(list);
+				mAdapter.notifyDataSetChanged();
+			} else {
+				mAdapter = new GrabTaskAdapter(list, mActivity);
+				mNearBySwipeListView.setAdapter(mAdapter);
 			}
 		}
 	}

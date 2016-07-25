@@ -37,8 +37,6 @@ import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.route.BaiduMapRoutePlan;
 import com.baidu.mapapi.utils.route.RouteParaOption;
 import com.baidu.mapapi.utils.route.RouteParaOption.EBusStrategyType;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.MyApplication;
@@ -48,7 +46,6 @@ import com.overtech.ems.activity.parttime.common.ElevatorDetailActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.Bean;
-import com.overtech.ems.entity.bean.TaskPackageDetailBean.TaskPackage;
 import com.overtech.ems.entity.common.Requester;
 import com.overtech.ems.http.OkHttpClientManager;
 import com.overtech.ems.http.OkHttpClientManager.ResultCallback;
@@ -157,8 +154,6 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tasklist_package_detail);
-		activity = TaskListPackageDetailActivity.this;
-		stackInstance.pushActivity(activity);
 		initTag();
 		initView();
 		getExtraDataAndInit();
@@ -166,6 +161,8 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	}
 
 	private void initTag() {
+		activity = TaskListPackageDetailActivity.this;
+		stackInstance.pushActivity(activity);
 		Set<String> tempSet = (Set<String>) SharePreferencesUtils.get(activity,
 				SharedPreferencesKeys.TAGSET, new LinkedHashSet<String>());
 	}
@@ -193,15 +190,13 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				SharedPreferencesKeys.UID, "");
 		certificate = (String) SharePreferencesUtils.get(activity,
 				SharedPreferencesKeys.CERTIFICATED, "");
-		getDataFromServer();
+		onRefresh();
 	}
 
 	private void initEvent() {
 		mSwipeLayout.setOnRefreshListener(this);
-		mSwipeLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
-				android.R.color.holo_green_light,
-				android.R.color.holo_orange_light,
-				android.R.color.holo_red_light);
+		mSwipeLayout.setColorSchemeResources(R.color.material_deep_teal_200,
+				R.color.material_deep_teal_500);
 		mDoBack.setOnClickListener(this);
 		mDoChargeBack.setOnClickListener(this);
 		mDoResponse.setOnClickListener(this);
@@ -305,16 +300,6 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 		oks.show(this);
 	}
 
-	// 弹出popupWindow
-	protected void showPopupWindow(View v) {
-		v.getLocationOnScreen(mLocation);
-		// 设置矩形的大小
-		mRect.set(mLocation[0], mLocation[1], mLocation[0] + v.getWidth(),
-				mLocation[1] + v.getHeight());
-		popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, mScreenWidth
-				- LIST_PADDING - (popupWindow.getWidth() / 2), mRect.bottom);
-	}
-
 	public void startNavicate(LatLng startPoint, LatLng endPoint, String endName) {
 		RouteParaOption para = new RouteParaOption().startName("我的位置")
 				.startPoint(startPoint).endPoint(endPoint).endName("终点")
@@ -341,10 +326,6 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 
 	@Override
 	public void onRefresh() {
-		getDataFromServer();
-	}
-
-	private void getDataFromServer() {
 		startProgressDialog(getResources().getString(
 				R.string.loading_public_default));
 		Requester requester = new Requester();
@@ -427,7 +408,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 					}
 					if (count == list.size()) {
 						mDoResponse.setVisibility(View.VISIBLE);
-						mDoResponse.setBackgroundColor(0xff00b9ef);
+						mDoResponse.setBackgroundResource(R.color.btn_visiable_bg);//绿色
 						mDoResponse.setTag(ALLCOMPLETE);
 						mDoChargeBack.setVisibility(View.GONE);
 					} else {
@@ -435,7 +416,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 						Logr.e("==是不是当天==" + isToday);
 						if (isToday) {
 							mDoResponse.setVisibility(View.VISIBLE);
-							mDoResponse.setBackgroundColor(0xffcccccc);
+							mDoResponse.setBackgroundResource(R.color.btn_disable_bg);//灰色
 							mDoResponse.setTag(NOTCOMPLETE);
 							mDoChargeBack.setVisibility(View.GONE);
 						} else {
@@ -587,27 +568,33 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 		case R.id.bt_cancle_task:
 			Logr.e("退单验证时间==");
 			validateChargebackTime();
-
 			break;
 		case R.id.bt_next_response:
 			if (mDoResponse.getTag().equals(ALLCOMPLETE)) {
 				Intent intent = new Intent(TaskListPackageDetailActivity.this,
-						QuestionResponseActivity.class);
+						EvaluationActivity.class);
 				Bundle bundle = new Bundle();
 				bundle.putString(Constant.TASKNO, sTaskNo);
 				intent.putExtras(bundle);
 				startActivity(intent);
 			} else if (mDoResponse.getTag().equals(NOTCOMPLETE)) {
-				Utilities.showToast("您还有未完成的电梯", activity);
-			} else {
-				Utilities.showToast("请查看所有电梯是否完成", activity);
-
+				Utilities.showToast("尚有未完成的电梯", activity);
 			}
 			break;
 		case R.id.iv_navicate_right:
 			showPopupWindow(v);
 			break;
 		}
+	}
+
+	// 弹出popupWindow
+	protected void showPopupWindow(View v) {
+		v.getLocationOnScreen(mLocation);
+		// 设置矩形的大小
+		mRect.set(mLocation[0], mLocation[1], mLocation[0] + v.getWidth(),
+				mLocation[1] + v.getHeight());
+		popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, mScreenWidth
+				- LIST_PADDING - (popupWindow.getWidth() / 2), mRect.bottom);
 	}
 
 	@Override

@@ -1,6 +1,5 @@
 package com.overtech.ems.activity.adapter;
 
-import java.text.NumberFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +14,6 @@ import com.baidu.mapapi.utils.DistanceUtil;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.config.StatusCode;
-import com.overtech.ems.entity.bean.TaskPackageBean.TaskPackage;
 import com.overtech.ems.utils.Utilities;
 
 public class TaskListAdapter extends BaseAdapter {
@@ -99,6 +97,10 @@ public class TaskListAdapter extends BaseAdapter {
 		return convertView;
 	}
 
+	public void setData(List<Map<String,Object>> data){
+		this.list=data;
+	}
+	
 	/**
 	 * 当前位置
 	 * 

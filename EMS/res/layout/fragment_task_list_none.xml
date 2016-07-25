@@ -4,16 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefresh"
+    <com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView
+        android:id="@+id/sl_task_list_listview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-        <com.overtech.ems.widget.swipemenu.SwipeMenuListView
-            android:id="@+id/sl_task_list_listview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-    </android.support.v4.widget.SwipeRefreshLayout>
+        android:layout_height="match_parent" />
 
     <include layout="@layout/nopagelayout" />
 
