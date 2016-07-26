@@ -109,14 +109,15 @@ public class QueryTaskListActivity extends BaseActivity implements
 				String isMeetRequire = bean.body.isMeetRequire;// 是否满足维保要求
 				if (TextUtils.equals(isMeetRequire, "1")) {// 满足
 					// 判断是否已经做过该电梯了
-					if (TextUtils.equals(bean.body.feedbacked, "1")) {//当完成了该电梯后就直接跳转到任务包详情里
-						Intent tasklistPackage = new Intent(activity,
-								TaskListPackageDetailActivity.class);
-						tasklistPackage.putExtra(Constant.TASKNO, mTaskNo);
-						startActivity(tasklistPackage);
-						stackInstance.popActivity(activity);
-						return;
-					}
+//					if (TextUtils.equals(bean.body.feedbacked, "1")) {//当完成了该电梯后就直接跳转到任务包详情里
+//						Intent tasklistPackage = new Intent(activity,
+//								TaskListPackageDetailActivity.class);
+//						String tempTaskNo=bean.body.data.get(0).taskNo;//每个对象中都有taskno,这里取第一个对象的
+//						tasklistPackage.putExtra(Constant.TASKNO,tempTaskNo);
+//						startActivity(tasklistPackage);
+//						stackInstance.popActivity(activity);
+//						return;
+//					}
 
 					List<BeginWorkResult> result = bean.body.data;
 					for (int i = 0; i < result.size(); i++) {// 遍历电梯编号，得到当前电梯正在维保的电梯
@@ -221,9 +222,9 @@ public class QueryTaskListActivity extends BaseActivity implements
 						Utilities.showToast("您还有未完成的电梯", activity);
 						// TODO
 						Intent intent = new Intent(QueryTaskListActivity.this,
-								QuestionResponseActivity.class);
+								TaskListPackageDetailActivity.class);
 						intent.putExtra(Constant.TASKNO, mTaskNo);
-						intent.putExtra(Constant.ELEVATORNO, mElevatorNo);
+//						intent.putExtra(Constant.ELEVATORNO, mElevatorNo);
 						startActivity(intent);
 						stackInstance.popActivity(activity);
 					} else {
@@ -239,9 +240,9 @@ public class QueryTaskListActivity extends BaseActivity implements
 				} else {
 					Utilities.showToast("请和搭档确认电梯的完成状态", activity);
 					Intent intent = new Intent(QueryTaskListActivity.this,
-							QuestionResponseActivity.class);
+							TaskListPackageDetailActivity.class);
 					intent.putExtra(Constant.TASKNO, mTaskNo);
-					intent.putExtra(Constant.ELEVATORNO, mElevatorNo);
+//					intent.putExtra(Constant.ELEVATORNO, mElevatorNo);
 					startActivity(intent);
 					stackInstance.popActivity(activity);
 				}

@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.overtech.ems.R;
+import com.overtech.ems.utils.Utilities;
 
 public class TaskListPackageDetailAdapter extends BaseAdapter {
 
@@ -69,15 +70,7 @@ public class TaskListPackageDetailAdapter extends BaseAdapter {
 			holder = (ViewHolder) convertView.getTag();
 		}
 		String temp = data.get("elevatorName").toString();
-		// if (temp.contains("号")) {
-		// if(temp.split("号").length==2){
-		// holder.mElevtorName.setText(temp.split("号")[1]);
-		// }else{
-		// holder.mElevtorName.setText(temp);
-		// }
-		// }else {
-		holder.mElevtorName.setText(temp);
-		// }
+		holder.mElevtorName.setText(temp==null?"":temp);
 		if (data.get("workType").equals("0")) {
 			holder.mWorkType.setText("(半月保)");
 		} else if (data.get("workType").equals("1")) {
@@ -106,6 +99,7 @@ public class TaskListPackageDetailAdapter extends BaseAdapter {
 			// holder.mRelativeLayout.setBackgroundDrawable(null);
 			holder.mElevatorComplete.setImageBitmap(null);
 		}
+
 		return convertView;
 	}
 

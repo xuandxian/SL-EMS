@@ -63,17 +63,13 @@ public class PersonalAboutAppActivity extends BaseActivity implements OnClickLis
 	private void showShare() {
 		ShareSDK.initSDK(this);
 		OnekeyShare oks = new OnekeyShare();
-//		oks.disableSSOWhenAuthorize();
 		oks.setTitle("上海乐配信息科技有限公司");
-		// titleUrl是标题的网络链接，仅在人人网和QQ空间使用
-		oks.setTitleUrl("http://www.wandoujia.com/apps/com.overtech.ems");
 		//暂时使用云端服务器上面的logo,豌豆荚审核通过后使用豌豆荚中的logo
-//		oks.setImageUrl("http://120.55.162.181:8080/test/icon.png");
+//		oks.setImageUrl("http://120.55.162.181:8080/test/icon.png");//图片的网络路径，新浪微博、人人网、QQ空间和Linked-In支持此字段
 		// text是分享文本，所有平台都需要这个字段
 		oks.setText("一款基于手机移动端的电梯维保App，欢迎下载。");
 		// url仅在微信（包括好友和朋友圈）中使用
 		oks.setUrl("http://www.wandoujia.com/apps/com.overtech.ems");
-		oks.setVenueName("24T");
 		// 启动分享GUI
 		oks.show(this);
 	}

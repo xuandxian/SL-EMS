@@ -158,4 +158,12 @@ public class TaskListDoneFragment extends BaseFragment implements
 		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
 				gson.toJson(requester));
 	}
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		// TODO Auto-generated method stub
+		super.onHiddenChanged(hidden);
+		if(!hidden){
+			onRefresh();
+		}
+	}
 }

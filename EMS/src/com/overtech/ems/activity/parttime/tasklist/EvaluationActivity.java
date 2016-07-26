@@ -136,7 +136,8 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 	}
 
 	private void startLoading() {
-		startProgressDialog(getResources().getString(R.string.loading_public_default));
+		startProgressDialog(getResources().getString(
+				R.string.loading_public_default));
 		Requester requester = new Requester();
 		requester.certificate = certificate;
 		requester.uid = uid;
@@ -199,6 +200,9 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 			}
 			evaluateLevel = "-2";
 			break;
+		case RadioGroup.NO_ID:
+			Utilities.showToast("您还没有选择分值", activity);
+			return;
 		}
 		startLoading();
 	}

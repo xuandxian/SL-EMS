@@ -133,7 +133,7 @@ public class QuestionResponseActivity extends BaseActivity implements
 					return;
 				} else {
 					Intent intent = new Intent(QuestionResponseActivity.this,
-							TaskListPackageDetailActivity.class);
+							EvaluationActivity.class);
 					Bundle bundle = new Bundle();
 					bundle.putString(Constant.TASKNO, taskNo);
 					bundle.putString(Constant.ELEVATORNO, elevatorNo);

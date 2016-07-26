@@ -138,7 +138,7 @@ public class TaskListNoneFragment extends BaseFragment implements
 		initTag();
 		findViewById(view);
 		init();
-		getDataFromServer();
+		onRefresh();
 		return view;
 	}
 
@@ -200,7 +200,7 @@ public class TaskListNoneFragment extends BaseFragment implements
 
 			@Override
 			public void onClick(View arg0) {
-				getDataFromServer();
+				onRefresh();
 			}
 		});
 	}
@@ -366,7 +366,39 @@ public class TaskListNoneFragment extends BaseFragment implements
 				gson.toJson(requester));
 	}
 
-	private void getDataFromServer() {
+	public void startNavicate(LatLng startPoint, LatLng endPoint, String endName) {// endName暂时不使用
+		// 构建 route搜索参数
+		RouteParaOption para = new RouteParaOption().startName("起点")
+				.startPoint(startPoint).endPoint(endPoint).endName("终点")
+				.busStrategyType(EBusStrategyType.bus_time_first);
+		try {
+			BaiduMapRoutePlan.setSupportWebRoute(true);
+			BaiduMapRoutePlan.openBaiduMapTransitRoute(para, mActivity);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == REQUESTCODE) {
+			onRefresh();
+		}
+	}
+
+	@Override
+	public void onHiddenChanged(boolean hidden) {
+		// TODO Auto-generated method stub
+		super.onHiddenChanged(hidden);
+		if(!hidden){
+			onRefresh();
+		}
+	}
+
+	@Override
+	public void onRefresh() {
+		// TODO Auto-generated method stub
 		startProgressDialog(getResources().getString(
 				R.string.loading_public_default));
 		Requester requester = new Requester();
@@ -442,41 +474,6 @@ public class TaskListNoneFragment extends BaseFragment implements
 		};
 		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
 				gson.toJson(requester));
-
-	}
-
-	public void startNavicate(LatLng startPoint, LatLng endPoint, String endName) {// endName暂时不使用
-		// 构建 route搜索参数
-		RouteParaOption para = new RouteParaOption().startName("起点")
-				.startPoint(startPoint).endPoint(endPoint).endName("终点")
-				.busStrategyType(EBusStrategyType.bus_time_first);
-		try {
-			BaiduMapRoutePlan.setSupportWebRoute(true);
-			BaiduMapRoutePlan.openBaiduMapTransitRoute(para, mActivity);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == REQUESTCODE) {
-			getDataFromServer();
-		}
-	}
-
-	@Override
-	public void onHiddenChanged(boolean hidden) {
-		// TODO Auto-generated method stub
-		super.onHiddenChanged(hidden);
-		Logr.e("tasklistnone" + hidden);
-	}
-
-	@Override
-	public void onRefresh() {
-		// TODO Auto-generated method stub
-		getDataFromServer();
 	}
 
 	@Override

@@ -290,12 +290,12 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	protected void shareToFriends() {// 分享给好友
 		ShareSDK.initSDK(this);
 		OnekeyShare oks = new OnekeyShare();
-		oks.setTitleUrl("http://www.wandoujia.com/apps/com.overtech.ems");
 		oks.setText("我在24T中抢到"
 				+ sZone
 				+ "的一个维保单，单号为:"
 				+ sTaskNo
 				+ ",请速度去抢哦！App下载链接：http://www.wandoujia.com/apps/com.overtech.ems");
+		oks.setUrl("http://www.wandoujia.com/apps/com.overtech.ems");
 		oks.setVenueName("24T");
 		oks.show(this);
 	}
@@ -572,7 +572,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 		case R.id.bt_next_response:
 			if (mDoResponse.getTag().equals(ALLCOMPLETE)) {
 				Intent intent = new Intent(TaskListPackageDetailActivity.this,
-						EvaluationActivity.class);
+						QuestionResponseActivity.class);
 				Bundle bundle = new Bundle();
 				bundle.putString(Constant.TASKNO, sTaskNo);
 				intent.putExtras(bundle);
