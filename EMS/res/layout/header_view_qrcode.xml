@@ -3,7 +3,7 @@
     android:id="@+id/task_list_headview"
     android:layout_width="fill_parent"
     android:layout_height="56dp"
-    android:background="@color/bg_title_red" >
+    android:background="@color/bg_title_blue" >
 
     <ImageView
         android:id="@+id/iv_headBack"

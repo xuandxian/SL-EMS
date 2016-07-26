@@ -72,7 +72,7 @@
     <color name="btn_disable_bg">#ffcccccc</color>
     
     <color name="line_blue_color">#7FBDED</color>
-    <color name="bg_title_red">#00b9ef</color>
+    <color name="bg_title_blue">#00b9ef</color>
     <color name="bg_titile_black">#4D4D4D</color>
     <!-- nifity dialog -->
     <color name="divider_color">#11000000</color>

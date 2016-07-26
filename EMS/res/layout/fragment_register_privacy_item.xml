@@ -16,8 +16,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:textSize="@dimen/text_size_info"
-            android:text="@string/item_privacy" />
+            android:text="@string/item_privacy"
+            android:textSize="@dimen/text_size_info" />
     </ScrollView>
 
     <LinearLayout
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
-        <CheckBox
+        <android.support.v7.widget.AppCompatCheckBox
             android:id="@+id/cb_item_privacy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -35,7 +35,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/privacy_item_checkbox" />
-
     </LinearLayout>
 
     <Button

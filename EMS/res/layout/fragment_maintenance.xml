@@ -18,7 +18,7 @@
             android:layout_weight="1"
             android:background="@drawable/horizontal_line"
             android:text="未完成"
-            android:textColor="@color/bg_title_red"
+            android:textColor="@color/bg_title_blue"
             android:textSize="15sp" />
 
         <Button
@@ -28,7 +28,7 @@
             android:layout_weight="1"
             android:background="@color/main_white"
             android:text="已完成"
-            android:textColor="@color/bg_title_red"
+            android:textColor="@color/bg_title_blue"
             android:textSize="15sp" />
     </LinearLayout>
 
