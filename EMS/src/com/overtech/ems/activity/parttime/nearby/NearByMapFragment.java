@@ -1,6 +1,7 @@
 package com.overtech.ems.activity.parttime.nearby;
 
 import java.util.List;
+import java.util.Map;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -28,14 +29,21 @@ import com.baidu.mapapi.model.LatLng;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
 import com.overtech.ems.activity.MyApplication;
+import com.overtech.ems.activity.common.LoginActivity;
+import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
-import com.overtech.ems.activity.parttime.fragment.NearByFragment;
-import com.overtech.ems.activity.parttime.fragment.NearByFragment.NearByMapCallback;
-import com.overtech.ems.entity.bean.TaskPackageBean.TaskPackage;
+import com.overtech.ems.config.SystemConfig;
+import com.overtech.ems.entity.bean.Bean;
+import com.overtech.ems.entity.common.Requester;
+import com.overtech.ems.http.OkHttpClientManager;
+import com.overtech.ems.http.OkHttpClientManager.ResultCallback;
+import com.overtech.ems.utils.Logr;
+import com.overtech.ems.utils.SharePreferencesUtils;
+import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
+import com.squareup.okhttp.Request;
 
-public class NearByMapFragment extends BaseFragment implements
-		NearByMapCallback {
+public class NearByMapFragment extends BaseFragment {
 
 	private MapView mMapView = null;
 	private BaiduMap mBaiduMap = null;
@@ -44,11 +52,13 @@ public class NearByMapFragment extends BaseFragment implements
 	private MarkerOptions mOverlayOptions;
 	private Marker mMarker;
 	private View view;
-	private TaskPackage data;
+	private Map<String, Object> data;
 	private double latitude;
 	private double longitude;
+	private String uid;
+	private String certificate;
 	private LatLng myLocation, longPressLocation;
-	private List<TaskPackage> list;
+	private List<Map<String, Object>> list;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -64,16 +74,57 @@ public class NearByMapFragment extends BaseFragment implements
 
 	@SuppressWarnings("unchecked")
 	private void getExtralData() {
-
-		((NearByFragment) getParentFragment()).setNearByMapCallback(this);
+		uid = ((MainActivity) getActivity()).getUid();
+		certificate = ((MainActivity) getActivity()).getCertificate();
 		latitude = ((MyApplication) getActivity().getApplicationContext()).latitude;
 		longitude = ((MyApplication) getActivity().getApplicationContext()).longitude;
 		if (latitude == 0 || longitude == 0) {
 			Utilities.showToast("定位失败", activity);
 			return;
 		}
+		onRefresh();
 	}
+	public void onRefresh(){
+		Requester requester = new Requester();
+		requester.cmd = 20030;
+		requester.certificate = certificate;
+		requester.uid = uid;
+		requester.body.put("latitude", String.valueOf(latitude));
+		requester.body.put("longitude", String.valueOf(longitude));
+		ResultCallback<Bean> nearCallback = new ResultCallback<Bean>() {
 
+			@Override
+			public void onError(Request request, Exception e) {
+				// TODO Auto-generated method stub
+				Logr.e(request.toString());
+			}
+
+			@Override
+			public void onResponse(Bean response) {
+				// TODO Auto-generated method stub
+				int st = response.st;
+				if (st == -1 || st == -2) {
+					Utilities.showToast(response.msg, activity);
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent = new Intent(activity, LoginActivity.class);
+					startActivity(intent);
+					return;
+				} else if (st == 1) {// 上岗证相关
+					Utilities.showToast(response.msg, activity);
+				}
+				list = (List<Map<String, Object>>) response.body.get("data");
+				myLocation = new LatLng(latitude, longitude);
+				addOverLay(list);
+				setMyLocationMarker(myLocation);
+			}
+
+		};
+		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, nearCallback,
+				gson.toJson(requester));
+	}
 	private void initView(View view) {
 		mMapView = (MapView) view.findViewById(R.id.bmapView);
 		mBaiduMap = mMapView.getMap();
@@ -99,7 +150,7 @@ public class NearByMapFragment extends BaseFragment implements
 		mBaiduMap.showInfoWindow(myInfoWindow);
 	}
 
-	public void addOverLay(List<TaskPackage> dataList) {
+	public void addOverLay(List<Map<String, Object>> dataList) {
 		if (mMapView == null) {
 			mMapView = (MapView) view.findViewById(R.id.bmapView);
 		}
@@ -110,7 +161,7 @@ public class NearByMapFragment extends BaseFragment implements
 			return;
 		}
 		if (null == dataList || dataList.size() == 0) {
-			Utilities.showToast("无数据", activity);
+			// Utilities.showToast("无数据", activity);
 		} else {
 			// if (null != longPressLocation) {
 			// OverlayOptions ooCircle = new CircleOptions()
@@ -123,8 +174,8 @@ public class NearByMapFragment extends BaseFragment implements
 			// }
 			for (int i = 0; i < dataList.size(); i++) {
 				data = dataList.get(i);
-				String lat = data.latitude;
-				String lon = data.longitude;
+				String lat = data.get("latitude").toString();
+				String lon = data.get("longitude").toString();
 				if (!(TextUtils.isEmpty(lat) || TextUtils.isEmpty(lon))) {
 
 					LatLng ll = new LatLng(Double.parseDouble(lat),
@@ -142,10 +193,13 @@ public class NearByMapFragment extends BaseFragment implements
 					mOverlayOptions.animateType(MarkerAnimateType.drop);
 					mMarker = (Marker) (mBaiduMap.addOverlay(mOverlayOptions));
 					Bundle bundle = new Bundle();
-					bundle.putString("taskPackageName", data.taskPackageName);
-					bundle.putString("taskNo", data.taskNo);
-					bundle.putString("latitude", data.latitude);
-					bundle.putString("longitude", data.longitude);
+					bundle.putString("taskPackageName",
+							data.get("taskPackageName").toString());
+					bundle.putString("taskNo", data.get("taskNo").toString());
+					bundle.putString("latitude", data.get("latitude")
+							.toString());
+					bundle.putString("longitude", data.get("longitude")
+							.toString());
 					mMarker.setExtraInfo(bundle);
 				}
 			}
@@ -209,6 +263,16 @@ public class NearByMapFragment extends BaseFragment implements
 	// }
 
 	@Override
+	public void onHiddenChanged(boolean hidden) {
+		// TODO Auto-generated method stub
+		super.onHiddenChanged(hidden);
+		Logr.e("NearByMapFragment=="+hidden);
+		if(!hidden){
+			Logr.e("地图刷新了");
+			onRefresh();
+		}
+	}
+	@Override
 	public void onDestroy() {
 		// 关闭定位图层
 		if (mBaiduMap.isMyLocationEnabled()) {
@@ -221,14 +285,5 @@ public class NearByMapFragment extends BaseFragment implements
 			bitmap.recycle();
 		}
 		super.onDestroy();
-	}
-
-	@Override
-	public void callback() {
-		// TODO Auto-generated method stub
-		list = ((NearByFragment) getParentFragment()).getData();
-		myLocation = new LatLng(latitude, longitude);
-		addOverLay(list);
-		setMyLocationMarker(myLocation);
 	}
 }

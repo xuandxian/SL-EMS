@@ -87,17 +87,15 @@ public class KeyWordSerachActivity extends BaseActivity {
 					Intent intent = new Intent(activity, LoginActivity.class);
 					startActivity(intent);
 					return;
-				}else if(st==1){
+				} else if (st == 1) {
 					Utilities.showToast(bean.msg, activity);
 					stackInstance.popActivity(activity);
-				}else{
-					
+				} else {
+
 				}
 				List<String> data = (List<String>) bean.body.get("data");
 				int length = data.size();
-				if (length == 1) {
-					Utilities.showToast(bean.msg, activity);
-				} else {
+				if (length != 1) {
 					for (int i = 0; i < length; i++) {
 						if (i == 0) {
 							zoneCount = Integer.valueOf(data.get(i));
@@ -110,6 +108,12 @@ public class KeyWordSerachActivity extends BaseActivity {
 					mResultAdapter = new SearchResultAdapter(activity,
 							searchList, zoneCount);
 					mSearchListView.setAdapter(mResultAdapter);
+				} else {
+					if (bean.msg == null) {
+						Utilities.showToast("无相关记录", activity);
+					} else {
+						Utilities.showToast(bean.msg, activity);
+					}
 				}
 				break;
 			case StatusCode.RESPONSE_SERVER_EXCEPTION:
@@ -148,7 +152,7 @@ public class KeyWordSerachActivity extends BaseActivity {
 		sharedPreferences = getSharedPreferences("search", MODE_PRIVATE);
 		readHistory();
 		if (null == historyList || historyList.isEmpty()) {
-			Utilities.showToast("无历史记录", activity);
+//			Utilities.showToast("无历史记录", activity);
 		} else {
 			initHistoryItem();
 			mHistoryTextView.setVisibility(View.VISIBLE);

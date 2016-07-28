@@ -1,5 +1,6 @@
 package com.overtech.ems.activity.parttime.tasklist;
 
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -91,8 +92,6 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	private SwipeRefreshLayout mSwipeLayout;
 	private TaskListPackageDetailAdapter adapter;
 	private List<Map<String, Object>> list;
-	private Set<String> tagSet;
-	private String TAG = "24梯";
 	protected final int LIST_PADDING = 10;// 列表弹窗的间隔
 	private Rect mRect = new Rect();// 实例化一个矩形
 	private final int[] mLocation = new int[2];// 坐标的位置（x、y）
@@ -125,27 +124,22 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			switch (code) {
 			case 0:
 				logs = "Set tag and alias success";
-				Log.d(TAG, logs);
-				SharePreferencesUtils.put(activity,
-						SharedPreferencesKeys.TAGSET, tags);// //
-															// 成功保存标签后，将标签放到本地
-				Utilities.showToast("退单成功", activity);
-				stopProgressDialog();
+				Logr.e(logs);
 				stackInstance.popActivity(activity);
 				break;
 			case 6002:
 				logs = "Failed to set alias and tags due to timeout. Try again after 60s.";
-				Log.d(TAG, logs);
+				Logr.e(logs);
 				if (AppUtils.isConnected(getApplicationContext())) {
 					handler.sendMessageDelayed(handler.obtainMessage(
 							StatusCode.MSG_SET_TAGS, tags), 1000 * 60);
 				} else {
-					Log.i(TAG, "No network");
+					Logr.e("No network");
 				}
 				break;
 			default:
 				logs = "Failed with errorCode = " + code;
-				Log.d(TAG, logs);
+				Logr.e(logs);
 			}
 		}
 	};
@@ -154,17 +148,11 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_tasklist_package_detail);
-		initTag();
+		activity = TaskListPackageDetailActivity.this;
+		stackInstance.pushActivity(activity);
 		initView();
 		getExtraDataAndInit();
 		initEvent();
-	}
-
-	private void initTag() {
-		activity = TaskListPackageDetailActivity.this;
-		stackInstance.pushActivity(activity);
-		Set<String> tempSet = (Set<String>) SharePreferencesUtils.get(activity,
-				SharedPreferencesKeys.TAGSET, new LinkedHashSet<String>());
 	}
 
 	private void initView() {
@@ -241,6 +229,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 						new OnClickListener() {
 							@Override
 							public void onClick(View v) {
+								Logr.e("调用百度地图");
 								startNavicate(mStartPoint, destination, "终点");
 							}
 						});
@@ -408,7 +397,8 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 					}
 					if (count == list.size()) {
 						mDoResponse.setVisibility(View.VISIBLE);
-						mDoResponse.setBackgroundResource(R.color.btn_visiable_bg);//绿色
+						mDoResponse
+								.setBackgroundResource(R.color.btn_visiable_bg);// 绿色
 						mDoResponse.setTag(ALLCOMPLETE);
 						mDoChargeBack.setVisibility(View.GONE);
 					} else {
@@ -416,7 +406,8 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 						Logr.e("==是不是当天==" + isToday);
 						if (isToday) {
 							mDoResponse.setVisibility(View.VISIBLE);
-							mDoResponse.setBackgroundResource(R.color.btn_disable_bg);//灰色
+							mDoResponse
+									.setBackgroundResource(R.color.btn_disable_bg);// 灰色
 							mDoResponse.setTag(NOTCOMPLETE);
 							mDoChargeBack.setVisibility(View.GONE);
 						} else {
@@ -547,11 +538,10 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				} else if (st == 1) {
 					Utilities.showToast(response.msg, activity);
 					return;
-				} else {
+				} else if(st==0){
 					Utilities.showToast(response.msg, activity);
-					tagSet.remove(sTaskNo);
-					JPushInterface.setAliasAndTags(getApplicationContext(),
-							null, tagSet, mTagsCallback);
+					//推送业务
+					loadNotDoneTask();
 				}
 			}
 		};
@@ -602,5 +592,43 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 		// TODO Auto-generated method stub
 		super.onBackPressed();
 		stackInstance.popActivity(activity);
+	}
+	
+	private ResultCallback<Bean> loadNotDoneCallback = new ResultCallback<Bean>() {
+
+		@Override
+		public void onError(Request request, Exception e) {
+			// TODO Auto-generated method stub
+			Logr.e(request.toString());
+		}
+
+		@Override
+		public void onResponse(Bean response) {
+			// TODO Auto-generated method stub
+			int st = response.st;
+			if (st == 0) {
+				List<Map<String, Object>> datas = (List<Map<String, Object>>) response.body
+						.get("data");
+				Set<String> tempSet = new HashSet<String>();
+				for (Map<String, Object> data : datas) {
+					String sTaskNo = (String) data.get("taskNo");
+					tempSet.add(sTaskNo);
+				}
+				JPushInterface.setAliasAndTags(activity, "", tempSet,
+						mTagsCallback);
+			}
+		}
+	};
+
+	/**
+	 * 加载未完成的任务单
+	 */
+	private void loadNotDoneTask() {
+		Requester requester = new Requester();
+		requester.cmd = 20050;
+		requester.uid = uid;
+		requester.certificate = certificate;
+		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, loadNotDoneCallback,
+				gson.toJson(requester));
 	}
 }

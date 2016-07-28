@@ -1,8 +1,9 @@
 package com.overtech.ems.activity.parttime.common;
 
 import java.io.IOException;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import android.app.Activity;
@@ -29,10 +30,13 @@ import com.overtech.ems.activity.adapter.PackageDetailAdapter;
 import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.config.SystemConfig;
+import com.overtech.ems.entity.bean.Bean;
 import com.overtech.ems.entity.bean.StatusCodeBean;
 import com.overtech.ems.entity.bean.TaskPackageDetailBean;
 import com.overtech.ems.entity.bean.TaskPackageDetailBean.TaskPackage;
 import com.overtech.ems.entity.common.Requester;
+import com.overtech.ems.http.OkHttpClientManager;
+import com.overtech.ems.http.OkHttpClientManager.ResultCallback;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.AppUtils;
 import com.overtech.ems.utils.Logr;
@@ -66,9 +70,6 @@ public class PackageDetailActivity extends BaseActivity {
 	private String mLongitude; // 经度
 	private String mLatitude; // 纬度
 	private TextView mHeadTitleTaskNo;
-	private Set<String> tagSet;
-	private String tagItem;
-	private String TAG = "24梯";
 	private int totalPrice;
 	private String uid;
 	private String certificate;
@@ -139,29 +140,16 @@ public class PackageDetailActivity extends BaseActivity {
 				String content = bean.body.get("status").toString();
 				if (TextUtils.equals(content, "0")) {
 					Utilities.showToast(bean.msg, activity);
-				} else if (TextUtils.equals(content, "1")) {
+				} else if (TextUtils.equals(content, "1")) {//抢单成功，等待第二个人抢
 					Utilities.showToast(bean.msg, activity);
 					// 推送业务代码
-					tagItem = bean.body.get("taskNo").toString();
-					if (!AppUtils.isValidTagAndAlias(tagItem)) {
-						Utilities.showToast("格式不对", activity);
-					} else {
-						tagSet.add(tagItem);
-						JPushInterface.setAliasAndTags(getApplicationContext(),
-								null, tagSet, mTagsCallback);
-					}
+					//TODO
+					loadNotDoneTask();
 					onActivityForResult();
-				} else if (TextUtils.equals(content, "2")) {
+				} else if (TextUtils.equals(content, "2")) {//抢单成功，到任务单中查看
 					Utilities.showToast(bean.msg, activity);
 					// 推送业务代码
-					tagItem = bean.body.get("taskNo").toString();
-					if (!AppUtils.isValidTagAndAlias(tagItem)) {
-						Utilities.showToast("格式不对", activity);
-					} else {
-						tagSet.add(tagItem);
-						JPushInterface.setAliasAndTags(getApplicationContext(),
-								null, tagSet, mTagsCallback);
-					}
+					loadNotDoneTask();
 					onActivityForResult();
 				} else if (TextUtils.equals(content, "3")) {
 					Utilities.showToast(bean.msg, activity);
@@ -201,24 +189,22 @@ public class PackageDetailActivity extends BaseActivity {
 			switch (code) {
 			case 0:
 				logs = "Set tag and alias success";
-				Log.d(TAG, logs);
-				SharePreferencesUtils.put(activity, "tagSet", tags);// 成功保存标签后，将标签放到本地
+				Logr.e(logs);
 				break;
-
 			case 6002:
 				logs = "Failed to set alias and tags due to timeout. Try again after 60s.";
-				Log.d(TAG, logs);
+				Logr.e(logs);
 				if (AppUtils.isConnected(getApplicationContext())) {
 					handler.sendMessageDelayed(handler.obtainMessage(
 							StatusCode.MSG_SET_TAGS, tags), 1000 * 60);
 				} else {
-					Log.i(TAG, "No network");
+					Logr.e("No network");
 				}
 				break;
 
 			default:
 				logs = "Failed with errorCode = " + code;
-				Log.d(TAG, logs);
+				Logr.e(logs);
 			}
 
 		}
@@ -231,9 +217,6 @@ public class PackageDetailActivity extends BaseActivity {
 		setContentView(R.layout.activity_package_detail);
 		activity = this;
 		stackInstance.pushActivity(activity);
-		Set<String> tempSet = (Set<String>) SharePreferencesUtils.get(activity,
-				"tagSet", new LinkedHashSet<String>());
-		tagSet = tempSet;
 		getExtrasData();
 		findViewById();
 		getDataByTaskNo(SystemConfig.NEWIP);
@@ -415,5 +398,43 @@ public class PackageDetailActivity extends BaseActivity {
 		Intent intent = new Intent();
 		setResult(Activity.RESULT_OK, intent);
 		stackInstance.popActivity(activity);
+	}
+	
+	private ResultCallback<Bean> loadNotDoneCallback = new ResultCallback<Bean>() {
+
+		@Override
+		public void onError(Request request, Exception e) {
+			// TODO Auto-generated method stub
+			Logr.e(request.toString());
+		}
+
+		@Override
+		public void onResponse(Bean response) {
+			// TODO Auto-generated method stub
+			int st = response.st;
+			if (st == 0) {
+				List<Map<String, Object>> datas = (List<Map<String, Object>>) response.body
+						.get("data");
+				Set<String> tempSet = new HashSet<String>();
+				for (Map<String, Object> data : datas) {
+					String sTaskNo = (String) data.get("taskNo");
+					tempSet.add(sTaskNo);
+				}
+				JPushInterface.setAliasAndTags(activity, "", tempSet,
+						mTagsCallback);
+			}
+		}
+	};
+
+	/**
+	 * 加载未完成的任务单
+	 */
+	private void loadNotDoneTask() {
+		Requester requester = new Requester();
+		requester.cmd = 20050;
+		requester.uid = uid;
+		requester.certificate = certificate;
+		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, loadNotDoneCallback,
+				gson.toJson(requester));
 	}
 }

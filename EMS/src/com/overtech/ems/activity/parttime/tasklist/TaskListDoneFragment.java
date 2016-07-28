@@ -134,11 +134,6 @@ public class TaskListDoneFragment extends BaseFragment implements
 					}
 				}
 				if (list == null || list.size() == 0) {
-					Utilities
-							.showToast(
-									getResources().getString(
-											R.string.response_no_data),
-									mActivity);
 					llNoPage.setVisibility(View.VISIBLE);
 					swipeRefresh.setVisibility(View.GONE);
 				} else {
@@ -158,11 +153,12 @@ public class TaskListDoneFragment extends BaseFragment implements
 		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
 				gson.toJson(requester));
 	}
+
 	@Override
 	public void onHiddenChanged(boolean hidden) {
 		// TODO Auto-generated method stub
 		super.onHiddenChanged(hidden);
-		if(!hidden){
+		if (!hidden) {
 			onRefresh();
 		}
 	}

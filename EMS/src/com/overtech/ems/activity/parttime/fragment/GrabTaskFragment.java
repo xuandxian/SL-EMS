@@ -2,9 +2,10 @@ package com.overtech.ems.activity.parttime.fragment;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.LinkedHashSet;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import android.app.Activity;
@@ -38,8 +39,8 @@ import com.overtech.ems.activity.parttime.grabtask.GrabTaskDoFilterActivity;
 import com.overtech.ems.activity.parttime.grabtask.KeyWordSerachActivity;
 import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.config.SystemConfig;
+import com.overtech.ems.entity.bean.Bean;
 import com.overtech.ems.entity.bean.TaskPackageBean;
-import com.overtech.ems.entity.bean.TaskPackageBean.TaskPackage;
 import com.overtech.ems.entity.common.Requester;
 import com.overtech.ems.http.OkHttpClientManager;
 import com.overtech.ems.http.OkHttpClientManager.ResultCallback;
@@ -70,22 +71,13 @@ public class GrabTaskFragment extends BaseFragment implements
 	private View mHeadView;
 	private Effectstype effect;
 	private GrabTaskAdapter mAdapter;
-	private List<TaskPackage> list;
+	private List<Map<String,Object>> list;
 	private TextView mHeadTitle;
 	private LinearLayout mNoResultPage;
 	private LinearLayout mNoWifi;
 	private Button mRetrySearch;
 	private String uid;
 	private String certificate;
-	/**
-	 * 存放用于推送的标签
-	 */
-	private Set<String> tagSet;
-	/**
-	 * 抢单成功的任务单用做标签
-	 */
-	private String tagItem;
-	private String TAG = "24梯";
 	private final static String REFRESH_TYPE_DEFAULT = "0";
 	private final static String REFRESH_TYPE_LOADING = "1";
 	private final static String REFRESH_TYPE_FILTER = "2";
@@ -114,7 +106,7 @@ public class GrabTaskFragment extends BaseFragment implements
 			stopProgressDialog();
 		};
 	};
-	private ResultCallback<TaskPackageBean> mCallBack = new ResultCallback<TaskPackageBean>() {
+	private ResultCallback<Bean> mCallBack = new ResultCallback<Bean>() {
 
 		@Override
 		public void onError(Request request, Exception e) {
@@ -125,7 +117,7 @@ public class GrabTaskFragment extends BaseFragment implements
 		}
 
 		@Override
-		public void onResponse(TaskPackageBean response) {
+		public void onResponse(Bean response) {
 			// TODO Auto-generated method stub
 			stopProgressDialog();
 			mSwipeListView.stopRefresh();
@@ -150,6 +142,8 @@ public class GrabTaskFragment extends BaseFragment implements
 					startActivity(intent);
 				} else {// 包含上岗证过期
 					Utilities.showToast(msg, mActivity);
+					// new
+					// AlertDialog.Builder(activity).setMessage(msg).create().show();
 					if (mAdapter != null) {
 						mAdapter.getData().clear();
 						mAdapter.notifyDataSetChanged();
@@ -158,7 +152,7 @@ public class GrabTaskFragment extends BaseFragment implements
 					mNoWifi.setVisibility(View.GONE);
 				}
 			} else {
-				list = response.body.data;
+				list = (List<Map<String, Object>>) response.body.get("data");
 				if (null == list || list.isEmpty()) {
 					mNoWifi.setVisibility(View.GONE);
 					mNoResultPage.setVisibility(View.VISIBLE);
@@ -214,31 +208,12 @@ public class GrabTaskFragment extends BaseFragment implements
 					onRefresh();
 				} else if (TextUtils.equals(status, "1")) {// 抢单成功，等待第二个人抢
 					Utilities.showToast(response.msg, activity);
-
-					// 推送业务代码
-					// tagItem = response.body.taskNo;
-					// if (!AppUtils.isValidTagAndAlias(tagItem)) {
-					// Utilities.showToast("格式不对", context);
-					// } else {
-					// tagSet.add(tagItem);
-					// JPushInterface.setAliasAndTags(getActivity()
-					// .getApplicationContext(), null, tagSet,
-					// mTagsCallback);
-					// }
 					onRefresh();
+					loadNotDoneTask();
 				} else if (TextUtils.equals(status, "2")) {// 抢单成功，到任务单中查看
 					Utilities.showToast(response.msg, activity);
-					// 推送业务代码
-					// tagItem = response.body.taskNo;
-					// if (!AppUtils.isValidTagAndAlias(tagItem)) {
-					// Utilities.showToast("格式不对", context);
-					// } else {
-					// tagSet.add(tagItem);
-					// JPushInterface.setAliasAndTags(getActivity()
-					// .getApplicationContext(), null, tagSet,
-					// mTagsCallback);
-					// }
 					onRefresh();
+					loadNotDoneTask();
 				} else if (TextUtils.equals(status, "3")) {// 差一点抢到
 					Utilities.showToast(response.msg, activity);
 					onRefresh();
@@ -263,24 +238,22 @@ public class GrabTaskFragment extends BaseFragment implements
 			switch (code) {
 			case 0:
 				logs = "Set tag and alias success";
-				Log.d(TAG, logs);
-				SharePreferencesUtils.put(mActivity,
-						SharedPreferencesKeys.TAGSET, tags);
+				Logr.e(logs);
 				break;
 			case 6002:
 				logs = "Failed to set alias and tags due to timeout. Try again after 60s.";
-				Log.d(TAG, logs);
+				Logr.e(logs);
 				if (AppUtils.isConnected(getActivity().getApplicationContext())) {
 					handler.sendMessageDelayed(handler.obtainMessage(
 							StatusCode.MSG_SET_TAGS, tags), 1000 * 60);
 				} else {
-					Log.i(TAG, "No network");
+					Logr.e("No network");
 				}
 				break;
 
 			default:
 				logs = "Failed with errorCode = " + code;
-				Log.d(TAG, logs);
+				Logr.e(logs);
 			}
 
 		}
@@ -300,21 +273,12 @@ public class GrabTaskFragment extends BaseFragment implements
 				false);
 		uid = ((MainActivity) getActivity()).getUid();
 		certificate = ((MainActivity) getActivity()).getCertificate();
-		// 读取保存在本地的标签
-		readTagSet();
 		initView(view);
 		initEvent();
 		onRefresh();
 		Log.e("GrabTaskFragment", "onCretateView");
 
 		return view;
-	}
-
-	private void readTagSet() {
-		// TODO Auto-generated method stub
-		Set<String> tempSet = (Set<String>) SharePreferencesUtils.get(
-				mActivity, SharedPreferencesKeys.TAGSET,
-				new LinkedHashSet<String>());
 	}
 
 	private void initView(View view) {
@@ -343,15 +307,15 @@ public class GrabTaskFragment extends BaseFragment implements
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				TaskPackage data = (TaskPackage) parent
+				Map<String,Object> data = (Map<String,Object>) parent
 						.getItemAtPosition(position);
 				Intent intent = new Intent(mActivity,
 						PackageDetailActivity.class);
 				Bundle bundle = new Bundle();
-				bundle.putString("CommunityName", data.taskPackageName);
-				bundle.putString("TaskNo", data.taskNo);
-				bundle.putString("Longitude", data.longitude);
-				bundle.putString("Latitude", data.latitude);
+				bundle.putString("CommunityName", data.get("taskPackageName").toString());
+				bundle.putString("TaskNo", data.get("taskNo").toString());
+				bundle.putString("Longitude", data.get("longitude").toString());
+				bundle.putString("Latitude", data.get("latitude").toString());
 				intent.putExtras(bundle);
 				startActivityForResult(intent, StatusCode.RESULT_GRAB_DO_GRAB);
 			}
@@ -485,14 +449,16 @@ public class GrabTaskFragment extends BaseFragment implements
 		mSwipeListView.stopRefresh();
 		mSwipeListView.stopLoadMore();
 	}
+
 	@Override
 	public void onHiddenChanged(boolean hidden) {
 		// TODO Auto-generated method stub
 		super.onHiddenChanged(hidden);
-		if(!hidden){
+		if (!hidden) {
 			onRefresh();
 		}
 	}
+
 	private void showDialog(final int position) {
 		effect = Effectstype.Slideright;
 		dialogBuilder.withTitle("温馨提示").withTitleColor(R.color.main_primary)
@@ -514,7 +480,7 @@ public class GrabTaskFragment extends BaseFragment implements
 						dialogBuilder.dismiss();
 						startProgressDialog(getResources().getString(
 								R.string.loading_public_grabing));
-						String mTaskNo = list.get(position).taskNo;
+						String mTaskNo = list.get(position).get("taskNo").toString();
 						Requester requester = new Requester();
 						requester.cmd = 20023;
 						requester.uid = uid;
@@ -524,6 +490,44 @@ public class GrabTaskFragment extends BaseFragment implements
 								grabCallback, gson.toJson(requester));
 					}
 				}).show();
+	}
+
+	private ResultCallback<Bean> loadNotDoneCallback = new ResultCallback<Bean>() {
+
+		@Override
+		public void onError(Request request, Exception e) {
+			// TODO Auto-generated method stub
+			Logr.e(request.toString());
+		}
+
+		@Override
+		public void onResponse(Bean response) {
+			// TODO Auto-generated method stub
+			int st = response.st;
+			if (st == 0) {
+				List<Map<String, Object>> datas = (List<Map<String, Object>>) response.body
+						.get("data");
+				Set<String> tempSet = new HashSet<String>();
+				for (Map<String, Object> data : datas) {
+					String sTaskNo = (String) data.get("taskNo");
+					tempSet.add(sTaskNo);
+				}
+				JPushInterface.setAliasAndTags(activity, "", tempSet,
+						mTagsCallback);
+			}
+		}
+	};
+
+	/**
+	 * 加载未完成的任务单
+	 */
+	private void loadNotDoneTask() {
+		Requester requester = new Requester();
+		requester.cmd = 20050;
+		requester.uid = uid;
+		requester.certificate = certificate;
+		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, loadNotDoneCallback,
+				gson.toJson(requester));
 	}
 
 }

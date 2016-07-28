@@ -146,7 +146,11 @@ public class ChangePhoneNoValidatePasswordActivity extends BaseActivity
 		case R.id.btn_next:
 			String phoneNo = mPhone.getHint().toString().trim();
 			String password = mPassword.getText().toString().trim();
-			valicatePassword(phoneNo, password);
+			if (!TextUtils.isEmpty(password)) {
+				valicatePassword(phoneNo, password);
+			} else {
+				Utilities.showToast("请输入原密码", activity);
+			}
 			break;
 		default:
 			break;
@@ -154,7 +158,8 @@ public class ChangePhoneNoValidatePasswordActivity extends BaseActivity
 	}
 
 	private void valicatePassword(String phoneNo, String password) {
-		startProgressDialog(getResources().getString(R.string.loading_public_default));
+		startProgressDialog(getResources().getString(
+				R.string.loading_public_default));
 		Requester requester = new Requester();
 		requester.cmd = 20072;
 		requester.uid = uid;

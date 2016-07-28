@@ -2,6 +2,7 @@ package com.overtech.ems.activity.adapter;
 
 import java.text.NumberFormat;
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.text.TextUtils;
@@ -15,25 +16,24 @@ import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.DistanceUtil;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.MyApplication;
-import com.overtech.ems.entity.bean.TaskPackageBean.TaskPackage;
 
 public class GrabTaskAdapter extends BaseAdapter {
 
-	private List<TaskPackage> list;
+	private List<Map<String,Object>> list;
 	private Context context;
 	private LatLng mLocation;
 	private double curLatitude;
 	private double curLongitude;
 
-	public List<TaskPackage> getData() {
+	public List<Map<String,Object>> getData() {
 		return list;
 	}
 
-	public void setData(List<TaskPackage> data) {
+	public void setData(List<Map<String,Object>> data) {
 		this.list = data;
 	}
 
-	public GrabTaskAdapter(List<TaskPackage> list, Context context) {
+	public GrabTaskAdapter(List<Map<String,Object>> list, Context context) {
 		super();
 		this.list = list;
 		this.context = context;
@@ -64,20 +64,20 @@ public class GrabTaskAdapter extends BaseAdapter {
 			new ViewHolder(convertView);
 		}
 		ViewHolder holder = (ViewHolder) convertView.getTag();
-		TaskPackage data = list.get(position);
-		holder.tv_name.setText(data.taskPackageName);
-		holder.elevtorNum.setText(data.elevatorAmounts + "");
-		holder.addressName.setText(data.maintenanceAddress);
-		String latitude = data.latitude.trim();
-		String longitude = data.longitude.trim();
+		Map<String,Object> data = list.get(position);
+		holder.tv_name.setText(data.get("taskPackageName").toString());
+		holder.elevtorNum.setText(data.get("elevatorAmounts").toString());
+		holder.addressName.setText(data.get("maintenanceAddress").toString());
+		String latitude = data.get("latitude").toString();
+		String longitude = data.get("longitude").toString();
 		if (null == latitude || TextUtils.equals("", latitude)
 				|| null == longitude || TextUtils.equals("", longitude)) {
 			holder.distance.setText("距离计算错误");
 		} else {
 			NumberFormat numberFormat = NumberFormat.getNumberInstance();// 保留两位小数
 			numberFormat.setMaximumFractionDigits(2);
-			LatLng latlng = new LatLng(Double.valueOf(data.latitude),
-					Double.valueOf(data.longitude));
+			LatLng latlng = new LatLng(Double.valueOf(data.get("latitude").toString()),
+					Double.valueOf(data.get("longitude").toString()));
 			if (curLatitude == 0 || curLongitude == 0) {
 				holder.distance.setText("未获取到位置信息");
 			} else {
@@ -85,13 +85,13 @@ public class GrabTaskAdapter extends BaseAdapter {
 						.getDistance(mLocation, latlng) / 1000.0) + "km");
 			}
 		}
-		holder.date.setText(data.maintenanceDate);
-		if (TextUtils.equals(data.grabNums, "0")) {
+		holder.date.setText(data.get("maintenanceDate").toString());
+		if (TextUtils.equals(data.get("grabNums").toString(), "0")) {
 			holder.iv_icon.setImageResource(R.drawable.icon_task_none);
-		} else if (TextUtils.equals(data.grabNums, "1")) {
+		} else if (TextUtils.equals(data.get("grabNums").toString(), "1")) {
 			holder.iv_icon.setImageResource(R.drawable.icon_task_done);
 		}
-		if (TextUtils.equals(data.topState, "1")) {
+		if (TextUtils.equals(data.get("topState").toString(), "1")) {
 			holder.hot.setVisibility(View.VISIBLE);
 		} else {
 			holder.hot.setVisibility(View.GONE);
