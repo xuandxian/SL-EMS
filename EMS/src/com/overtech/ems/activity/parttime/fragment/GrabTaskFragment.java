@@ -91,16 +91,6 @@ public class GrabTaskFragment extends BaseFragment implements
 						.getApplicationContext(), null, (Set<String>) msg.obj,
 						mTagsCallback);
 				break;
-			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				mNoWifi.setVisibility(View.VISIBLE);
-				mNoResultPage.setVisibility(View.GONE);
-				Utilities.showToast(R.string.response_failure_msg, activity);
-				break;
-			case StatusCode.RESPONSE_NET_FAILED:
-				mNoWifi.setVisibility(View.VISIBLE);
-				mNoResultPage.setVisibility(View.GONE);
-				Utilities.showToast(R.string.request_error_msg, activity);
-				break;
 			}
 			onLoad();
 			stopProgressDialog();

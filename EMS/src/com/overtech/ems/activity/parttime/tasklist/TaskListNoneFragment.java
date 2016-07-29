@@ -264,14 +264,16 @@ public class TaskListNoneFragment extends BaseFragment implements
 					return;
 				}
 				String time = response.body.get("result").toString();
-				if (time.equals("-1")) {
+				if (time.equals("-1")) {//维保单维保时间已经过期
 					Utilities.showToast(response.msg, mActivity);
-				} else if (time.equals("0")) {
+					return;
+				} else if (time.equals("0")) {//维保单维保时间是当天，不允许退单
 					Utilities.showToast(response.msg, mActivity);
-				} else if (time.equals("1")) {
+					return;
+				} else if (time.equals("1")) {//退单时间距离维保时间在72小时内，退单会影响星级评定
 					dialogBuilder.withMessage(response.msg);
 				} else {
-					dialogBuilder.withMessage("你确认要退单？");
+					dialogBuilder.withMessage("你确认要退单？");//退单时间距离维保时间72小时外
 				}
 				effect = Effectstype.Slideright;
 				dialogBuilder.withTitle("温馨提示")
@@ -358,7 +360,7 @@ public class TaskListNoneFragment extends BaseFragment implements
 				gson.toJson(requester));
 	}
 
-	public void startNavicate(LatLng startPoint, LatLng endPoint, String endName) {// endName暂时不使用
+	private void startNavicate(LatLng startPoint, LatLng endPoint, String endName) {// endName暂时不使用
 		// 构建 route搜索参数
 		RouteParaOption para = new RouteParaOption().startName("起点")
 				.startPoint(startPoint).endPoint(endPoint).endName("终点")
@@ -366,6 +368,7 @@ public class TaskListNoneFragment extends BaseFragment implements
 		try {
 			BaiduMapRoutePlan.setSupportWebRoute(true);
 			BaiduMapRoutePlan.openBaiduMapTransitRoute(para, mActivity);
+			Logr.e("专为5.1量身打造的Logr，fuck，你到底是执行不执行");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

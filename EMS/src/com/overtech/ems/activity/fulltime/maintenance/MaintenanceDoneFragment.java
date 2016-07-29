@@ -52,6 +52,8 @@ public class MaintenanceDoneFragment extends BaseFragment {
 		uid = ((MainActivity) getActivity()).getUid();
 		certificate = ((MainActivity) getActivity()).getCertificate();
 
+		swipeRefresh.setColorSchemeResources(R.color.material_deep_teal_200,
+				R.color.material_deep_teal_500);
 		swipeRefresh.setOnRefreshListener(new OnRefreshListener() {
 
 			@Override
@@ -115,11 +117,8 @@ public class MaintenanceDoneFragment extends BaseFragment {
 				} else {
 					list = response.body.data;
 					if (list == null || list.size() == 0) {
-						Utilities.showToast(
-								getResources().getString(
-										R.string.response_no_data), activity);
 						tvNoData.setVisibility(View.VISIBLE);
-						if(adapter!=null){
+						if (adapter != null) {
 							adapter.setData(list);
 							adapter.notifyDataSetChanged();
 						}

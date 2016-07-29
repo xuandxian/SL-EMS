@@ -59,13 +59,15 @@ public class MaintenanceNoneFragment extends BaseFragment {
 		reLoad = (Button) view.findViewById(R.id.load_btn_retry);
 		uid = ((MainActivity) getActivity()).getUid();
 		certificate = ((MainActivity) getActivity()).getCertificate();
-		requestLoading();
 		initEvent();
+		requestLoading();
 		return view;
 	}
 
 	private void initEvent() {
 		// TODO Auto-generated method stub
+		swipeRefresh.setColorSchemeResources(R.color.material_deep_teal_200,
+				R.color.material_deep_teal_500);
 		swipeRefresh.setOnRefreshListener(new OnRefreshListener() {
 
 			@Override

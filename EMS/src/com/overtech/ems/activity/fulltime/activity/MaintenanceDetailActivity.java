@@ -124,7 +124,7 @@ public class MaintenanceDetailActivity extends BaseActivity implements
 					elevatorStoreySite.setText(response.body.storeySite);
 					faultCause.setText(response.body.faultCause);
 					faultFrom.setText(response.body.faultFrom);
-					faultComponent.setText(response.body.faultComponent);
+//					faultComponent.setText(response.body.faultComponent);
 					partnerTel = response.body.partnerTel;
 					elevatorNo = response.body.elevatorNo;
 					desLatLng = new LatLng(
@@ -162,7 +162,7 @@ public class MaintenanceDetailActivity extends BaseActivity implements
 		elevatorStoreySite = (TextView) findViewById(R.id.tv_elevator_storey_site);
 		faultCause = (TextView) findViewById(R.id.tv_fault_cause);
 		faultFrom = (TextView) findViewById(R.id.tv_fault_from);
-		faultComponent = (TextView) findViewById(R.id.tv_fault_component);
+//		faultComponent = (TextView) findViewById(R.id.tv_fault_component);
 	}
 
 	@Override

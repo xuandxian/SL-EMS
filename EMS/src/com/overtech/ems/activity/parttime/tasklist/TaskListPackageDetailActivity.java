@@ -120,6 +120,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 
 		@Override
 		public void gotResult(int code, String alias, Set<String> tags) {
+			stopProgressDialog();
 			String logs;
 			switch (code) {
 			case 0:
@@ -524,7 +525,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			@Override
 			public void onResponse(Bean response) {
 				// TODO Auto-generated method stub
-				stopProgressDialog();
+//				stopProgressDialog();
 				int st = response.st;
 				if (st == -1 || st == -2) {
 					Utilities.showToast(response.msg, activity);
@@ -539,7 +540,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 					Utilities.showToast(response.msg, activity);
 					return;
 				} else if(st==0){
-					Utilities.showToast(response.msg, activity);
+//					Utilities.showToast(response.msg, activity);
 					//推送业务
 					loadNotDoneTask();
 				}

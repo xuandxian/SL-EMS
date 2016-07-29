@@ -1,11 +1,19 @@
 package com.overtech.ems.activity.common;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -14,18 +22,23 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+import cn.jpush.android.api.JPushInterface;
+import cn.jpush.android.api.TagAliasCallback;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.common.password.LostPasswordActivity;
 import com.overtech.ems.activity.common.register.RegisterActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
+import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.config.SystemConfig;
+import com.overtech.ems.entity.bean.Bean;
 import com.overtech.ems.entity.bean.LoginBean;
 import com.overtech.ems.entity.common.Requester;
 import com.overtech.ems.http.OkHttpClientManager;
 import com.overtech.ems.http.OkHttpClientManager.ResultCallback;
 import com.overtech.ems.security.MD5Util;
+import com.overtech.ems.utils.AppUtils;
 import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
@@ -49,7 +62,19 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	private ToggleButton mChangePasswordState;
 	private String encryptPassword;
 	private Context ctx;
-
+	protected String certificate;
+	protected String uid;
+	private Handler handler = new Handler() {
+		public void handleMessage(Message msg) {
+			switch (msg.what) {
+			case StatusCode.MSG_SET_TAGS:
+				Log.d("24梯", "Set tags in handler.");
+				JPushInterface.setAliasAndTags(getApplicationContext(), null, (Set<String>) msg.obj,
+						mTagsCallback);
+				break;
+			}
+		};
+	};
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -142,18 +167,18 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			@Override
 			public void onResponse(LoginBean response) {
 				// TODO Auto-generated method stub
-				stopProgressDialog();
 				if (response == null) {
 					Utilities.showToast(R.string.response_no_object, ctx);
 					return;
 				}
 				int st = response.st;
 				if (st != 0) {
+					stopProgressDialog();
 					Utilities.showToast(response.msg, ctx);
 				} else {
-					String certificate = response.body.certificate;
+					 certificate = response.body.certificate;
 					String employeeType = response.body.employeeType;
-					String uid = response.body.uid;
+					 uid = response.body.uid;
 					SharePreferencesUtils.put(ctx,
 							SharedPreferencesKeys.CERTIFICATED, certificate);
 					SharePreferencesUtils.put(ctx, SharedPreferencesKeys.UID,
@@ -161,10 +186,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 					SharePreferencesUtils.put(ctx,
 							SharedPreferencesKeys.EMPLOYEETYPE, employeeType);
 
-					Intent intent = new Intent(LoginActivity.this,
-							MainActivity.class);
-					startActivity(intent);
-					finish();
+					loadNotDoneTask();
 				}
 			}
 
@@ -191,5 +213,78 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			onBackPressed();
 			break;
 		}
+	}
+	private final TagAliasCallback mTagsCallback = new TagAliasCallback() {
+
+		@Override
+		public void gotResult(int code, String alias, Set<String> tags) {
+			stopProgressDialog();
+			String logs;
+			switch (code) {
+			case 0:
+				logs = "Set tag and alias success";
+				Logr.e(logs);
+				//将信息添加成功后即可成功
+				Intent intent = new Intent(LoginActivity.this,
+						MainActivity.class);
+				startActivity(intent);
+				finish();
+				break;
+			case 6002:
+				Utilities.showToast("登录失败，请检查网络重新尝试", LoginActivity.this);
+				logs = "Failed to set alias and tags due to timeout. Try again after 60s.";
+				Logr.e(logs);
+				if (AppUtils.isConnected(getApplicationContext())) {
+					handler.sendMessageDelayed(handler.obtainMessage(
+							StatusCode.MSG_SET_TAGS, tags), 1000 * 60);
+				} else {
+					Logr.e("No network");
+				}
+				break;
+
+			default:
+				logs = "Failed with errorCode = " + code;
+				Logr.e(logs);
+			}
+
+		}
+
+	};
+	private ResultCallback<Bean> loadNotDoneCallback = new ResultCallback<Bean>() {
+
+		@Override
+		public void onError(Request request, Exception e) {
+			// TODO Auto-generated method stub
+			Logr.e(request.toString());
+		}
+
+		@Override
+		public void onResponse(Bean response) {
+			// TODO Auto-generated method stub
+			int st = response.st;
+			if (st == 0) {
+				List<Map<String, Object>> datas = (List<Map<String, Object>>) response.body
+						.get("data");
+				Set<String> tempSet = new HashSet<String>();
+				for (Map<String, Object> data : datas) {
+					String sTaskNo = (String) data.get("taskNo");
+					tempSet.add(sTaskNo);
+				}
+				JPushInterface.setAliasAndTags(LoginActivity.this, "", tempSet,
+						mTagsCallback);
+			}
+		}
+	};
+
+	/**
+	 * 加载未完成的任务单
+	 */
+	private void loadNotDoneTask() {
+		Requester requester = new Requester();
+		requester.cmd = 20050;
+		requester.uid = uid;
+		requester.certificate = certificate;
+		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, loadNotDoneCallback,
+				gson.toJson(requester));
 	}
 }
