@@ -102,9 +102,14 @@ public class ChangePhoneNoValidatePasswordActivity extends BaseActivity
 	};
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_change_phoneno_vc);
+	protected int getLayoutResIds() {
+		// TODO Auto-generated method stub
+		return R.layout.activity_change_phoneno_vc;
+	}
+
+	@Override
+	protected void afterCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
 		activity = this;
 		uid = (String) SharePreferencesUtils.get(activity,
 				SharedPreferencesKeys.UID, "");
@@ -206,4 +211,5 @@ public class ChangePhoneNoValidatePasswordActivity extends BaseActivity
 		super.onBackPressed();
 		stackInstance.popActivity(activity);
 	}
+
 }

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.overtech.ems"
-    android:versionCode="1"
+    android:versionCode="2"
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="14"
+        android:minSdkVersion="15"
         android:targetSdkVersion="20" />
 
     <permission
@@ -49,10 +49,10 @@
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
-        android:theme="@style/Theme.AppCompat.Light" >
+        android:theme="@style/AppBaseTheme" >
         <activity
             android:name=".activity.common.SplashActivity"
-            android:theme="@android:style/Theme.NoTitleBar" >
+            android:theme="@style/AppBaseTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -113,7 +113,9 @@
         <activity android:name=".activity.parttime.tasklist.QuestionResponseActivity" />
         <activity android:name=".activity.parttime.tasklist.EvaluationActivity" />
         <activity android:name=".activity.parttime.tasklist.TaskListPackageDetailActivity" />
+        <activity android:name=".activity.parttime.tasklist.TaskListPackageDoneDetailActivity"/>
         <activity android:name=".activity.parttime.personal.PersonalChargeBackListActivity" />
+        <activity android:name=".activity.parttime.personal.PersonalPartnersActivity" />
         <activity android:name=".activity.parttime.personal.others.PersonalHelpDocActivity" />
         <activity android:name=".activity.parttime.personal.notice.PersonalNoticeActivity" />
         <activity android:name=".activity.parttime.personal.notice.PersonalNoticeDetailActivity" />
@@ -123,6 +125,8 @@
         <activity android:name="com.overtech.ems.activity.fulltime.activity.MaintenanceDetailActivity" />
         <activity android:name="com.overtech.ems.activity.fulltime.activity.MaintenanceTaskActivity" />
         <activity android:name="com.overtech.ems.activity.fulltime.activity.MaintenanceResponseActivity" />
+        <activity android:name="com.overtech.ems.activity.fulltime.activity.MaintenanceComponentActivity"/>
+        <activity android:name="com.overtech.ems.activity.fulltime.activity.ClosePeopleSolveActivity"/>
         <!-- Required SDK核心功能 -->
         <activity
             android:name="cn.jpush.android.ui.PushActivity"
@@ -222,7 +226,7 @@
             android:value="developer-default" />
         <meta-data
             android:name="JPUSH_APPKEY"
-            android:value="47e3c96e973c115a5d204187" />
+            android:value="9f99fc91af2ebb66bdcca9cc" />
         <!-- </>值来自开发者平台取得的AppKey -->
         <activity
             android:name="com.mob.tools.MobUIShell"

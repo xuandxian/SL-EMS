@@ -1,7 +1,9 @@
 package com.overtech.ems.activity.fulltime.maintenance;
 
 import java.util.List;
+import java.util.Map;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,22 +21,12 @@ import android.widget.ListView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
-import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.activity.fulltime.activity.MaintenanceDetailActivity;
 import com.overtech.ems.activity.fulltime.adapter.MaintenaceNoneAdapter;
 import com.overtech.ems.activity.parttime.MainActivity;
-import com.overtech.ems.config.SystemConfig;
-import com.overtech.ems.entity.common.Requester;
-import com.overtech.ems.entity.fulltime.MaintenanceBean;
-import com.overtech.ems.entity.fulltime.MaintenanceBean.Workorder;
-import com.overtech.ems.http.OkHttpClientManager;
-import com.overtech.ems.http.OkHttpClientManager.ResultCallback;
+import com.overtech.ems.entity.bean.Bean;
+import com.overtech.ems.http.HttpConnector;
 import com.overtech.ems.http.constant.Constant;
-import com.overtech.ems.utils.Logr;
-import com.overtech.ems.utils.SharePreferencesUtils;
-import com.overtech.ems.utils.SharedPreferencesKeys;
-import com.overtech.ems.utils.Utilities;
-import com.squareup.okhttp.Request;
 
 public class MaintenanceNoneFragment extends BaseFragment {
 	private SwipeRefreshLayout swipeRefresh;
@@ -43,7 +35,7 @@ public class MaintenanceNoneFragment extends BaseFragment {
 	private Button reLoad;
 	private String uid;
 	private String certificate;
-	private List<Workorder> list;
+	private List<Map<String,Object>> list;
 	private MaintenaceNoneAdapter adapter;
 
 	@Override
@@ -105,72 +97,55 @@ public class MaintenanceNoneFragment extends BaseFragment {
 		// TODO Auto-generated method stub
 		startProgressDialog(getResources().getString(
 				R.string.loading_public_default));
-		Requester requester = new Requester();
-		requester.cmd = 20000;
-		requester.uid = uid;
-		requester.certificate = certificate;
-		ResultCallback<MaintenanceBean> callback = new ResultCallback<MaintenanceBean>() {
+		
+		HttpConnector<Bean> conn=new HttpConnector<Bean>(20000,uid,certificate,null) {
 
 			@Override
-			public void onResponse(MaintenanceBean response) {
+			public Context getContext() {
 				// TODO Auto-generated method stub
-				stopProgressDialog();
-				if (swipeRefresh.isRefreshing()) {
-					swipeRefresh.setRefreshing(false);
-				}
-				if (response == null) {
-					Utilities.showToast(R.string.response_no_object, activity);
-					return;
-				}
-				int st = response.st;
-				String msg = response.msg;
-				if (st != 0) {
-					if (st == -1 || st == -2) {
-						if (activity != null) {
-							Utilities.showToast(msg, activity);
-							SharePreferencesUtils.put(activity,
-									SharedPreferencesKeys.UID, "");
-							SharePreferencesUtils.put(activity,
-									SharedPreferencesKeys.CERTIFICATED, "");
-							Intent intent = new Intent(activity,
-									LoginActivity.class);
-							startActivity(intent);
-						}
-					} else {
-						Utilities.showToast(msg, activity);
-					}
-				} else {
-					list = response.body.data;
-					if (list == null || list.size() == 0) {
-						llNoPage.setVisibility(View.VISIBLE);
-						swipeRefresh.setVisibility(View.GONE);
-					} else {
-						llNoPage.setVisibility(View.GONE);
-						swipeRefresh.setVisibility(View.VISIBLE);
-						if (adapter == null) {
-							adapter = new MaintenaceNoneAdapter(getActivity(),
-									list);
-							listview.setAdapter(adapter);
-						} else {
-							adapter.setData(list);
-							adapter.notifyDataSetChanged();
-						}
-					}
+				return activity;
+			}
 
+			@Override
+			public void bizSuccess(Bean response) {
+				// TODO Auto-generated method stub
+				list = (List<Map<String, Object>>) response.body.get("data");
+				if (list == null || list.size() == 0) {
+					llNoPage.setVisibility(View.VISIBLE);
+					swipeRefresh.setVisibility(View.GONE);
+				} else {
+					llNoPage.setVisibility(View.GONE);
+					swipeRefresh.setVisibility(View.VISIBLE);
+					if (adapter == null) {
+						adapter = new MaintenaceNoneAdapter(getActivity(),
+								list);
+						listview.setAdapter(adapter);
+					} else {
+						adapter.setData(list);
+						adapter.notifyDataSetChanged();
+					}
 				}
 			}
 
 			@Override
-			public void onError(Request request, Exception e) {
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void stopDialog() {
 				// TODO Auto-generated method stub
 				stopProgressDialog();
 				if (swipeRefresh.isRefreshing()) {
 					swipeRefresh.setRefreshing(false);
 				}
-				Logr.e(request.toString());
 			}
 		};
-		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
-				gson.toJson(requester));
+		conn.sendRequest();
 	}
 }

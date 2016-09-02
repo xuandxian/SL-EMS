@@ -86,9 +86,14 @@ public class PersonalNoticeDetailActivity extends BaseActivity {
 	};
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_personal_announcement_detail);
+	protected int getLayoutResIds() {
+		// TODO Auto-generated method stub
+		return R.layout.activity_personal_announcement_detail;
+	}
+
+	@Override
+	protected void afterCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
 		activity = this;
 		stackInstance.pushActivity(activity);
 		uid = (String) SharePreferencesUtils.get(activity,
@@ -100,7 +105,8 @@ public class PersonalNoticeDetailActivity extends BaseActivity {
 	}
 
 	private void initData() {
-		startProgressDialog(getResources().getString(R.string.loading_public_default));
+		startProgressDialog(getResources().getString(
+				R.string.loading_public_default));
 		String id = getIntent().getExtras().getString(Constant.ANNOUNCEMENTID);
 		Requester requester = new Requester();
 		requester.cmd = 20078;
@@ -159,4 +165,5 @@ public class PersonalNoticeDetailActivity extends BaseActivity {
 		super.onBackPressed();
 		stackInstance.popActivity(activity);
 	}
+
 }

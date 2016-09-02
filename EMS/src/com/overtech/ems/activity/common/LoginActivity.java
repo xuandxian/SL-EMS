@@ -1,5 +1,6 @@
 package com.overtech.ems.activity.common;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.SwitchCompat;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
@@ -19,24 +24,19 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
+import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.common.password.LostPasswordActivity;
 import com.overtech.ems.activity.common.register.RegisterActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.config.StatusCode;
-import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.Bean;
-import com.overtech.ems.entity.bean.LoginBean;
-import com.overtech.ems.entity.common.Requester;
-import com.overtech.ems.http.OkHttpClientManager;
-import com.overtech.ems.http.OkHttpClientManager.ResultCallback;
+import com.overtech.ems.http.HttpConnector;
 import com.overtech.ems.security.MD5Util;
 import com.overtech.ems.utils.AppUtils;
 import com.overtech.ems.utils.Logr;
@@ -44,7 +44,6 @@ import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
-import com.squareup.okhttp.Request;
 
 /**
  * @author Overtech Will
@@ -52,14 +51,16 @@ import com.squareup.okhttp.Request;
  * @date 2016-6-14
  */
 public class LoginActivity extends BaseActivity implements OnClickListener {
+	private Toolbar toolbar;
+	private ActionBar actionBar;
+	private AppCompatTextView tvTitle;
 	private EditTextWithDelete mUserName, mPassword;
+	private SwitchCompat switchPassword;
 	private String sUserName, sPassword;
-	private TextView mHeadContent;
-	private ImageView mHeadBack;
-	private TextView mLostPassword;
 	private Button mLogin;
+	private TextView mLostPassword;
 	private TextView mRegister;
-	private ToggleButton mChangePasswordState;
+
 	private String encryptPassword;
 	private Context ctx;
 	protected String certificate;
@@ -69,19 +70,25 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			switch (msg.what) {
 			case StatusCode.MSG_SET_TAGS:
 				Log.d("24梯", "Set tags in handler.");
-				JPushInterface.setAliasAndTags(getApplicationContext(), null, (Set<String>) msg.obj,
-						mTagsCallback);
+				JPushInterface.setAliasAndTags(getApplicationContext(), null,
+						(Set<String>) msg.obj, mTagsCallback);
 				break;
 			}
 		};
 	};
+
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_login);
+	protected int getLayoutResIds() {
+		// TODO Auto-generated method stub
+		return R.layout.activity_login;
+	}
+
+	@Override
+	protected void afterCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
 		Logr.e("Loginactivity====oncreate===执行了");
-		stackInstance.popAllActivitys();
 		ctx = this;
+		stackInstance.popAllActivitys();
 		initView();
 		initEvent();
 	}
@@ -95,27 +102,41 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void initView() {
-		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
-		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
+		toolbar = (Toolbar) findViewById(R.id.toolBar);
+		setSupportActionBar(toolbar);
+
+		actionBar = getSupportActionBar();
+		tvTitle = (AppCompatTextView) findViewById(R.id.tvTitle);
 		mUserName = (EditTextWithDelete) findViewById(R.id.et_login_username);
 		mPassword = (EditTextWithDelete) findViewById(R.id.et_login_password);
 		mLostPassword = (TextView) findViewById(R.id.tv_lost_password);
 		mRegister = (TextView) findViewById(R.id.tv_login_by_message);
 		mLogin = (Button) findViewById(R.id.btn_login);
-		mChangePasswordState = (ToggleButton) findViewById(R.id.tb_change_password);
+		switchPassword = (SwitchCompat) findViewById(R.id.switch_password);
 	}
 
 	private void initEvent() {
-		mHeadContent.setText("登 录");
-		mHeadBack.setVisibility(View.VISIBLE);
+		toolbar.setNavigationOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				onBackPressed();
+			}
+		});
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
+		actionBar.setDisplayShowHomeEnabled(true);
+		tvTitle.setText("登录");
 		mLostPassword.setOnClickListener(this);
 		mRegister.setOnClickListener(this);
-		mHeadBack.setOnClickListener(this);
-		mChangePasswordState
+		switchPassword
 				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
 					@Override
 					public void onCheckedChanged(CompoundButton buttonView,
 							boolean isChecked) {
+						// TODO Auto-generated method stub
 						if (isChecked) {
 							mPassword
 									.setTransformationMethod(HideReturnsTransformationMethod
@@ -149,51 +170,52 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}
-		startProgressDialog(getResources().getString(R.string.loading_public_login));
-		Requester requester = new Requester();
-		requester.cmd = 1;
-		requester.pwd = encryptPassword;
-		requester.body.put("loginName", username);
-		ResultCallback<LoginBean> callback = new ResultCallback<LoginBean>() {
+		startProgressDialog(getResources().getString(
+				R.string.loading_public_login));
+		HashMap<String, Object> body = new HashMap<String, Object>();
+		body.put("loginName", username);
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(1, encryptPassword,
+				body) {
 
 			@Override
-			public void onError(Request request, Exception e) {
+			public Context getContext() {
+				// TODO Auto-generated method stub
+				return ctx;
+			}
+
+			@Override
+			public void bizSuccess(Bean response) {
+				// TODO Auto-generated method stub
+				certificate = response.body.get("certificate").toString();
+				String employeeType = response.body.get("employeeType")
+						.toString();
+				uid = response.body.get("uid").toString();
+				SharePreferencesUtils.put(ctx,
+						SharedPreferencesKeys.CERTIFICATED, certificate);
+				SharePreferencesUtils.put(ctx, SharedPreferencesKeys.UID, uid);
+				SharePreferencesUtils.put(ctx,
+						SharedPreferencesKeys.EMPLOYEETYPE, employeeType);
+
+				loadNotDoneTask();
+			}
+
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void stopDialog() {
 				// TODO Auto-generated method stub
 				stopProgressDialog();
-				Utilities.showToast(R.string.request_error_msg, ctx);
-				Logr.e(request.toString(), ctx);
 			}
-
-			@Override
-			public void onResponse(LoginBean response) {
-				// TODO Auto-generated method stub
-				if (response == null) {
-					Utilities.showToast(R.string.response_no_object, ctx);
-					return;
-				}
-				int st = response.st;
-				if (st != 0) {
-					stopProgressDialog();
-					Utilities.showToast(response.msg, ctx);
-				} else {
-					 certificate = response.body.certificate;
-					String employeeType = response.body.employeeType;
-					 uid = response.body.uid;
-					SharePreferencesUtils.put(ctx,
-							SharedPreferencesKeys.CERTIFICATED, certificate);
-					SharePreferencesUtils.put(ctx, SharedPreferencesKeys.UID,
-							uid);
-					SharePreferencesUtils.put(ctx,
-							SharedPreferencesKeys.EMPLOYEETYPE, employeeType);
-
-					loadNotDoneTask();
-				}
-			}
-
 		};
-		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
-				gson.toJson(requester));
-
+		conn.sendRequest();
 	}
 
 	@Override
@@ -209,11 +231,9 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 					RegisterActivity.class);
 			startActivity(intent2);
 			break;
-		case R.id.iv_headBack:
-			onBackPressed();
-			break;
 		}
 	}
+
 	private final TagAliasCallback mTagsCallback = new TagAliasCallback() {
 
 		@Override
@@ -224,7 +244,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			case 0:
 				logs = "Set tag and alias success";
 				Logr.e(logs);
-				//将信息添加成功后即可成功
+				// 将信息添加成功后即可成功
 				Intent intent = new Intent(LoginActivity.this,
 						MainActivity.class);
 				startActivity(intent);
@@ -250,19 +270,23 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		}
 
 	};
-	private ResultCallback<Bean> loadNotDoneCallback = new ResultCallback<Bean>() {
 
-		@Override
-		public void onError(Request request, Exception e) {
-			// TODO Auto-generated method stub
-			Logr.e(request.toString());
-		}
+	/**
+	 * 加载未完成的任务单
+	 */
+	private void loadNotDoneTask() {
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20050, uid,
+				certificate, null) {
 
-		@Override
-		public void onResponse(Bean response) {
-			// TODO Auto-generated method stub
-			int st = response.st;
-			if (st == 0) {
+			@Override
+			public Context getContext() {
+				// TODO Auto-generated method stub
+				return ctx;
+			}
+
+			@Override
+			public void bizSuccess(Bean response) {
+				// TODO Auto-generated method stub
 				List<Map<String, Object>> datas = (List<Map<String, Object>>) response.body
 						.get("data");
 				Set<String> tempSet = new HashSet<String>();
@@ -270,21 +294,40 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 					String sTaskNo = (String) data.get("taskNo");
 					tempSet.add(sTaskNo);
 				}
-				JPushInterface.setAliasAndTags(LoginActivity.this, "", tempSet,
-						mTagsCallback);
+				// 别名用will测试一下
+				JPushInterface.setAliasAndTags(LoginActivity.this, uid,
+						tempSet, mTagsCallback);
 			}
-		}
-	};
 
-	/**
-	 * 加载未完成的任务单
-	 */
-	private void loadNotDoneTask() {
-		Requester requester = new Requester();
-		requester.cmd = 20050;
-		requester.uid = uid;
-		requester.certificate = certificate;
-		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, loadNotDoneCallback,
-				gson.toJson(requester));
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(LoginActivity.this,
+						MainActivity.class);
+				startActivity(intent);
+				finish();
+			}
+
+			@Override
+			public void stopDialog() {
+				// TODO Auto-generated method stub
+
+			}
+		};
+		conn.sendRequest();
 	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		((MyApplication) getApplication()).locationService.stop();
+		super.onBackPressed();
+	}
+
 }

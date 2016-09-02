@@ -4,6 +4,7 @@ import com.overtech.ems.R;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.Spannable;
@@ -17,7 +18,7 @@ import android.view.animation.CycleInterpolator;
 import android.view.animation.TranslateAnimation;
 import android.widget.EditText;
 
-public class EditTextWithDelete extends EditText implements
+public class EditTextWithDelete extends AppCompatEditText implements
 		OnFocusChangeListener, TextWatcher {
 	private Drawable mClearDrawable;
 

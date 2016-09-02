@@ -127,9 +127,14 @@ public class KeyWordSerachActivity extends BaseActivity {
 	};
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_grab_task_keyword);
+	protected int getLayoutResIds() {
+		// TODO Auto-generated method stub
+		return R.layout.activity_grab_task_keyword;
+	}
+
+	@Override
+	protected void afterCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
 		findViewById();
 		init();
 	}
@@ -152,7 +157,7 @@ public class KeyWordSerachActivity extends BaseActivity {
 		sharedPreferences = getSharedPreferences("search", MODE_PRIVATE);
 		readHistory();
 		if (null == historyList || historyList.isEmpty()) {
-//			Utilities.showToast("无历史记录", activity);
+			// Utilities.showToast("无历史记录", activity);
 		} else {
 			initHistoryItem();
 			mHistoryTextView.setVisibility(View.VISIBLE);
@@ -352,4 +357,5 @@ public class KeyWordSerachActivity extends BaseActivity {
 		super.onBackPressed();
 		stackInstance.popActivity(activity);
 	}
+
 }

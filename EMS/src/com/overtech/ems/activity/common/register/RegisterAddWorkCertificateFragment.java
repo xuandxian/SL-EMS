@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Gravity;
@@ -26,13 +27,15 @@ import android.widget.TextView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.utils.ImageUtils;
+import com.overtech.ems.utils.Logr;
 import com.overtech.ems.widget.popwindow.DimPopupWindow;
 
 public class RegisterAddWorkCertificateFragment extends Fragment implements
 		OnClickListener {
 	private View view;
 	private Context mContext;
-	private ImageView mWorkCertificate;
+	private ImageView workCertificate1;
+	private ImageView workCertificate2;
 	private ImageView mDoBack;
 	private TextView mHeadTitle;
 	private Button mNext;
@@ -41,7 +44,14 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements
 	private Button mPhoto;
 	private Button mCancle;
 	private RegAddWorkCerFrgClickListener listener;
-	public String workCertificatePath = null;
+	public String workCertificatePath1 = null;
+	public String workCertificatePath2 = null;
+	public static final int CONE = 0x0010;
+	public static final int CTWO = 0x0020;
+	/**
+	 * 选择的是照片
+	 */
+	private int curSel;
 
 	/**
 	 * 打开本地相册的requestcode.
@@ -53,6 +63,7 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements
 	public final int SELECT_PICK_KITKAT = 0x4;
 	private static final int PHOTO_CAPTURE = 0x2;
 	private Uri certificateUri = null;
+	private Uri certificateUri2 = null;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -64,6 +75,23 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		if (savedInstanceState != null) {
+			String fileStr = savedInstanceState.getString("outFile");
+			String file2Str = savedInstanceState.getString("outFile2");
+			if (fileStr != null) {
+				outFile = new File(fileStr);
+				certificateUri = Uri.fromFile(outFile);
+			}
+			if (file2Str != null) {
+				outFile2 = new File(file2Str);
+				certificateUri2 = Uri.fromFile(outFile2);
+			}
+			workCertificatePath1 = savedInstanceState
+					.getString("workCertificatePath");
+			workCertificatePath2 = savedInstanceState
+					.getString("workCertificatePath2");
+			curSel = savedInstanceState.getInt("curSel");
+		}
 		view = inflater.inflate(
 				R.layout.fragment_register_add_work_certificate, null);
 		findViewById(view);
@@ -72,7 +100,9 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements
 
 	private void findViewById(View v) {
 		// TODO Auto-generated method stub
-		mWorkCertificate = (ImageView) v.findViewById(R.id.id_work_certificate);
+		workCertificate1 = (ImageView) v.findViewById(R.id.id_work_certificate);
+		workCertificate2 = (ImageView) v
+				.findViewById(R.id.id_work_certificate2);
 		mDoBack = (ImageView) v.findViewById(R.id.iv_headBack);
 		mHeadTitle = (TextView) v.findViewById(R.id.tv_headTitle);
 		mNext = (Button) v.findViewById(R.id.btn_next_fragment);
@@ -80,7 +110,8 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements
 		mDoBack.setVisibility(View.VISIBLE);
 		mHeadTitle.setText("上岗证确认");
 		mDoBack.setOnClickListener(this);
-		mWorkCertificate.setOnClickListener(this);
+		workCertificate1.setOnClickListener(this);
+		workCertificate2.setOnClickListener(this);
 		mNext.setOnClickListener(this);
 	}
 
@@ -116,6 +147,13 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.id_work_certificate:
+			Logr.e("==registerAddWorkCertificate=="+"one");
+			curSel = CONE;
+			showPopupWindow();
+			break;
+		case R.id.id_work_certificate2:
+			Logr.e("==registerAddWorkCertificate=="+"two");
+			curSel = CTWO;
 			showPopupWindow();
 			break;
 		case R.id.item_popupwindows_camera:
@@ -158,7 +196,9 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements
 	}
 
 	private File outFile;
+	private File outFile2;
 	private Uri cameraUri;
+	private Uri cameraUri2;
 
 	/**
 	 * 打开相机
@@ -169,10 +209,17 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
-		outFile = new File(dir, "workcitificate" + ".jpg");
-		cameraUri = Uri.fromFile(outFile);
-		intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraUri); // 这样就将文件的存储方式和uri指定到了Camera应用中
-		startActivityForResult(intent, PHOTO_CAPTURE);
+		if (curSel == CONE) {
+			outFile = new File(dir, "workcitificate1" + ".jpg");
+			cameraUri = Uri.fromFile(outFile);
+			intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraUri); // 这样就将文件的存储方式和uri指定到了Camera应用中
+			startActivityForResult(intent, PHOTO_CAPTURE);
+		} else if (curSel == CTWO) {
+			outFile2 = new File(dir, "workcitificate2" + ".jpg");
+			cameraUri2 = Uri.fromFile(outFile2);
+			intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraUri2); // 这样就将文件的存储方式和uri指定到了Camera应用中
+			startActivityForResult(intent, PHOTO_CAPTURE);
+		}
 	}
 
 	@Override
@@ -186,11 +233,19 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements
 		case SELECT_PICK:
 		case SELECT_PICK_KITKAT:
 			if (resultCode == Activity.RESULT_OK) {
-				certificateUri = data.getData();
-				workCertificatePath = ImageUtils.getPath(getActivity(),
-						data.getData());
-				mWorkCertificate.setImageBitmap(ImageUtils
-						.getSmallBitmap(workCertificatePath));
+				if (curSel == CONE) {
+					certificateUri = data.getData();
+					workCertificatePath1 = ImageUtils.getPath(getActivity(),
+							data.getData());
+					workCertificate1.setImageBitmap(ImageUtils
+							.getSmallBitmap(workCertificatePath1));
+				} else if (curSel == CTWO) {
+					certificateUri2 = data.getData();
+					workCertificatePath2 = ImageUtils.getPath(getActivity(),
+							data.getData());
+					workCertificate2.setImageBitmap(ImageUtils
+							.getSmallBitmap(workCertificatePath2));
+				}
 			}
 			break;
 
@@ -199,10 +254,17 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements
 
 			}
 			if (resultCode == Activity.RESULT_OK) {
-				workCertificatePath = outFile.getAbsolutePath();
-				mWorkCertificate.setImageBitmap(ImageUtils
-						.getSmallBitmap(workCertificatePath));
-				certificateUri = cameraUri;
+				if (curSel == CONE) {
+					workCertificatePath1 = outFile.getAbsolutePath();
+					workCertificate1.setImageBitmap(ImageUtils
+							.getSmallBitmap(workCertificatePath1));
+					certificateUri = cameraUri;
+				} else if (curSel == CTWO) {
+					workCertificatePath2 = outFile2.getAbsolutePath();
+					workCertificate2.setImageBitmap(ImageUtils
+							.getSmallBitmap(workCertificatePath2));
+					certificateUri2 = cameraUri2;
+				}
 			}
 			break;
 
@@ -210,6 +272,35 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements
 			break;
 		}
 		super.onActivityResult(requestCode, resultCode, data);
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		super.onSaveInstanceState(outState);
+		outState.putString("outFile",
+				outFile == null ? null : outFile.getAbsolutePath());
+		outState.putString("workCertificatePath", workCertificatePath1);
+		outState.putString("outFile2",
+				outFile2 == null ? null : outFile2.getAbsolutePath());
+		outState.putString("workCertificatePath2", workCertificatePath2);
+		outState.putInt("curSel", curSel);
+	}
+
+	@Override
+	public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onViewStateRestored(savedInstanceState);
+		if (certificateUri != null) {
+			workCertificate1.setImageBitmap(ImageUtils
+					.getSmallBitmap(ImageUtils.getPath(getActivity(),
+							certificateUri)));
+		}
+		if (certificateUri2 != null) {
+			workCertificate2.setImageBitmap(ImageUtils
+					.getSmallBitmap(ImageUtils.getPath(getActivity(),
+							certificateUri2)));
+		}
 	}
 
 	public void setRegAddWorkCerFrgClickListener(

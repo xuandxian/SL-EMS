@@ -23,9 +23,14 @@ public class ChangePhoneNoSuccessActivity extends BaseActivity {
 	private ChangePhoneNoSuccessActivity activity;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_change_phoneno_success);
+	protected int getLayoutResIds() {
+		// TODO Auto-generated method stub
+		return R.layout.activity_change_phoneno_success;
+	}
+
+	@Override
+	protected void afterCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
 		activity = this;
 		initView();
 	}
@@ -54,4 +59,5 @@ public class ChangePhoneNoSuccessActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		// super.onBackPressed();
 	}
+
 }

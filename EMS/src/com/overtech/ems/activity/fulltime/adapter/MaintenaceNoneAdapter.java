@@ -1,6 +1,7 @@
 package com.overtech.ems.activity.fulltime.adapter;
 
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.view.View;
@@ -13,17 +14,16 @@ import com.baidu.mapapi.utils.DistanceUtil;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.parttime.MainActivity;
-import com.overtech.ems.entity.fulltime.MaintenanceBean.Workorder;
 import com.overtech.ems.utils.Utilities;
 
 public class MaintenaceNoneAdapter extends BaseAdapter {
 	private Context ctx;
-	private List<Workorder> data;
+	private List<Map<String,Object>> data;
 	private double latitude;
 	private double longitude;
 	private LatLng curLatLng;
 
-	public MaintenaceNoneAdapter(Context ctx, List<Workorder> data) {
+	public MaintenaceNoneAdapter(Context ctx, List<Map<String,Object>> data) {
 		this.ctx = ctx;
 		this.data = data;
 		latitude = ((MyApplication) ctx.getApplicationContext()).latitude;
@@ -40,7 +40,7 @@ public class MaintenaceNoneAdapter extends BaseAdapter {
 	@Override
 	public String getItem(int position) {
 		// TODO Auto-generated method stub
-		return data.get(position).workorderCode;
+		return data.get(position).get("workorderCode").toString();
 	}
 
 	@Override
@@ -61,23 +61,23 @@ public class MaintenaceNoneAdapter extends BaseAdapter {
 		} else {
 			vh = (ViewHolder) convertView.getTag();
 		}
-		Workorder workorder = data.get(position);
-		vh.tvFaultType.setText(workorder.faultType);
-		vh.tvMaintenanceNoneAddress.setText(workorder.address);
+		Map<String,Object> workorder = data.get(position);
+		vh.tvFaultType.setText(workorder.get("faultType").toString());
+		vh.tvMaintenanceNoneAddress.setText(workorder.get("address").toString());
 		if (latitude == 0 || longitude == 0) {
 			vh.tvMaintenanceNoneDistance.setText("??");
 		} else {
 			double distance = DistanceUtil.getDistance(
 					curLatLng,
-					new LatLng(Double.parseDouble(workorder.latitude), Double
-							.parseDouble(workorder.longitude)));
+					new LatLng(Double.parseDouble(workorder.get("latitude").toString()), Double
+							.parseDouble(workorder.get("longitude").toString())));
 			vh.tvMaintenanceNoneDistance.setText(Utilities.format2decimal(distance / 1000.0) + "km");
 		}
-		vh.tvMaintenancePublishTime.setText(workorder.publishDatetime);
+		vh.tvMaintenancePublishTime.setText(workorder.get("publishDatetime").toString());
 		return convertView;
 	}
 
-	public void setData(List<Workorder> data) {
+	public void setData(List<Map<String,Object>> data) {
 		this.data = data;
 	}
 

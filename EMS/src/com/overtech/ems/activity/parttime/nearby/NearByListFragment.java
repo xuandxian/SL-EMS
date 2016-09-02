@@ -1,11 +1,13 @@
 package com.overtech.ems.activity.parttime.nearby;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -31,16 +33,11 @@ import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
 import com.overtech.ems.config.StatusCode;
-import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.Bean;
-import com.overtech.ems.entity.common.Requester;
-import com.overtech.ems.http.OkHttpClientManager;
-import com.overtech.ems.http.OkHttpClientManager.ResultCallback;
+import com.overtech.ems.http.HttpConnector;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.AppUtils;
 import com.overtech.ems.utils.Logr;
-import com.overtech.ems.utils.SharePreferencesUtils;
-import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.swipemenu.SwipeMenu;
@@ -48,7 +45,6 @@ import com.overtech.ems.widget.swipemenu.SwipeMenuCreator;
 import com.overtech.ems.widget.swipemenu.SwipeMenuItem;
 import com.overtech.ems.widget.swipemenu.SwipeMenuListView;
 import com.overtech.ems.widget.swipemenu.SwipeMenuListView.OnMenuItemClickListener;
-import com.squareup.okhttp.Request;
 
 @SuppressWarnings("unchecked")
 public class NearByListFragment extends BaseFragment {
@@ -77,59 +73,6 @@ public class NearByListFragment extends BaseFragment {
 				break;
 			}
 		};
-	};
-
-	private ResultCallback<Bean> grabCallback = new ResultCallback<Bean>() {
-
-		@Override
-		public void onError(Request request, Exception e) {
-			// TODO Auto-generated method stub
-			stopProgressDialog();
-			Logr.e(request.toString());
-		}
-
-		@Override
-		public void onResponse(Bean response) {
-			// TODO Auto-generated method stub
-			stopProgressDialog();
-			int st = response.st;
-			if (st == -1 || st == -2) {
-				Utilities.showToast(response.msg, activity);
-				SharePreferencesUtils.put(activity, SharedPreferencesKeys.UID,
-						"");
-				SharePreferencesUtils.put(activity,
-						SharedPreferencesKeys.CERTIFICATED, "");
-				Intent intent = new Intent(activity, LoginActivity.class);
-				startActivity(intent);
-				return;
-			} else if (st == 0) {
-				String content = response.body.get("status").toString();
-				if (TextUtils.equals(content, "0")) {
-					Utilities.showToast(response.msg, activity);
-				} else if (TextUtils.equals(content, "1")) {// 抢单成功，等待第二个人抢
-					Utilities.showToast(response.msg, activity);
-					// 待刷新页面
-					onRefresh();
-					loadNotDoneTask();
-					// 推送业务
-				} else if (TextUtils.equals(content, "2")) {// 抢单成功，到任务单中查看
-					Utilities.showToast(response.msg, activity);
-					onRefresh();
-					// 推送业务代码
-					loadNotDoneTask();
-				} else if (TextUtils.equals(content, "3")) {
-					Utilities.showToast(response.msg, activity);
-				} else if (TextUtils.equals(content, "4")) {
-					Utilities.showToast(response.msg, activity);
-				} else {
-					Utilities.showToast(response.msg, activity);
-					Intent intent = new Intent(getActivity(),
-							LoginActivity.class);
-					startActivity(intent);
-				}
-			}
-		}
-
 	};
 	private final TagAliasCallback mTagsCallback = new TagAliasCallback() {
 
@@ -161,49 +104,6 @@ public class NearByListFragment extends BaseFragment {
 
 	};
 
-	private ResultCallback<Bean> nearCallback = new ResultCallback<Bean>() {
-
-		@Override
-		public void onError(Request request, Exception e) {
-			// TODO Auto-generated method stub
-			Logr.e(request.toString());
-		}
-
-		@Override
-		public void onResponse(Bean response) {
-			// TODO Auto-generated method stub
-			int st = response.st;
-			if (st == -1 || st == -2) {
-				Utilities.showToast(response.msg, activity);
-				SharePreferencesUtils.put(activity, SharedPreferencesKeys.UID,
-						"");
-				SharePreferencesUtils.put(activity,
-						SharedPreferencesKeys.CERTIFICATED, "");
-				Intent intent = new Intent(activity, LoginActivity.class);
-				startActivity(intent);
-				return;
-			} else if (st == 1) {// 上岗证相关
-				Utilities.showToast(response.msg, activity);
-			}
-			list = (List<Map<String, Object>>) response.body.get("data");
-			if (list == null || list.size() == 0) {
-				tvNoData.setVisibility(View.VISIBLE);
-				mNearBySwipeListView.setVisibility(View.GONE);
-			} else {
-				tvNoData.setVisibility(View.GONE);
-				mNearBySwipeListView.setVisibility(View.VISIBLE);
-				if (mAdapter == null) {
-					mAdapter = new GrabTaskAdapter(list, mActivity);
-					mNearBySwipeListView.setAdapter(mAdapter);
-				} else {
-					mAdapter.setData(list);
-					mAdapter.notifyDataSetChanged();
-				}
-			}
-		}
-
-	};
-
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
@@ -226,15 +126,57 @@ public class NearByListFragment extends BaseFragment {
 
 	public void onRefresh() {
 		// TODO Auto-generated method stub
-		Requester requester = new Requester();
-		requester.cmd = 20030;
-		requester.certificate = certificate;
-		requester.uid = uid;
-		requester.body.put("latitude", String.valueOf(latitude));
-		requester.body.put("longitude", String.valueOf(longitude));
+		HashMap<String, Object> body = new HashMap<String, Object>();
+		body.put("latitude", String.valueOf(latitude));
+		body.put("longitude", String.valueOf(longitude));
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20030, uid,
+				certificate, body) {
 
-		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, nearCallback,
-				gson.toJson(requester));
+			@Override
+			public Context getContext() {
+				// TODO Auto-generated method stub
+				return activity;
+			}
+
+			@Override
+			public void bizSuccess(Bean response) {
+				// TODO Auto-generated method stub
+				list = (List<Map<String, Object>>) response.body.get("data");
+				if (list == null || list.size() == 0) {
+					tvNoData.setVisibility(View.VISIBLE);
+					mNearBySwipeListView.setVisibility(View.GONE);
+				} else {
+					tvNoData.setVisibility(View.GONE);
+					mNearBySwipeListView.setVisibility(View.VISIBLE);
+					if (mAdapter == null) {
+						mAdapter = new GrabTaskAdapter(list, mActivity);
+						mNearBySwipeListView.setAdapter(mAdapter);
+					} else {
+						mAdapter.setData(list);
+						mAdapter.notifyDataSetChanged();
+					}
+				}
+			}
+
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void stopDialog() {
+				// TODO Auto-generated method stub
+				
+			}
+		};
+		conn.sendRequest();
 	}
 
 	private void getExtralData() {
@@ -322,32 +264,90 @@ public class NearByListFragment extends BaseFragment {
 						dialogBuilder.dismiss();
 						String mTaskNo = list.get(position).get("taskNo")
 								.toString();
-						startProgressDialog(getResources().getString(
-								R.string.loading_public_default));
-						Requester requester = new Requester();
-						requester.cmd = 20023;
-						requester.uid = uid;
-						requester.certificate = certificate;
-						requester.body.put(Constant.TASKNO, mTaskNo);
-						OkHttpClientManager.postAsyn(SystemConfig.NEWIP,
-								grabCallback, gson.toJson(requester));
+						grabTask(mTaskNo);
 					}
 				}).show();
 	}
 
-	private ResultCallback<Bean> loadNotDoneCallback = new ResultCallback<Bean>() {
+	private void grabTask(String taskNo) {
+		startProgressDialog(getResources().getString(
+				R.string.loading_public_default));
+		HashMap<String, Object> body = new HashMap<String, Object>();
+		body.put(Constant.TASKNO, taskNo);
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20023, uid,
+				certificate, body) {
 
-		@Override
-		public void onError(Request request, Exception e) {
-			// TODO Auto-generated method stub
-			Logr.e(request.toString());
-		}
+			@Override
+			public Context getContext() {
+				// TODO Auto-generated method stub
+				return activity;
+			}
 
-		@Override
-		public void onResponse(Bean response) {
-			// TODO Auto-generated method stub
-			int st = response.st;
-			if (st == 0) {
+			@Override
+			public void bizSuccess(Bean response) {
+				// TODO Auto-generated method stub
+				String content = response.body.get("status").toString();
+				if (TextUtils.equals(content, "0")) {
+					Utilities.showToast(response.msg, activity);
+				} else if (TextUtils.equals(content, "1")) {// 抢单成功，等待第二个人抢
+					Utilities.showToast(response.msg, activity);
+					// 待刷新页面
+					onRefresh();
+					loadNotDoneTask();
+					// 推送业务
+				} else if (TextUtils.equals(content, "2")) {// 抢单成功，到任务单中查看
+					Utilities.showToast(response.msg, activity);
+					onRefresh();
+					// 推送业务代码
+					loadNotDoneTask();
+				} else if (TextUtils.equals(content, "3")) {
+					Utilities.showToast(response.msg, activity);
+				} else if (TextUtils.equals(content, "4")) {
+					Utilities.showToast(response.msg, activity);
+				} else {
+					Utilities.showToast(response.msg, activity);
+					Intent intent = new Intent(getActivity(),
+							LoginActivity.class);
+					startActivity(intent);
+				}
+			}
+
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void stopDialog() {
+				// TODO Auto-generated method stub
+				stopProgressDialog();
+			}
+		};
+		conn.sendRequest();
+	}
+
+	
+
+	/**
+	 * 加载未完成的任务单
+	 */
+	private void loadNotDoneTask() {
+		HttpConnector<Bean> conn=new HttpConnector<Bean>(20050,uid,certificate,null) {
+
+			@Override
+			public Context getContext() {
+				// TODO Auto-generated method stub
+				return activity;
+			}
+
+			@Override
+			public void bizSuccess(Bean response) {
+				// TODO Auto-generated method stub
 				List<Map<String, Object>> datas = (List<Map<String, Object>>) response.body
 						.get("data");
 				Set<String> tempSet = new HashSet<String>();
@@ -358,18 +358,25 @@ public class NearByListFragment extends BaseFragment {
 				JPushInterface.setAliasAndTags(activity, "", tempSet,
 						mTagsCallback);
 			}
-		}
-	};
 
-	/**
-	 * 加载未完成的任务单
-	 */
-	private void loadNotDoneTask() {
-		Requester requester = new Requester();
-		requester.cmd = 20050;
-		requester.uid = uid;
-		requester.certificate = certificate;
-		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, loadNotDoneCallback,
-				gson.toJson(requester));
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void stopDialog() {
+				// TODO Auto-generated method stub
+				
+			}
+		};
+		conn.sendRequest();
 	}
 }

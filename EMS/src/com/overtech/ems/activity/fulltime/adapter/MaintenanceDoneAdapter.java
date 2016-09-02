@@ -1,6 +1,7 @@
 package com.overtech.ems.activity.fulltime.adapter;
 
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.view.View;
@@ -10,13 +11,12 @@ import android.widget.TextView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.parttime.MainActivity;
-import com.overtech.ems.entity.fulltime.MaintenanceBean.Workorder;
 
 public class MaintenanceDoneAdapter extends BaseAdapter {
 	private Context ctx;
-	private List<Workorder> data;
+	private List<Map<String,Object>> data;
 
-	public MaintenanceDoneAdapter(Context ctx, List<Workorder> data) {
+	public MaintenanceDoneAdapter(Context ctx, List<Map<String,Object>> data) {
 		this.ctx = ctx;
 		this.data = data;
 	}
@@ -51,14 +51,14 @@ public class MaintenanceDoneAdapter extends BaseAdapter {
 		} else {
 			vh = (ViewHolder) convertView.getTag();
 		}
-		Workorder workorder = data.get(position);
-		vh.tvFaultType.setText(workorder.faultType);
-		vh.tvMaintenanceNoneAddress.setText(workorder.address);
-		vh.tvMaintenanceAccomplishTime.setText(workorder.accomplishDate);
+		Map<String,Object> workorder = data.get(position);
+		vh.tvFaultType.setText(workorder.get("faultType").toString());
+		vh.tvMaintenanceNoneAddress.setText(workorder.get("address").toString());
+		vh.tvMaintenanceAccomplishTime.setText(workorder.get("accomplishDate").toString());
 		return convertView;
 	}
 
-	public void setData(List<Workorder> data) {
+	public void setData(List<Map<String,Object>> data) {
 		this.data = data;
 	}
 

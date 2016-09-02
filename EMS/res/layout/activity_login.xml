@@ -1,105 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_main" >
+    android:orientation="vertical" >
 
-    <include
-        android:id="@+id/include_register"
-        layout="@layout/headview" />
+    <include layout="@layout/layout_toolbar" />
 
     <RelativeLayout
         android:id="@+id/rl_register_username"
         android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_below="@+id/include_register"
-        android:layout_marginTop="20dp"
-        android:background="@color/main_white" >
+        android:layout_marginTop="8dp"
+        android:layout_height="56dp" >
 
         <com.overtech.ems.widget.EditTextWithDelete
             android:id="@+id/et_login_username"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:hint="手机号/ID号"
             android:singleLine="true"
-            android:background="@drawable/shape_input"
-            android:hint="手机号/ID号" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
     </RelativeLayout>
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_above="@+id/rl_register_password"
-        android:layout_centerHorizontal="true"
-        android:background="#c1c1c1" />
 
     <RelativeLayout
         android:id="@+id/rl_register_password"
         android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/rl_register_username"
-        android:background="@color/main_white" >
+        android:layout_height="56dp" >
 
         <com.overtech.ems.widget.EditTextWithDelete
             android:id="@+id/et_login_password"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="20dp"
-            android:singleLine="true"
-            android:layout_toLeftOf="@+id/tb_change_password"
-            android:background="@drawable/shape_input"
+            android:layout_marginLeft="16dp"
+            android:layout_toLeftOf="@+id/switch_password"
             android:hint="密码"
             android:inputType="textPassword"
-            android:maxLength="18" />
+            android:maxLength="18"
+            android:singleLine="true"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-        <ToggleButton
-            android:id="@+id/tb_change_password"
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/switch_password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="15dp"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/selector_toggle_button"
-            android:text=""
-            android:textOff=""
-            android:textOn="" />
+            android:layout_marginRight="16dp" />
     </RelativeLayout>
 
-    <Button
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_login"
         style="@style/btn_title_white_style"
-        android:layout_below="@+id/rl_register_password"
         android:layout_marginTop="25dp"
-        android:background="@drawable/shape_button_visiable"
-        android:text="登录" />
+        android:background="@drawable/selector_button_normal"
+        android:text="登录"
+        android:textAppearance="@style/TextAppearance.AppCompat.Button" />
 
-    <TextView
-        android:id="@+id/tv_lost_password"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/btn_login"
-        android:layout_below="@+id/btn_login"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_marginTop="20dp"
-        android:text="忘记密码?"
-        android:textColor="@color/line_blue_color"
-        android:textSize="15sp" />
+        android:orientation="horizontal" >
 
-    <TextView
-        android:id="@+id/tv_login_by_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/tv_lost_password"
-        android:layout_alignRight="@+id/btn_login"
-        android:layout_marginRight="5dp"
-        android:text="注册新账户"
-        android:textColor="@color/line_blue_color"
-        android:textSize="15sp" />
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tv_lost_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="忘记密码?"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorPrimary30" />
 
-</RelativeLayout>
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/tv_login_by_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="注册新账户"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/colorPrimary30" />
+    </LinearLayout>
+
+</LinearLayout>

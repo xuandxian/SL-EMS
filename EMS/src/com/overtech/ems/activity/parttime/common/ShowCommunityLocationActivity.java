@@ -38,10 +38,14 @@ public class ShowCommunityLocationActivity extends BaseActivity {
 	private String mLatitude;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.activity_show_community_location);
+	protected int getLayoutResIds() {
+		// TODO Auto-generated method stub
+		return R.layout.activity_show_community_location;
+	}
+
+	@Override
+	protected void afterCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
 		getExtrasData();
 		findViewById();
 		getLocationData();
@@ -59,7 +63,7 @@ public class ShowCommunityLocationActivity extends BaseActivity {
 		mCommunityName = bundle.getString("CommunityName");
 		mLongitude = bundle.getString("Longitude");
 		mLatitude = bundle.getString("Latitude");
-		Logr.e("longitude=="+mLongitude+"==latitude=="+mLatitude);
+		Logr.e("longitude==" + mLongitude + "==latitude==" + mLatitude);
 	}
 
 	private void getLocationData() {
@@ -99,7 +103,7 @@ public class ShowCommunityLocationActivity extends BaseActivity {
 	}
 
 	private void setCommunityMarker(LatLng ll) {
-		
+
 		BitmapDescriptor bitmap = BitmapDescriptorFactory
 				.fromResource(R.drawable.icon_map_community);
 		MarkerOptions option = new MarkerOptions().position(ll).icon(bitmap)
@@ -124,4 +128,5 @@ public class ShowCommunityLocationActivity extends BaseActivity {
 		}
 		super.onDestroy();
 	}
+
 }

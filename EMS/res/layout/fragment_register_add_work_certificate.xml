@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_main"
+    android:fitsSystemWindows="true"
     android:orientation="vertical" >
 
     <include layout="@layout/headview" />
@@ -13,7 +14,7 @@
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="10dp"
-        android:text="上岗证照片（非必填）" />
+        android:text="上岗证照片（可选两张）" />
 
     <ImageView
         android:id="@+id/id_work_certificate"
@@ -21,7 +22,16 @@
         android:layout_height="200dp"
         android:background="@color/main_white"
         android:src="@drawable/btn_camera_comment_rest" />
-	<Button
+
+    <ImageView
+        android:id="@+id/id_work_certificate2"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="2dp"
+        android:background="@color/main_white"
+        android:src="@drawable/btn_camera_comment_rest" />
+
+    <Button
         android:id="@+id/btn_next_fragment"
         android:layout_width="match_parent"
         android:layout_height="50dp"
@@ -30,9 +40,8 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="25dp"
         android:background="@drawable/shape_button_visiable"
-        android:textColor="@color/main_white"
-        android:textSize="17sp"
         android:text="下一步"
-         />
-    
+        android:textColor="@color/main_white"
+        android:textSize="17sp" />
+
 </LinearLayout>

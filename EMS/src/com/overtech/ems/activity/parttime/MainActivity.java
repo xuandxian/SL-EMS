@@ -1,5 +1,6 @@
 package com.overtech.ems.activity.parttime;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -10,13 +11,15 @@ import android.widget.RadioGroup;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
+import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.fulltime.maintenance.MaintenanceFragment;
+import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
 import com.overtech.ems.activity.parttime.fragment.GrabTaskFragment;
 import com.overtech.ems.activity.parttime.fragment.NearByFragment;
 import com.overtech.ems.activity.parttime.fragment.PersonalZoneFragment;
 import com.overtech.ems.activity.parttime.fragment.TaskListFragment;
-import com.overtech.ems.activity.parttime.tasklist.TaskListNoneFragment;
 import com.overtech.ems.utils.FragmentUtils;
+import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
@@ -46,21 +49,48 @@ public class MainActivity extends BaseActivity {
 	public static String QZ = "全职";
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	protected int getLayoutResIds() {
+		// TODO Auto-generated method stub
+		return R.layout.activity_main;
+	}
+
+	@Override
+	protected void afterCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
 		employeeType = (String) SharePreferencesUtils.get(this,
 				SharedPreferencesKeys.EMPLOYEETYPE, "");
 		uid = (String) SharePreferencesUtils.get(this,
 				SharedPreferencesKeys.UID, "");
 		certificate = (String) SharePreferencesUtils.get(this,
 				SharedPreferencesKeys.CERTIFICATED, "");
-		if(!stackInstance.isExistActivity(this)){
+		if (!stackInstance.isExistActivity(this)) {
 			stackInstance.pushActivity(this);
 		}
-		setContentView(R.layout.activity_main);
 		findViewById();
 		setDefaultView();
 		initEvents();
+		initJpushIfExists();
+	}
+
+	private void initJpushIfExists() {
+		// TODO Auto-generated method stub
+		Bundle bundle = getIntent().getExtras();
+		if (bundle != null) {
+			String orderNo = bundle.getString("orderNo");
+			String action = bundle.getString("action");
+			Logr.e("=orderNo==" + orderNo + "==action==" + action);
+			if (TextUtils.equals(action, "1") && orderNo != null) {// 打开抢单页面
+				if (employeeType.equals(JZ)) {
+					Intent i = new Intent(this, PackageDetailActivity.class);
+					i.putExtra("TaskNo", orderNo);
+					startActivity(i);
+				} else {
+					Utilities.showToast("您是全职人员不用参与抢单！！！", this);
+				}
+			} else {
+
+			}
+		}
 	}
 
 	protected void findViewById() {
@@ -73,17 +103,16 @@ public class MainActivity extends BaseActivity {
 
 	private void setDefaultView() {
 		if (TextUtils.equals(QZ, employeeType)) {
-			mHomeHomeRb.setText("维修");
-			String flag=getIntent().getStringExtra("flag");
-			if(TextUtils.equals(flag, "1")){
+			mHomeHomeRb.setText("维修单");
+			String flag = getIntent().getStringExtra("flag");
+			if (TextUtils.equals(flag, "1")) {
 				currentFragment = FragmentUtils.switchFragment(fragmentManager,
 						R.id.mHomeContent, currentFragment,
 						TaskListFragment.class, null);
 				mTaskListFragment = (TaskListFragment) currentFragment;
-				
-				
+
 				mHomeSearchRb.setChecked(true);
-			}else{
+			} else {
 				currentFragment = FragmentUtils.switchFragment(fragmentManager,
 						R.id.mHomeContent, currentFragment,
 						MaintenanceFragment.class, null);
@@ -97,8 +126,7 @@ public class MainActivity extends BaseActivity {
 						R.id.mHomeContent, currentFragment,
 						TaskListFragment.class, null);
 				mTaskListFragment = (TaskListFragment) currentFragment;
-				
-				
+
 				mHomeSearchRb.setChecked(true);
 			} else {
 				currentFragment = FragmentUtils.switchFragment(fragmentManager,
@@ -198,6 +226,9 @@ public class MainActivity extends BaseActivity {
 				Utilities.showToast("再按一次退出24梯", this);
 				exitTime = System.currentTimeMillis();
 			} else {
+				if (((MyApplication) getApplication()).locationService != null) {
+					((MyApplication) getApplication()).locationService.stop();
+				}
 				stackInstance.popAllActivitys();
 			}
 			return true;
@@ -227,4 +258,9 @@ public class MainActivity extends BaseActivity {
 	public String getCertificate() {
 		return certificate;
 	}
+
+	public String getEmployeeType() {
+		return employeeType;
+	}
+
 }

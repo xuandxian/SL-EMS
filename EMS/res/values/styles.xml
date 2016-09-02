@@ -2,17 +2,22 @@
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
-    <style name="AppBaseTheme" parent="android:Theme.Light">
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
-            backward-compatibility can go here.
+            backward-compatibility can go here.
         -->
+        <item name="colorPrimary">#00b9ef</item>
+        <item name="colorPrimaryDark">@android:color/transparent</item>
+        <item name="android:windowBackground">@color/main_white</item>
+        <item name="colorControlNormal">@android:color/white</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
     </style>
-
-    <!-- Application theme. -->
+ <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
@@ -89,12 +94,14 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+
     <style name="tv_list_secondary_style" parent="@android:style/Widget.TextView">
         <item name="android:textSize">@dimen/text_size_list</item>
         <item name="android:textColor">@color/main_secondary</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
+
     <style name="tv_list_qq_style" parent="@android:style/Widget.TextView">
         <item name="android:textSize">@dimen/text_size_list</item>
         <item name="android:textColor">@color/bg_qq_blue</item>
@@ -108,7 +115,7 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
-    
+
     <style name="tv_list_hint_style" parent="@android:style/Widget.TextView">
         <item name="android:textSize">@dimen/text_size_list</item>
         <item name="android:textColor">@color/main_hint</item>
@@ -162,9 +169,9 @@
         <item name="android:textSize">@dimen/text_size_title</item>
         <item name="android:textColor">@color/main_white</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">50dp</item>
-        <item name="android:layout_marginLeft">15dp</item>
-        <item name="android:layout_marginRight">15dp</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:layout_marginRight">16dp</item>
     </style>
 
     <!-- spinner -->
@@ -184,26 +191,26 @@
     </style>
 
     <style name="CustomProgressDialog" parent="@style/CustomDialog">
-        <item name="android:windowBackground">@color/bg_mask</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:windowNoTitle">true</item>
     </style>
-    
+
     <!-- Rating Bar -->
-     <style name="CommonRatingBar" parent="@android:style/Widget.RatingBar">
-       <item name="android:progressDrawable">@drawable/common_ratingbar</item>
-       <item name="android:minHeight">40dip</item>
-       <item name="android:maxHeight">40dip</item>
+    <style name="CommonRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/common_ratingbar</item>
+        <item name="android:minHeight">40dip</item>
+        <item name="android:maxHeight">40dip</item>
     </style>
-    
-     <style name="tv_warning_info_null_style" parent="@android:style/Widget.TextView">
+
+    <style name="tv_warning_info_null_style" parent="@android:style/Widget.TextView">
         <item name="android:textSize">@dimen/text_size_info</item>
         <item name="android:textColor">@color/main_null</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:lineSpacingExtra">@dimen/common_warning_line_space</item>
     </style>
-    
-     <style name="btn_err_layout_white_style" parent="@android:style/Widget.Button">
+
+    <style name="btn_err_layout_white_style" parent="@android:style/Widget.Button">
         <item name="android:textSize">@dimen/text_size_title</item>
         <item name="android:textColor">@color/main_secondary</item>
         <item name="android:background">@drawable/selector_no_result</item>

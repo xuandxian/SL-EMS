@@ -1,30 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingEnd="24dp"
+    android:paddingStart="24dp" >
+
+    <android.support.v7.widget.AppCompatTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:text="新上岗证编号:"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <android.support.v7.widget.AppCompatEditText
         android:id="@+id/et_worklicense_no"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="24dp"
         android:layout_marginRight="18dp"
-        android:hint="工作证编号" >
-    </android.support.v7.widget.AppCompatEditText>
+        android:gravity="fill_horizontal"
+        android:hint="工作证编号"
+        android:scrollHorizontally="true"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <!--
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="16dp"
-        android:text="更新到期时间"
-        android:textColor="@android:color/black"
-        android:textSize="18sp" >
-    </TextView>
-    -->
-
+        android:gravity="left"
+        android:text="更新到期时间:"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <DatePicker
         android:id="@+id/datepicker_worklicense_due"
@@ -32,5 +37,23 @@
         android:layout_height="wrap_content"
         android:calendarViewShown="false"
         android:datePickerMode="spinner" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/bt_add_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="添加上岗证照片："
+        android:textAppearance="?android:attr/textAppearanceButton"
+        android:textColor="@color/material_deep_teal_200"
+         />
+
+    <android.support.v7.widget.GridLayout
+        android:id="@+id/gridLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="true"
+        app:columnCount="2"
+        app:rowCount="1"
+        app:useDefaultMargins="true" />
 
 </LinearLayout>

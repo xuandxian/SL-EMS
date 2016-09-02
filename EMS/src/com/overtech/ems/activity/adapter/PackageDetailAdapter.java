@@ -1,6 +1,7 @@
 package com.overtech.ems.activity.adapter;
 
 import java.util.List;
+import java.util.Map;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -11,14 +12,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.overtech.ems.R;
-import com.overtech.ems.entity.bean.TaskPackageDetailBean.TaskPackage;
 
 public class PackageDetailAdapter extends BaseAdapter {
 
 	private Context context;
-	private List<TaskPackage> list;
+	private List<Map<String,Object>> list;
 
-	public PackageDetailAdapter(Context context, List<TaskPackage> list) {
+	public PackageDetailAdapter(Context context, List<Map<String,Object>> list) {
 		super();
 		this.context = context;
 		this.list = list;
@@ -38,13 +38,13 @@ public class PackageDetailAdapter extends BaseAdapter {
 	public long getItemId(int position) {
 		return position;
 	}
-	public void setData(List<TaskPackage> list){
+	public void setData(List<Map<String,Object>> list){
 		this.list=list;
 	}
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		ViewHolder holder = null;
-		TaskPackage data = list.get(position);
+		Map<String,Object> data = list.get(position);
 		if (convertView == null) {
 			holder = new ViewHolder();
 			convertView = LayoutInflater.from(context).inflate(
@@ -66,7 +66,7 @@ public class PackageDetailAdapter extends BaseAdapter {
 		} else {
 			holder = (ViewHolder) convertView.getTag();
 		}
-		String temp = data.elevatorName;
+		String temp = data.get("elevatorName").toString();
 		// if (temp.contains("号")) {
 		// if (temp.endsWith("号")) {
 		// holder.mElevtorName.setText(temp);
@@ -76,20 +76,20 @@ public class PackageDetailAdapter extends BaseAdapter {
 		// } else {
 		holder.mElevtorName.setText(temp);
 		// }
-		if (data.workType.equals("0")) {
+		if (data.get("workType").equals("0")) {
 			holder.mWorkType.setText("(半月保)");
-		} else if (data.workType.equals("1")) {
+		} else if (data.get("workType").equals("1")) {
 			holder.mWorkType.setText("(季度保)");
-		} else if (data.workType.equals("2")) {
+		} else if (data.get("workType").equals("2")) {
 			holder.mWorkType.setText("(半年保)");
 		} else {
 			holder.mWorkType.setText("(年保)");
 		}
-		holder.mElevtorProductor.setText(data.elevatorBrand);
-		holder.mElevtorNo.setText(data.elevatorNo);
-		String contentFloor = data.storeySite;
+		holder.mElevtorProductor.setText(data.get("elevatorBrand").toString());
+		holder.mElevtorNo.setText(data.get("elevatorNo").toString());
+		String contentFloor = data.get("storeySite").toString();
 		if (contentFloor.contains("/")) {
-			String[] floor = data.storeySite.split("/");
+			String[] floor = contentFloor.split("/");
 			holder.mElevtorType.setText(floor[0] + "层/" + floor[1] + "站");
 		} else {
 			holder.mElevtorType.setText(contentFloor);

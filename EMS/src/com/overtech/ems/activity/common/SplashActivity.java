@@ -4,11 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
-import android.view.WindowManager;
+import android.view.View;
 import cn.jpush.android.api.JPushInterface;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
+import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.SharePreferencesUtils;
@@ -24,16 +25,30 @@ public class SplashActivity extends BaseActivity {
 	private String certificate;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		setContentView(R.layout.splash);
+	protected int getLayoutResIds() {
+		// TODO Auto-generated method stub
+		return R.layout.splash;
+	}
+
+	@Override
+	protected void afterCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		View view=getWindow().getDecorView();
+		int option=View.SYSTEM_UI_FLAG_FULLSCREEN|View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+		view.setSystemUiVisibility(option);
+		
 		uid = (String) SharePreferencesUtils.get(this,
 				SharedPreferencesKeys.UID, "");
 		certificate = (String) SharePreferencesUtils.get(this,
 				SharedPreferencesKeys.CERTIFICATED, "");
+		if (!((MyApplication) getApplication()).locationService.isStarted()) {
+			Logr.e("地图还没开始定位");
+			((MyApplication) getApplication()).locationService.start();
+		}
+		((MyApplication) getApplication()).locationService.requestLocation();
+
 		Logr.e("uid==" + uid + "==certificate==" + certificate);
+		JPushInterface.resumePush(this);
 		new Handler().postDelayed(new Runnable() {
 
 			@Override
@@ -53,7 +68,7 @@ public class SplashActivity extends BaseActivity {
 				}
 			}
 		}, 3000);
-		JPushInterface.resumePush(this);
+
 	}
 
 	@Override
@@ -66,6 +81,12 @@ public class SplashActivity extends BaseActivity {
 	protected void onPause() {
 		super.onPause();
 		JPushInterface.onPause(this);
+	}
+
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		// super.onBackPressed();
 	}
 
 }

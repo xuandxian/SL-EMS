@@ -1,12 +1,14 @@
 package com.overtech.ems.activity.parttime.tasklist;
 
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -32,19 +34,13 @@ import com.baidu.mapapi.utils.route.RouteParaOption.EBusStrategyType;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
 import com.overtech.ems.activity.adapter.TaskListAdapter;
-import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.config.StatusCode;
-import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.Bean;
-import com.overtech.ems.entity.common.Requester;
-import com.overtech.ems.http.OkHttpClientManager;
-import com.overtech.ems.http.OkHttpClientManager.ResultCallback;
+import com.overtech.ems.http.HttpConnector;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.AppUtils;
 import com.overtech.ems.utils.Logr;
-import com.overtech.ems.utils.SharePreferencesUtils;
-import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView;
@@ -54,7 +50,6 @@ import com.overtech.ems.widget.swiperefreshlistview.pulltorefresh.RefreshTime;
 import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenu;
 import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuCreator;
 import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuItem;
-import com.squareup.okhttp.Request;
 
 public class TaskListNoneFragment extends BaseFragment implements
 		IXListViewListener {
@@ -84,7 +79,6 @@ public class TaskListNoneFragment extends BaseFragment implements
 			default:
 				break;
 			}
-			stopProgressDialog();
 		};
 	};
 
@@ -151,8 +145,8 @@ public class TaskListNoneFragment extends BaseFragment implements
 				.setOnMenuItemClickListener(new OnMenuItemClickListener() {
 
 					@Override
-					public void onMenuItemClick(int position, SwipeMenu menu,
-							int index) {
+					public void onMenuItemClick(final int position,
+							SwipeMenu menu, int index) {
 						// TODO Auto-generated method stub
 						switch (index) {
 						case 0:// 导航
@@ -162,11 +156,48 @@ public class TaskListNoneFragment extends BaseFragment implements
 							startNavicate(startPoint, endPoint, endName);
 							break;
 						case 1:// t退单
-							Map<String, Object> data = (Map<String, Object>) adapter
-									.getItem(position);
-							mTaskNo = data.get("taskNo").toString();
-							mPosition = position;
-							doChargeBackTaskValidateTime(mTaskNo);
+							alertBuilder
+									.setTitle("温馨提示")
+									.setMessage("您确定要退单")
+									.setNegativeButton(
+											"取消",
+											new DialogInterface.OnClickListener() {
+
+												@Override
+												public void onClick(
+														DialogInterface dialog,
+														int which) {
+													// TODO Auto-generated
+													// method stub
+
+												}
+											})
+									.setPositiveButton(
+											"确认",
+											new DialogInterface.OnClickListener() {
+
+												@Override
+												public void onClick(
+														DialogInterface dialog,
+														int which) {
+													// TODO Auto-generated
+													// method stub
+													Map<String, Object> data = (Map<String, Object>) adapter
+															.getItem(position);
+													mTaskNo = data
+															.get("taskNo")
+															.toString();
+													mPosition = position;
+													doChargeBackTaskValidateTime(mTaskNo);
+												}
+											}).show();
+
+							// Map<String, Object> data = (Map<String, Object>)
+							// adapter
+							// .getItem(position);
+							// mTaskNo = data.get("taskNo").toString();
+							// mPosition = position;
+							// doChargeBackTaskValidateTime(mTaskNo);
 							break;
 						}
 					}
@@ -176,11 +207,15 @@ public class TaskListNoneFragment extends BaseFragment implements
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
+				@SuppressWarnings("unchecked")
 				Map<String, Object> data = (Map<String, Object>) parent
 						.getAdapter().getItem(position);
 				Intent intent = new Intent(mActivity,
 						TaskListPackageDetailActivity.class);
 				intent.putExtra(Constant.TASKNO, data.get("taskNo").toString());
+				if(data.get("isAs")!=null){
+					intent.putExtra("isAs", data.get("isAs").toString());
+				}
 				startActivityForResult(intent, REQUESTCODE);
 			}
 		});
@@ -227,140 +262,125 @@ public class TaskListNoneFragment extends BaseFragment implements
 	protected void doChargeBackTaskValidateTime(String taskNo) {
 		startProgressDialog(getResources().getString(
 				R.string.loading_public_default));
-		Requester requester = new Requester();
-		requester.uid = uid;
-		requester.cmd = 20052;
-		requester.certificate = certificate;
-		requester.body.put(Constant.TASKNO, mTaskNo);
-		ResultCallback<Bean> callback = new ResultCallback<Bean>() {
+		HashMap<String, Object> body = new HashMap<String, Object>();
+		body.put(Constant.TASKNO, mTaskNo);
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20052, uid,
+				certificate, body) {
 
 			@Override
-			public void onError(Request request, Exception e) {
+			public Context getContext() {
 				// TODO Auto-generated method stub
-				stopProgressDialog();
-				Logr.e(request.toString());
+				return activity;
 			}
 
 			@Override
-			public void onResponse(Bean response) {
+			public void bizSuccess(Bean response) {
+				// TODO Auto-generated method stub
+				String time = response.body.get("result").toString();
+				if (time.equals("-1")) {// 维保单维保时间已经过期
+					Utilities.showToast(response.msg, mActivity);
+					return;
+				} else if (time.equals("0")) {// 维保单维保时间是当天，不允许退单
+					Utilities.showToast(response.msg, mActivity);
+					return;
+				} else if (time.equals("1")) {// 退单时间距离维保时间在72小时内，退单会影响星级评定
+					alertBuilder.setMessage(response.msg);
+				} else {
+					alertBuilder.setMessage("您确认要退单？");// 退单时间距离维保时间72小时外
+				}
+				alertBuilder
+						.setTitle("温馨提示")
+						.setNegativeButton("取消",
+								new DialogInterface.OnClickListener() {
+
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										// TODO Auto-generated method stub
+
+									}
+								})
+						.setPositiveButton("确认",
+								new DialogInterface.OnClickListener() {
+
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										// TODO Auto-generated method stub
+										dealChargeBackTask();
+									}
+								}).show();
+			}
+
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void stopDialog() {
 				// TODO Auto-generated method stub
 				stopProgressDialog();
-				if (response == null) {
-					Utilities.showToast(R.string.response_no_object, activity);
-					return;
-				}
-				int st = response.st;
-				if (st == -1 || st == -2) {
-					Utilities.showToast(response.msg, mActivity);
-					SharePreferencesUtils.put(mActivity,
-							SharedPreferencesKeys.UID, "");
-					SharePreferencesUtils.put(mActivity,
-							SharedPreferencesKeys.CERTIFICATED, "");
-					Intent intent = new Intent(mActivity, LoginActivity.class);
-					startActivity(intent);
-					return;
-				} else if (st == 1) {
-					Utilities.showToast(response.msg, mActivity);
-					return;
-				}
-				String time = response.body.get("result").toString();
-				if (time.equals("-1")) {//维保单维保时间已经过期
-					Utilities.showToast(response.msg, mActivity);
-					return;
-				} else if (time.equals("0")) {//维保单维保时间是当天，不允许退单
-					Utilities.showToast(response.msg, mActivity);
-					return;
-				} else if (time.equals("1")) {//退单时间距离维保时间在72小时内，退单会影响星级评定
-					dialogBuilder.withMessage(response.msg);
-				} else {
-					dialogBuilder.withMessage("你确认要退单？");//退单时间距离维保时间72小时外
-				}
-				effect = Effectstype.Slideright;
-				dialogBuilder.withTitle("温馨提示")
-						.withTitleColor(R.color.main_primary)
-						.withDividerColor("#11000000")
-						.withMessageColor(R.color.main_primary)
-						.withDialogColor("#FFFFFFFF")
-						.isCancelableOnTouchOutside(true).withDuration(700)
-						.withEffect(effect)
-						.withButtonDrawable(R.color.main_white)
-						.withButton1Text("取消").withButton1Color("#DD47BEE9")
-						.withButton2Text("确认").withButton2Color("#DD47BEE9")
-						.setButton1Click(new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								dialogBuilder.dismiss();
-							}
-						}).setButton2Click(new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								dialogBuilder.dismiss();
-								dealChargeBackTask();
-							}
-						}).show();
 			}
 		};
-		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
-				gson.toJson(requester));
+		conn.sendRequest();
 	}
 
 	// 处理退单事件
 	private void dealChargeBackTask() {
 		startProgressDialog("正在退单...");
-		Requester requester = new Requester();
-		requester.cmd = 20053;
-		requester.certificate = certificate;
-		requester.uid = uid;
-		requester.body.put("taskNo", mTaskNo);
-		ResultCallback<Bean> callback = new ResultCallback<Bean>() {
+		HashMap<String, Object> body = new HashMap<String, Object>();
+		body.put("taskNo", mTaskNo);
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20053, uid,
+				certificate, body) {
 
 			@Override
-			public void onError(Request request, Exception e) {
+			public Context getContext() {
 				// TODO Auto-generated method stub
-				stopProgressDialog();
-				Logr.e(request.toString());
+				return activity;
 			}
 
 			@Override
-			public void onResponse(Bean response) {
+			public void bizSuccess(Bean response) {
 				// TODO Auto-generated method stub
 				stopProgressDialog();
-				if (response == null) {
-					Utilities.showToast(R.string.response_no_object, activity);
-					return;
-				}
-				int st = response.st;
-				if (st == -1 || st == -2) {
-					Utilities.showToast(response.msg, mActivity);
-					SharePreferencesUtils.put(mActivity,
-							SharedPreferencesKeys.UID, "");
-					SharePreferencesUtils.put(mActivity,
-							SharedPreferencesKeys.CERTIFICATED, "");
-					Intent intent = new Intent(mActivity, LoginActivity.class);
-					startActivity(intent);
-					return;
-				}
-				if (st == 0) {
-					list.remove(mPosition);
-					if (list.isEmpty()) {
-						mSwipeListView.setVisibility(View.GONE);
-						mNoPage.setVisibility(View.VISIBLE);
-					} else {
-						adapter.notifyDataSetChanged();
-					}
-					// 推送业务
-					loadNotDoneTask();
+				list.remove(mPosition);
+				if (list.isEmpty()) {
+					mSwipeListView.setVisibility(View.GONE);
+					mNoPage.setVisibility(View.VISIBLE);
 				} else {
-					Utilities.showToast(response.msg, activity);
+					adapter.notifyDataSetChanged();
 				}
+				// 推送业务
+				loadNotDoneTask();
+			}
 
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void stopDialog() {
+				// TODO Auto-generated method stub
+				stopProgressDialog();
 			}
 		};
-		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
-				gson.toJson(requester));
+		conn.sendRequest();
 	}
 
-	private void startNavicate(LatLng startPoint, LatLng endPoint, String endName) {// endName暂时不使用
+	private void startNavicate(LatLng startPoint, LatLng endPoint,
+			String endName) {// endName暂时不使用
 		// 构建 route搜索参数
 		RouteParaOption para = new RouteParaOption().startName("起点")
 				.startPoint(startPoint).endPoint(endPoint).endName("终点")
@@ -396,51 +416,18 @@ public class TaskListNoneFragment extends BaseFragment implements
 		// TODO Auto-generated method stub
 		startProgressDialog(getResources().getString(
 				R.string.loading_public_default));
-		Requester requester = new Requester();
-		requester.certificate = certificate;
-		requester.uid = uid;
-		requester.cmd = 20050;
-		ResultCallback<Bean> callback = new ResultCallback<Bean>() {
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20050, uid,
+				certificate, null) {
 
 			@Override
-			public void onError(Request request, Exception e) {
+			public Context getContext() {
 				// TODO Auto-generated method stub
-				stopProgressDialog();
-				mSwipeListView.stopRefresh();
-				Logr.e(request.toString());
+				return activity;
 			}
 
 			@Override
-			public void onResponse(Bean response) {
+			public void bizSuccess(Bean response) {
 				// TODO Auto-generated method stub
-				stopProgressDialog();
-				mSwipeListView.stopRefresh();
-				if (response == null) {
-					Utilities.showToast(R.string.response_no_object, activity);
-					mSwipeListView.setVisibility(View.GONE);
-					mNoPage.setVisibility(View.VISIBLE);
-					return;
-				}
-				int st = response.st;
-				if (st == -1 || st == -2) {
-					Utilities.showToast(response.msg, mActivity);
-					SharePreferencesUtils.put(mActivity,
-							SharedPreferencesKeys.UID, "");
-					SharePreferencesUtils.put(mActivity,
-							SharedPreferencesKeys.CERTIFICATED, "");
-					Intent intent = new Intent(mActivity, LoginActivity.class);
-					startActivity(intent);
-					return;
-				} else if (st == 1) {
-					Utilities.showToast(response.msg, activity);
-					if (adapter != null) {
-						adapter.getData().clear();
-						adapter.notifyDataSetChanged();
-					}
-					mSwipeListView.setVisibility(View.GONE);
-					mNoPage.setVisibility(View.VISIBLE);
-					return;
-				}
 				list = (List<Map<String, Object>>) response.body.get("data");
 				if (null == list || list.size() == 0) {
 					mSwipeListView.setVisibility(View.GONE);
@@ -459,11 +446,54 @@ public class TaskListNoneFragment extends BaseFragment implements
 						adapter.setData(list);
 						adapter.notifyDataSetChanged();
 					}
+					/*
+					 * for (Map<String, Object> map : list) { String isAs =
+					 * map.get("isAs").toString(); if (TextUtils.equals(isAs,
+					 * "1")) {// 年检包 alertBuilder .setTitle("温馨提示")
+					 * .setMessage("发现你有需要年检的任务单，请按时年检") .setNegativeButton(
+					 * "取消", new DialogInterface.OnClickListener() {
+					 * 
+					 * @Override public void onClick( DialogInterface dialog,
+					 * int which) { // TODO Auto-generated // method stub
+					 * 
+					 * } }) .setPositiveButton( "确认", new
+					 * DialogInterface.OnClickListener() {
+					 * 
+					 * @Override public void onClick( DialogInterface dialog,
+					 * int which) { // TODO Auto-generated // method stub
+					 * 
+					 * } }).show(); } else {// 维保包
+					 * 
+					 * } }
+					 */
 				}
 			}
+
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+				if (adapter != null) {
+					adapter.getData().clear();
+					adapter.notifyDataSetChanged();
+				}
+				mSwipeListView.setVisibility(View.GONE);
+				mNoPage.setVisibility(View.VISIBLE);
+			}
+
+			@Override
+			public void stopDialog() {
+				// TODO Auto-generated method stub
+				stopProgressDialog();
+				mSwipeListView.stopRefresh();
+			}
 		};
-		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
-				gson.toJson(requester));
+		conn.sendRequest();
 	}
 
 	@Override
@@ -472,19 +502,22 @@ public class TaskListNoneFragment extends BaseFragment implements
 		mSwipeListView.stopLoadMore();
 	}
 
-	private ResultCallback<Bean> loadNotDoneCallback = new ResultCallback<Bean>() {
+	/**
+	 * 加载未完成的任务单
+	 */
+	private void loadNotDoneTask() {
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20050, uid,
+				certificate, null) {
 
-		@Override
-		public void onError(Request request, Exception e) {
-			// TODO Auto-generated method stub
-			Logr.e(request.toString());
-		}
+			@Override
+			public Context getContext() {
+				// TODO Auto-generated method stub
+				return activity;
+			}
 
-		@Override
-		public void onResponse(Bean response) {
-			// TODO Auto-generated method stub
-			int st = response.st;
-			if (st == 0) {
+			@Override
+			public void bizSuccess(Bean response) {
+				// TODO Auto-generated method stub
 				List<Map<String, Object>> datas = (List<Map<String, Object>>) response.body
 						.get("data");
 				Set<String> tempSet = new HashSet<String>();
@@ -495,18 +528,25 @@ public class TaskListNoneFragment extends BaseFragment implements
 				JPushInterface.setAliasAndTags(activity, "", tempSet,
 						mTagsCallback);
 			}
-		}
-	};
 
-	/**
-	 * 加载未完成的任务单
-	 */
-	private void loadNotDoneTask() {
-		Requester requester = new Requester();
-		requester.cmd = 20050;
-		requester.uid = uid;
-		requester.certificate = certificate;
-		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, loadNotDoneCallback,
-				gson.toJson(requester));
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void stopDialog() {
+				// TODO Auto-generated method stub
+				
+			}
+		};
+		conn.sendRequest();
 	}
 }

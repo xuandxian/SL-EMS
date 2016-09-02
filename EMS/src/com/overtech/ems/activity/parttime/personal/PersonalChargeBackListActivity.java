@@ -87,9 +87,14 @@ public class PersonalChargeBackListActivity extends BaseActivity {
 	};
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_personal_cancle_list);
+	protected int getLayoutResIds() {
+		// TODO Auto-generated method stub
+		return R.layout.activity_personal_cancle_list;
+	}
+
+	@Override
+	protected void afterCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
 		initView();
 		init();
 	}
@@ -161,4 +166,5 @@ public class PersonalChargeBackListActivity extends BaseActivity {
 		super.onBackPressed();
 		stackInstance.popActivity(activity);
 	}
+
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+	<color name="colorPrimary">#00b9ef</color>
+	<color name="colorPrimary30">#5500b9ef</color>
     <!-- create by tony 2015-06-28 source comes from tongcheng -->
     <color name="return_money">#ffa733</color>
     <!-- 橙色，用户返利按钮的背景颜色 -->

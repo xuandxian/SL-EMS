@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.util.Log;
@@ -39,7 +40,8 @@ import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
 import com.overtech.ems.widget.popwindow.DimPopupWindow;
 
-public class RegisterAddPersonEduAndWorkFragment extends Fragment implements OnClickListener {
+public class RegisterAddPersonEduAndWorkFragment extends Fragment implements
+		OnClickListener {
 	private View view;
 	private Context mContext;
 	private TextView mHeadTitle;
@@ -62,7 +64,7 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment implements OnC
 	/**
 	 * 记录选择的电梯品牌
 	 */
-	private HashMap<Integer,Boolean> isSelected;
+	private HashMap<Integer, Boolean> isSelected;
 	private StringBuilder mCheckedMessage;
 	private TextView mWorkTime;
 	private RegAddPerEduWorkFrgClickListener listener;
@@ -79,7 +81,8 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment implements OnC
 	public String workUnit = null;
 	public String enterTime = null;
 	public String elevatorBrand = null;
-	public String workYears=null;
+	public String workYears = null;
+
 	@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
@@ -90,12 +93,30 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment implements OnC
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		if (savedInstanceState != null) {
+			eduLevel = savedInstanceState.getString("eduLevel");
+			workUnit = savedInstanceState.getString("workUnit");
+			enterTime = savedInstanceState.getString("enterTime");
+			elevatorBrand = savedInstanceState.getString("elevatorBrand");
+			workYears = savedInstanceState.getString("workYears");
+		}
 		view = inflater.inflate(
 				R.layout.fragment_register_add_person_edu_and_work, null);
 		findViewById(view);
 		init();
 		dealElevator();
 		return view;
+	}
+
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		super.onSaveInstanceState(outState);
+		outState.putString("eduLevel", eduLevel);
+		outState.putString("workUnit", workUnit);
+		outState.putString("enterTime", enterTime);
+		outState.putString("elevatorBrand", elevatorBrand);
+		outState.putString("workYears", workYears);
 	}
 
 	private void init() {
@@ -138,7 +159,7 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment implements OnC
 				int info = dealTime();
 				if (info != -1) {
 					mWorkTime.setText(info + "年");
-					workYears=info+"";//工作年限 用于提交给后台
+					workYears = info + "";// 工作年限 用于提交给后台
 				} else {
 					mWorkTime.setText("工作年限");
 					showDialog();
@@ -180,11 +201,12 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment implements OnC
 	private void dealElevator() {
 		if (adapter != null) {
 			mCheckedMessage = new StringBuilder();
-			if(!isSelected.isEmpty()){
-				Iterator<Map.Entry<Integer, Boolean>> iterator=isSelected.entrySet().iterator();
-				while(iterator.hasNext()){
-					Map.Entry<Integer,Boolean> brand=iterator.next();
-					mCheckedMessage.append(data[brand.getKey()]+" ");
+			if (!isSelected.isEmpty()) {
+				Iterator<Map.Entry<Integer, Boolean>> iterator = isSelected
+						.entrySet().iterator();
+				while (iterator.hasNext()) {
+					Map.Entry<Integer, Boolean> brand = iterator.next();
+					mCheckedMessage.append(data[brand.getKey()] + " ");
 				}
 			}
 			if (TextUtils.isEmpty(mCheckedMessage)) {
@@ -195,61 +217,63 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment implements OnC
 		}
 	}
 
-	
-	//选择电梯品牌
+	// 选择电梯品牌
 	protected void showPopupWindow() {
-		mPopupWindow = new DimPopupWindow(mContext);
-		View view = LayoutInflater.from(mContext).inflate(
-				R.layout.register_gridview_elevator_brand, null);
-		mGridView = (GridView) view.findViewById(R.id.gridViewElevator);
-		mConfirm = (Button) view.findViewById(R.id.bt_elevator_confirm);
-		mCancle = (Button) view.findViewById(R.id.bt_elevator_cancle);
-		adapter = new ElevatorBrandAdapter(data, mContext);
-		mGridView.setAdapter(adapter);
-		isSelected=adapter.isSelected;
-		mGridView.setOnItemClickListener(new OnItemClickListener() {
+		if (mPopupWindow == null) {
+			mPopupWindow = new DimPopupWindow(mContext);
+			View view = LayoutInflater.from(mContext).inflate(
+					R.layout.register_gridview_elevator_brand, null);
+			mPopupWindow.setContentView(view);
+			mGridView = (GridView) view.findViewById(R.id.gridViewElevator);
+			mConfirm = (Button) view.findViewById(R.id.bt_elevator_confirm);
+			mCancle = (Button) view.findViewById(R.id.bt_elevator_cancle);
+			adapter = new ElevatorBrandAdapter(data, mContext);
+			mGridView.setAdapter(adapter);
+			isSelected = adapter.isSelected;
+			mPopupWindow.setOutsideTouchable(false);
+			mGridView.setOnItemClickListener(new OnItemClickListener() {
 
-			@Override
-			public void onItemClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				// TODO Auto-generated method stub
-				Log.e("注册", position+"======");
-				CheckBox elevator=(CheckBox) view;
-				if(elevator.isChecked()){
-					elevator.setChecked(false);
-					isSelected.remove(position);
-				}else{
-					elevator.setChecked(true);
-					isSelected.put(position, true);
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					// TODO Auto-generated method stub
+					Log.e("注册", position + "======");
+					CheckBox elevator = (CheckBox) view;
+					if (elevator.isChecked()) {
+						elevator.setChecked(false);
+						isSelected.remove(position);
+					} else {
+						elevator.setChecked(true);
+						isSelected.put(position, true);
+					}
 				}
-			}
-		});
-		mPopupWindow.setOutsideTouchable(false);
-		mPopupWindow.setContentView(view);
+			});
+
+			mConfirm.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					dealElevator();
+					mPopupWindow.dismiss();
+				}
+			});
+			mCancle.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					mPopupWindow.dismiss();
+				}
+			});
+		}
 		mPopupWindow.showAtLocation(mElevatorBrand, Gravity.CENTER, 0, 0);
 
-		mConfirm.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				dealElevator();
-				mPopupWindow.dismiss();
-			}
-		});
-		mCancle.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				mPopupWindow.dismiss();
-			}
-		});
 	}
 
 	private void findViewById(View v) {
 		c = Calendar.getInstance();
-		mHeadTitle=(TextView)v.findViewById(R.id.tv_headTitle);
-		mDoBack=(ImageView)v.findViewById(R.id.iv_headBack);
-		mNext=(Button)v.findViewById(R.id.btn_next_fragment);
+		mHeadTitle = (TextView) v.findViewById(R.id.tv_headTitle);
+		mDoBack = (ImageView) v.findViewById(R.id.iv_headBack);
+		mNext = (Button) v.findViewById(R.id.btn_next_fragment);
 		mEdu = (Spinner) v.findViewById(R.id.sp_add_education);
 		mCurrWork = (EditTextWithDelete) v
 				.findViewById(R.id.et_register_add_name);
@@ -290,27 +314,27 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment implements OnC
 			getActivity().onBackPressed();
 			break;
 		case R.id.btn_next_fragment:
-			if(eduLevel.equals("学历")){
+			if (eduLevel.equals("学历")) {
 				Utilities.showToast("你还没有选择学历", mContext);
 				return;
 			}
-			workUnit=mCurrWork.getText().toString().trim();
-			if(TextUtils.isEmpty(workUnit)){
+			workUnit = mCurrWork.getText().toString().trim();
+			if (TextUtils.isEmpty(workUnit)) {
 				Utilities.showToast("工作单位不能为空", mContext);
 				return;
 			}
-			enterTime=mEnterWorkTime.getText().toString().trim();
-			if(TextUtils.isEmpty(enterTime)){
+			enterTime = mEnterWorkTime.getText().toString().trim();
+			if (TextUtils.isEmpty(enterTime)) {
 				Utilities.showToast("入行时间不能为空", mContext);
 				return;
 			}
-			elevatorBrand=mElevator.getText().toString().trim();
-			if(elevatorBrand.equals("电梯品牌")){
+			elevatorBrand = mElevator.getText().toString().trim();
+			if (elevatorBrand.equals("电梯品牌")) {
 				Utilities.showToast("您还没有选择电梯品牌", mContext);
 				return;
 			}
-			
-			if(listener!=null){
+
+			if (listener != null) {
 				listener.onRegAddPerEduWorkFrgClick();
 			}
 			break;
@@ -318,10 +342,22 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment implements OnC
 			break;
 		}
 	}
-	public void setRegAddPerEduWorkFrgClickListener(RegAddPerEduWorkFrgClickListener listener){
-		this.listener=listener;
+
+	@Override
+	public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onViewStateRestored(savedInstanceState);
+		if (workYears != null) {
+			mWorkTime.setText(workYears + "年");
+		}
 	}
-	public interface RegAddPerEduWorkFrgClickListener{
+
+	public void setRegAddPerEduWorkFrgClickListener(
+			RegAddPerEduWorkFrgClickListener listener) {
+		this.listener = listener;
+	}
+
+	public interface RegAddPerEduWorkFrgClickListener {
 		void onRegAddPerEduWorkFrgClick();
 	}
 }

@@ -83,9 +83,14 @@ public class LostPasswordActivity extends BaseActivity {
 	};
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_lost_password);
+	protected int getLayoutResIds() {
+		// TODO Auto-generated method stub
+		return R.layout.activity_lost_password;
+	}
+
+	@Override
+	protected void afterCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
 		activity = LostPasswordActivity.this;
 		findViewById();
 		init();
@@ -156,7 +161,8 @@ public class LostPasswordActivity extends BaseActivity {
 	private void getSmsCode() {
 		mPhoneNo = mPhoneNoEditText.getText().toString().trim();
 		if (Utilities.isMobileNO(mPhoneNo)) {
-			startProgressDialog(getResources().getString(R.string.loading_public_default));
+			startProgressDialog(getResources().getString(
+					R.string.loading_public_default));
 			Requester requester = new Requester();
 			requester.cmd = 10;
 			requester.body.put(Constant.PHONENO, mPhoneNo);
@@ -193,7 +199,8 @@ public class LostPasswordActivity extends BaseActivity {
 	}
 
 	public void submitVerificationCode() {
-		startProgressDialog(getResources().getString(R.string.loading_public_sms));
+		startProgressDialog(getResources().getString(
+				R.string.loading_public_sms));
 		mSMSCode = mSMSCodeEditText.getText().toString().trim();
 		if (TextUtils.isEmpty(mSMSCode)) {
 			Utilities.showToast("输入不能为空", activity);
@@ -231,4 +238,5 @@ public class LostPasswordActivity extends BaseActivity {
 		}
 
 	}
+
 }

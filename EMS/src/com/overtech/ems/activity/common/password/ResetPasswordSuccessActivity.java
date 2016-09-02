@@ -17,9 +17,14 @@ public class ResetPasswordSuccessActivity extends BaseActivity {
 	private ImageView mHeadBack;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_reset_password_success);
+	protected int getLayoutResIds() {
+		// TODO Auto-generated method stub
+		return R.layout.activity_reset_password_success;
+	}
+
+	@Override
+	protected void afterCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
 		findViewById();
 		init();
 	}
@@ -50,4 +55,5 @@ public class ResetPasswordSuccessActivity extends BaseActivity {
 		// TODO Auto-generated method stub
 		// super.onBackPressed();
 	}
+
 }

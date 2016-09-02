@@ -73,7 +73,8 @@ public class PersonalNoticeActivity extends BaseActivity {
 				}
 				list = (List<Map<String, Object>>) bean.body.get("data");
 				if (null == list || list.size() == 0) {
-					Utilities.showToast(getString(R.string.response_no_data), activity);
+					Utilities.showToast(getString(R.string.response_no_data),
+							activity);
 				} else {
 					int newItems = list.size() - announceSize;// 计算最新的数据集合的大小与之前的数据集合大小
 					if (newItems > 0) {
@@ -111,15 +112,21 @@ public class PersonalNoticeActivity extends BaseActivity {
 	};
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
+	protected int getLayoutResIds() {
+		// TODO Auto-generated method stub
+		return R.layout.activity_personal_announcement;
+	}
+
+	@Override
+	protected void afterCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
 		activity = this;
 		stackInstance.pushActivity(activity);
 		uid = (String) SharePreferencesUtils.get(activity,
 				SharedPreferencesKeys.UID, "");
 		certificate = (String) SharePreferencesUtils.get(activity,
 				SharedPreferencesKeys.CERTIFICATED, "");
-		setContentView(R.layout.activity_personal_announcement);
+
 		initView();
 		initData();
 	}
@@ -220,4 +227,5 @@ public class PersonalNoticeActivity extends BaseActivity {
 		super.onBackPressed();
 		stackInstance.popActivity(activity);
 	}
+
 }

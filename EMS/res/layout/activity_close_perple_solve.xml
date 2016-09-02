@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <include layout="@layout/layout_toolbar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_repair_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:text="报修时间：2016-07-20 18:30"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:text="达到现场时间："
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_achieve_time"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:gravity="center"
+                android:hint="请选择您达到现场的时间"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:text="放人时间："
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_problem_solve_time"
+                android:layout_width="match_parent"
+                android:layout_height="180dp"
+                android:gravity="center"
+                android:hint="请选择您解决问题的时间"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/bt_complete"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Button"
+                />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

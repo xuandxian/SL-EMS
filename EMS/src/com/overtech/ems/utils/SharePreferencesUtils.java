@@ -70,7 +70,6 @@ public class SharePreferencesUtils {
 		} else if (defaultObject instanceof Set) {
 			return sp.getStringSet(key, (Set) defaultObject);
 		}
-
 		return null;
 	}
 

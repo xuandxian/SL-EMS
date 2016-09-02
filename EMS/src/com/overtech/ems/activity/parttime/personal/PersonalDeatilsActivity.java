@@ -1,19 +1,31 @@
 package com.overtech.ems.activity.parttime.personal;
 
-import java.io.IOException;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.GridLayout;
+import android.support.v7.widget.PopupMenu;
+import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -29,13 +41,8 @@ import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.activity.parttime.personal.phoneno.ChangePhoneNoValidatePasswordActivity;
-import com.overtech.ems.config.StatusCode;
-import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.Bean;
-import com.overtech.ems.entity.bean.CommonBean;
-import com.overtech.ems.entity.common.Requester;
-import com.overtech.ems.http.OkHttpClientManager;
-import com.overtech.ems.http.OkHttpClientManager.ResultCallback;
+import com.overtech.ems.http.HttpConnector;
 import com.overtech.ems.picasso.Transformation;
 import com.overtech.ems.utils.ImageUtils;
 import com.overtech.ems.utils.Logr;
@@ -43,10 +50,6 @@ import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.bitmap.ImageLoader;
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
 public class PersonalDeatilsActivity extends BaseActivity implements
 		OnClickListener {
@@ -69,39 +72,65 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 	private View workLicenseView;// 上岗证view
 	private AppCompatEditText etWorkLicenseNo;// 上岗证编号
 	private DatePicker dpWorkLicenseDue;// 上岗证到期时间
+	private GridLayout glWorkLicenseImg;// 上岗证图片
+	private Button btAddNewImg;
+	private PopupMenu popupMenu;// 拍照或者选择图片
+	private File outFile;// 拍照时指定路径
+	private Uri cameraUri;// 拍照时指定的图片路径
 	private String uid;
 	private String certificate;
 	private String mWorkNo;
+	private String allowUpdateWorkLicense;// 允许更新上岗证信息
 	private PersonalDeatilsActivity activity;
 	private final String CHANGEPHONE = "0";
 	private final String RESETPASSWORD = "1";
-	private Handler handler = new Handler() {
-		public void handleMessage(android.os.Message msg) {
-			stopProgressDialog();
-			switch (msg.what) {
-			case StatusCode.PERSONAL_DETAIL_SUCCESS:
-				String json = (String) msg.obj;
-				CommonBean bean = gson.fromJson(json, CommonBean.class);
-				int st = bean.st;
-				if (st == -1 || st == -2) {
-					Utilities.showToast(bean.msg, activity);
-					SharePreferencesUtils.put(activity,
-							SharedPreferencesKeys.UID, "");
-					SharePreferencesUtils.put(activity,
-							SharedPreferencesKeys.CERTIFICATED, "");
-					Intent intent = new Intent(activity, LoginActivity.class);
-					startActivity(intent);
-					return;
-				}
-				String avatorUrl = bean.body.avator;
-				float rate = Float.parseFloat(bean.body.employeeRate);
-				String id = bean.body.id;
-				String name = bean.body.name;
-				String phone = bean.body.phone;
-				String registerTime = bean.body.registerTime;
-				mWorkNo = bean.body.workNo;
-				if (avatorUrl == null || "none".equals(avatorUrl)) {
-					avator.setScaleType(ScaleType.FIT_XY);
+	private final int SELECT_PHOTO = 0x00012;
+	private final int SELECT_CAMERA = 0x00013;
+	private String[] paths = new String[2];
+
+	@Override
+	protected int getLayoutResIds() {
+		// TODO Auto-generated method stub
+		return R.layout.activity_personal_details;
+	}
+
+	@Override
+	protected void afterCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		stackInstance.pushActivity(this);
+		initViews();
+		initEvents();
+		startLoading();
+	}
+
+	private void startLoading() {
+		startProgressDialog(getResources().getString(
+				R.string.loading_public_default));
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20071, uid,
+				certificate, null) {
+
+			@Override
+			public Context getContext() {
+				// TODO Auto-generated method stub
+				return activity;
+			}
+
+			@Override
+			public void bizSuccess(Bean response) {
+				// TODO Auto-generated method stub
+				String avatorUrl = response.body.get("avator").toString();
+				float rate = Float.parseFloat(response.body.get("employeeRate")
+						.toString());
+				String id = response.body.get("id").toString();
+				String name = response.body.get("name").toString();
+				String phone = response.body.get("phone").toString();
+				String registerTime = response.body.get("registerTime")
+						.toString();
+				allowUpdateWorkLicense = response.body.get(
+						"allowUpdateWorkLicense").toString();
+				mWorkNo = response.body.get("workNo").toString();
+				if (avatorUrl == null || "".equals(avatorUrl)) {
+					avator.setScaleType(ScaleType.CENTER_CROP);
 					avator.setImageResource(STUB_ID);
 				} else {
 					ImageLoader.getInstance().displayImage(avatorUrl, avator,
@@ -127,64 +156,27 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 				mCertificateNo.setText(mWorkNo);
 				mRegisterDate.setText(registerTime);
 				mRatingBar.setRating(rate);
-				break;
-			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast(R.string.response_failure_msg, activity);
-				break;
-			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast(R.string.request_error_msg, activity);
-				break;
-			default:
-				break;
-			}
-		}
-
-		;
-	};
-
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		stackInstance.pushActivity(this);
-		setContentView(R.layout.activity_personal_details);
-		initViews();
-		initEvents();
-		startLoading();
-	}
-
-	private void startLoading() {
-		startProgressDialog(getResources().getString(R.string.loading_public_default));
-		Requester requester = new Requester();
-		requester.uid = uid;
-		requester.certificate = certificate;
-		requester.cmd = 20071;
-		Request request = httpEngine.createRequest(SystemConfig.NEWIP,
-				gson.toJson(requester));
-		Call call = httpEngine.createRequestCall(request);
-		call.enqueue(new Callback() {
-
-			@Override
-			public void onResponse(Response arg0) throws IOException {
-				Message msg = new Message();
-				if (arg0.isSuccessful()) {
-					msg.obj = arg0.body().string();
-					msg.what = StatusCode.PERSONAL_DETAIL_SUCCESS;
-					handler.sendMessage(msg);
-				} else {
-					msg.obj = "服务器异常";
-					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
-					handler.sendMessage(msg);
-				}
 			}
 
 			@Override
-			public void onFailure(Request arg0, IOException arg1) {
-				Message msg = new Message();
-				msg.what = StatusCode.RESPONSE_NET_FAILED;
-				msg.obj = "网络异常";
-				handler.sendMessage(msg);
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+
 			}
-		});
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void stopDialog() {
+				// TODO Auto-generated method stub
+				stopProgressDialog();
+			}
+		};
+		conn.sendRequest();
 	}
 
 	private void initViews() {
@@ -222,6 +214,13 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
+		case R.id.bt_add_img:
+			if (glWorkLicenseImg.getChildCount() >= 2) {
+				Utilities.showToast("最多可选择两张照片", activity);
+			} else {
+				showPopupMenu();
+			}
+			break;
 		case R.id.iv_headBack:
 			stackInstance.popActivity(activity);
 			break;
@@ -242,12 +241,63 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 			startActivity(intent2);
 			break;
 		case R.id.rl_worklicense:
-			showWorklicenseDialog();
+			if (TextUtils.equals("0", allowUpdateWorkLicense)) {
+				Utilities.showToast("您的上岗证尚未过期", activity);
+			} else if (TextUtils.equals("1", allowUpdateWorkLicense)) {
+				showWorklicenseDialog();
+			}
 			break;
 		case R.id.btn_exit:
 			exitDialog();
 			break;
 		}
+	}
+
+	private void showPopupMenu() {
+		if (popupMenu == null) {
+			popupMenu = new PopupMenu(activity, btAddNewImg, Gravity.END);
+			popupMenu.getMenuInflater().inflate(
+					R.menu.menu_popup_select_photo_camara, popupMenu.getMenu());
+			popupMenu.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+				@Override
+				public boolean onMenuItemClick(MenuItem item) {
+					// TODO Auto-generated method stub
+					switch (item.getItemId()) {
+					case R.id.menu_select_photo:
+						openPhoto();
+						break;
+					case R.id.menu_select_camera:
+						openCamera();
+						break;
+					default:
+						break;
+					}
+					return true;
+				}
+			});
+		}
+		popupMenu.show();
+	}
+
+	private void openCamera() {
+		Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+		File dir = activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+		outFile = new File(dir, "workLicense" + (int) (Math.random() * 100)
+				+ ".jpg");
+		cameraUri = Uri.fromFile(outFile);
+		intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraUri); // 这样就将文件的存储方式和uri指定到了Camera应用中
+		startActivityForResult(intent, SELECT_CAMERA);
+	}
+
+	private void openPhoto() {
+		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+		intent.addCategory(Intent.CATEGORY_OPENABLE);
+		intent.setType("image/jpeg");
+		startActivityForResult(intent, SELECT_PHOTO);
 	}
 
 	private void showWorklicenseDialog() {
@@ -259,6 +309,11 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 					.findViewById(R.id.et_worklicense_no);
 			dpWorkLicenseDue = (DatePicker) workLicenseView
 					.findViewById(R.id.datepicker_worklicense_due);
+			glWorkLicenseImg = (GridLayout) workLicenseView
+					.findViewById(R.id.gridLayout);
+			btAddNewImg = (Button) workLicenseView
+					.findViewById(R.id.bt_add_img);
+			btAddNewImg.setOnClickListener(this);
 		}
 		etWorkLicenseNo.setText(mWorkNo);
 		if (builder == null) {
@@ -316,48 +371,136 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 
 	private void startUpload(final String worklicenseNo, String date) {
 		// TODO Auto-generated method stub
-		startProgressDialog(getResources().getString(R.string.loading_public_default));
-		Requester requester = new Requester();
-		requester.cmd = 20080;
-		requester.uid = uid;
-		requester.certificate = certificate;
-		requester.body.put("workLicenseNo", worklicenseNo);
-		requester.body.put("workLicenseDueDate", date);
-		ResultCallback<Bean> callback = new ResultCallback<Bean>() {
+		startProgressDialog(getResources().getString(
+				R.string.loading_public_default));
+		HashMap<String, Object> body = new HashMap<String, Object>();
+		body.put("workLicenseNo", worklicenseNo);
+		body.put("workLicenseDueDate", date);
+		List<Map<String, Object>> workLicenseImgs = new ArrayList<Map<String, Object>>();
+		for (String path : paths) {
+			if (path != null) {
+				HashMap<String, Object> workLicenseImg = new HashMap<String, Object>();
+				workLicenseImg.put("content", ImageUtils.bitmapToString(path));
+				workLicenseImg.put("attrName",
+						ImageUtils.getBitmapAttrName(path));
+				workLicenseImgs.add(workLicenseImg);
+			}
+		}
+		body.put("workLicenseImg", workLicenseImgs);
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20080, uid,
+				certificate, body) {
 
 			@Override
-			public void onError(Request request, Exception e) {
+			public Context getContext() {
 				// TODO Auto-generated method stub
-				stopProgressDialog();
-				Logr.e(request.toString());
+				return activity;
 			}
 
 			@Override
-			public void onResponse(Bean response) {
+			public void bizSuccess(Bean response) {
 				// TODO Auto-generated method stub
-				stopProgressDialog();
-				if (response == null) {
-					Utilities.showToast(R.string.response_no_data, activity);
-					return;
-				}
-				int st = response.st;
-				if (st == -1 || st == -2) {
-					Utilities.showToast(response.msg, activity);
-					SharePreferencesUtils.put(activity,
-							SharedPreferencesKeys.UID, "");
-					SharePreferencesUtils.put(activity,
-							SharedPreferencesKeys.CERTIFICATED, "");
-					Intent intent = new Intent(activity, LoginActivity.class);
-					startActivity(intent);
-				}
-				if (st == 0) {
-					mCertificateNo.setText(worklicenseNo);
-					Utilities.showToast(response.msg, activity);
-				}
+				mCertificateNo.setText(worklicenseNo);
+				Utilities.showToast(response.msg, activity);
+			}
+
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void stopDialog() {
+				// TODO Auto-generated method stub
+
 			}
 		};
-		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
-				gson.toJson(requester));
+		conn.sendRequest();
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		super.onActivityResult(requestCode, resultCode, data);
+		switch (requestCode) {
+		case SELECT_PHOTO:
+			if (resultCode == Activity.RESULT_OK) {
+				ImageView newImg = new ImageView(activity);
+				paths[glWorkLicenseImg.getChildCount()] = ImageUtils.getPath(
+						activity, data.getData());
+				newImg.setScaleType(ScaleType.CENTER_CROP);
+				newImg.setTag(glWorkLicenseImg.getChildCount());
+				newImg.setImageBitmap(ImageUtils.getSmallBitmap(ImageUtils
+						.getPath(activity, data.getData())));
+				newImg.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						int index = (Integer) v.getTag();
+						paths[index] = null;
+						for (int i = index; i < paths.length; i++) {
+							if (i != paths.length - 1) {
+								paths[i] = paths[i + 1];
+							} else {
+								paths[i] = null;
+							}
+						}
+						glWorkLicenseImg.removeView(v);
+						for (int i = 0; i < glWorkLicenseImg.getChildCount(); i++) {
+							glWorkLicenseImg.getChildAt(i).setTag(i);
+						}
+					}
+				});
+				glWorkLicenseImg.addView(newImg,
+						Utilities.dp2px(activity, 100),
+						Utilities.dp2px(activity, 100));
+			}
+			break;
+		case SELECT_CAMERA:
+			if (resultCode == Activity.RESULT_OK) {
+				ImageView newImg = new ImageView(activity);
+				newImg.setScaleType(ScaleType.CENTER_CROP);
+				newImg.setTag(glWorkLicenseImg.getChildCount());
+				newImg.setImageBitmap(ImageUtils.getSmallBitmap(ImageUtils
+						.getPath(activity, cameraUri)));
+				paths[glWorkLicenseImg.getChildCount()] = ImageUtils.getPath(
+						activity, cameraUri);
+				newImg.setOnClickListener(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						// TODO Auto-generated method stub
+						int index = (Integer) v.getTag();
+						File delF = new File(paths[index]);
+						delF.delete();
+						for (int i = index; i < paths.length; i++) {
+							if (i != paths.length - 1) {
+								paths[i] = paths[i + 1];
+							} else {
+								paths[i] = null;
+							}
+						}
+						glWorkLicenseImg.removeView(v);
+						for (int i = 0; i < glWorkLicenseImg.getChildCount(); i++) {
+							glWorkLicenseImg.getChildAt(i).setTag(i);
+						}
+					}
+				});
+				glWorkLicenseImg.addView(newImg,
+						Utilities.dp2px(activity, 100),
+						Utilities.dp2px(activity, 100));
+			}
+			break;
+		default:
+			break;
+		}
 	}
 
 	private void exitDialog() {
@@ -381,50 +524,56 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 					}
 				}).show();
 	}
+
 	private void exit() {
 		// TODO Auto-generated method stub
-		Requester requester = new Requester();
-		requester.cmd = 2;
-		requester.uid = uid;
-		requester.certificate = certificate;
-		ResultCallback<CommonBean> callback = new ResultCallback<CommonBean>() {
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(2, uid, certificate,
+				null) {
 
 			@Override
-			public void onError(Request request, Exception e) {
+			public Context getContext() {
 				// TODO Auto-generated method stub
-				Logr.e(request.toString());
+				return activity;
 			}
 
 			@Override
-			public void onResponse(CommonBean response) {
+			public void bizSuccess(Bean response) {
 				// TODO Auto-generated method stub
-				int st = response.st;
-				if (st == 0) {
-					Utilities.showToast(response.msg, activity);
-					SharePreferencesUtils.put(activity,
-							SharedPreferencesKeys.UID, "");
-					SharePreferencesUtils.put(activity,
-							SharedPreferencesKeys.CERTIFICATED, "");
-					Intent intent = new Intent(activity, LoginActivity.class);
-					startActivity(intent);
-				} else if (st == -1 || st == -2) {
-					Utilities.showToast(response.msg, activity);
-					SharePreferencesUtils.put(activity,
-							SharedPreferencesKeys.UID, "");
-					SharePreferencesUtils.put(activity,
-							SharedPreferencesKeys.CERTIFICATED, "");
-					Intent intent = new Intent(activity, LoginActivity.class);
-					startActivity(intent);
-				}
+				Utilities.showToast(response.msg, activity);
+				SharePreferencesUtils.put(activity, SharedPreferencesKeys.UID,
+						"");
+				SharePreferencesUtils.put(activity,
+						SharedPreferencesKeys.CERTIFICATED, "");
+				Intent intent = new Intent(activity, LoginActivity.class);
+				startActivity(intent);
+			}
+
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void stopDialog() {
+				// TODO Auto-generated method stub
+
 			}
 		};
-		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
-				gson.toJson(requester));
+		conn.sendRequest();
 	}
+
 	@Override
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
 		super.onBackPressed();
 		stackInstance.popActivity(activity);
 	}
+
 }

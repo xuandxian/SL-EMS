@@ -1,8 +1,10 @@
 package com.overtech.ems.activity.parttime.nearby;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -29,19 +31,12 @@ import com.baidu.mapapi.model.LatLng;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
 import com.overtech.ems.activity.MyApplication;
-import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
-import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.Bean;
-import com.overtech.ems.entity.common.Requester;
-import com.overtech.ems.http.OkHttpClientManager;
-import com.overtech.ems.http.OkHttpClientManager.ResultCallback;
+import com.overtech.ems.http.HttpConnector;
 import com.overtech.ems.utils.Logr;
-import com.overtech.ems.utils.SharePreferencesUtils;
-import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
-import com.squareup.okhttp.Request;
 
 public class NearByMapFragment extends BaseFragment {
 
@@ -84,47 +79,50 @@ public class NearByMapFragment extends BaseFragment {
 		}
 		onRefresh();
 	}
-	public void onRefresh(){
-		Requester requester = new Requester();
-		requester.cmd = 20030;
-		requester.certificate = certificate;
-		requester.uid = uid;
-		requester.body.put("latitude", String.valueOf(latitude));
-		requester.body.put("longitude", String.valueOf(longitude));
-		ResultCallback<Bean> nearCallback = new ResultCallback<Bean>() {
+
+	public void onRefresh() {
+		HashMap<String, Object> body = new HashMap<String, Object>();
+		body.put("latitude", String.valueOf(latitude));
+		body.put("longitude", longitude);
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20030, uid,
+				certificate, body) {
 
 			@Override
-			public void onError(Request request, Exception e) {
+			public Context getContext() {
 				// TODO Auto-generated method stub
-				Logr.e(request.toString());
+				return activity;
 			}
 
 			@Override
-			public void onResponse(Bean response) {
+			public void bizSuccess(Bean response) {
 				// TODO Auto-generated method stub
-				int st = response.st;
-				if (st == -1 || st == -2) {
-					Utilities.showToast(response.msg, activity);
-					SharePreferencesUtils.put(activity,
-							SharedPreferencesKeys.UID, "");
-					SharePreferencesUtils.put(activity,
-							SharedPreferencesKeys.CERTIFICATED, "");
-					Intent intent = new Intent(activity, LoginActivity.class);
-					startActivity(intent);
-					return;
-				} else if (st == 1) {// 上岗证相关
-					Utilities.showToast(response.msg, activity);
-				}
 				list = (List<Map<String, Object>>) response.body.get("data");
 				myLocation = new LatLng(latitude, longitude);
 				addOverLay(list);
 				setMyLocationMarker(myLocation);
 			}
 
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void stopDialog() {
+				// TODO Auto-generated method stub
+				
+			}
 		};
-		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, nearCallback,
-				gson.toJson(requester));
+		conn.sendRequest();
 	}
+
 	private void initView(View view) {
 		mMapView = (MapView) view.findViewById(R.id.bmapView);
 		mBaiduMap = mMapView.getMap();
@@ -266,12 +264,13 @@ public class NearByMapFragment extends BaseFragment {
 	public void onHiddenChanged(boolean hidden) {
 		// TODO Auto-generated method stub
 		super.onHiddenChanged(hidden);
-		Logr.e("NearByMapFragment=="+hidden);
-		if(!hidden){
+		Logr.e("NearByMapFragment==" + hidden);
+		if (!hidden) {
 			Logr.e("地图刷新了");
 			onRefresh();
 		}
 	}
+
 	@Override
 	public void onDestroy() {
 		// 关闭定位图层

@@ -3,7 +3,8 @@
     android:id="@+id/layout_personal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_main" >
+    android:background="@color/bg_main"
+    android:fitsSystemWindows="true" >
 
     <include
         android:id="@+id/personal_zone_header"
@@ -36,22 +37,21 @@
                     android:contentDescription="@null"
                     android:src="@drawable/icon_personal_my" />
 
-                <TextView
-                    style="@style/tv_title_primary_style"
+                <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/tv_name"
+                    style="@style/tv_title_primary_style"
                     android:layout_alignTop="@id/imageView1"
                     android:layout_marginLeft="10dp"
                     android:layout_marginTop="8dp"
                     android:layout_toRightOf="@+id/iv_headview"
                     android:textSize="17sp" />
 
-                <TextView
-                    style="@style/tv_title_primary_style"
+                <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/textViewPhone"
+                    style="@style/tv_title_primary_style"
                     android:layout_alignBottom="@+id/iv_headview"
                     android:layout_alignLeft="@+id/tv_name"
-                    android:layout_marginBottom="8dp"
-                     />
+                    android:layout_marginBottom="8dp" />
 
                 <ImageView
                     android:id="@+id/imageView2"
@@ -63,64 +63,77 @@
                     android:src="@drawable/icon_big_arrow_right" />
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/rl_personal_account_list"
+            <LinearLayout
+                android:id="@+id/ll_personal_account_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dip"
-                android:background="@color/main_white" >
+                android:background="@color/main_white"
+                android:orientation="horizontal"
+                android:padding="16dp" >
 
-                <TextView
-                    style="@style/tv_title_primary_style"
-                    android:padding="10dip"
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvAccount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="我的账单"
-                    android:textSize="17sp" />
+                    android:textAppearance="?android:attr/textAppearance"
+                    android:textSize="18sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
                     android:contentDescription="@null"
                     android:src="@drawable/icon_arrow_right" />
-            </RelativeLayout>
+            </LinearLayout>
 
-            <RelativeLayout
-                android:id="@+id/rl_personal_bounds"
+            <LinearLayout
+                android:id="@+id/ll_personal_bounds"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dip"
-                android:background="@color/main_white" >
+                android:background="@color/main_white"
+                android:orientation="horizontal"
+                android:padding="16dp" >
 
-                <TextView
-                    style="@style/tv_title_primary_style"
-                    android:padding="10dip"
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvBounds"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="奖励记录"
-                    android:textSize="17sp" />
+                    android:textAppearance="?android:attr/textAppearance"
+                    android:textSize="18sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
                     android:contentDescription="@null"
                     android:src="@drawable/icon_arrow_right" />
-            </RelativeLayout>
+            </LinearLayout>
 
-            <RelativeLayout
-                android:id="@+id/rl_cancle_list"
+            <LinearLayout
+                android:id="@+id/ll_cancle_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dip"
-                android:background="@color/main_white" >
+                android:background="@color/main_white"
+                android:orientation="horizontal"
+                android:padding="16dp" >
 
-                <TextView
-                    style="@style/tv_title_primary_style"
-                    android:padding="10dip"
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tvChargeback"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="退单记录"
-                    android:textSize="17sp" />
+                    android:textAppearance="?android:attr/textAppearance"
+                    android:textSize="18sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -128,78 +141,103 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:contentDescription="@null"
-                    android:layout_marginRight="15dp"
                     android:src="@drawable/icon_arrow_right" />
-            </RelativeLayout>
+            </LinearLayout>
 
-            <RelativeLayout
-                android:id="@+id/rl_about_app"
+            <LinearLayout
+                android:id="@+id/llPartners"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@color/main_white"
+                android:orientation="horizontal"
+                android:padding="16dp" >
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="搭档收藏"
+                    android:textAppearance="?android:attr/textAppearance"
+                    android:textSize="18sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_arrow_right" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_about_app"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dip"
-                android:background="@color/main_white" >
+                android:background="@color/main_white"
+                android:orientation="horizontal"
+                android:padding="16dp" >
 
-                <TextView
+                <android.support.v7.widget.AppCompatTextView
                     style="@style/tv_title_primary_style"
-                    android:padding="10dip"
+                    android:layout_weight="1"
                     android:text="@string/about_app"
-                    android:textSize="17sp" />
+                    android:textSize="18sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
                     android:contentDescription="@null"
                     android:src="@drawable/icon_arrow_right" />
-            </RelativeLayout>
+            </LinearLayout>
 
-            <RelativeLayout
-                android:id="@+id/rl_personal_notice"
+            <LinearLayout
+                android:id="@+id/ll_personal_notice"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dip"
-                android:background="@color/main_white" >
+                android:background="@color/main_white"
+                android:orientation="horizontal"
+                android:padding="16dp" >
 
-                <TextView
+                <android.support.v7.widget.AppCompatTextView
                     style="@style/tv_title_primary_style"
-                    android:padding="10dip"
+                    android:layout_weight="1"
                     android:text="公告"
-                    android:textSize="17sp" />
+                    android:textSize="18sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
                     android:contentDescription="@null"
                     android:src="@drawable/icon_arrow_right" />
-            </RelativeLayout>
+            </LinearLayout>
 
-            <RelativeLayout
-                android:id="@+id/rl_help_doc"
+            <LinearLayout
+                android:id="@+id/ll_help_doc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="1dip"
-                android:background="@color/main_white" >
+                android:background="@color/main_white"
+                android:orientation="horizontal"
+                android:padding="16dp" >
 
-                <TextView
+                <android.support.v7.widget.AppCompatTextView
                     style="@style/tv_title_primary_style"
-                    android:padding="10dip"
+                    android:layout_weight="1"
                     android:text="帮助文档"
-                    android:textSize="17sp" />
+                    android:textSize="18sp" />
 
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
                     android:contentDescription="@null"
                     android:src="@drawable/icon_arrow_right" />
-            </RelativeLayout>
+            </LinearLayout>
         </LinearLayout>
     </com.overtech.ems.widget.ReboundScrollView>
 

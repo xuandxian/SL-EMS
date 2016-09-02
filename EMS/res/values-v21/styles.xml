@@ -1,0 +1,228 @@
+<resources>
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimary30</item>
+        <item name="android:windowBackground">@color/main_white</item>
+        <item name="colorControlNormal">@color/colorPrimary30</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
+        
+        <item name="android:windowTranslucentStatus">false</item>
+    	<item name="android:windowTranslucentNavigation">false</item>
+    	<item name="android:statusBarColor">@color/colorPrimary30</item>
+
+    </style>
+ <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+
+    <!-- nifityDialog type -->
+    <style name="DialogWindowTitle">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/main_white</item>
+    </style>
+
+    <style name="dialog_tran" parent="android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:backgroundDimAmount">0.4</item>
+    </style>
+
+    <style name="dialog_untran" parent="dialog_tran">
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
+
+    <style name="dialog_btn">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:minHeight">36dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@color/nifity_dialog_bg</item>
+        <item name="android:textColor">@color/bg_qq_blue</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <!-- 自定义样式 -->
+    <style name="tv_title_white_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_title</item>
+        <item name="android:textColor">@color/main_white</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="tv_list_white_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_list</item>
+        <item name="android:textColor">@color/main_white</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="tv_large_primary_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_large</item>
+        <item name="android:textColor">@color/main_primary</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="tv_title_primary_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_title</item>
+        <item name="android:textColor">@color/main_primary</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="tv_title_secondary_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_title</item>
+        <item name="android:textColor">@color/main_secondary</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="tv_list_primary_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_list</item>
+        <item name="android:textColor">@color/main_primary</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="tv_list_secondary_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_list</item>
+        <item name="android:textColor">@color/main_secondary</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="tv_list_qq_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_list</item>
+        <item name="android:textColor">@color/bg_qq_blue</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="tv_info_hint_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_info</item>
+        <item name="android:textColor">@color/main_hint</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="tv_list_hint_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_list</item>
+        <item name="android:textColor">@color/main_hint</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="tv_hint_hint_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_hint</item>
+        <item name="android:textColor">@color/main_hint</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="tv_hint_secondary_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_hint</item>
+        <item name="android:textColor">@color/main_secondary</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="tv_info_secondary_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_info</item>
+        <item name="android:textColor">@color/main_secondary</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="tv_info_red_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_info</item>
+        <item name="android:textColor">@color/main_red</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="tv_info_white_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_info</item>
+        <item name="android:textColor">@color/main_white</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="tv_hint_white_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_hint</item>
+        <item name="android:textColor">@color/main_white</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="btn_title_white_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_title</item>
+        <item name="android:textColor">@color/main_white</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">56dp</item>
+        <item name="android:layout_marginLeft">16dp</item>
+        <item name="android:layout_marginRight">16dp</item>
+    </style>
+
+    <!-- spinner -->
+    <style name="spinner_style">
+        <item name="android:background">@drawable/spinner_selector</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:paddingLeft">15dip</item>
+    </style>
+    <!-- progress dialog -->
+    <style name="CustomDialog" parent="@android:style/Theme.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowAnimationStyle">@android:style/Animation.Dialog</item>
+        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
+    </style>
+
+    <style name="CustomProgressDialog" parent="@style/CustomDialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <!-- Rating Bar -->
+    <style name="CommonRatingBar" parent="@android:style/Widget.RatingBar">
+        <item name="android:progressDrawable">@drawable/common_ratingbar</item>
+        <item name="android:minHeight">40dip</item>
+        <item name="android:maxHeight">40dip</item>
+    </style>
+
+    <style name="tv_warning_info_null_style" parent="@android:style/Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_info</item>
+        <item name="android:textColor">@color/main_null</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:lineSpacingExtra">@dimen/common_warning_line_space</item>
+    </style>
+
+    <style name="btn_err_layout_white_style" parent="@android:style/Widget.Button">
+        <item name="android:textSize">@dimen/text_size_title</item>
+        <item name="android:textColor">@color/main_secondary</item>
+        <item name="android:background">@drawable/selector_no_result</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:paddingLeft">10dip</item>
+        <item name="android:paddingRight">10dip</item>
+    </style>
+
+</resources>

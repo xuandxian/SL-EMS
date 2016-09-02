@@ -1,16 +1,18 @@
 package com.overtech.ems.activity.parttime.tasklist;
 
-import java.io.IOException;
+import java.util.HashMap;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
+import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.Button;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioGroup;
@@ -18,83 +20,38 @@ import android.widget.TextView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
-import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
-import com.overtech.ems.config.StatusCode;
-import com.overtech.ems.config.SystemConfig;
-import com.overtech.ems.entity.bean.CommonBean;
-import com.overtech.ems.entity.common.Requester;
+import com.overtech.ems.entity.bean.Bean;
+import com.overtech.ems.http.HttpConnector;
 import com.overtech.ems.http.constant.Constant;
-import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
-import com.squareup.okhttp.Call;
-import com.squareup.okhttp.Callback;
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
 
 public class EvaluationActivity extends BaseActivity implements OnClickListener {
-	private TextView mHeadContent;
-	private ImageView mDoBack;
-	private Button mConfirm;
-	private RadioGroup mChecked;
-	private EditText mContent;
+	private TextView tvHeadContent;
+	private ImageView ivBack;
+	private Button btConfirm;
+	private RadioGroup rgChecked;
+	private EditText etContent;
+	private SwitchCompat swParteners;
 	private String uid;
 	private String certificate;
-	private String evaluateLevel;
-	private String evaluateInfo;
+	private String sEvaluateLevel;
+	private String sEvaluateInfo;
 	private String taskNo;
+	private String isPartner;// 是否是搭档
 	private EvaluationActivity activity;
-	private Handler handler = new Handler() {
-		public void handleMessage(android.os.Message msg) {
-			stopProgressDialog();
-			switch (msg.what) {
-			case StatusCode.EVALUATEOTHER:
-				String json = (String) msg.obj;
-				Logr.e(json);
-				CommonBean bean = gson.fromJson(json, CommonBean.class);
-				if (bean == null) {
-					Utilities.showToast(R.string.response_no_object, activity);
-					return;
-				}
-				int st = bean.st;
-				if (st == -1 || st == -2) {
-					Utilities.showToast(bean.msg, activity);
-					SharePreferencesUtils.put(activity,
-							SharedPreferencesKeys.UID, "");
-					SharePreferencesUtils.put(activity,
-							SharedPreferencesKeys.CERTIFICATED, "");
-					Intent intent = new Intent(activity, LoginActivity.class);
-					startActivity(intent);
-					return;
-				}
-				if (st == 0) {
-					Intent intent = new Intent(activity, MainActivity.class);
-					intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-					intent.putExtra("flag", "1");
-					startActivity(intent);
-				} else {
-					Utilities.showToast(bean.msg, activity);
-				}
-				break;
-			case StatusCode.RESPONSE_NET_FAILED:
-				Utilities.showToast(R.string.request_error_msg, activity);
-				break;
-			case StatusCode.RESPONSE_SERVER_EXCEPTION:
-				Utilities.showToast(R.string.response_failure_msg, activity);
-				break;
-			default:
-				break;
-			}
-		};
-	};
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.activity_evaluation);
+	protected int getLayoutResIds() {
+		// TODO Auto-generated method stub
+		return R.layout.activity_evaluation;
+	}
+
+	@Override
+	protected void afterCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
 		certificate = (String) SharePreferencesUtils.get(this,
 				SharedPreferencesKeys.CERTIFICATED, "");
 		uid = (String) SharePreferencesUtils.get(this,
@@ -104,18 +61,102 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 	}
 
 	private void initEvent() {
-		mDoBack.setOnClickListener(this);
-		mConfirm.setOnClickListener(this);
+		ivBack.setOnClickListener(this);
+		btConfirm.setOnClickListener(this);
+		swParteners.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				// TODO Auto-generated method stub
+				if (!isChecked) {
+					alertBuilder
+							.setTitle("温馨提示")
+							.setMessage("您确定要取消收藏该搭档？")
+							.setNegativeButton("取消",
+									new DialogInterface.OnClickListener() {
+
+										@Override
+										public void onClick(
+												DialogInterface dialog,
+												int which) {
+											// TODO Auto-generated method stub
+											swParteners.setChecked(true);
+										}
+									})
+							.setPositiveButton("确认",
+									new DialogInterface.OnClickListener() {
+
+										@Override
+										public void onClick(
+												DialogInterface dialog,
+												int which) {
+											// TODO Auto-generated method stub
+											updatePartnersChange("1");
+										}
+									}).show();
+				} else {
+					updatePartnersChange("0");
+				}
+			}
+		});
+		updatePartnersChange(null);
+
+	}
+
+	private void updatePartnersChange(String status) {
+		startProgressDialog("加载中...");
+		HashMap<String, Object> body = new HashMap<String, Object>();
+		body.put(Constant.TASKNO, taskNo);
+		body.put("isPartner", status);
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20059, uid,
+				certificate, body) {
+
+			@Override
+			public Context getContext() {
+				// TODO Auto-generated method stub
+				return activity;
+			}
+
+			@Override
+			public void bizSuccess(Bean response) {
+				// TODO Auto-generated method stub
+				isPartner = response.body.get("isPartner").toString();
+				if (TextUtils.equals(isPartner, "1")) {
+					swParteners.setChecked(true);
+				} else if (TextUtils.equals(isPartner, "0")) {
+					swParteners.setChecked(false);
+				}
+			}
+
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void stopDialog() {
+				// TODO Auto-generated method stub
+				stopProgressDialog();
+			}
+		};
+		conn.sendRequest();
 	}
 
 	private void init() {
-		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
-		mDoBack = (ImageView) findViewById(R.id.iv_headBack);
-		mConfirm = (Button) findViewById(R.id.bt_confirm);
-		mChecked = (RadioGroup) findViewById(R.id.rg_container);
-		mContent = (EditText) findViewById(R.id.et_evaluation);
-		mHeadContent.setText("互相评价");
-		mDoBack.setVisibility(View.VISIBLE);
+		tvHeadContent = (TextView) findViewById(R.id.tv_headTitle);
+		ivBack = (ImageView) findViewById(R.id.iv_headBack);
+		swParteners = (SwitchCompat) findViewById(R.id.swPartner);
+		btConfirm = (Button) findViewById(R.id.bt_confirm);
+		rgChecked = (RadioGroup) findViewById(R.id.rg_container);
+		etContent = (EditText) findViewById(R.id.et_evaluation);
+		tvHeadContent.setText("互相评价");
+		ivBack.setVisibility(View.VISIBLE);
 		taskNo = getIntent().getExtras().getString(Constant.TASKNO);
 		activity = this;
 		stackInstance.pushActivity(activity);
@@ -138,67 +179,74 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 	private void startLoading() {
 		startProgressDialog(getResources().getString(
 				R.string.loading_public_default));
-		Requester requester = new Requester();
-		requester.certificate = certificate;
-		requester.uid = uid;
-		requester.cmd = 20058;
-		requester.body.put(Constant.TASKNO, taskNo);
-		requester.body.put(Constant.EVALUATELEVEL, evaluateLevel);
-		requester.body.put(Constant.EVALUATEINFO, evaluateInfo);
-
-		Request request = httpEngine.createRequest(SystemConfig.NEWIP,
-				gson.toJson(requester));
-		Call call = httpEngine.createRequestCall(request);
-		call.enqueue(new Callback() {
+		HashMap<String, Object> body = new HashMap<String, Object>();
+		body.put(Constant.TASKNO, taskNo);
+		body.put(Constant.EVALUATELEVEL, sEvaluateLevel);
+		body.put(Constant.EVALUATEINFO, sEvaluateInfo);
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20058, uid,
+				certificate, body) {
 
 			@Override
-			public void onResponse(Response response) throws IOException {
-				Message msg = new Message();
-				if (response.isSuccessful()) {
-					msg.what = StatusCode.EVALUATEOTHER;
-					msg.obj = response.body().string();
-				} else {
-					msg.what = StatusCode.RESPONSE_SERVER_EXCEPTION;
-					msg.obj = "服务器异常";
-				}
-				handler.sendMessage(msg);
+			public Context getContext() {
+				// TODO Auto-generated method stub
+				return activity;
 			}
 
 			@Override
-			public void onFailure(Request arg0, IOException arg1) {
-				Message msg = new Message();
-				msg.what = StatusCode.RESPONSE_NET_FAILED;
-				msg.obj = "网络异常";
-				handler.sendMessage(msg);
+			public void bizSuccess(Bean response) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(activity, MainActivity.class);
+				intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+				intent.putExtra("flag", "1");
+				startActivity(intent);
 			}
-		});
+
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void stopDialog() {
+				// TODO Auto-generated method stub
+				stopProgressDialog();
+			}
+		};
+		conn.sendRequest();
 	}
 
 	private void upLoading() {
-		evaluateInfo = mContent.getText().toString().trim();
-		int rbId = mChecked.getCheckedRadioButtonId();
+		sEvaluateInfo = etContent.getText().toString().trim();
+		int rbId = rgChecked.getCheckedRadioButtonId();
 		switch (rbId) {
 		case R.id.rb_verygood:
-			evaluateLevel = "3";
+			sEvaluateLevel = "3";
 			break;
 		case R.id.rb_sogood:
-			evaluateLevel = "2";
+			sEvaluateLevel = "2";
 			break;
 		case R.id.rb_good:
-			evaluateLevel = "1";
+			sEvaluateLevel = "1";
 			break;
 		case R.id.rb_notbad:
-			evaluateLevel = "0";
+			sEvaluateLevel = "0";
 			break;
 		case R.id.rb_bad:
-			if (TextUtils.isEmpty(evaluateInfo)) {
+			if (TextUtils.isEmpty(sEvaluateInfo)) {
 				Utilities.showToast("请告诉我们您选择差评的原因", this);
 				return;
-			} else if (evaluateInfo.length() < 15) {
+			} else if (sEvaluateInfo.length() < 15) {
 				Utilities.showToast("输入的字符少于15个", this);
 				return;
 			}
-			evaluateLevel = "-2";
+			sEvaluateLevel = "-2";
 			break;
 		case RadioGroup.NO_ID:
 			Utilities.showToast("您还没有选择分值", activity);

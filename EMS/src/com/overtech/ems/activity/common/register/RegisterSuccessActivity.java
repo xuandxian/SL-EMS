@@ -15,29 +15,35 @@ public class RegisterSuccessActivity extends BaseActivity {
 	private ImageView mDoBack;
 	private TextView mTitle;
 	private RegisterSuccessActivity mActivity;
+
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected int getLayoutResIds() {
 		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_register_success);
-		mActivity=this;
+		return R.layout.activity_register_success;
+	}
+
+	@Override
+	protected void afterCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		mActivity = this;
 		initView();
 	}
 
 	private void initView() {
-		mDoBack=(ImageView) findViewById(R.id.iv_headBack);
-		mTitle=(TextView) findViewById(R.id.tv_headTitle);
+		mDoBack = (ImageView) findViewById(R.id.iv_headBack);
+		mTitle = (TextView) findViewById(R.id.tv_headTitle);
 		mDoBack.setVisibility(View.GONE);
 		mTitle.setText("注册成功");
 		new Handler().postDelayed(new Runnable() {
-			
+
 			@Override
 			public void run() {
-				Intent intent=new Intent(RegisterSuccessActivity.this,LoginActivity.class);
+				Intent intent = new Intent(RegisterSuccessActivity.this,
+						LoginActivity.class);
 				mActivity.startActivity(intent);
 				finish();
 			}
 		}, 3000);
 	}
-	
+
 }

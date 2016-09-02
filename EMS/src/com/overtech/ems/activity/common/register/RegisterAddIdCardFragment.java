@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Gravity;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.utils.ImageUtils;
+import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.popwindow.DimPopupWindow;
 
@@ -73,6 +75,19 @@ public class RegisterAddIdCardFragment extends Fragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		if(savedInstanceState!=null){
+			String outFileStr=savedInstanceState.getString("outFileStr");
+			if(outFileStr!=null){
+				outFile=new File(outFileStr);
+				cameraUri=Uri.fromFile(outFile);
+			}
+			currentState=savedInstanceState.getInt("currentState");
+			idCardFrontPath=savedInstanceState.getString("idCardFrontPath");
+			idCardOppositePath=savedInstanceState.getString("idCardOppositePath");
+		}
+		Logr.e("==fragment==onCreateView=");
+		
+		Logr.e("fragment实例=="+this);
 		view = inflater.inflate(R.layout.fragment_register_add_id_card, null);
 		findViewById(view);
 		init();
@@ -158,7 +173,7 @@ public class RegisterAddIdCardFragment extends Fragment implements
 		} else if (currentState == 1) {
 			outFile = new File(dir, "oppositeIdcard" + ".jpg");
 		}
-
+		Logr.e(outFile.getAbsolutePath());
 		cameraUri = Uri.fromFile(outFile);
 		intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraUri); // 这样就将文件的存储方式和uri指定到了Camera应用中
 		startActivityForResult(intent, PHOTO_CAPTURE);
@@ -180,6 +195,7 @@ public class RegisterAddIdCardFragment extends Fragment implements
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Logr.e("==fragment=onActivityResult=");
 		String sdStatus = Environment.getExternalStorageState();
 		if (!sdStatus.equals(Environment.MEDIA_MOUNTED)) {
 			Log.i("内存卡错误", "请检查您的内存卡");
@@ -274,4 +290,58 @@ public class RegisterAddIdCardFragment extends Fragment implements
 	public interface RegAddIdCardFrgClickListener {
 		void onRegAddIdCardFrgClick();
 	}
+	
+	@Override
+	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onActivityCreated(savedInstanceState);
+		Logr.e("==fragment=onActivityCreate==");
+	}
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		super.onSaveInstanceState(outState);
+		Logr.e("==fragment==onSaveInstanceState=");
+		outState.putString("outFileStr", outFile==null?null:outFile.getAbsolutePath());
+		outState.putInt("currentState",currentState);
+		outState.putString("idCardFrontPath", idCardFrontPath);
+		outState.putString("idCardOppositePath", idCardOppositePath);
+	}
+	@Override
+	public void onCreate(@Nullable Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		Logr.e("==fragment==onCreate==");
+	}
+	@Override
+	public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onViewStateRestored(savedInstanceState);
+		Logr.e("==fragment=onViewStateRestored==");
+		if(frontUri!=null){
+			mIdCardFront.setImageBitmap(ImageUtils.getSmallBitmap(ImageUtils.getPath(getActivity(), frontUri)));
+		}
+		if(oppositeUri!=null){
+			mIdCardOpposite.setImageBitmap(ImageUtils.getSmallBitmap(ImageUtils.getPath(getActivity(), oppositeUri)));	
+		}
+	}
+	@Override
+	public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onViewCreated(view, savedInstanceState);
+		Logr.e("==fragment==onViewCreated=");
+	}
+	@Override
+	public void onDestroyView() {
+		// TODO Auto-generated method stub
+		super.onDestroyView();
+		Logr.e("==fragment==onDestroyView==");
+	}
+	@Override
+	public void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		Logr.e("===fragment=onDestroy==");
+	}
+	
 }

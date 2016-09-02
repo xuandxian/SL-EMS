@@ -12,7 +12,6 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -70,10 +69,10 @@ public class PersonalAccountListActivity extends BaseActivity implements
 				}
 				List<Map<String, Object>> data = (List<Map<String, Object>>) datas.body
 						.get("data");
-				if(data==null||data.size()==0){
+				if (data == null || data.size() == 0) {
 					mPersonalAccountListView.setVisibility(View.GONE);
 					tvNoData.setVisibility(View.VISIBLE);
-				}else{
+				} else {
 					mPersonalAccountListView.setVisibility(View.VISIBLE);
 					tvNoData.setVisibility(View.GONE);
 				}
@@ -109,12 +108,16 @@ public class PersonalAccountListActivity extends BaseActivity implements
 	};
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+	protected int getLayoutResIds() {
+		// TODO Auto-generated method stub
+		return R.layout.activity_personal_account_list;
+	}
+
+	@Override
+	protected void afterCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
 		activity = this;
 		stackInstance.pushActivity(activity);
-		setContentView(R.layout.activity_personal_account_list);
 		findViewById();
 		initData();
 		startLoading(HASCOUNT);// 默认已结算
@@ -210,4 +213,5 @@ public class PersonalAccountListActivity extends BaseActivity implements
 		super.onBackPressed();
 		stackInstance.popActivity(activity);
 	}
+
 }

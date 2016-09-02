@@ -17,11 +17,17 @@ public class PersonalHelpDocActivity extends BaseActivity {
 	private ListView mHelpDoc;
 	private Context context;
 	private PersonalHelpDocAdapter adapter;
+
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_personal_helpdoc);
-		context=this;
+	protected int getLayoutResIds() {
+		// TODO Auto-generated method stub
+		return R.layout.activity_personal_helpdoc;
+	}
+
+	@Override
+	protected void afterCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		context = this;
 		initView();
 		init();
 	}
@@ -35,13 +41,14 @@ public class PersonalHelpDocActivity extends BaseActivity {
 			}
 		});
 		mHeadTitle.setText("帮助文档");
-		adapter=new PersonalHelpDocAdapter(context);
+		adapter = new PersonalHelpDocAdapter(context);
 		mHelpDoc.setAdapter(adapter);
 	}
 
 	private void initView() {
-		mDoBack=(ImageView) findViewById(R.id.iv_headBack);
-		mHeadTitle=(TextView) findViewById(R.id.tv_headTitle);
-		mHelpDoc=(ListView) findViewById(R.id.lv_help_doc);
+		mDoBack = (ImageView) findViewById(R.id.iv_headBack);
+		mHeadTitle = (TextView) findViewById(R.id.tv_headTitle);
+		mHelpDoc = (ListView) findViewById(R.id.lv_help_doc);
 	}
+
 }

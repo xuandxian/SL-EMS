@@ -62,14 +62,16 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 				String json = (String) msg.obj;
 				CommonBean phoneBean = gson.fromJson(json, CommonBean.class);
 				int st = phoneBean.st;
-				if(st==-1||st==-2){
+				if (st == -1 || st == -2) {
 					Utilities.showToast(phoneBean.msg, activity);
-					SharePreferencesUtils.put(activity, SharedPreferencesKeys.UID, "");
-					SharePreferencesUtils.put(activity, SharedPreferencesKeys.CERTIFICATED, "");
-					Intent intent=new Intent(activity,LoginActivity.class);
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent = new Intent(activity, LoginActivity.class);
 					startActivity(intent);
 					return;
-				}else{
+				} else {
 					Utilities.showToast(phoneBean.msg, activity);
 				}
 				break;
@@ -77,11 +79,13 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 				String json2 = (String) msg.obj;
 				CommonBean smsBean = gson.fromJson(json2, CommonBean.class);
 				int smsSt = smsBean.st;
-				if(smsSt==-1||smsSt==-2){
+				if (smsSt == -1 || smsSt == -2) {
 					Utilities.showToast(smsBean.msg, activity);
-					SharePreferencesUtils.put(activity, SharedPreferencesKeys.UID, "");
-					SharePreferencesUtils.put(activity, SharedPreferencesKeys.CERTIFICATED, "");
-					Intent intent=new Intent(activity,LoginActivity.class);
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent = new Intent(activity, LoginActivity.class);
 					startActivity(intent);
 					return;
 				}
@@ -96,15 +100,17 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 				String json3 = (String) msg.obj;
 				CommonBean updateBean = gson.fromJson(json3, CommonBean.class);
 				int updateSt = updateBean.st;
-				if(updateSt==-1||updateSt==-2){
+				if (updateSt == -1 || updateSt == -2) {
 					Utilities.showToast(updateBean.msg, activity);
-					SharePreferencesUtils.put(activity, SharedPreferencesKeys.UID, "");
-					SharePreferencesUtils.put(activity, SharedPreferencesKeys.CERTIFICATED, "");
-					Intent intent=new Intent(activity,LoginActivity.class);
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.UID, "");
+					SharePreferencesUtils.put(activity,
+							SharedPreferencesKeys.CERTIFICATED, "");
+					Intent intent = new Intent(activity, LoginActivity.class);
 					startActivity(intent);
 					return;
 				}
-				
+
 				if (updateSt == 0) {
 					String success = updateBean.msg;
 					if (success.equals("1")) {
@@ -130,9 +136,14 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 	};
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_change_phoneno_in_vc);
+	protected int getLayoutResIds() {
+		// TODO Auto-generated method stub
+		return R.layout.activity_change_phoneno_in_vc;
+	}
+
+	@Override
+	protected void afterCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
 		stackInstance.pushActivity(this);
 		initView();
 		initEvent();
@@ -204,7 +215,8 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 		// TODO Auto-generated method stub
 		mPhoneNo = mPhoneNoEditText.getText().toString().trim();
 		if (Utilities.isMobileNO(mPhoneNo)) {
-			startProgressDialog(getResources().getString(R.string.loading_public_default));
+			startProgressDialog(getResources().getString(
+					R.string.loading_public_default));
 			Requester requester = new Requester();
 			requester.uid = uid;
 			requester.certificate = certificate;
@@ -246,7 +258,8 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 		if (TextUtils.isEmpty(mSMSCode)) {
 			Utilities.showToast("输入不能为空", activity);
 		} else {
-			startProgressDialog(getResources().getString(R.string.loading_public_sms));
+			startProgressDialog(getResources().getString(
+					R.string.loading_public_sms));
 			Requester requester = new Requester();
 			requester.certificate = certificate;
 			requester.uid = uid;
@@ -281,7 +294,8 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 	}
 
 	private void updatePhoneNo() {
-		startProgressDialog(getResources().getString(R.string.loading_public_default));
+		startProgressDialog(getResources().getString(
+				R.string.loading_public_default));
 		Requester requester = new Requester();
 		requester.uid = uid;
 		requester.certificate = certificate;
@@ -321,4 +335,5 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 		super.onBackPressed();
 		stackInstance.popActivity(activity);
 	}
+
 }

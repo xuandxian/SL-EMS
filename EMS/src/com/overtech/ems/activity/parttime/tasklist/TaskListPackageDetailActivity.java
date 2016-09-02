@@ -1,33 +1,31 @@
 package com.overtech.ems.activity.parttime.tasklist;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnMultiChoiceClickListener;
 import android.content.Intent;
-import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
@@ -42,22 +40,16 @@ import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.MyApplication;
 import com.overtech.ems.activity.adapter.TaskListPackageDetailAdapter;
-import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.activity.parttime.common.ElevatorDetailActivity;
 import com.overtech.ems.config.StatusCode;
-import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.Bean;
-import com.overtech.ems.entity.common.Requester;
-import com.overtech.ems.http.OkHttpClientManager;
-import com.overtech.ems.http.OkHttpClientManager.ResultCallback;
+import com.overtech.ems.http.HttpConnector;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.AppUtils;
 import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
-import com.overtech.ems.widget.dialogeffects.Effectstype;
-import com.squareup.okhttp.Request;
 
 /*
  *任务包详情(任务单模块)
@@ -65,38 +57,40 @@ import com.squareup.okhttp.Request;
  */
 public class TaskListPackageDetailActivity extends BaseActivity implements
 		OnRefreshListener, OnClickListener {
-	private ImageView mDoBack;
-	private ListView mTaskListView;
-	private Button mDoChargeBack;
-	private Button mDoResponse;
-	private TextView mTaskPackageName;
-	private TextView mTaskNo;
-	private LinearLayout shareToFriends;
-	private LinearLayout dialToPartner;
-	private String sPhone;
+	private ImageView ivBack;
+	private ListView lvTask;
+	private Button btChargeback;
+	private Button btNext;
+	private Button btASComplete;
+	private TextView tvTaskPackageName;
+	private TextView tvTaskNo;
+	private AppCompatTextView tvNavigation;
+	private AppCompatTextView tvQrcode;
+	private AppCompatTextView tvShare;
+	private AppCompatTextView tvPartner;
+	private String sPartnerPhone;
+	private String sPartnerName;
 	private String sTaskPackageName;
 	private String latitude; // 纬度
 	private String longitude; // 经度
 	private String maintenanceDate; // 维保日期
 	private String sZone;
-	private String sPartnerName;
 	private String sTaskNo;
-	private String mLoginName;
-	private Effectstype effect;
-	private ImageView mDoMore;
-	private PopupWindow popupWindow;
-	private LatLng mStartPoint;
-	private LatLng destination;
+	private String isAs;// 是否是年检包
+	private String isMainAs;// 是否是主年检
+	/**
+	 * 如果已经请求到收藏的搭档列表，就不需要重复请求了
+	 */
+	private boolean hasLoadPartners = false;
+	private List<Map<String, Object>> listPartners;// 搭档
+	private String[] partners;// 搭档集合
+	private LatLng llStartPoint;
+	private LatLng llDestination;
 	// private String mDesName;
 	private boolean isToday;
 	private SwipeRefreshLayout mSwipeLayout;
 	private TaskListPackageDetailAdapter adapter;
 	private List<Map<String, Object>> list;
-	protected final int LIST_PADDING = 10;// 列表弹窗的间隔
-	private Rect mRect = new Rect();// 实例化一个矩形
-	private final int[] mLocation = new int[2];// 坐标的位置（x、y）
-	private int mScreenWidth;// 屏幕的宽度
-	private int mScreenHeight;// 屏幕的高度
 	private final String ALLCOMPLETE = "allComplete";
 	private final String NOTCOMPLETE = "notComplete";
 	private String uid;
@@ -146,39 +140,64 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	};
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_tasklist_package_detail);
+	protected int getLayoutResIds() {
+		// TODO Auto-generated method stub
+		return R.layout.activity_tasklist_package_detail;
+	}
+
+	@Override
+	protected void afterCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
 		activity = TaskListPackageDetailActivity.this;
 		stackInstance.pushActivity(activity);
 		initView();
-		getExtraDataAndInit();
 		initEvent();
+		getExtraDataAndInit();
 	}
 
 	private void initView() {
-		mStartPoint = new LatLng(
+		llStartPoint = new LatLng(
 				((MyApplication) getApplicationContext()).latitude,
 				(((MyApplication) getApplicationContext())).longitude);
-		mDoBack = (ImageView) findViewById(R.id.iv_grab_headBack);
-		mTaskListView = (ListView) findViewById(R.id.lv_tasklist);
-		mDoChargeBack = (Button) findViewById(R.id.bt_cancle_task);
-		mDoResponse = (Button) findViewById(R.id.bt_next_response);
-		mDoMore = (ImageView) findViewById(R.id.iv_navicate_right);
-		mDoMore.setBackgroundResource(R.drawable.icon_common_more);
-		mDoMore.setVisibility(View.VISIBLE);
-		mTaskPackageName = (TextView) findViewById(R.id.tv_headTitle_community_name);
-		mTaskNo = (TextView) findViewById(R.id.tv_headTitle_taskno);
+		ivBack = (ImageView) findViewById(R.id.iv_grab_headBack);
+		tvNavigation = (AppCompatTextView) findViewById(R.id.tv_navigation);
+		tvQrcode = (AppCompatTextView) findViewById(R.id.tv_qrcode);
+		tvShare = (AppCompatTextView) findViewById(R.id.tv_share);
+		tvPartner = (AppCompatTextView) findViewById(R.id.tv_partner);
+		lvTask = (ListView) findViewById(R.id.lv_tasklist);
+		btChargeback = (Button) findViewById(R.id.bt_cancle_task);
+		btNext = (Button) findViewById(R.id.bt_next_response);
+		btASComplete = (Button) findViewById(R.id.bt_as_complete);
+
+		tvTaskPackageName = (TextView) findViewById(R.id.tv_headTitle_community_name);
+		tvTaskNo = (TextView) findViewById(R.id.tv_headTitle_taskno);
 		mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.srl_container);
 	}
 
 	private void getExtraDataAndInit() {
 		Intent intent = getIntent();
 		sTaskNo = intent.getStringExtra(Constant.TASKNO);
+		isAs = intent.getStringExtra("isAs");
 		uid = (String) SharePreferencesUtils.get(activity,
 				SharedPreferencesKeys.UID, "");
 		certificate = (String) SharePreferencesUtils.get(activity,
 				SharedPreferencesKeys.CERTIFICATED, "");
+		mSwipeLayout.post(new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				mSwipeLayout.setRefreshing(true);
+			}
+		});
+		if (TextUtils.equals(isAs, "1")) {
+			tvPartner.setVisibility(View.VISIBLE);
+			tvShare.setVisibility(View.GONE);
+			tvQrcode.setEnabled(false);
+		} else {
+			// 不好确定，可能有，可能没有
+			// requestPartners();
+		}
 		onRefresh();
 	}
 
@@ -186,11 +205,15 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 		mSwipeLayout.setOnRefreshListener(this);
 		mSwipeLayout.setColorSchemeResources(R.color.material_deep_teal_200,
 				R.color.material_deep_teal_500);
-		mDoBack.setOnClickListener(this);
-		mDoChargeBack.setOnClickListener(this);
-		mDoResponse.setOnClickListener(this);
-		mDoMore.setOnClickListener(this);
-		mTaskListView.setOnItemClickListener(new OnItemClickListener() {
+		ivBack.setOnClickListener(this);
+		tvNavigation.setOnClickListener(this);
+		tvQrcode.setOnClickListener(this);
+		tvShare.setOnClickListener(this);
+		tvPartner.setOnClickListener(this);
+		btChargeback.setOnClickListener(this);
+		btNext.setOnClickListener(this);
+		btASComplete.setOnClickListener(this);
+		lvTask.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
@@ -203,82 +226,119 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				startActivity(intent);
 			}
 		});
-		initPopupWindow();
 	}
 
-	private void initPopupWindow() {
-		if (popupWindow == null) {
-			mScreenWidth = activity.getResources().getDisplayMetrics().widthPixels;
-			mScreenHeight = activity.getResources().getDisplayMetrics().heightPixels;
-			popupWindow = new PopupWindow(activity);
-			popupWindow.setWidth(mScreenWidth / 2);
-			popupWindow.setHeight(LayoutParams.WRAP_CONTENT);
-			popupWindow.setFocusable(true);
-			popupWindow.setTouchable(true);
-			popupWindow.setOutsideTouchable(true);
-			popupWindow.setBackgroundDrawable(new BitmapDrawable());
-			popupWindow.setContentView(LayoutInflater.from(this).inflate(
-					R.layout.layout_tasklist_pop, null));
-			initUI();
-		}
-	}
+	private void share() {// 分享给好友
+		alertBuilder
+				.setTitle("分享")
+				.setMessage("分享任务单给你的搭档或者朋友")
+				.setNeutralButton("搭档", new DialogInterface.OnClickListener() {
 
-	// 对popupWindow的ui进行初始化
-	private void initUI() {
-		popupWindow.getContentView().findViewById(R.id.ll_pop_1)
-				.setOnClickListener(// 地图导航
-						new OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								Logr.e("调用百度地图");
-								startNavicate(mStartPoint, destination, "终点");
-							}
-						});
-		shareToFriends = (LinearLayout) popupWindow.getContentView()
-				.findViewById(R.id.ll_pop_2);
-		shareToFriends.setOnClickListener(new OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						if (partners != null && partners.length > 0) {
+							shareToPartners();
+						} else {
+							Utilities.showToast("暂无搭档", activity);
+						}
+					}
+				})
+				.setPositiveButton("微信QQ等",
+						new DialogInterface.OnClickListener() {
 
-			@Override
-			public void onClick(View arg0) {
-				shareToFriends();
-			}
-		});
-		dialToPartner = (LinearLayout) popupWindow.getContentView()
-				.findViewById(R.id.ll_pop_3);
-		dialToPartner.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				Effectstype effect = Effectstype.Shake;
-				dialogBuilder.withTitle("温馨提示")
-						.withTitleColor(R.color.main_primary)
-						.withDividerColor("#11000000")
-						.withMessage("您确认要拨打电话给您的搭档：" + sPartnerName)
-						.withMessageColor(R.color.main_primary)
-						.withDialogColor("#FFFFFFFF")
-						.isCancelableOnTouchOutside(true).withDuration(700)
-						.withEffect(effect)
-						.withButtonDrawable(R.color.main_white)
-						.withButton1Text("取消").withButton1Color("#DD47BEE9")
-						.withButton2Text("确认").withButton2Color("#DD47BEE9")
-						.setButton1Click(new View.OnClickListener() {
 							@Override
-							public void onClick(View v) {
-								dialogBuilder.dismiss();
-							}
-						}).setButton2Click(new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								Intent intent = new Intent(Intent.ACTION_CALL,
-										Uri.parse("tel:" + sPhone));
-								startActivity(intent);
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// TODO Auto-generated method stub
+								shareToWeChatOrQQ();
 							}
 						}).show();
-			}
-		});
+
 	}
 
-	protected void shareToFriends() {// 分享给好友
-		ShareSDK.initSDK(this);
+	private void shareToPartners() {
+		final List<HashMap<String, Object>> selectPartners = new ArrayList<HashMap<String, Object>>();
+
+		alertBuilder
+				.setTitle("搭档")
+				.setMultiChoiceItems(partners, null,
+						new OnMultiChoiceClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which, boolean isChecked) {
+								// TODO Auto-generated method stub
+								if (isChecked) {
+									HashMap<String, Object> map = new HashMap<String, Object>();
+									map.put("uid",
+											listPartners.get(which).get("uid"));
+									selectPartners.add(which, map);
+								} else {
+									selectPartners.remove(which);
+								}
+							}
+						})
+				.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+
+					}
+				})
+				.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						sharePartnersConfirm(selectPartners);
+					}
+				}).show();
+	}
+
+	private void sharePartnersConfirm(List<HashMap<String, Object>> data) {
+		HashMap<String, Object> body = new HashMap<String, Object>();
+		body.put("taskNo", sTaskNo);
+		body.put("partners", data);
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20061, uid,
+				certificate, body) {
+
+			@Override
+			public Context getContext() {
+				// TODO Auto-generated method stub
+				return activity;
+			}
+
+			@Override
+			public void bizSuccess(Bean response) {
+				// TODO Auto-generated method stub
+				Utilities.showToast(response.msg, activity);
+			}
+
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void stopDialog() {
+				// TODO Auto-generated method stub
+
+			}
+		};
+		conn.sendRequest();
+	}
+
+	private void shareToWeChatOrQQ() {
+		ShareSDK.initSDK(activity);
 		OnekeyShare oks = new OnekeyShare();
 		oks.setText("我在24T中抢到"
 				+ sZone
@@ -287,7 +347,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				+ ",请速度去抢哦！App下载链接：http://www.wandoujia.com/apps/com.overtech.ems");
 		oks.setUrl("http://www.wandoujia.com/apps/com.overtech.ems");
 		oks.setVenueName("24T");
-		oks.show(this);
+		oks.show(activity);
 	}
 
 	public void startNavicate(LatLng startPoint, LatLng endPoint, String endName) {
@@ -316,80 +376,67 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 
 	@Override
 	public void onRefresh() {
-		startProgressDialog(getResources().getString(
-				R.string.loading_public_default));
-		Requester requester = new Requester();
-		requester.cmd = 20051;
-		requester.certificate = certificate;
-		requester.uid = uid;
-		requester.body.put(Constant.TASKNO, sTaskNo);
-		ResultCallback<Bean> callback = new ResultCallback<Bean>() {
+		HashMap<String, Object> body = new HashMap<String, Object>();
+		body.put(Constant.TASKNO, sTaskNo);
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20051, uid,
+				certificate, body) {
 
 			@Override
-			public void onError(Request request, Exception e) {
+			public Context getContext() {
 				// TODO Auto-generated method stub
-				stopProgressDialog();
-				if (mSwipeLayout.isRefreshing()) {
-					mSwipeLayout.setRefreshing(false);
-				}
-				Logr.e(request.toString());
+				return activity;
 			}
 
 			@Override
-			public void onResponse(Bean response) {
+			public void bizSuccess(Bean response) {
 				// TODO Auto-generated method stub
-				stopProgressDialog();
-				if (mSwipeLayout.isRefreshing()) {
-					mSwipeLayout.setRefreshing(false);
-				}
-				int st = response.st;
-				if (st == -1 || st == -2) {
-					Utilities.showToast(response.msg, activity);
-					SharePreferencesUtils.put(activity,
-							SharedPreferencesKeys.UID, "");
-					SharePreferencesUtils.put(activity,
-							SharedPreferencesKeys.CERTIFICATED, "");
-					Intent intent = new Intent(activity, LoginActivity.class);
-					startActivity(intent);
-					return;
-				} else if (st == 1) {
-					Utilities.showToast(response.msg, activity);
-					return;
-				}
 				list = (List<Map<String, Object>>) response.body.get("data");
-				sPhone = response.body.get("partnerPhone").toString();
 				sTaskPackageName = response.body.get("taskPackageName")
 						.toString();
 				latitude = response.body.get("latitude").toString();
 				longitude = response.body.get("longitude").toString();
-				destination = new LatLng(Double.valueOf(latitude),
+				llDestination = new LatLng(Double.valueOf(latitude),
 						Double.valueOf(longitude));
+				sZone = response.body.get("zone").toString();
 				maintenanceDate = response.body.get("maintenanceDate")
 						.toString();
-				sPartnerName = response.body.get("partnerName").toString();
-				sZone = response.body.get("zone").toString();
-				mTaskNo.setText(sTaskNo);
-				mTaskPackageName.setText(sTaskPackageName);
-				if (TextUtils.isEmpty(sPartnerName)
-						|| TextUtils.isEmpty(sPhone)) {
-					shareToFriends.setVisibility(View.VISIBLE);
-					dialToPartner.setVisibility(View.GONE);
-				} else {
-					shareToFriends.setVisibility(View.GONE);
-					dialToPartner.setVisibility(View.VISIBLE);
-				}
-				if (null == list || list.size() == 0) {
-					Utilities
-							.showToast(
-									getResources().getString(
-											R.string.response_no_data),
-									activity);
-					mDoChargeBack.setVisibility(View.GONE);
-					mDoResponse.setVisibility(View.GONE);
-				} else {
+				isAs = response.body.get("isAs").toString();
+				if (TextUtils.equals(isAs, "1")) {// 年检包
+					tvPartner.setVisibility(View.VISIBLE);// 搭档可用
+					tvShare.setVisibility(View.GONE);// 分享不可用
 
-					adapter = new TaskListPackageDetailAdapter(activity, list);
-					mTaskListView.setAdapter(adapter);
+					String isMainAs = response.body.get("isMainAs").toString();
+					String isAsTimeReach = response.body.get("isAsTimeReach")
+							.toString();
+					if (TextUtils.equals("1", isMainAs)
+							&& TextUtils.equals("1", isAsTimeReach)) {
+						btASComplete.setVisibility(View.VISIBLE);
+						btChargeback.setVisibility(View.GONE);
+						btNext.setVisibility(View.GONE);
+					} else {
+						btASComplete.setVisibility(View.GONE);
+						btChargeback.setVisibility(View.GONE);
+						btNext.setVisibility(View.GONE);
+					}
+					if (!hasLoadPartners) {
+						requestLoadASPartners();
+					}
+				} else if (TextUtils.equals(isAs, "0")) {// 普通包
+					sPartnerPhone = response.body.get("partnerPhone")
+							.toString();
+					sPartnerName = response.body.get("partnerName").toString();
+					if (TextUtils.isEmpty(sPartnerName)
+							|| TextUtils.isEmpty(sPartnerPhone)) {
+						tvPartner.setVisibility(View.GONE);
+						tvShare.setVisibility(View.VISIBLE);
+						if (!hasLoadPartners) {
+							requestPartners();
+						}
+					} else {
+						tvShare.setVisibility(View.GONE);
+						tvPartner.setVisibility(View.VISIBLE);
+					}
+
 					int count = 0;// 记录完成电梯的数量
 					for (Map<String, Object> data : list) {
 						if (data.get("isFinish").equals("2")) {
@@ -397,74 +444,85 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 						}
 					}
 					if (count == list.size()) {
-						mDoResponse.setVisibility(View.VISIBLE);
-						mDoResponse
-								.setBackgroundResource(R.color.btn_visiable_bg);// 绿色
-						mDoResponse.setTag(ALLCOMPLETE);
-						mDoChargeBack.setVisibility(View.GONE);
+						btNext.setVisibility(View.VISIBLE);
+						btNext.setBackgroundResource(R.color.btn_visiable_bg);// 绿色
+						btNext.setTag(ALLCOMPLETE);
+						btChargeback.setVisibility(View.GONE);
 					} else {
 						isToday = Utilities.isToday(maintenanceDate);
 						Logr.e("==是不是当天==" + isToday);
 						if (isToday) {
-							mDoResponse.setVisibility(View.VISIBLE);
-							mDoResponse
-									.setBackgroundResource(R.color.btn_disable_bg);// 灰色
-							mDoResponse.setTag(NOTCOMPLETE);
-							mDoChargeBack.setVisibility(View.GONE);
+							btNext.setVisibility(View.VISIBLE);
+							btNext.setBackgroundResource(R.color.btn_disable_bg);// 灰色
+							btNext.setTag(NOTCOMPLETE);
+							btChargeback.setVisibility(View.GONE);
 						} else {
-							mDoResponse.setVisibility(View.GONE);
-							mDoChargeBack.setVisibility(View.VISIBLE);
+							btNext.setVisibility(View.GONE);
+							btChargeback.setVisibility(View.VISIBLE);
 						}
 					}
 
 				}
+				tvTaskNo.setText(sTaskNo);
+				tvTaskPackageName.setText(sTaskPackageName);
+				if (null == list || list.size() == 0) {
+					Utilities
+							.showToast(
+									getResources().getString(
+											R.string.response_no_data),
+									activity);
+					btChargeback.setVisibility(View.GONE);
+					btNext.setVisibility(View.GONE);
+				} else {
+					if (adapter == null) {
+						adapter = new TaskListPackageDetailAdapter(activity,
+								list);
+						lvTask.setAdapter(adapter);
+					} else {
+						adapter.setData(list);
+					}
+
+				}
+			}
+
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void stopDialog() {
+				// TODO Auto-generated method stub
+				if (mSwipeLayout.isRefreshing()) {
+					mSwipeLayout.setRefreshing(false);
+				}
 			}
 		};
-		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
-				gson.toJson(requester));
+		conn.sendRequest();
 	}
 
 	private void validateChargebackTime() {
 		startProgressDialog(getResources().getString(
 				R.string.loading_public_default));
-		Requester requestVali = new Requester();
-		requestVali.cmd = 20052;
-		requestVali.certificate = certificate;
-		requestVali.uid = uid;
-		requestVali.body.put(Constant.TASKNO, sTaskNo);
-		ResultCallback<Bean> callback = new ResultCallback<Bean>() {
+		HashMap<String, Object> body = new HashMap<String, Object>();
+		body.put(Constant.TASKNO, sTaskNo);
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20052, uid,
+				certificate, body) {
 
 			@Override
-			public void onError(Request request, Exception e) {
+			public Context getContext() {
 				// TODO Auto-generated method stub
-				stopProgressDialog();
-				if (mSwipeLayout.isRefreshing()) {
-					mSwipeLayout.setRefreshing(false);
-				}
-				Logr.e(request.toString());
+				return activity;
 			}
 
 			@Override
-			public void onResponse(Bean response) {
+			public void bizSuccess(Bean response) {
 				// TODO Auto-generated method stub
-				stopProgressDialog();
-				if (mSwipeLayout.isRefreshing()) {
-					mSwipeLayout.setRefreshing(false);
-				}
-				int st = response.st;
-				if (st == -1 || st == -2) {
-					Utilities.showToast(response.msg, activity);
-					SharePreferencesUtils.put(activity,
-							SharedPreferencesKeys.UID, "");
-					SharePreferencesUtils.put(activity,
-							SharedPreferencesKeys.CERTIFICATED, "");
-					Intent intent = new Intent(activity, LoginActivity.class);
-					startActivity(intent);
-					return;
-				} else if (st == 1) {
-					Utilities.showToast(response.msg, activity);
-					return;
-				}
 				String result = response.body.get("result").toString();
 				if (result.equals("-1")) {
 					Utilities.showToast(response.msg, activity);
@@ -473,81 +531,187 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 					Utilities.showToast(response.msg, activity);
 					return;
 				} else if (result.equals("1")) {
-					dialogBuilder.withMessage("72小时内退单会影响星级评定，你确认要退单？");
+					alertBuilder.setMessage("72小时内退单会影响星级评定，你确认要退单？");
 				} else {
-					dialogBuilder.withMessage("你确认要退单？");
+					alertBuilder.setMessage("你确认要退单？");
 				}
-				effect = Effectstype.Slideright;
-				dialogBuilder.withTitle("温馨提示")
-						.withTitleColor(R.color.main_primary)
-						.withDividerColor("#11000000")
-						.withMessageColor(R.color.main_primary)
-						.withDialogColor("#FFFFFFFF")
-						.isCancelableOnTouchOutside(true).withDuration(700)
-						.withEffect(effect)
-						.withButtonDrawable(R.color.main_white)
-						.withButton1Text("取消").withButton1Color("#DD47BEE9")
-						.withButton2Text("确认").withButton2Color("#DD47BEE9")
-						.setButton1Click(new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								dialogBuilder.dismiss();
-							}
-						}).setButton2Click(new View.OnClickListener() {
-							@Override
-							public void onClick(View v) {
-								dialogBuilder.dismiss();
-								chargeback();
-							}
-						}).show();
+				alertBuilder
+						.setTitle("温馨提示")
+						.setPositiveButton("确认",
+								new DialogInterface.OnClickListener() {
+
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										// TODO Auto-generated method stub
+										chargeback();
+									}
+								})
+						.setNegativeButton("取消",
+								new DialogInterface.OnClickListener() {
+
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										// TODO Auto-generated method stub
+
+									}
+								}).show();
+			}
+
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void stopDialog() {
+				// TODO Auto-generated method stub
+				stopProgressDialog();
+				if (mSwipeLayout.isRefreshing()) {
+					mSwipeLayout.setRefreshing(false);
+				}
 			}
 		};
-		String jsonData = gson.toJson(requestVali);
-		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback, jsonData);
+		conn.sendRequest();
+	}
+
+	private void requestLoadASPartners() {
+		HashMap<String, Object> body = new HashMap<String, Object>();
+		body.put("taskNo", sTaskNo);
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20062, uid,
+				certificate, body) {
+
+			@Override
+			public Context getContext() {
+				// TODO Auto-generated method stub
+				return activity;
+			}
+
+			@Override
+			public void bizSuccess(Bean response) {
+				// TODO Auto-generated method stub
+				hasLoadPartners = true;
+				listPartners = (List<Map<String, Object>>) response.body
+						.get("partners");
+				partners = new String[listPartners.size()];
+				for (int i = 0; i < listPartners.size(); i++) {
+					if (listPartners.get(i).get("isMainAs").equals("1")) {
+						partners[i] = listPartners.get(i).get("partnerName")
+								.toString()
+								+ "(主修)";
+					} else {
+						partners[i] = listPartners.get(i).get("partnerName")
+								.toString();
+					}
+				}
+			}
+
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void stopDialog() {
+				// TODO Auto-generated method stub
+				stopProgressDialog();
+			}
+		};
+		conn.sendRequest();
+	}
+
+	private void requestPartners() {
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20079, uid,
+				certificate, null) {
+
+			@Override
+			public Context getContext() {
+				// TODO Auto-generated method stub
+				return activity;
+			}
+
+			@Override
+			public void bizSuccess(Bean response) {
+				// TODO Auto-generated method stub
+				hasLoadPartners = true;
+				listPartners = (List<Map<String, Object>>) response.body
+						.get("data");
+				partners = new String[listPartners.size()];
+				for (int i = 0; i < listPartners.size(); i++) {
+					partners[i] = listPartners.get(i).get("name").toString();
+				}
+			}
+
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void stopDialog() {
+				// TODO Auto-generated method stub
+				stopProgressDialog();
+			}
+		};
+		conn.sendRequest();
 	}
 
 	private void chargeback() {
 		startProgressDialog("正在退单...");
-		Requester requester = new Requester();
-		requester.cmd = 20053;
-		requester.certificate = certificate;
-		requester.uid = uid;
-		requester.body.put(Constant.TASKNO, sTaskNo);
-		ResultCallback<Bean> callback = new ResultCallback<Bean>() {
+		HashMap<String, Object> body = new HashMap<String, Object>();
+		body.put(Constant.TASKNO, sTaskNo);
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20053, uid,
+				certificate, body) {
 
 			@Override
-			public void onError(Request request, Exception e) {
+			public Context getContext() {
+				// TODO Auto-generated method stub
+				return activity;
+			}
+
+			@Override
+			public void bizSuccess(Bean response) {
+				// TODO Auto-generated method stub
+				loadNotDoneTask();
+			}
+
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void stopDialog() {
 				// TODO Auto-generated method stub
 				stopProgressDialog();
-				Logr.e(request.toString());
-			}
-
-			@Override
-			public void onResponse(Bean response) {
-				// TODO Auto-generated method stub
-//				stopProgressDialog();
-				int st = response.st;
-				if (st == -1 || st == -2) {
-					Utilities.showToast(response.msg, activity);
-					SharePreferencesUtils.put(activity,
-							SharedPreferencesKeys.UID, "");
-					SharePreferencesUtils.put(activity,
-							SharedPreferencesKeys.CERTIFICATED, "");
-					Intent intent = new Intent(activity, LoginActivity.class);
-					startActivity(intent);
-					return;
-				} else if (st == 1) {
-					Utilities.showToast(response.msg, activity);
-					return;
-				} else if(st==0){
-//					Utilities.showToast(response.msg, activity);
-					//推送业务
-					loadNotDoneTask();
-				}
 			}
 		};
-		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
-				gson.toJson(requester));
+		conn.sendRequest();
 	}
 
 	@Override
@@ -561,31 +725,139 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			validateChargebackTime();
 			break;
 		case R.id.bt_next_response:
-			if (mDoResponse.getTag().equals(ALLCOMPLETE)) {
+			if (btNext.getTag().equals(ALLCOMPLETE)) {
 				Intent intent = new Intent(TaskListPackageDetailActivity.this,
-						QuestionResponseActivity.class);
+						EvaluationActivity.class);
 				Bundle bundle = new Bundle();
 				bundle.putString(Constant.TASKNO, sTaskNo);
 				intent.putExtras(bundle);
 				startActivity(intent);
-			} else if (mDoResponse.getTag().equals(NOTCOMPLETE)) {
+			} else if (btNext.getTag().equals(NOTCOMPLETE)) {
 				Utilities.showToast("尚有未完成的电梯", activity);
 			}
 			break;
-		case R.id.iv_navicate_right:
-			showPopupWindow(v);
+		case R.id.bt_as_complete:
+			asComplete();
+			break;
+		case R.id.tv_navigation:
+			startNavicate(llStartPoint, llDestination, "终点");
+			break;
+		case R.id.tv_qrcode:
+			Intent intent = new Intent();
+			intent.setClass(activity, ScanCodeActivity.class);
+			startActivity(intent);
+			break;
+		case R.id.tv_share:
+			share();
+			break;
+		case R.id.tv_partner:
+			if (TextUtils.equals(isAs, "1")) {
+				dialToASPartner();
+			} else {
+				dialToPartner();
+			}
 			break;
 		}
 	}
 
-	// 弹出popupWindow
-	protected void showPopupWindow(View v) {
-		v.getLocationOnScreen(mLocation);
-		// 设置矩形的大小
-		mRect.set(mLocation[0], mLocation[1], mLocation[0] + v.getWidth(),
-				mLocation[1] + v.getHeight());
-		popupWindow.showAtLocation(v, Gravity.NO_GRAVITY, mScreenWidth
-				- LIST_PADDING - (popupWindow.getWidth() / 2), mRect.bottom);
+	private void asComplete() {// 年检完成
+		startProgressDialog("加载中...");
+		HashMap<String, Object> body = new HashMap<String, Object>();
+		body.put("taskNo", sTaskNo);
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20065, uid,
+				certificate, body) {
+
+			@Override
+			public Context getContext() {
+				// TODO Auto-generated method stub
+				return activity;
+			}
+
+			@Override
+			public void bizSuccess(Bean response) {
+				// TODO Auto-generated method stub
+				Utilities.showToast(response.msg, activity);
+
+			}
+
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void stopDialog() {
+				// TODO Auto-generated method stub
+				stopProgressDialog();
+			}
+		};
+		conn.sendRequest();
+	}
+
+	private void dialToASPartner() {
+		alertBuilder
+				.setTitle("年检成员")
+				.setMessage("请选择你要联系的搭档")
+				.setSingleChoiceItems(partners, -1,
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// TODO Auto-generated method stub
+
+							}
+						})
+				.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						String asPartner = listPartners.get(which)
+								.get("partnerPhone").toString();
+						Intent intent = new Intent(Intent.ACTION_CALL, Uri
+								.parse("tel:" + asPartner));
+						startActivity(intent);
+					}
+				})
+				.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+
+					}
+				}).show();
+	}
+
+	private void dialToPartner() {
+		// TODO Auto-generated method stub
+		alertBuilder
+				.setTitle("温馨提示")
+				.setMessage("您确认要拨打电话给您的搭档：" + sPartnerName)
+				.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						Intent intent = new Intent(Intent.ACTION_CALL, Uri
+								.parse("tel:" + sPartnerPhone));
+						startActivity(intent);
+					}
+				})
+				.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+
+					}
+				}).show();
 	}
 
 	@Override
@@ -594,20 +866,24 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 		super.onBackPressed();
 		stackInstance.popActivity(activity);
 	}
-	
-	private ResultCallback<Bean> loadNotDoneCallback = new ResultCallback<Bean>() {
 
-		@Override
-		public void onError(Request request, Exception e) {
-			// TODO Auto-generated method stub
-			Logr.e(request.toString());
-		}
+	/**
+	 * 加载未完成的任务单
+	 */
+	private void loadNotDoneTask() {
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20050, uid,
+				certificate, null) {
 
-		@Override
-		public void onResponse(Bean response) {
-			// TODO Auto-generated method stub
-			int st = response.st;
-			if (st == 0) {
+			@Override
+			public Context getContext() {
+				// TODO Auto-generated method stub
+				return activity;
+			}
+
+			@Override
+			public void bizSuccess(Bean response) {
+				// TODO Auto-generated method stub
+				stopProgressDialog();
 				List<Map<String, Object>> datas = (List<Map<String, Object>>) response.body
 						.get("data");
 				Set<String> tempSet = new HashSet<String>();
@@ -618,18 +894,26 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				JPushInterface.setAliasAndTags(activity, "", tempSet,
 						mTagsCallback);
 			}
-		}
-	};
 
-	/**
-	 * 加载未完成的任务单
-	 */
-	private void loadNotDoneTask() {
-		Requester requester = new Requester();
-		requester.cmd = 20050;
-		requester.uid = uid;
-		requester.certificate = certificate;
-		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, loadNotDoneCallback,
-				gson.toJson(requester));
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void stopDialog() {
+				// TODO Auto-generated method stub
+				stopProgressDialog();
+			}
+		};
+		conn.sendRequest();
 	}
+
 }

@@ -34,10 +34,14 @@ public class SelectCityActivity extends BaseActivity {
 	private String childName;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected int getLayoutResIds() {
 		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_selectcity);
+		return R.layout.activity_selectcity;
+	}
+
+	@Override
+	protected void afterCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
 		ivBack = (ImageView) findViewById(R.id.iv_headBack);
 		title = (TextView) findViewById(R.id.tv_headTitle);
 		elvCitys = (ExpandableListView) findViewById(R.id.elv_citys);
@@ -96,7 +100,8 @@ public class SelectCityActivity extends BaseActivity {
 
 	private void initData() {
 		// TODO Auto-generated method stub
-		startProgressDialog(getResources().getString(R.string.loading_public_default));
+		startProgressDialog(getResources().getString(
+				R.string.loading_public_default));
 		Requester requester = new Requester();
 		requester.cmd = 4;
 		ResultCallback<Bean> callback = new ResultCallback<Bean>() {
@@ -123,4 +128,5 @@ public class SelectCityActivity extends BaseActivity {
 		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
 				gson.toJson(requester));
 	}
+
 }

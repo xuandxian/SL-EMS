@@ -1,5 +1,6 @@
 package com.overtech.ems.activity.common.register;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import com.overtech.ems.activity.common.register.RegisterFragment.RegFraBtnClick
 import com.overtech.ems.activity.common.register.RegisterOtherCertificateFragment.RegOthCerFrgListener;
 import com.overtech.ems.activity.common.register.RegisterPrivacyItemFragment.RegPriItemFrgBtnClickListener;
 import com.overtech.ems.config.SystemConfig;
+import com.overtech.ems.entity.bean.Bean;
 import com.overtech.ems.entity.bean.LoginBean;
 import com.overtech.ems.entity.common.Requester;
 import com.overtech.ems.http.OkHttpClientManager;
@@ -42,26 +44,78 @@ public class RegisterActivity extends BaseActivity implements
 	private RegisterOtherCertificateFragment mOtherCertificateFragment;
 	public String mPhoneNo;
 	private RegisterActivity activity;
+	private ArrayList<String> imgs = new ArrayList<String>();
+	/**
+	 * 记录上传的图片顺序 默认从身份证开始 0,1
+	 */
+	public static int imgIndex = 0;
+	/**
+	 * 记录已经选择的上岗证张数
+	 */
+	private int workCounts = 0;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_register);
+	protected int getLayoutResIds() {
+		// TODO Auto-generated method stub
+		return R.layout.activity_register;
+	}
+
+	@Override
+	protected void afterCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
 		activity = this;
-		manager = getSupportFragmentManager();
-		FragmentTransaction transaction = manager.beginTransaction();
-		if (mPrivacyItemFragment == null) {
-			mPrivacyItemFragment = new RegisterPrivacyItemFragment();
+		if (savedInstanceState == null) {
+			manager = getSupportFragmentManager();
+			FragmentTransaction transaction = manager.beginTransaction();
+			if (mPrivacyItemFragment == null) {
+				mPrivacyItemFragment = new RegisterPrivacyItemFragment();
+			}
+			mPrivacyItemFragment.setRegPriItemFrgBtnClickListener(this);
+			if (!mPrivacyItemFragment.isAdded()) {
+				transaction.add(R.id.fl_register_container,
+						mPrivacyItemFragment, "RegisterPrivacyItemFragment");
+				transaction.commit();
+			} else {
+				transaction.show(mPrivacyItemFragment);
+				transaction.commit();
+			}
+		} else {
+			manager = getSupportFragmentManager();
+			mPrivacyItemFragment = (RegisterPrivacyItemFragment) manager
+					.findFragmentByTag("");
+			mPrivacyItemFragment.setRegPriItemFrgBtnClickListener(this);
+
+			mRegisterFragment = (RegisterFragment) manager
+					.findFragmentByTag("RegisterFragment");
+			mRegisterFragment.setRegFraBtnClickListener(this);
+
+			mPersonInfoFragment = (RegisterAddPersonInfoFragment) manager
+					.findFragmentByTag("RegisterAddPersonInfoFragment");
+			mPersonInfoFragment.setRegAddPerInfoFrgClickListener(this);
+
+			mPersonEduWorkFragment = (RegisterAddPersonEduAndWorkFragment) manager
+					.findFragmentByTag("RegisterAddPersonEduAndWorkFragment");
+			mPersonEduWorkFragment.setRegAddPerEduWorkFrgClickListener(this);
+
+			mIdCardFragment = (RegisterAddIdCardFragment) manager
+					.findFragmentByTag("RegisterAddIdCardFragment");
+			mIdCardFragment.setRegAddIdCardClickListener(this);
+
+			mWorkCertificateFragment = (RegisterAddWorkCertificateFragment) manager
+					.findFragmentByTag("RegisterAddWorkCertificateFragment");
+			mWorkCertificateFragment.setRegAddWorkCerFrgClickListener(this);
+
+			mOtherCertificateFragment = (RegisterOtherCertificateFragment) manager
+					.findFragmentByTag("RegisterOtherCertificateFragment");
+			mOtherCertificateFragment.setRegOthFrgListener(this);
 		}
-		mPrivacyItemFragment.setRegPriItemFrgBtnClickListener(this);
-		transaction.add(R.id.fl_register_container, mPrivacyItemFragment);
-		transaction.commit();
 	}
 
 	/**
-	 * 上传用户信息
+	 * 上传用户基本信息以及上传身份证正反面
 	 */
 	protected void startUpLoading() {
+		initAllImgPath();
 		startProgressDialog(getResources().getString(
 				R.string.loading_public_upload));
 		Requester requester = new Requester();
@@ -93,81 +147,11 @@ public class RegisterActivity extends BaseActivity implements
 		HashMap<String, Object> opposite = new HashMap<String, Object>();// 身份证反面
 		opposite.put("content",
 				ImageUtils.bitmapToString(mIdCardFragment.idCardOppositePath));
-		// opposite.put("content","123");//test
+
 		opposite.put("attrName", ImageUtils
 				.getBitmapAttrName(mIdCardFragment.idCardOppositePath));
 		Logr.e(ImageUtils.getBitmapAttrName(mIdCardFragment.idCardOppositePath));
 		requester.body.put("oppositeIdCard", opposite);
-
-		HashMap<String, Object> workcertificate = new HashMap<String, Object>();// 工作证书
-		workcertificate.put("content", ImageUtils
-				.bitmapToString(mWorkCertificateFragment.workCertificatePath));
-		// workcertificate.put("content", "123");//test
-		workcertificate
-				.put("attrName",
-						ImageUtils
-								.getBitmapAttrName(mWorkCertificateFragment.workCertificatePath));
-		Logr.e(ImageUtils
-				.getBitmapAttrName(mWorkCertificateFragment.workCertificatePath));
-		requester.body.put("workCertificate", workcertificate);
-
-		HashMap<String, Object> other = new HashMap<String, Object>();// 其他证书
-		other.put("content", ImageUtils
-				.bitmapToString(mOtherCertificateFragment.otherCertificatePath));
-		// other.put("content","123");//test
-		other.put(
-				"attrName",
-				ImageUtils
-						.getBitmapAttrName(mOtherCertificateFragment.otherCertificatePath));
-		Logr.e(ImageUtils
-				.getBitmapAttrName(mOtherCertificateFragment.otherCertificatePath));
-		requester.body.put("otherCertificate", other);
-
-		// 工作证和 其他证书可有可无需要对其进行判断
-		// if (mWorkCertificateFragment.workCertificatePath != null
-		// && mOtherCertificateFragment.otherCertificatePath == null) {
-		// files = new File[3];
-		// files[0] = new File(mIdCardFragment.idCardFrontPath);
-		// files[1] = new File(mIdCardFragment.idCardOppositePath);
-		// files[2] = new File(mWorkCertificateFragment.workCertificatePath);
-		//
-		// fileKeys = new String[3];
-		// fileKeys[0] = "frontIdCard";
-		// fileKeys[1] = "oppositeIdCard";
-		// fileKeys[2] = "workCertificate";
-		//
-		// } else if (mWorkCertificateFragment.workCertificatePath != null
-		// && mOtherCertificateFragment.otherCertificatePath != null) {
-		// files = new File[4];
-		// files[0] = new File(mIdCardFragment.idCardFrontPath);
-		// files[1] = new File(mIdCardFragment.idCardOppositePath);
-		// files[2] = new File(mWorkCertificateFragment.workCertificatePath);
-		// files[3] = new File(mOtherCertificateFragment.otherCertificatePath);
-		//
-		// fileKeys = new String[4];
-		// fileKeys[0] = "frontIdCard";
-		// fileKeys[1] = "oppositeIdCard";
-		// fileKeys[2] = "workCertificate";
-		// fileKeys[3] = "otherCertificate";
-		// } else if (mWorkCertificateFragment.workCertificatePath == null
-		// && mOtherCertificateFragment.otherCertificatePath != null) {
-		// files = new File[3];
-		// files[0] = new File(mIdCardFragment.idCardFrontPath);
-		// files[1] = new File(mIdCardFragment.idCardOppositePath);
-		// files[2] = new File(mOtherCertificateFragment.otherCertificatePath);
-		//
-		// fileKeys = new String[3];
-		// fileKeys[0] = "frontIdCard";
-		// fileKeys[1] = "oppositeIdCard";
-		// fileKeys[2] = "otherCertificate";
-		// } else {
-		// files = new File[2];
-		// files[0] = new File(mIdCardFragment.idCardFrontPath);
-		// files[1] = new File(mIdCardFragment.idCardOppositePath);
-		// fileKeys = new String[2];
-		// fileKeys[0] = "frontIdCard";
-		// fileKeys[1] = "oppositeIdCard";
-		// }
 		ResultCallback<LoginBean> callback = new ResultCallback<LoginBean>() {
 
 			@Override
@@ -181,7 +165,44 @@ public class RegisterActivity extends BaseActivity implements
 				int st = response.st;
 				if (st == 0) {
 					Utilities.showToast(response.msg, activity);
-					finish();
+					imgIndex = 2;// 下一步开始加载角标2位置的图片
+					if (workCounts == 2) {// 选择了两张上岗证
+						String content = ImageUtils
+								.bitmapToString(mWorkCertificateFragment.workCertificatePath1);
+						String attrName = ImageUtils
+								.getBitmapAttrName(mWorkCertificateFragment.workCertificatePath1);
+						uploadImg(mPhoneNo, "certificate", content, attrName,
+								imgIndex);
+					} else if (workCounts == 1) {// 选择了一站上岗证
+						if (mWorkCertificateFragment.workCertificatePath1 != null) {
+							String content = ImageUtils
+									.bitmapToString(mWorkCertificateFragment.workCertificatePath1);
+							String attrName = ImageUtils
+									.getBitmapAttrName(mWorkCertificateFragment.workCertificatePath1);
+							uploadImg(mPhoneNo, "certificate", content,
+									attrName, imgIndex);
+						} else {
+							String content = ImageUtils
+									.bitmapToString(mWorkCertificateFragment.workCertificatePath1);
+							String attrName = ImageUtils
+									.getBitmapAttrName(mWorkCertificateFragment.workCertificatePath1);
+							uploadImg(mPhoneNo, "certificate", content,
+									attrName, imgIndex);
+						}
+					} else {// 没有选择上岗证
+						if (imgs.size() > 2) {// 选择了其他图片
+							String content = ImageUtils
+									.bitmapToString(mOtherCertificateFragment.paths[0]);
+							String attrName = ImageUtils
+									.getBitmapAttrName(mOtherCertificateFragment.paths[0]);
+							uploadImg(mPhoneNo, "other", content, attrName,
+									imgIndex);
+						} else {// 没有选择其他图片
+							Utilities.showToast("注册成功了,\n请等待后台分配用户名和密码",
+									activity);
+						}
+
+					}
 				} else {
 					Utilities.showToast(response.msg, activity);
 				}
@@ -192,6 +213,103 @@ public class RegisterActivity extends BaseActivity implements
 				// TODO Auto-generated method stub
 				Logr.e(request.toString());
 				stopProgressDialog();
+			}
+		};
+		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
+				gson.toJson(requester));
+	}
+
+	private void initAllImgPath() {
+		// TODO Auto-generated method stub
+		imgs.clear();// 以防出现重复添加的情况
+		if (mIdCardFragment.idCardFrontPath != null) {
+			imgs.add(mIdCardFragment.idCardFrontPath);
+		}
+		if (mIdCardFragment.idCardOppositePath != null) {
+			imgs.add(mIdCardFragment.idCardOppositePath);
+		}
+		if (mWorkCertificateFragment.workCertificatePath1 != null) {
+			imgs.add(mWorkCertificateFragment.workCertificatePath1);
+			workCounts++;
+		}
+		if (mWorkCertificateFragment.workCertificatePath2 != null) {
+			imgs.add(mWorkCertificateFragment.workCertificatePath2);
+			workCounts++;
+		}
+		for (String path : mOtherCertificateFragment.paths) {
+			if (path != null) {
+				imgs.add(path);
+			}
+		}
+		Logr.e("集合中的图片数量====" + imgs.size());
+	}
+
+	protected void uploadImg(String phone, String type, String content,
+			String attrName, int index) {
+		startProgressDialog("正在上传第" + (imgIndex + 1) + "张图片");
+		Requester requester = new Requester();
+		requester.cmd = 5;
+		requester.body.put("phone", phone);
+		requester.body.put("type", type);
+		requester.body.put("content", content);
+		requester.body.put("attrName", attrName);
+		requester.body.put("index", index + "");
+		ResultCallback<Bean> callback = new ResultCallback<Bean>() {
+
+			@Override
+			public void onError(Request request, Exception e) {
+				// TODO Auto-generated method stub
+				Logr.e(e.getMessage() + "\n" + request.toString());
+			}
+
+			@Override
+			public void onResponse(Bean response) {
+				// TODO Auto-generated method stub
+				int st = response.st;
+				if (st == 0) {
+					stopProgressDialog();
+					imgIndex++;
+					Logr.e("当前图片角标==" + imgIndex + "==当前图片集合大小==" + imgs.size());
+					if (imgIndex < imgs.size()) {// 图片尚未上传完
+						if (workCounts == 0) {// 继续上传其他照片
+							String content = ImageUtils.bitmapToString(imgs
+									.get(imgIndex));
+							String attrName = ImageUtils.getBitmapAttrName(imgs
+									.get(imgIndex));
+							uploadImg(mPhoneNo, "other", content, attrName,
+									imgIndex);
+						} else if (workCounts == 1) {// 开始上传其他照片
+							String content = ImageUtils.bitmapToString(imgs
+									.get(imgIndex));
+							String attrName = ImageUtils.getBitmapAttrName(imgs
+									.get(imgIndex));
+							uploadImg(mPhoneNo, "other", content, attrName,
+									imgIndex);
+						} else {// 先上传上岗证
+							if (imgIndex < 4) {// 4代表身份证和上岗证的数量 这里上岗证还没有上传完
+								String content = ImageUtils.bitmapToString(imgs
+										.get(imgIndex));
+								String attrName = ImageUtils
+										.getBitmapAttrName(imgs.get(imgIndex));
+								uploadImg(mPhoneNo, "certificate", content,
+										attrName, imgIndex);
+							} else {
+								String content = ImageUtils.bitmapToString(imgs
+										.get(imgIndex));
+								String attrName = ImageUtils
+										.getBitmapAttrName(imgs.get(imgIndex));
+								uploadImg(mPhoneNo, "other", content, attrName,
+										imgIndex);
+							}
+
+						}
+					} else {
+						Utilities.showToast("图片上传完成", activity);
+					}
+				} else {
+					// Utilities.showToast("", activity);
+					Logr.e("上传图片出问题了==");
+				}
 			}
 		};
 		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
@@ -232,8 +350,12 @@ public class RegisterActivity extends BaseActivity implements
 		mOtherCertificateFragment.setRegOthFrgListener(this);
 		if (!mOtherCertificateFragment.isAdded()) {
 			transaction.add(R.id.fl_register_container,
-					mOtherCertificateFragment);
+					mOtherCertificateFragment,
+					"RegisterOtherCertificateFragment");
 			transaction.addToBackStack(null);
+			transaction.commit();
+		} else {
+			transaction.show(mOtherCertificateFragment);
 			transaction.commit();
 		}
 	}
@@ -247,8 +369,12 @@ public class RegisterActivity extends BaseActivity implements
 		mWorkCertificateFragment.setRegAddWorkCerFrgClickListener(this);
 		if (!mWorkCertificateFragment.isAdded()) {
 			transaction.add(R.id.fl_register_container,
-					mWorkCertificateFragment);
+					mWorkCertificateFragment,
+					"RegisterAddWorkCertificateFragment");
 			transaction.addToBackStack(null);
+			transaction.commit();
+		} else {
+			transaction.show(mWorkCertificateFragment);
 			transaction.commit();
 		}
 	}
@@ -261,8 +387,12 @@ public class RegisterActivity extends BaseActivity implements
 		}
 		mIdCardFragment.setRegAddIdCardClickListener(this);
 		if (!mIdCardFragment.isAdded()) {
-			transaction.add(R.id.fl_register_container, mIdCardFragment);
+			transaction.add(R.id.fl_register_container, mIdCardFragment,
+					"RegisterAddIdCardFragment");
 			transaction.addToBackStack(null);
+			transaction.commit();
+		} else {
+			transaction.show(mIdCardFragment);
 			transaction.commit();
 		}
 	}
@@ -275,8 +405,12 @@ public class RegisterActivity extends BaseActivity implements
 		}
 		mPersonEduWorkFragment.setRegAddPerEduWorkFrgClickListener(this);
 		if (!mPersonEduWorkFragment.isAdded()) {
-			transaction.add(R.id.fl_register_container, mPersonEduWorkFragment);
+			transaction.add(R.id.fl_register_container, mPersonEduWorkFragment,
+					"RegisterAddPersonEduAndWorkFragment");
 			transaction.addToBackStack(null);
+			transaction.commit();
+		} else {
+			transaction.show(mPersonEduWorkFragment);
 			transaction.commit();
 		}
 	}
@@ -290,8 +424,12 @@ public class RegisterActivity extends BaseActivity implements
 		}
 		mPersonInfoFragment.setRegAddPerInfoFrgClickListener(this);
 		if (!mPersonInfoFragment.isAdded()) {
-			transaction.add(R.id.fl_register_container, mPersonInfoFragment);
+			transaction.add(R.id.fl_register_container, mPersonInfoFragment,
+					"RegisterAddPersonInfoFragment");
 			transaction.addToBackStack(null);
+			transaction.commit();
+		} else {
+			transaction.show(mPersonInfoFragment);
 			transaction.commit();
 		}
 	}
@@ -305,19 +443,104 @@ public class RegisterActivity extends BaseActivity implements
 		}
 		mRegisterFragment.setRegFraBtnClickListener(this);
 		if (!mRegisterFragment.isAdded()) {
-			transaction.add(R.id.fl_register_container, mRegisterFragment);
+			transaction.add(R.id.fl_register_container, mRegisterFragment,
+					"RegisterFragment");
 			transaction.addToBackStack(null);
+			transaction.commit();
+		} else {
+			transaction.show(mRegisterFragment);
 			transaction.commit();
 		}
 
+		// FragmentTransaction transaction = manager.beginTransaction();
+		// if (mIdCardFragment == null) {
+		// mIdCardFragment = new RegisterAddIdCardFragment();
+		// Logr.e("IdCardFragment==实例化了");
+		// }
+		// mIdCardFragment.setRegAddIdCardClickListener(this);
+		// if (!mIdCardFragment.isAdded()) {
+		// transaction.add(R.id.fl_register_container,
+		// mIdCardFragment,"RegisterAddIdCardFragment");
+		// transaction.addToBackStack(null);
+		// transaction.commit();
+		// Logr.e("==RegPriClick=add=");
+		// }else{
+		// transaction.show(mIdCardFragment);
+		// transaction.commit();
+		// Logr.e("==RegPriClick=show=");
+		// }
 		// FragmentTransaction transaction = manager.beginTransaction();
 		// if (mPersonInfoFragment == null) {
 		// mPersonInfoFragment = new RegisterAddPersonInfoFragment();
 		// }
 		// mPersonInfoFragment.setRegAddPerInfoFrgClickListener(this);
-		// transaction.add(R.id.fl_register_container, mPersonInfoFragment);
+		// if(!mPersonInfoFragment.isAdded()){
+		// transaction.add(R.id.fl_register_container,
+		// mPersonInfoFragment,"RegisterAddPersonInfoFragment");
 		// transaction.addToBackStack(null);
 		// transaction.commit();
+		// }else{
+		// transaction.show(mPersonInfoFragment);
+		// transaction.commit();
+		// }
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onRestoreInstanceState(savedInstanceState);
+		mPhoneNo = savedInstanceState.getString("phone");
+		Logr.e("==activity==onRestoreInstanceState===");
+	}
+
+	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		Logr.e("===activity==onStart====");
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		Logr.e("==activity===onResume====");
+	}
+
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		Logr.e("==activity===onPause====");
+	}
+
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		super.onStop();
+		Logr.e("===activity==onStop====");
+	}
+
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		Logr.e("==activity===onDestroy====");
+	}
+
+	@Override
+	protected void onRestart() {
+		// TODO Auto-generated method stub
+		super.onRestart();
+		Logr.e("==activity==onRestory==");
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle arg0) {
+		// TODO Auto-generated method stub
+		super.onSaveInstanceState(arg0);
+		arg0.putString("phone", mPhoneNo);
+		Logr.e("==activity==onSaveInstanceState==");
 	}
 
 }

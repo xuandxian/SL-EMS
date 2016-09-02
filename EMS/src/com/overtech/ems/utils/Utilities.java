@@ -10,18 +10,29 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.overtech.ems.widget.CToast;
+
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
+import android.support.v7.app.AlertDialog;
+import android.view.Gravity;
 import android.widget.Toast;
 
 /**
  * @author Tony 2015-10-08
  */
 public class Utilities {
+	public static int dp2px(Context ctx, int dp) {
+		float density = ctx.getResources().getDisplayMetrics().density;
+
+		return (int) (dp * density + 0.5f);
+	}
+
 	public static String format2decimal(double num) {
 		NumberFormat format = NumberFormat.getInstance();
 		format.setMaximumFractionDigits(2);
@@ -40,7 +51,18 @@ public class Utilities {
 		}
 		return "";
 	}
+	
+	public static void showDialog(Context ctx, String message) {
+		AlertDialog dialog = new AlertDialog.Builder(ctx).setMessage(message)
+				.create();
+		dialog.show();
+	}
 
+	public static void showCToast(Context context,CharSequence message,int duration){
+		CToast toast=CToast.makeText(context, message, duration);
+		toast.setGravity(Gravity.CENTER, 0, 0);
+		toast.show();
+	}
 	/**
 	 * 公用提示框
 	 * 
@@ -50,8 +72,7 @@ public class Utilities {
 	public static void showToast(CharSequence message, Context context) {
 		int duration = Toast.LENGTH_LONG;
 
-		Toast toast = Toast.makeText(context, message,duration);
-		toast.setDuration(3000);
+		Toast toast = Toast.makeText(context, message, duration);
 		toast.show();
 	}
 
@@ -69,7 +90,7 @@ public class Utilities {
 	@SuppressLint("SimpleDateFormat")
 	public static String setThroughTime() {
 		Date date = new Date();
-		SimpleDateFormat sdformat = new SimpleDateFormat(("yyyy-MM-dd"));// 24小时制
+		SimpleDateFormat sdformat = new SimpleDateFormat("yyyy-MM-dd");// 24小时制
 		String LgTime = sdformat.format(date);
 		return LgTime;
 	}

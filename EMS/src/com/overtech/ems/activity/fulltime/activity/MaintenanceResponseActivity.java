@@ -1,34 +1,37 @@
 package com.overtech.ems.activity.fulltime.activity;
 
+import java.util.HashMap;
+
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
-import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
-import com.overtech.ems.config.SystemConfig;
-import com.overtech.ems.entity.common.Requester;
-import com.overtech.ems.entity.fulltime.MaintenanceBean;
-import com.overtech.ems.http.OkHttpClientManager;
-import com.overtech.ems.http.OkHttpClientManager.ResultCallback;
+import com.overtech.ems.entity.bean.Bean;
+import com.overtech.ems.http.HttpConnector;
 import com.overtech.ems.http.constant.Constant;
-import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
-import com.overtech.ems.utils.Utilities;
-import com.squareup.okhttp.Request;
 
-public class MaintenanceResponseActivity extends BaseActivity {
-	private TextView title;
-	private ImageView ivBack;
+public class MaintenanceResponseActivity extends BaseActivity implements
+		OnClickListener {
+	private Toolbar toolbar;
+	private ActionBar actionBar;
+	private AppCompatTextView tvTitle;
+	private AppCompatTextView tvRepairTime;
+	private AppCompatTextView tvPeopleInEmergency;
+	private AppCompatTextView tvArrivalTime;
 	private EditText etCurrentSituation;
 	private EditText etMaintenanceSolve;
 	private Button btSubmit;
@@ -36,13 +39,22 @@ public class MaintenanceResponseActivity extends BaseActivity {
 	private String uid;
 	private String workorderCode;
 	private String isMain;
+	private String sRepairTime;
+	private String sPeopleInEmergency;
+	private String sArrivalTime;
+	private String sLiveSituation;
+	private String sRepairResult;
 	private MaintenanceResponseActivity activity;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	protected int getLayoutResIds() {
 		// TODO Auto-generated method stub
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_maintenance_response);
+		return R.layout.activity_maintenance_response;
+	}
+
+	@Override
+	protected void afterCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
 		activity = this;
 		stackInstance.pushActivity(activity);
 		certificate = (String) SharePreferencesUtils.get(this,
@@ -50,16 +62,92 @@ public class MaintenanceResponseActivity extends BaseActivity {
 		uid = (String) SharePreferencesUtils.get(this,
 				SharedPreferencesKeys.UID, "");
 		workorderCode = getIntent().getStringExtra(Constant.WORKORDERCODE);
-		isMain=getIntent().getStringExtra("isMain");
+		isMain = getIntent().getStringExtra("isMain");
 		initView();
 		initEvent();
+		initData();
+	}
+
+	private void initData() {
+		// TODO Auto-generated method stub
+		startProgressDialog(getResources().getString(
+				R.string.loading_public_default));
+		HashMap<String, Object> body = new HashMap<String, Object>();
+		body.put("workorderCode", workorderCode);
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20012, uid,
+				certificate, body) {
+
+			@Override
+			public Context getContext() {
+				// TODO Auto-generated method stub
+				return activity;
+			}
+
+			@Override
+			public void bizSuccess(Bean response) {
+				// TODO Auto-generated method stub
+				sRepairTime = response.body.get("repairTime").toString();
+				sPeopleInEmergency = response.body.get("peopleInEmergency")
+						.toString();
+				sArrivalTime = response.body.get("arrivalTime").toString();
+				sLiveSituation = response.body.get("liveSituation").toString();
+				sRepairResult = response.body.get("repairResult").toString();
+
+				tvRepairTime.setText("报修时间：" + sRepairTime);
+				if (!TextUtils.isEmpty(sPeopleInEmergency)) {
+					tvPeopleInEmergency.setVisibility(View.VISIBLE);
+					tvPeopleInEmergency.setText("关人时间：" + sPeopleInEmergency);
+				}
+				if (!TextUtils.isEmpty(sArrivalTime)) {
+					tvArrivalTime.setVisibility(View.VISIBLE);
+					tvArrivalTime.setText("到达时间:" + sArrivalTime);
+				}
+				if (!TextUtils.isEmpty(sLiveSituation)) {
+					etCurrentSituation.setText(sLiveSituation);
+				}
+				if (!TextUtils.isEmpty(sRepairResult)) {
+					etMaintenanceSolve.setText(sRepairResult);
+				}
+			}
+
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void stopDialog() {
+				// TODO Auto-generated method stub
+				stopProgressDialog();
+			}
+		};
+		conn.sendRequest();
+	}
+
+	private void initView() {
+		// TODO Auto-generated method stub
+		toolbar = (Toolbar) findViewById(R.id.toolBar);
+		setSupportActionBar(toolbar);
+		actionBar = getSupportActionBar();
+		tvTitle = (AppCompatTextView) findViewById(R.id.tvTitle);
+		tvRepairTime = (AppCompatTextView) findViewById(R.id.tv_repair_time);
+		tvPeopleInEmergency = (AppCompatTextView) findViewById(R.id.tv_people_in_emergency);
+		tvArrivalTime = (AppCompatTextView) findViewById(R.id.tv_arrival_time);
+		etCurrentSituation = (EditText) findViewById(R.id.et_current_situcation);
+		etMaintenanceSolve = (EditText) findViewById(R.id.et_maintenance_result);
+		btSubmit = (Button) findViewById(R.id.bt_submit);
 	}
 
 	private void initEvent() {
 		// TODO Auto-generated method stub
-		title.setText("问题反馈");
-		ivBack.setVisibility(View.VISIBLE);
-		ivBack.setOnClickListener(new OnClickListener() {
+		toolbar.setNavigationOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
@@ -67,86 +155,56 @@ public class MaintenanceResponseActivity extends BaseActivity {
 				stackInstance.popActivity(activity);
 			}
 		});
-		btSubmit.setOnClickListener(new OnClickListener() {
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
+		tvTitle.setText("维修结果");
 
-			@Override
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				String sit = etCurrentSituation.getText().toString().trim();
-				String solve = etMaintenanceSolve.getText().toString().trim();
-				if (TextUtils.isEmpty(sit) || TextUtils.isEmpty(solve)) {
-					Utilities.showToast("输入不能为空", activity);
-					return;
-				}
-				startSubmit(sit, solve);
-			}
-
-			private void startSubmit(String sit, String solve) {
-				// TODO Auto-generated method stub
-				Requester requester = new Requester();
-				requester.certificate = certificate;
-				requester.uid = uid;
-				requester.cmd = 20006;
-				requester.body.put("workorderCode", workorderCode);
-				requester.body.put("isMain", isMain);
-				requester.body.put("liveSituation", sit);
-				requester.body.put("repairResult", solve);
-				ResultCallback<MaintenanceBean> callback = new OkHttpClientManager.ResultCallback<MaintenanceBean>() {
-
-					@Override
-					public void onError(Request request, Exception e) {
-						// TODO Auto-generated method stub
-						Logr.e(request.toString());
-					}
-
-					@Override
-					public void onResponse(MaintenanceBean response) {
-						// TODO Auto-generated method stub
-						if (response == null) {
-							Utilities.showToast("提交失败,请重新尝试", activity);
-							return;
-						}
-						int st = response.st;
-						String msg = response.msg;
-						if (st != 0) {
-							if (st == -1 || st == -2) {
-								Utilities.showToast(msg, activity);
-								SharePreferencesUtils.put(activity,
-										SharedPreferencesKeys.UID, "");
-								SharePreferencesUtils.put(activity,
-										SharedPreferencesKeys.CERTIFICATED, "");
-								Intent intent = new Intent(activity,
-										LoginActivity.class);
-								startActivity(intent);
-							} else if(st==1){//上岗证过期
-								Utilities.showToast(msg, activity);
-								stackInstance.popActivity(activity);
-							}else{
-								Utilities.showToast(msg, activity);
-							}
-						} else {
-							Utilities.showToast(msg, activity);
-							// 关闭之前的activity
-							Intent intent = new Intent(activity,
-									MainActivity.class);
-							startActivity(intent);
-						}
-					}
-				};
-				OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
-						gson.toJson(requester));
-			}
-
-		});
+		btSubmit.setOnClickListener(this);
 	}
 
-	private void initView() {
-		// TODO Auto-generated method stub
-		title = (TextView) findViewById(R.id.tv_headTitle);
-		ivBack = (ImageView) findViewById(R.id.iv_headBack);
-		etCurrentSituation = (EditText) findViewById(R.id.et_current_situcation);
-		etMaintenanceSolve = (EditText) findViewById(R.id.et_maintenance_result);
-		btSubmit = (Button) findViewById(R.id.bt_submit);
+	private void submitRepairSolve(String live, String solve) {
+		startProgressDialog(getResources().getString(
+				R.string.loading_public_default));
+		HashMap<String, Object> body = new HashMap<String, Object>();
+		body.put("workorderCode", workorderCode);
+		body.put("isMain", isMain);
+		body.put("liveSituation", live);
+		body.put("repairResult", solve);
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20006, uid,
+				certificate, body) {
+
+			@Override
+			public Context getContext() {
+				// TODO Auto-generated method stub
+				return activity;
+			}
+
+			@Override
+			public void bizSuccess(Bean response) {
+				// TODO Auto-generated method stub
+				toMainActivity();
+			}
+
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+				stackInstance.popActivity(activity);
+			}
+
+			@Override
+			public void stopDialog() {
+				// TODO Auto-generated method stub
+				stopProgressDialog();
+			}
+		};
+		conn.sendRequest();
 	}
 
 	@Override
@@ -155,4 +213,54 @@ public class MaintenanceResponseActivity extends BaseActivity {
 		super.onBackPressed();
 		stackInstance.popActivity(activity);
 	}
+
+	private void toMainActivity() {
+		Intent i = new Intent(activity, MainActivity.class);
+		startActivity(i);
+	}
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		switch (v.getId()) {
+		case R.id.bt_submit:
+			alertBuilder
+					.setTitle("提示")
+					.setMessage("此次维修任务完成？")
+					.setNegativeButton("取消",
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									// TODO Auto-generated method stub
+
+								}
+							})
+					.setPositiveButton("确认",
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									// TODO Auto-generated method stub
+									if (TextUtils.equals(isMain, "1")) {
+										sLiveSituation = etCurrentSituation
+												.getText().toString();
+										sRepairResult = etMaintenanceSolve
+												.getText().toString();
+										submitRepairSolve(sLiveSituation,
+												sRepairResult);
+									} else {
+										toMainActivity();
+									}
+								}
+							}).show();
+			break;
+
+		default:
+			break;
+		}
+	}
+
 }

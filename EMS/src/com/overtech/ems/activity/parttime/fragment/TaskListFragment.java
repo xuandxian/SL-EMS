@@ -1,7 +1,6 @@
 package com.overtech.ems.activity.parttime.fragment;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,12 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
-import com.overtech.ems.activity.parttime.tasklist.ScanCodeActivity;
 import com.overtech.ems.activity.parttime.tasklist.TaskListDoneFragment;
 import com.overtech.ems.activity.parttime.tasklist.TaskListNoneFragment;
 import com.overtech.ems.utils.FragmentUtils;
@@ -26,7 +23,6 @@ public class TaskListFragment extends BaseFragment implements OnClickListener {
 	private TextView mNone;
 	private TextView mDonet;
 	private TextView mHead;
-	private ImageView mQrCode;
 	private Fragment currentFragment;
 	private TaskListNoneFragment mTaskNone;
 	private TaskListDoneFragment mTaskDone;
@@ -49,18 +45,14 @@ public class TaskListFragment extends BaseFragment implements OnClickListener {
 
 	private void initView(View view) {
 		mHead = (TextView) view.findViewById(R.id.tv_tasklist_title);
-		mQrCode = (ImageView) view.findViewById(R.id.iv_common_qrcode);
 		mNone = (TextView) view.findViewById(R.id.tv_tasklist_none);
 		mDonet = (TextView) view.findViewById(R.id.tv_tasklist_donet);
 		mNone.setOnClickListener(this);
 		mDonet.setOnClickListener(this);
-		mQrCode.setOnClickListener(this);
-
 	}
 
 	private void setDefaultView() {
 		mHead.setText("任务单");
-		mQrCode.setVisibility(View.VISIBLE);
 		currentFragment = FragmentUtils.switchFragment(
 				getChildFragmentManager(), R.id.fl_container, currentFragment,
 				TaskListNoneFragment.class, null);
@@ -89,7 +81,6 @@ public class TaskListFragment extends BaseFragment implements OnClickListener {
 					getChildFragmentManager(), R.id.fl_container,
 					currentFragment, TaskListNoneFragment.class, null);
 			mTaskNone = (TaskListNoneFragment) currentFragment;
-			mQrCode.setVisibility(View.VISIBLE);
 			mNone.setBackgroundResource(R.drawable.horizontal_line);
 			mDonet.setBackgroundResource(R.color.main_white);
 			mNone.setTextColor(Color.rgb(0, 185, 239));
@@ -100,16 +91,10 @@ public class TaskListFragment extends BaseFragment implements OnClickListener {
 					getChildFragmentManager(), R.id.fl_container,
 					currentFragment, TaskListDoneFragment.class, null);
 			mTaskDone = (TaskListDoneFragment) currentFragment;
-			mQrCode.setVisibility(View.GONE);
 			mNone.setBackgroundResource(R.color.main_white);
 			mDonet.setBackgroundResource(R.drawable.horizontal_line);
 			mNone.setTextColor(getResources().getColor(R.color.main_secondary));
 			mDonet.setTextColor(Color.rgb(0, 185, 239));
-			break;
-		case R.id.iv_common_qrcode:
-			Intent intent = new Intent();
-			intent.setClass(mActivity, ScanCodeActivity.class);
-			startActivity(intent);
 			break;
 		}
 	}

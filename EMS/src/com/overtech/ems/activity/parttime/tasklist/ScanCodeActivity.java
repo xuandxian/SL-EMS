@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.overtech.ems.R;
+import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.activity.fulltime.activity.MaintenanceTaskActivity;
 import com.overtech.ems.http.constant.Constant;
@@ -125,6 +126,7 @@ public class ScanCodeActivity extends Activity implements Callback {
 		if (mElevatorNo.equals("")) {
 			Utilities.showToast("扫描失败", mContext);
 		} else {
+			Logr.e("employeeType=="+employeeType);
 			if (TextUtils.equals(QZ, employeeType)) {
 				// 前往维修清单
 				Intent intent = new Intent(ScanCodeActivity.this,

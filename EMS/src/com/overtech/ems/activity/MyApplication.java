@@ -11,6 +11,7 @@ import com.baidu.location.BDLocationListener;
 import com.baidu.mapapi.SDKInitializer;
 import com.overtech.ems.service.LocationService;
 import com.overtech.ems.utils.Logr;
+import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.Utilities;
 
 public class MyApplication extends Application {
@@ -37,6 +38,10 @@ public class MyApplication extends Application {
 			JPushInterface.setDebugMode(true); // 设置开启日志,发布时请关闭日志
 			JPushInterface.init(this); // 初始化 JPush
 			Logr.e("==MyApplication= 执行了");
+			
+			latitude=Double.parseDouble((String)SharePreferencesUtils.get(getApplicationContext(), "latitude", "0.0"));
+			longitude= Double.parseDouble((String)SharePreferencesUtils.get(getApplicationContext(), "longitude", "0.0"));
+			Logr.e("文件存取的latitude=="+latitude+"==文件存取的longitude=="+longitude);
 		} else {
 			Logr.e("myapplication++++remote进行执行了");
 		}
@@ -53,10 +58,13 @@ public class MyApplication extends Application {
 				latitude = location.getLatitude();
 				longitude = location.getLongitude();
 				Logr.e("latitude==" + latitude + "==longitude==" + longitude);
-				locationService.stop();
+//				locationService.stop();
+				SharePreferencesUtils.put(getApplicationContext(), "latitude", latitude+"");
+				SharePreferencesUtils.put(getApplicationContext(), "longitude", longitude+"");
 			}
 		}
 
 	}
+	
 
 }

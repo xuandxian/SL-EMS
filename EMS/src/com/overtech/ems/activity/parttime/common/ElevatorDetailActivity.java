@@ -1,7 +1,9 @@
 package com.overtech.ems.activity.parttime.common;
 
+import java.util.HashMap;
+
 import android.app.Activity;
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -10,18 +12,11 @@ import android.widget.TextView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
-import com.overtech.ems.activity.common.LoginActivity;
-import com.overtech.ems.config.SystemConfig;
-import com.overtech.ems.entity.common.Requester;
-import com.overtech.ems.entity.parttime.ElevatorBean;
-import com.overtech.ems.http.OkHttpClientManager;
-import com.overtech.ems.http.OkHttpClientManager.ResultCallback;
+import com.overtech.ems.entity.bean.Bean;
+import com.overtech.ems.http.HttpConnector;
 import com.overtech.ems.http.constant.Constant;
-import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
-import com.overtech.ems.utils.Utilities;
-import com.squareup.okhttp.Request;
 
 /*
  * 电梯详情
@@ -53,9 +48,14 @@ public class ElevatorDetailActivity extends BaseActivity {
 	private Activity activity;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_elevator_detail);
+	protected int getLayoutResIds() {
+		// TODO Auto-generated method stub
+		return R.layout.activity_elevator_detail;
+	}
+
+	@Override
+	protected void afterCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
 		activity = this;
 		stackInstance.pushActivity(activity);
 		findViewById();
@@ -107,73 +107,74 @@ public class ElevatorDetailActivity extends BaseActivity {
 	}
 
 	private void getDataByElevatorNo() {
-		startProgressDialog(getResources().getString(R.string.loading_public_default));
-		Requester requester = new Requester();
-		requester.cmd = 20003;
-		requester.certificate = certificate;
-		requester.uid = uid;
-		requester.body.put("elevatorNo", sElevatorNo);
-		ResultCallback<ElevatorBean> callback = new ResultCallback<ElevatorBean>() {
+		startProgressDialog(getResources().getString(
+				R.string.loading_public_default));
+		HashMap<String, Object> body = new HashMap<String, Object>();
+		body.put("elevatorNo", sElevatorNo);
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20003, uid,
+				certificate, body) {
 
 			@Override
-			public void onError(Request request, Exception e) {
+			public Context getContext() {
 				// TODO Auto-generated method stub
-				stopProgressDialog();
-				Logr.e(request.toString());
+				return activity;
 			}
 
 			@Override
-			public void onResponse(ElevatorBean response) {
+			public void bizSuccess(Bean response) {
+				// TODO Auto-generated method stub
+				mProjectName.setText(response.body.get("projectName")
+						.toString());
+				mElevatorBrand.setText(response.body.get("elevatorBrand")
+						.toString());
+				mElevatorModel.setText(response.body.get("elevatorModel")
+						.toString());
+				mElevatorNo.setText(response.body.get("elevatorNo").toString());
+				mElevatorAliase.setText(response.body.get("elevatorAliase")
+						.toString());
+				mTenementCompany.setText(response.body.get("tenementCompany")
+						.toString());
+				mTenementPerson.setText(response.body.get("tenementPerson")
+						.toString());
+				mTenementTel.setText(response.body.get("tenementTel")
+						.toString());
+				mMaintenanceCompany.setText(response.body.get(
+						"maintenanceCompany").toString());
+				mLoadCapacity.setText(response.body.get("loadCapacity")
+						.toString());
+				mNominalSpeed.setText(response.body.get("nominalSpeed")
+						.toString());
+				mStoreyPlatformDoor.setText(response.body.get(
+						"storeyPlatformDoor").toString());
+				mElevatorHigher.setText(response.body.get("elevatorHigher")
+						.toString());
+				mMaintenanceType.setText(response.body.get("maintenanceType")
+						.toString());
+				mDeviceAddress.setText(response.body.get("deviceAddress")
+						.toString());
+				mAnnualInspectionDate.setText(response.body.get(
+						"annualInspectionDate").toString());
+				mLastMaintenanceDate.setText(response.body.get(
+						"lastMaintenanceDate").toString());
+			}
+
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void stopDialog() {
 				// TODO Auto-generated method stub
 				stopProgressDialog();
-				if (response == null) {
-					Utilities.showToast(R.string.response_no_object, activity);
-					return;
-				}
-				int st = response.st;
-				String msg = response.msg;
-				if (st != 0) {
-					if (st == -1 || st == -2) {
-						if (activity != null) {
-							Utilities.showToast(msg, activity);
-							SharePreferencesUtils.put(activity,
-									SharedPreferencesKeys.UID, "");
-							SharePreferencesUtils.put(activity,
-									SharedPreferencesKeys.CERTIFICATED, "");
-							Intent intent = new Intent(activity,
-									LoginActivity.class);
-							startActivity(intent);
-						}
-					} else {
-						Utilities.showToast(msg, activity);
-					}
-				} else {
-					mProjectName.setText(response.body.projectName);
-					mElevatorBrand.setText(response.body.elevatorBrand);
-					mElevatorModel.setText(response.body.elevatorModel);
-					mElevatorNo.setText(response.body.elevatorNo);
-					mElevatorAliase.setText(response.body.elevatorAliase);
-					mTenementCompany.setText(response.body.tenementCompany);
-					mTenementPerson.setText(response.body.tenementPerson);
-					mTenementTel.setText(response.body.tenementTel);
-					mMaintenanceCompany
-							.setText(response.body.maintenanceCompany);
-					mLoadCapacity.setText(response.body.loadCapacity);
-					mNominalSpeed.setText(response.body.nominalSpeed);
-					mStoreyPlatformDoor
-							.setText(response.body.storeyPlatformDoor);
-					mElevatorHigher.setText(response.body.elevatorHigher);
-					mMaintenanceType.setText(response.body.maintenanceType);
-					mDeviceAddress.setText(response.body.deviceAddress);
-					mAnnualInspectionDate
-							.setText(response.body.annualInspectionDate);
-					mLastMaintenanceDate
-							.setText(response.body.lastMaintenanceDate);
-				}
 			}
 		};
-		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
-				gson.toJson(requester));
+		conn.sendRequest();
 	}
 
 	@Override
@@ -182,4 +183,5 @@ public class ElevatorDetailActivity extends BaseActivity {
 		super.onBackPressed();
 		stackInstance.popActivity(activity);
 	}
+
 }

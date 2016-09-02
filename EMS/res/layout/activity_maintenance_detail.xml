@@ -5,7 +5,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <include layout="@layout/headview" />
+    <include layout="@layout/layout_toolbar" />
+
+    <include layout="@layout/layout_task_menu" />
 
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -17,145 +19,72 @@
             android:id="@+id/rl_elevator_detail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="horizontal" >
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal" >
+                android:layout_weight="1"
+                android:orientation="vertical" >
 
-                <TextView
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tv_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="维修地点："
-                    android:textSize="18sp" />
+                    android:text="地址："
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-                <TextView
-                    android:id="@+id/tv_adderss"
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tv_elevator_no"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:textSize="18sp" />
-            </LinearLayout>
+                    android:text="梯号："
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="电梯品牌："
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/tv_elevator_brand"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:layout_weight="1"
-                    android:textSize="18sp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/icon_arrow_right" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="电梯层站："
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/tv_elevator_storey_site"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="33/32"
-                    android:textSize="18sp" />
-            </LinearLayout>
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
-
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        app:contentPadding="16dp" >
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" >
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="故障来源："
-                    android:textSize="18sp" />
-
-                <TextView
+                <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/tv_fault_from"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="18sp" />
+                    android:text="故障来源："
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/tv_repair_content"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="报修内容："
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
             </LinearLayout>
 
-            <LinearLayout
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="故障详情："
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/tv_fault_cause"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="18sp" />
-            </LinearLayout>
-
-            <!--
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="故障部件："
-                    android:textSize="18sp" />
-
-                <TextView
-                    android:id="@+id/tv_fault_component"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textSize="18sp" />
-            </LinearLayout>
-            -->
+                android:layout_gravity="center_vertical"
+                android:src="@drawable/icon_arrow_right" />
         </LinearLayout>
     </android.support.v7.widget.CardView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/bt_close_people"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="关人"
+            android:textAppearance="@style/TextAppearance.AppCompat.Button"
+            android:visibility="gone" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:id="@+id/bt_component_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="配件列表"
+            android:textAppearance="@style/TextAppearance.AppCompat.Button"
+            android:visibility="gone" />
+    </LinearLayout>
 
 </LinearLayout>

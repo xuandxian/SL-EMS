@@ -74,9 +74,14 @@ public class ResetPasswordActivity extends BaseActivity {
 	};
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_reset_password);
+	protected int getLayoutResIds() {
+		// TODO Auto-generated method stub
+		return R.layout.activity_reset_password;
+	}
+
+	@Override
+	protected void afterCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
 		stackInstance.pushActivity(this);
 		findViewById();
 		init();
@@ -109,7 +114,8 @@ public class ResetPasswordActivity extends BaseActivity {
 					if (sPasswordNew.length() >= 6
 							&& sPasswordNew.length() <= 18) {
 						if (TextUtils.equals(sPasswordNew, sPasswordConfirm)) {
-							startProgressDialog(getResources().getString(R.string.loading_public_default));
+							startProgressDialog(getResources().getString(
+									R.string.loading_public_default));
 							Requester requester = new Requester();
 							requester.cmd = 20043;
 							requester.body.put(Constant.PHONENO, mPhoneNo);
@@ -171,4 +177,5 @@ public class ResetPasswordActivity extends BaseActivity {
 		super.onBackPressed();
 		stackInstance.popActivity(activity);
 	}
+
 }

@@ -2,6 +2,7 @@ package com.overtech.ems.activity.parttime.fragment;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -9,13 +10,13 @@ import java.util.Map;
 import java.util.Set;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,24 +33,16 @@ import cn.jpush.android.api.TagAliasCallback;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
 import com.overtech.ems.activity.adapter.GrabTaskAdapter;
-import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
 import com.overtech.ems.activity.parttime.grabtask.GrabTaskDoFilterActivity;
 import com.overtech.ems.activity.parttime.grabtask.KeyWordSerachActivity;
 import com.overtech.ems.config.StatusCode;
-import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.Bean;
-import com.overtech.ems.entity.bean.TaskPackageBean;
-import com.overtech.ems.entity.common.Requester;
-import com.overtech.ems.http.OkHttpClientManager;
-import com.overtech.ems.http.OkHttpClientManager.ResultCallback;
+import com.overtech.ems.http.HttpConnector;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.AppUtils;
 import com.overtech.ems.utils.Logr;
-import com.overtech.ems.utils.SharePreferencesUtils;
-import com.overtech.ems.utils.SharedPreferencesKeys;
-import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView;
 import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView.IXListViewListener;
@@ -58,7 +51,6 @@ import com.overtech.ems.widget.swiperefreshlistview.pulltorefresh.RefreshTime;
 import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenu;
 import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuCreator;
 import com.overtech.ems.widget.swiperefreshlistview.swipemenu.SwipeMenuItem;
-import com.squareup.okhttp.Request;
 
 public class GrabTaskFragment extends BaseFragment implements
 		IXListViewListener {
@@ -96,130 +88,7 @@ public class GrabTaskFragment extends BaseFragment implements
 			stopProgressDialog();
 		};
 	};
-	private ResultCallback<Bean> mCallBack = new ResultCallback<Bean>() {
-
-		@Override
-		public void onError(Request request, Exception e) {
-			// TODO Auto-generated method stub
-			Logr.e(request.toString());
-			stopProgressDialog();
-			mSwipeListView.stopRefresh();
-		}
-
-		@Override
-		public void onResponse(Bean response) {
-			// TODO Auto-generated method stub
-			stopProgressDialog();
-			mSwipeListView.stopRefresh();
-			if (response == null) {
-				Utilities.showToast("暂时没有数据", mActivity);
-				if (mAdapter != null) {
-					mAdapter.getData().clear();
-					mAdapter.notifyDataSetChanged();// 清空搜索结果
-				}
-				return;
-			}
-			int st = response.st;
-			String msg = response.msg;
-			if (st != 0) {
-				if (st == -1 || st == -2) {
-					Utilities.showToast(msg, mActivity);
-					SharePreferencesUtils.put(mActivity,
-							SharedPreferencesKeys.UID, "");
-					SharePreferencesUtils.put(mActivity,
-							SharedPreferencesKeys.CERTIFICATED, "");
-					Intent intent = new Intent(mActivity, LoginActivity.class);
-					startActivity(intent);
-				} else {// 包含上岗证过期
-					Utilities.showToast(msg, mActivity);
-					// new
-					// AlertDialog.Builder(activity).setMessage(msg).create().show();
-					if (mAdapter != null) {
-						mAdapter.getData().clear();
-						mAdapter.notifyDataSetChanged();
-					}
-					mNoResultPage.setVisibility(View.VISIBLE);
-					mNoWifi.setVisibility(View.GONE);
-				}
-			} else {
-				list = (List<Map<String, Object>>) response.body.get("data");
-				if (null == list || list.isEmpty()) {
-					mNoWifi.setVisibility(View.GONE);
-					mNoResultPage.setVisibility(View.VISIBLE);
-					if (mAdapter != null) {
-						mAdapter.getData().clear();
-						mAdapter.notifyDataSetChanged();
-					}
-				} else {
-					mNoWifi.setVisibility(View.GONE);
-					mNoResultPage.setVisibility(View.GONE);
-					if (mAdapter == null) {
-						mAdapter = new GrabTaskAdapter(list, mActivity);
-						mSwipeListView.setAdapter(mAdapter);
-					} else {
-						mAdapter.setData(list);
-						mAdapter.notifyDataSetChanged();
-					}
-				}
-			}
-		}
-	};
-	private ResultCallback<TaskPackageBean> grabCallback = new ResultCallback<TaskPackageBean>() {
-
-		@Override
-		public void onError(Request request, Exception e) {
-			// TODO Auto-generated method stub
-			Logr.e(request.toString());
-			stopProgressDialog();
-		}
-
-		@Override
-		public void onResponse(TaskPackageBean response) {
-			// TODO Auto-generated method stub
-			stopProgressDialog();
-			int st = response.st;
-			String msg = response.msg;
-			if (st != 0) {
-				if (st == -1 || st == -2) {
-					Utilities.showToast(msg, mActivity);
-					SharePreferencesUtils.put(mActivity,
-							SharedPreferencesKeys.UID, "");
-					SharePreferencesUtils.put(mActivity,
-							SharedPreferencesKeys.CERTIFICATED, "");
-					Intent intent = new Intent(mActivity, LoginActivity.class);
-					startActivity(intent);
-				} else {
-					Utilities.showToast(msg, mActivity);
-				}
-			} else {
-				String status = response.body.status;
-				if (TextUtils.equals(status, "0")) {// 重复抢单
-					Utilities.showToast(response.msg, activity);
-					onRefresh();
-				} else if (TextUtils.equals(status, "1")) {// 抢单成功，等待第二个人抢
-					Utilities.showToast(response.msg, activity);
-					onRefresh();
-					loadNotDoneTask();
-				} else if (TextUtils.equals(status, "2")) {// 抢单成功，到任务单中查看
-					Utilities.showToast(response.msg, activity);
-					onRefresh();
-					loadNotDoneTask();
-				} else if (TextUtils.equals(status, "3")) {// 差一点抢到
-					Utilities.showToast(response.msg, activity);
-					onRefresh();
-				} else if (TextUtils.equals(status, "4")) {// 维保日期内的电梯已经超过10台
-					Utilities.showToast(response.msg, activity);
-					onRefresh();
-				} else {
-					Utilities.showToast(response.msg, activity);
-					Intent intent = new Intent(getActivity(),
-							LoginActivity.class);
-					startActivity(intent);
-				}
-			}
-		}
-
-	};
+	
 	private final TagAliasCallback mTagsCallback = new TagAliasCallback() {
 
 		@Override
@@ -357,6 +226,7 @@ public class GrabTaskFragment extends BaseFragment implements
 		mSwipeListView.setPullRefreshEnable(true);
 		mSwipeListView.setPullLoadEnable(true);
 		mSwipeListView.setXListViewListener(this);
+		mSwipeListView.setFooterViewInvisible();
 		mHeadView = LayoutInflater.from(mActivity).inflate(
 				R.layout.listview_header_filter, null);
 		mHeadView.setOnClickListener(null);
@@ -367,19 +237,6 @@ public class GrabTaskFragment extends BaseFragment implements
 				.findViewById(R.id.et_do_parttime_search);
 	}
 
-	public <T> void initData(String url, String flag, String jsonData,
-			ResultCallback<T> callback) {
-		if (TextUtils.equals(REFRESH_TYPE_DEFAULT, flag)) {
-			startProgressDialog(getResources().getString(
-					R.string.loading_public_default));
-		} else if (TextUtils.equals(REFRESH_TYPE_FILTER, flag)) {
-			startProgressDialog(getResources().getString(
-					R.string.loading_public_default));
-			// mSwipeListView.setPullRefreshEnable(false);
-		}
-		mSwipeListView.setFooterViewInvisible();
-		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback, jsonData);
-	}
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -388,41 +245,242 @@ public class GrabTaskFragment extends BaseFragment implements
 				&& resultCode == Activity.RESULT_OK) {
 			String mZone = data.getStringExtra("mZone");
 			String mTime = data.getStringExtra("mTime");
-
-			Requester requester = new Requester();
-			requester.cmd = 20022;
-			requester.certificate = certificate;
-			requester.uid = uid;
-			requester.body.put(Constant.FILTERTIME, mTime);
-			requester.body.put(Constant.FILTERZONE, mZone);
-			initData(SystemConfig.NEWIP, REFRESH_TYPE_FILTER,
-					gson.toJson(requester), mCallBack);
+			filter(mTime, mZone);
 		} else if (requestCode == StatusCode.RESULT_GRAB_DO_SEARCH
 				&& resultCode == Activity.RESULT_OK) {
 			String keyWord = data.getStringExtra("mKeyWord");
-
-			Requester requester = new Requester();
-			requester.cmd = 20020;
-			requester.certificate = certificate;
-			requester.uid = uid;
-			requester.body.put(Constant.KEYWORD, keyWord);
-			initData(SystemConfig.NEWIP, REFRESH_TYPE_FILTER,
-					gson.toJson(requester), mCallBack);
+			keyWord(keyWord);
 		} else if (requestCode == StatusCode.RESULT_GRAB_DO_GRAB
 				&& resultCode == Activity.RESULT_OK) {
 			onRefresh();
 		}
 	}
+	private void keyWord(String keyWord){
+		HashMap<String,Object> body=new HashMap<String,Object>();
+		body.put("mKeyWord", keyWord);
+		HttpConnector<Bean> conn=new HttpConnector<Bean>(20020,uid,certificate,body) {
 
+			@Override
+			public Context getContext() {
+				// TODO Auto-generated method stub
+				return activity;
+			}
+
+			@Override
+			public void bizSuccess(Bean response) {
+				// TODO Auto-generated method stub
+				mSwipeListView.stopRefresh();
+				list = (List<Map<String, Object>>) response.body.get("data");
+				if (null == list || list.isEmpty()) {
+					mNoWifi.setVisibility(View.GONE);
+					mNoResultPage.setVisibility(View.VISIBLE);
+					if (mAdapter != null) {
+						mAdapter.getData().clear();
+						mAdapter.notifyDataSetChanged();
+					}
+				} else {
+					mNoWifi.setVisibility(View.GONE);
+					mNoResultPage.setVisibility(View.GONE);
+					if (mAdapter == null) {
+						mAdapter = new GrabTaskAdapter(list, mActivity);
+						mSwipeListView.setAdapter(mAdapter);
+					} else {
+						mAdapter.setData(list);
+						mAdapter.notifyDataSetChanged();
+					}
+				}
+			}
+
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+				mSwipeListView.stopRefresh();
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+				mSwipeListView.stopRefresh();
+				// new
+				// AlertDialog.Builder(activity).setMessage(msg).create().show();
+				if (mAdapter != null) {
+					mAdapter.getData().clear();
+					mAdapter.notifyDataSetChanged();
+				}
+				mNoResultPage.setVisibility(View.VISIBLE);
+				mNoWifi.setVisibility(View.GONE);
+			}
+
+			@Override
+			public void stopDialog() {
+				// TODO Auto-generated method stub
+				stopProgressDialog();
+			}
+		};
+		conn.sendRequest();
+	}
+	private void filter(String filterTime,String filterZone){
+		HashMap<String,Object> body=new HashMap<String,Object>();
+		body.put(Constant.FILTERTIME, filterTime);
+		body.put(Constant.FILTERZONE, filterZone);
+		HttpConnector<Bean> conn=new HttpConnector<Bean>(20022,uid,certificate,body) {
+
+			@Override
+			public Context getContext() {
+				// TODO Auto-generated method stub
+				return activity;
+			}
+
+			@Override
+			public void bizSuccess(Bean response) {
+				// TODO Auto-generated method stub
+				list = (List<Map<String, Object>>) response.body.get("data");
+				if (null == list || list.isEmpty()) {
+					mNoWifi.setVisibility(View.GONE);
+					mNoResultPage.setVisibility(View.VISIBLE);
+					if (mAdapter != null) {
+						mAdapter.getData().clear();
+						mAdapter.notifyDataSetChanged();
+					}
+				} else {
+					mNoWifi.setVisibility(View.GONE);
+					mNoResultPage.setVisibility(View.GONE);
+					if (mAdapter == null) {
+						mAdapter = new GrabTaskAdapter(list, mActivity);
+						mSwipeListView.setAdapter(mAdapter);
+					} else {
+						mAdapter.setData(list);
+						mAdapter.notifyDataSetChanged();
+					}
+				}
+			}
+
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+				// new
+				// AlertDialog.Builder(activity).setMessage(msg).create().show();
+				if (mAdapter != null) {
+					mAdapter.getData().clear();
+					mAdapter.notifyDataSetChanged();
+				}
+				mNoResultPage.setVisibility(View.VISIBLE);
+				mNoWifi.setVisibility(View.GONE);
+			}
+
+			@Override
+			public void stopDialog() {
+				// TODO Auto-generated method stub
+				stopProgressDialog();
+				mSwipeListView.stopRefresh();
+			}
+		};
+		conn.sendRequest();
+	}
+	private void grabTask(String taskNo){
+		startProgressDialog(getResources().getString(
+				R.string.loading_public_grabing));
+		HashMap<String,Object> body=new HashMap<String,Object>();
+		body.put("taskNo", taskNo);
+		HttpConnector<Bean> conn=new HttpConnector<Bean>(20023,uid,certificate,body) {
+
+			@Override
+			public Context getContext() {
+				// TODO Auto-generated method stub
+				return activity;
+			}
+
+			@Override
+			public void bizSuccess(Bean response) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void stopDialog() {
+				// TODO Auto-generated method stub
+				stopProgressDialog();
+			}
+		};
+		conn.sendRequest();
+	}
 	@Override
 	public void onRefresh() {
-		Requester requester = new Requester();
-		requester.cmd = 20020;
-		requester.certificate = certificate;
-		requester.uid = uid;
-		requester.body.put("mKeyWord", "0");
-		initData(SystemConfig.NEWIP, REFRESH_TYPE_DEFAULT,
-				gson.toJson(requester), mCallBack);
+		HashMap<String,Object> body=new HashMap<String,Object>();
+		body.put("mKeyWord", "0");
+		HttpConnector<Bean> conn=new HttpConnector<Bean>(20020,uid,certificate,body) {
+
+			@Override
+			public Context getContext() {
+				// TODO Auto-generated method stub
+				return activity;
+			}
+
+			@Override
+			public void bizSuccess(Bean response) {
+				// TODO Auto-generated method stub
+				list = (List<Map<String, Object>>) response.body.get("data");
+				if (null == list || list.isEmpty()) {
+					mNoWifi.setVisibility(View.GONE);
+					mNoResultPage.setVisibility(View.VISIBLE);
+					if (mAdapter != null) {
+						mAdapter.getData().clear();
+						mAdapter.notifyDataSetChanged();
+					}
+				} else {
+					mNoWifi.setVisibility(View.GONE);
+					mNoResultPage.setVisibility(View.GONE);
+					if (mAdapter == null) {
+						mAdapter = new GrabTaskAdapter(list, mActivity);
+						mSwipeListView.setAdapter(mAdapter);
+					} else {
+						mAdapter.setData(list);
+						mAdapter.notifyDataSetChanged();
+					}
+				}
+			}
+
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+				// new
+				// AlertDialog.Builder(activity).setMessage(msg).create().show();
+				if (mAdapter != null) {
+					mAdapter.getData().clear();
+					mAdapter.notifyDataSetChanged();
+				}
+				mNoResultPage.setVisibility(View.VISIBLE);
+				mNoWifi.setVisibility(View.GONE);
+			}
+
+			@Override
+			public void stopDialog() {
+				// TODO Auto-generated method stub
+				stopProgressDialog();
+				mSwipeListView.stopRefresh();
+			}
+		};
+		conn.sendRequest();
+//		mSwipeListView.setFooterViewInvisible();
 	}
 
 	@Override
@@ -468,33 +526,26 @@ public class GrabTaskFragment extends BaseFragment implements
 					@Override
 					public void onClick(View v) {
 						dialogBuilder.dismiss();
-						startProgressDialog(getResources().getString(
-								R.string.loading_public_grabing));
 						String mTaskNo = list.get(position).get("taskNo").toString();
-						Requester requester = new Requester();
-						requester.cmd = 20023;
-						requester.uid = uid;
-						requester.certificate = certificate;
-						requester.body.put(Constant.TASKNO, mTaskNo);
-						OkHttpClientManager.postAsyn(SystemConfig.NEWIP,
-								grabCallback, gson.toJson(requester));
+						grabTask(mTaskNo);
 					}
 				}).show();
 	}
+	/**
+	 * 加载未完成的任务单
+	 */
+	private void loadNotDoneTask() {
+		HttpConnector<Bean> conn=new HttpConnector<Bean>(20050,uid,certificate,null){
 
-	private ResultCallback<Bean> loadNotDoneCallback = new ResultCallback<Bean>() {
+			@Override
+			public Context getContext() {
+				// TODO Auto-generated method stub
+				return activity;
+			}
 
-		@Override
-		public void onError(Request request, Exception e) {
-			// TODO Auto-generated method stub
-			Logr.e(request.toString());
-		}
-
-		@Override
-		public void onResponse(Bean response) {
-			// TODO Auto-generated method stub
-			int st = response.st;
-			if (st == 0) {
+			@Override
+			public void bizSuccess(Bean response) {
+				// TODO Auto-generated method stub
 				List<Map<String, Object>> datas = (List<Map<String, Object>>) response.body
 						.get("data");
 				Set<String> tempSet = new HashSet<String>();
@@ -505,19 +556,27 @@ public class GrabTaskFragment extends BaseFragment implements
 				JPushInterface.setAliasAndTags(activity, "", tempSet,
 						mTagsCallback);
 			}
-		}
-	};
 
-	/**
-	 * 加载未完成的任务单
-	 */
-	private void loadNotDoneTask() {
-		Requester requester = new Requester();
-		requester.cmd = 20050;
-		requester.uid = uid;
-		requester.certificate = certificate;
-		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, loadNotDoneCallback,
-				gson.toJson(requester));
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void stopDialog() {
+				// TODO Auto-generated method stub
+				
+			}
+			
+		};
+		conn.sendRequest();
 	}
 
 }

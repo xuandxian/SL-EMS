@@ -103,6 +103,11 @@ public class TaskListPackageDetailAdapter extends BaseAdapter {
 		return convertView;
 	}
 
+	public void setData(List<Map<String,Object>> list){
+		this.list=list;
+		notifyDataSetChanged();
+	}
+	
 	/**
 	 * 对电梯的完成状态进行遍历，如果全部完成则返回true，否则返回false；
 	 * 

@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_main"
+    android:clickable="true"
+    android:fitsSystemWindows="true"
     android:orientation="vertical" >
 
     <include layout="@layout/headview" />
@@ -11,16 +14,39 @@
         android:id="@+id/register_send_phone"
         style="@style/tv_info_secondary_style"
         android:layout_marginBottom="10dp"
-        android:layout_marginLeft="15dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginTop="10dp"
         android:text="证书上传（其他证书的上传将有助于您个人的星级评定）" />
 
-    <ImageView
-        android:id="@+id/id_card_1"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/bt_add_img"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:background="@drawable/shape_button_visiable"
+            android:text="选择照片"
+            android:textColor="@color/main_white" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="(最多可选择5张照片，点击照片可删除)" />
+    </LinearLayout>
+
+    <android.support.v7.widget.GridLayout
+        android:id="@+id/gridLayout"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="@color/main_white"
-        android:src="@drawable/btn_camera_comment_rest" />
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:animateLayoutChanges="true"
+        app:columnCount="3"
+        app:useDefaultMargins="true" />
+
     <Button
         android:id="@+id/btn_next_fragment"
         android:layout_width="match_parent"
@@ -30,9 +56,8 @@
         android:layout_marginRight="15dp"
         android:layout_marginTop="25dp"
         android:background="@drawable/shape_button_visiable"
-        android:textColor="@color/main_white"
-        android:textSize="17sp"
         android:text="下一步"
-         />
+        android:textColor="@color/main_white"
+        android:textSize="17sp" />
 
 </LinearLayout>

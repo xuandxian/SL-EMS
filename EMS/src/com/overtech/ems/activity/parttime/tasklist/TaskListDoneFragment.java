@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -12,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -19,24 +22,16 @@ import android.widget.ListView;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
 import com.overtech.ems.activity.adapter.TaskListAdapter;
-import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.config.StatusCode;
-import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.Bean;
-import com.overtech.ems.entity.common.Requester;
-import com.overtech.ems.http.OkHttpClientManager;
-import com.overtech.ems.http.OkHttpClientManager.ResultCallback;
-import com.overtech.ems.utils.Logr;
-import com.overtech.ems.utils.SharePreferencesUtils;
-import com.overtech.ems.utils.SharedPreferencesKeys;
-import com.overtech.ems.utils.Utilities;
-import com.squareup.okhttp.Request;
+import com.overtech.ems.http.HttpConnector;
+import com.overtech.ems.http.constant.Constant;
 
 public class TaskListDoneFragment extends BaseFragment implements
 		OnRefreshListener {
 	private SwipeRefreshLayout swipeRefresh;
-	private ListView mDonet;
+	private ListView listView;
 	private LinearLayout llNoPage;
 	private Button btLoadRetry;
 	private Activity mActivity;
@@ -79,10 +74,23 @@ public class TaskListDoneFragment extends BaseFragment implements
 				onRefresh();
 			}
 		});
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				String taskNo = list.get(position).get("taskNo").toString();
+				Intent intent = new Intent(getActivity(),
+						TaskListPackageDoneDetailActivity.class);
+				intent.putExtra(Constant.TASKNO, taskNo);
+				startActivity(intent);
+			}
+		});
 	}
 
 	private void findViewById(View view) {
-		mDonet = (ListView) view.findViewById(R.id.donet_task_list_listview);
+		listView = (ListView) view.findViewById(R.id.donet_task_list_listview);
 		swipeRefresh = (SwipeRefreshLayout) view
 				.findViewById(R.id.swipeRefresh);
 		llNoPage = (LinearLayout) view.findViewById(R.id.page_no_result);
@@ -92,47 +100,20 @@ public class TaskListDoneFragment extends BaseFragment implements
 	@Override
 	public void onRefresh() {
 		// TODO Auto-generated method stub
-		Requester requester = new Requester();
-		requester.certificate = certificate;
-		requester.uid = uid;
-		requester.cmd = 20054;
-		ResultCallback<Bean> callback = new ResultCallback<Bean>() {
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20054, uid,
+				certificate, null) {
 
 			@Override
-			public void onError(Request request, Exception e) {
+			public Context getContext() {
 				// TODO Auto-generated method stub
-				Logr.e(request.toString());
-				if (swipeRefresh.isRefreshing()) {
-					swipeRefresh.setRefreshing(false);
-				}
-				stopProgressDialog();
+				return activity;
 			}
 
 			@Override
-			public void onResponse(Bean response) {
+			public void bizSuccess(Bean response) {
 				// TODO Auto-generated method stub
-				stopProgressDialog();
-				if (swipeRefresh.isRefreshing()) {
-					swipeRefresh.setRefreshing(false);
-				}
-				if (response == null) {
-					Utilities.showToast(R.string.response_no_object, activity);
-					return;
-				}
+
 				list = (List<Map<String, Object>>) response.body.get("data");
-				int st = response.st;
-				if (st == -1 || st == -2) {
-					if (activity != null) {
-						Utilities.showToast(response.msg, activity);
-						SharePreferencesUtils.put(activity,
-								SharedPreferencesKeys.UID, "");
-						SharePreferencesUtils.put(activity,
-								SharedPreferencesKeys.CERTIFICATED, "");
-						Intent intent = new Intent(activity,
-								LoginActivity.class);
-						startActivity(intent);
-					}
-				}
 				if (list == null || list.size() == 0) {
 					llNoPage.setVisibility(View.VISIBLE);
 					swipeRefresh.setVisibility(View.GONE);
@@ -142,16 +123,35 @@ public class TaskListDoneFragment extends BaseFragment implements
 					if (adapter == null) {
 						adapter = new TaskListAdapter(list, mActivity,
 								StatusCode.TASK_DO);
-						mDonet.setAdapter(adapter);
+						listView.setAdapter(adapter);
 					} else {
 						adapter.setData(list);
 						adapter.notifyDataSetChanged();
 					}
 				}
 			}
+
+			@Override
+			public void bizFailed() {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void bizStIs1Deal() {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void stopDialog() {
+				// TODO Auto-generated method stub
+				if (swipeRefresh.isRefreshing()) {
+					swipeRefresh.setRefreshing(false);
+				}
+				stopProgressDialog();
+			}
+
 		};
-		OkHttpClientManager.postAsyn(SystemConfig.NEWIP, callback,
-				gson.toJson(requester));
+		conn.sendRequest();
 	}
 
 	@Override

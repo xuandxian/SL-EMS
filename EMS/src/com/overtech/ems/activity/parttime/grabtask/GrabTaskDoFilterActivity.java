@@ -48,9 +48,14 @@ public class GrabTaskDoFilterActivity extends BaseActivity implements
 			R.drawable.filter_time_fifteen_out };
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_grab_task_filter);
+	protected int getLayoutResIds() {
+		// TODO Auto-generated method stub
+		return R.layout.activity_grab_task_filter;
+	}
+
+	@Override
+	protected void afterCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
 		findViewById();
 		init();
 		setOnClickListener();
@@ -73,7 +78,7 @@ public class GrabTaskDoFilterActivity extends BaseActivity implements
 	}
 
 	private void init() {
-		activity=this;
+		activity = this;
 		mHeadContent.setText("筛 选");
 		mHeadContentRight.setText("确定");
 		mHeadBack.setVisibility(View.VISIBLE);
@@ -212,4 +217,5 @@ public class GrabTaskDoFilterActivity extends BaseActivity implements
 			break;
 		}
 	}
+
 }

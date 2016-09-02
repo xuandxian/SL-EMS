@@ -1,9 +1,14 @@
 package com.overtech.ems.activity;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.os.Build;
+import android.os.Build.VERSION_CODES;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AlertDialog.Builder;
 import android.util.TypedValue;
 
 import com.google.gson.Gson;
@@ -28,8 +33,11 @@ public class BaseFragment extends Fragment {
 
 	public CustomProgressDialog progressDialog;
 
+	public ProgressDialog dialog;
+	
 	public NiftyDialogBuilder dialogBuilder;
-
+	
+	public AlertDialog.Builder alertBuilder;
 	public Gson gson;
 	public final static String TAG="ems data from server==";
 	@Override
@@ -38,13 +46,25 @@ public class BaseFragment extends Fragment {
 		activity = getActivity();
 		fragmentManager = getFragmentManager();
 		dialogBuilder = NiftyDialogBuilder.getInstance(activity);
+		if(alertBuilder==null){
+			alertBuilder=new Builder(activity);
+			alertBuilder.setCancelable(false);
+		}
 		httpEngine = HttpEngine.getInstance();
 		imageLoader = ImageLoader.getInstance();
 		imageLoader.initContext(getActivity().getApplicationContext());
-		progressDialog = CustomProgressDialog.createDialog(activity);
-		progressDialog.setMessage(activity
-				.getString(R.string.loading_public_default));
-		progressDialog.setCanceledOnTouchOutside(false);
+		if(dialog==null&&Build.VERSION.SDK_INT>=VERSION_CODES.LOLLIPOP){
+			dialog=new ProgressDialog(activity);
+			dialog.setMessage(getResources().getString(R.string.loading_public_default));
+			dialog.setCancelable(true);
+			dialog.setCanceledOnTouchOutside(false);
+			dialog.setIndeterminate(true);
+		}else{
+			progressDialog = CustomProgressDialog.createDialog(activity);
+			progressDialog.setMessage(activity
+					.getString(R.string.loading_public_default));
+			progressDialog.setCanceledOnTouchOutside(false);
+		}
 		if (gson == null) {
 			gson = new Gson();
 		}
@@ -60,17 +80,28 @@ public class BaseFragment extends Fragment {
 	}
 
 	public void startProgressDialog(String content) {
-		if (progressDialog == null) {
-			progressDialog = CustomProgressDialog.createDialog(activity);
+		if(Build.VERSION.SDK_INT>=VERSION_CODES.LOLLIPOP){
+			dialog.setMessage(content);
+			dialog.show();
+		}else{
+			if (progressDialog == null) {
+				progressDialog = CustomProgressDialog.createDialog(activity);
+			}
+			progressDialog.setMessage(content);
+			progressDialog.show();
 		}
-		progressDialog.setMessage(content);
-		progressDialog.show();
 	}
 
 	public void stopProgressDialog() {
-		if (progressDialog != null) {
-			progressDialog.dismiss();
-			progressDialog = null;
+		if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
+			if(dialog!=null){
+				dialog.dismiss();
+			}
+		}else{
+			if (progressDialog != null) {
+				progressDialog.dismiss();
+				progressDialog = null;
+			}
 		}
 	}
 

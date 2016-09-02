@@ -8,6 +8,8 @@
         android:id="@+id/tasklist_title_package"
         layout="@layout/headview_grabtask" />
 
+    <include layout="@layout/layout_task_menu" />
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/srl_container"
         android:layout_width="match_parent"
@@ -22,24 +24,36 @@
             android:layout_weight="1" >
         </ListView>
     </android.support.v4.widget.SwipeRefreshLayout>
+
     <Button
         android:id="@+id/bt_cancle_task"
         style="@style/btn_title_white_style"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="15dp"
-        android:visibility="gone"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/shape_button_delete"
-        android:text="退单" />
-    <Button 
+        android:text="退单"
+        android:visibility="gone" />
+    <!-- 维保单单台电梯完成时下一步 -->
+
+    <Button
         android:id="@+id/bt_next_response"
         style="@style/btn_title_white_style"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="15dp"
-        android:visibility="gone"
+        android:layout_marginBottom="16dp"
         android:background="@drawable/shape_button_visiable"
         android:text="下一步"
-        />
+        android:visibility="gone" />
+
+    <Button
+        android:id="@+id/bt_as_complete"
+        style="@style/btn_title_white_style"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/shape_button_visiable"
+        android:text="完成"
+        android:visibility="gone" />
 
 </RelativeLayout>

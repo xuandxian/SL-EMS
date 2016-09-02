@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatSpinner;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -44,6 +45,8 @@ public class RegisterAddPersonInfoFragment extends BaseFragment implements
 	private EditTextWithDelete mWorkNum;
 	private TextView mCity;
 	private AppCompatSpinner mZone;
+	private ArrayAdapter<Zone> adapter;
+	private int spSelectPosition;//记录spinner选择的位置
 	public String nameContent = null;
 	public String idNumContent = null;
 	public String workNumContent = null;
@@ -63,7 +66,15 @@ public class RegisterAddPersonInfoFragment extends BaseFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-
+		if(savedInstanceState!=null){
+			nameContent=savedInstanceState.getString("nameContent");
+			idNumContent=savedInstanceState.getString("idNumContent");
+			workNumContent=savedInstanceState.getString("workNumContent");
+			cityName=savedInstanceState.getString("cityName");
+			cityCode=savedInstanceState.getString("cityCode");
+			zoneName=savedInstanceState.getString("zoneName");
+			zoneCode=savedInstanceState.getString("zoneCode");
+		}
 		view = inflater.inflate(R.layout.fragment_register_add_person_info,
 				null);
 		findViewById(view);
@@ -104,6 +115,7 @@ public class RegisterAddPersonInfoFragment extends BaseFragment implements
 					int position, long id) {
 				// TODO Auto-generated method stub
 				Zone zone = (Zone) parent.getItemAtPosition(position);
+				spSelectPosition=position;
 				zoneCode = zone.code;
 				zoneName = zone.name;
 			}
@@ -124,6 +136,9 @@ public class RegisterAddPersonInfoFragment extends BaseFragment implements
 			getActivity().onBackPressed();
 			break;
 		case R.id.btn_next_fragment:
+			if(nameContent!=null){
+				Logr.e("PersonInfo=="+nameContent);
+			}
 			nameContent = mName.getText().toString().trim();
 			if (!Utilities.isAllChinese(nameContent)) {
 				Utilities.showToast("姓名必须为中文", mContext);
@@ -159,7 +174,30 @@ public class RegisterAddPersonInfoFragment extends BaseFragment implements
 			break;
 		}
 	}
-
+	@Override
+	public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onViewStateRestored(savedInstanceState);
+		if(cityName!=null){
+			mCity.setText(cityName);
+		}
+		if(zoneName!=null){
+			mZone.setAdapter(adapter);
+			mZone.setSelection(spSelectPosition);
+		}
+	}
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+		super.onSaveInstanceState(outState);
+		outState.putString("nameContent", nameContent);
+		outState.putString("idNumContent", idNumContent);
+		outState.putString("workNumContent", workNumContent);
+		outState.putString("cityName", cityName);
+		outState.putString("cityCode", cityCode);
+		outState.putString("zoneName", zoneName);
+		outState.putString("zoneCode", zoneCode);
+	}
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		// TODO Auto-generated method stub
@@ -206,7 +244,7 @@ public class RegisterAddPersonInfoFragment extends BaseFragment implements
 				if (response.body.data != null) {
 					City city = response.body.data.get(0);
 					if (city != null) {
-						ArrayAdapter<Zone> adapter = new ArrayAdapter<Zone>(
+						adapter = new ArrayAdapter<Zone>(
 								activity, android.R.layout.simple_spinner_item,
 								city.list);
 						adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

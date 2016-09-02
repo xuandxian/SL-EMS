@@ -63,7 +63,7 @@ public class RegisterFragment extends BaseFragment {
 						CommonBean.class);
 				int validateSt = validateBean.st;
 				if (validateSt == 100) {
-					Utilities.showToast(validateBean.msg, activity);
+//					Utilities.showToast(validateBean.msg, activity);
 					if (listener != null) {
 						listener.onRegFraBtnClick();
 					}
