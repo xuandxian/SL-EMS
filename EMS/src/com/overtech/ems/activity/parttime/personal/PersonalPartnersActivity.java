@@ -69,7 +69,7 @@ public class PersonalPartnersActivity extends BaseActivity implements
 		actionBar = getSupportActionBar();
 		actionBar.setDisplayShowTitleEnabled(false);
 		actionBar.setDisplayShowHomeEnabled(true);
-		actionBar.setDefaultDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayHomeAsUpEnabled(true);
 		tvHead.setText("搭档收藏");
 		swipeRefresh.setColorSchemeColors(R.color.material_deep_teal_200,
 				R.color.material_deep_teal_500);

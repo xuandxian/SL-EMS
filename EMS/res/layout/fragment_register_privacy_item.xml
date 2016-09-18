@@ -5,50 +5,39 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical" >
 
-    <include layout="@layout/headview" />
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" >
 
-        <TextView
+        <android.support.v7.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:text="@string/item_privacy"
-            android:textSize="@dimen/text_size_info" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Small" />
     </ScrollView>
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <android.support.v7.widget.AppCompatCheckBox
+        android:id="@+id/cb_item_privacy"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:checked="false"
+        android:text="@string/privacy_item_checkbox" />
 
-        <android.support.v7.widget.AppCompatCheckBox
-            android:id="@+id/cb_item_privacy"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="false" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/privacy_item_checkbox" />
-    </LinearLayout>
-
-    <Button
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_next_fragment"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_marginTop="25dp"
-        android:background="@drawable/shape_button_disable"
+        android:background="@drawable/selector_button_normal"
         android:text="下一步"
+        android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button"
         android:textColor="@color/main_white"
-        android:textSize="17sp" />
+        android:textSize="18sp" />
 
 </LinearLayout>

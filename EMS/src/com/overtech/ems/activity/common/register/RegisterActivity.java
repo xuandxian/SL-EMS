@@ -3,10 +3,18 @@ package com.overtech.ems.activity.common.register;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentManager.BackStackEntry;
+import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
+import android.view.View.OnClickListener;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
@@ -26,7 +34,6 @@ import com.overtech.ems.http.OkHttpClientManager.ResultCallback;
 import com.overtech.ems.utils.ImageUtils;
 import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.Utilities;
-import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.squareup.okhttp.Request;
 
 public class RegisterActivity extends BaseActivity implements
@@ -34,6 +41,9 @@ public class RegisterActivity extends BaseActivity implements
 		RegAddPerInfoFrgClickListener, RegAddPerEduWorkFrgClickListener,
 		RegAddIdCardFrgClickListener, RegAddWorkCerFrgClickListener,
 		RegOthCerFrgListener {
+	private Toolbar toolbar;
+	private ActionBar actionBar;
+	private AppCompatTextView tvTitle;
 	private FragmentManager manager;
 	private RegisterPrivacyItemFragment mPrivacyItemFragment;
 	private RegisterFragment mRegisterFragment;
@@ -45,6 +55,13 @@ public class RegisterActivity extends BaseActivity implements
 	public String mPhoneNo;
 	private RegisterActivity activity;
 	private ArrayList<String> imgs = new ArrayList<String>();
+	private final String PRIVACY = "privacy";
+	private final String PHONE = "phone";
+	private final String INFO = "info";
+	private final String EDU = "educate";
+	private final String IDCARD = "idCard";
+	private final String WORK = "work";
+	private final String OTHER = "other";
 	/**
 	 * 记录上传的图片顺序 默认从身份证开始 0,1
 	 */
@@ -64,8 +81,41 @@ public class RegisterActivity extends BaseActivity implements
 	protected void afterCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		activity = this;
+		initView();
 		if (savedInstanceState == null) {
 			manager = getSupportFragmentManager();
+			manager.addOnBackStackChangedListener(new OnBackStackChangedListener() {
+
+				@Override
+				public void onBackStackChanged() {
+					// TODO Auto-generated method stub
+					Logr.e("fragment 又改变了");
+					if (manager.getBackStackEntryCount() > 0) {
+						BackStackEntry entry = manager
+								.getBackStackEntryAt(manager
+										.getBackStackEntryCount() - 1);
+						if (entry != null) {
+							Logr.e("当前fragment==stack名称==" + entry.getName());
+							if (TextUtils.equals(PHONE, entry.getName())) {
+								tvTitle.setText("注册");
+							} else if (TextUtils.equals(INFO, entry.getName())) {
+								tvTitle.setText("基本信息");
+							} else if (TextUtils.equals(EDU, entry.getName())) {
+								tvTitle.setText("学历/工作信息");
+							} else if (TextUtils.equals(IDCARD, entry.getName())) {
+								tvTitle.setText("身份证确认");
+							} else if (TextUtils.equals(WORK, entry.getName())) {
+								tvTitle.setText("上岗证确认");
+							} else if (TextUtils.equals(OTHER, entry.getName())) {
+								tvTitle.setText("其他信息");
+							}
+						}
+
+					} else {
+						tvTitle.setText("用户协议");
+					}
+				}
+			});
 			FragmentTransaction transaction = manager.beginTransaction();
 			if (mPrivacyItemFragment == null) {
 				mPrivacyItemFragment = new RegisterPrivacyItemFragment();
@@ -81,8 +131,39 @@ public class RegisterActivity extends BaseActivity implements
 			}
 		} else {
 			manager = getSupportFragmentManager();
+			manager.addOnBackStackChangedListener(new OnBackStackChangedListener() {
+
+				@Override
+				public void onBackStackChanged() {
+					// TODO Auto-generated method stub
+					if (manager.getBackStackEntryCount() > 0) {
+						BackStackEntry entry = manager
+								.getBackStackEntryAt(manager
+										.getBackStackEntryCount() - 1);
+						if (entry != null) {
+							Logr.e("当前fragment==stack名称==" + entry.getName());
+							if (TextUtils.equals(PHONE, entry.getName())) {
+								tvTitle.setText("注册");
+							} else if (TextUtils.equals(INFO, entry.getName())) {
+								tvTitle.setText("基本信息");
+							} else if (TextUtils.equals(EDU, entry.getName())) {
+								tvTitle.setText("学历/工作信息");
+							} else if (TextUtils.equals(IDCARD, entry.getName())) {
+								tvTitle.setText("身份证确认");
+							} else if (TextUtils.equals(WORK, entry.getName())) {
+								tvTitle.setText("上岗证确认");
+							} else if (TextUtils.equals(OTHER, entry.getName())) {
+								tvTitle.setText("其他信息");
+							}
+						}
+
+					} else {
+						tvTitle.setText("用户协议");
+					}
+				}
+			});
 			mPrivacyItemFragment = (RegisterPrivacyItemFragment) manager
-					.findFragmentByTag("");
+					.findFragmentByTag("RegisterPrivacyItemFragment");
 			mPrivacyItemFragment.setRegPriItemFrgBtnClickListener(this);
 
 			mRegisterFragment = (RegisterFragment) manager
@@ -109,6 +190,31 @@ public class RegisterActivity extends BaseActivity implements
 					.findFragmentByTag("RegisterOtherCertificateFragment");
 			mOtherCertificateFragment.setRegOthFrgListener(this);
 		}
+		initEvent();
+	}
+
+	private void initEvent() {
+		// TODO Auto-generated method stub
+		toolbar.setNavigationOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				onBackPressed();
+			}
+		});
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
+		tvTitle.setText("用户协议");
+	}
+
+	private void initView() {
+		// TODO Auto-generated method stub
+		toolbar = (Toolbar) findViewById(R.id.toolBar);
+		setSupportActionBar(toolbar);
+		actionBar = getSupportActionBar();
+		tvTitle = (AppCompatTextView) findViewById(R.id.tvTitle);
 	}
 
 	/**
@@ -318,27 +424,24 @@ public class RegisterActivity extends BaseActivity implements
 
 	@Override
 	public void onRegOthCerFrgClick() {
-		Effectstype effect = Effectstype.Shake;
-		dialogBuilder.withTitle("温馨提示").withTitleColor(R.color.main_primary)
-				.withDividerColor("#11000000").withMessage("您确认提交以上信息？")
-				.withMessageColor(R.color.main_primary)
-				.withDialogColor("#FFFFFFFF").isCancelableOnTouchOutside(true)
-				.withDuration(700).withEffect(effect)
-				.withButtonDrawable(R.color.main_white).withButton1Text("取消")
-				.withButton1Color("#DD47BEE9").withButton2Text("确认")
-				.withButton2Color("#DD47BEE9")
-				.setButton1Click(new View.OnClickListener() {
+		alertBuilder.setTitle("温馨提示").setMessage("您确认提交以上信息？")
+				.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
 					@Override
-					public void onClick(View v) {
-						dialogBuilder.dismiss();
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+
 					}
-				}).setButton2Click(new View.OnClickListener() {
+				})
+				.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+
 					@Override
-					public void onClick(View v) {
-						dialogBuilder.dismiss();
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
 						startUpLoading();
 					}
 				}).show();
+
 	}
 
 	@Override
@@ -352,7 +455,7 @@ public class RegisterActivity extends BaseActivity implements
 			transaction.add(R.id.fl_register_container,
 					mOtherCertificateFragment,
 					"RegisterOtherCertificateFragment");
-			transaction.addToBackStack(null);
+			transaction.addToBackStack(OTHER);
 			transaction.commit();
 		} else {
 			transaction.show(mOtherCertificateFragment);
@@ -371,7 +474,7 @@ public class RegisterActivity extends BaseActivity implements
 			transaction.add(R.id.fl_register_container,
 					mWorkCertificateFragment,
 					"RegisterAddWorkCertificateFragment");
-			transaction.addToBackStack(null);
+			transaction.addToBackStack(WORK);
 			transaction.commit();
 		} else {
 			transaction.show(mWorkCertificateFragment);
@@ -389,7 +492,7 @@ public class RegisterActivity extends BaseActivity implements
 		if (!mIdCardFragment.isAdded()) {
 			transaction.add(R.id.fl_register_container, mIdCardFragment,
 					"RegisterAddIdCardFragment");
-			transaction.addToBackStack(null);
+			transaction.addToBackStack(IDCARD);
 			transaction.commit();
 		} else {
 			transaction.show(mIdCardFragment);
@@ -407,7 +510,7 @@ public class RegisterActivity extends BaseActivity implements
 		if (!mPersonEduWorkFragment.isAdded()) {
 			transaction.add(R.id.fl_register_container, mPersonEduWorkFragment,
 					"RegisterAddPersonEduAndWorkFragment");
-			transaction.addToBackStack(null);
+			transaction.addToBackStack(EDU);
 			transaction.commit();
 		} else {
 			transaction.show(mPersonEduWorkFragment);
@@ -426,7 +529,7 @@ public class RegisterActivity extends BaseActivity implements
 		if (!mPersonInfoFragment.isAdded()) {
 			transaction.add(R.id.fl_register_container, mPersonInfoFragment,
 					"RegisterAddPersonInfoFragment");
-			transaction.addToBackStack(null);
+			transaction.addToBackStack(INFO);
 			transaction.commit();
 		} else {
 			transaction.show(mPersonInfoFragment);
@@ -445,7 +548,7 @@ public class RegisterActivity extends BaseActivity implements
 		if (!mRegisterFragment.isAdded()) {
 			transaction.add(R.id.fl_register_container, mRegisterFragment,
 					"RegisterFragment");
-			transaction.addToBackStack(null);
+			transaction.addToBackStack(PHONE);
 			transaction.commit();
 		} else {
 			transaction.show(mRegisterFragment);
@@ -469,20 +572,20 @@ public class RegisterActivity extends BaseActivity implements
 		// transaction.commit();
 		// Logr.e("==RegPriClick=show=");
 		// }
-		// FragmentTransaction transaction = manager.beginTransaction();
-		// if (mPersonInfoFragment == null) {
-		// mPersonInfoFragment = new RegisterAddPersonInfoFragment();
-		// }
-		// mPersonInfoFragment.setRegAddPerInfoFrgClickListener(this);
-		// if(!mPersonInfoFragment.isAdded()){
-		// transaction.add(R.id.fl_register_container,
-		// mPersonInfoFragment,"RegisterAddPersonInfoFragment");
-		// transaction.addToBackStack(null);
-		// transaction.commit();
-		// }else{
-		// transaction.show(mPersonInfoFragment);
-		// transaction.commit();
-		// }
+//		 FragmentTransaction transaction = manager.beginTransaction();
+//		 if (mPersonInfoFragment == null) {
+//		 mPersonInfoFragment = new RegisterAddPersonInfoFragment();
+//		 }
+//		 mPersonInfoFragment.setRegAddPerInfoFrgClickListener(this);
+//		 if(!mPersonInfoFragment.isAdded()){
+//		 transaction.add(R.id.fl_register_container,
+//		 mPersonInfoFragment,"RegisterAddPersonInfoFragment");
+//		 transaction.addToBackStack(null);
+//		 transaction.commit();
+//		 }else{
+//		 transaction.show(mPersonInfoFragment);
+//		 transaction.commit();
+//		 }
 	}
 
 	@Override

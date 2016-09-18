@@ -9,8 +9,8 @@
     <RelativeLayout
         android:id="@+id/rl_register_username"
         android:layout_width="match_parent"
-        android:layout_marginTop="8dp"
-        android:layout_height="56dp" >
+        android:layout_height="56dp"
+        android:layout_marginTop="8dp" >
 
         <com.overtech.ems.widget.EditTextWithDelete
             android:id="@+id/et_login_username"
@@ -53,11 +53,16 @@
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_login"
-        style="@style/btn_title_white_style"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_marginTop="25dp"
         android:background="@drawable/selector_button_normal"
         android:text="登录"
-        android:textAppearance="@style/TextAppearance.AppCompat.Button" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button"
+        android:textColor="@color/main_white"
+        android:textSize="18sp" />
 
     <LinearLayout
         android:layout_width="match_parent"

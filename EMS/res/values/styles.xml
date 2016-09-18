@@ -1,8 +1,8 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
-        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
     <style name="AppBaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
 
@@ -17,15 +17,16 @@
         <item name="colorControlNormal">@android:color/white</item>
         <item name="colorControlActivated">@color/colorPrimary</item>
     </style>
- <!-- Application theme. -->
+
+    <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
-    <!-- nifityDialog type -->
-    <style name="DialogWindowTitle">
-        <item name="android:textSize">22sp</item>
-        <item name="android:textColor">@color/main_white</item>
+    <!-- custom appcompat alertdialog -->
+    <style name="MyCustomAppCompatAlertDialg" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
+        <!-- Used for the buttons -->
+    	<item name="colorAccent">@color/colorPrimary</item>
     </style>
 
     <style name="dialog_tran" parent="android:style/Theme.Dialog">
@@ -175,12 +176,6 @@
     </style>
 
     <!-- spinner -->
-    <style name="spinner_style">
-        <item name="android:background">@drawable/spinner_selector</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:paddingLeft">15dip</item>
-    </style>
     <!-- progress dialog -->
     <style name="CustomDialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>

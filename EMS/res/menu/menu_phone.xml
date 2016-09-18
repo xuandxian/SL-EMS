@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.overtech.ems.activity.parttime.tasklist.QueryTaskListActivity" >
+
+    <item
+        android:id="@+id/menu_phone"
+        android:icon="@drawable/icon_common_phone"
+        android:title="技术支持"
+        app:showAsAction="always"/>
+
+</menu>

@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_main" >
+    android:background="@color/bg_main"
+    android:orientation="vertical" >
 
-    <include
-        android:id="@+id/include_parttime_main"
-        layout="@layout/headview" />
+    <include layout="@layout/layout_toolbar" />
 
     <com.overtech.ems.widget.ReboundScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/include_parttime_main" >
+        android:layout_height="match_parent" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -28,11 +26,13 @@
                 android:paddingRight="15dip"
                 android:paddingTop="8dip" >
 
-                <TextView
-                    style="@style/tv_title_primary_style"
+                <android.support.v7.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:text="头像" />
+                    android:text="头像"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                 <ImageView
                     android:id="@+id/iv_avator"
@@ -49,15 +49,20 @@
                 android:background="@color/main_white"
                 android:padding="15dip" >
 
-                <TextView
-                    style="@style/tv_title_primary_style"
+                <android.support.v7.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:text="ID" />
+                    android:text="ID"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-                <TextView
+                <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/tv_id"
-                    style="@style/tv_list_primary_style"
-                    android:layout_alignParentRight="true" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/black" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -67,15 +72,20 @@
                 android:background="@color/main_white"
                 android:padding="15dip" >
 
-                <TextView
-                    style="@style/tv_title_primary_style"
+                <android.support.v7.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:text="姓名" />
+                    android:text="姓名"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-                <TextView
+                <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/tv_username"
-                    style="@style/tv_list_primary_style"
-                    android:layout_alignParentRight="true" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/black" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -86,10 +96,12 @@
                 android:background="@color/main_white"
                 android:padding="15dip" >
 
-                <TextView
-                    style="@style/tv_title_primary_style"
+                <android.support.v7.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:text="手机号" />
+                    android:text="手机号"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                 <ImageView
                     android:id="@+id/imageView1"
@@ -99,13 +111,15 @@
                     android:layout_centerVertical="true"
                     android:src="@drawable/icon_arrow_right" />
 
-                <TextView
+                <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/tv_personal_phone"
-                    style="@style/tv_list_primary_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignTop="@+id/imageView1"
                     android:layout_toLeftOf="@+id/imageView1"
                     android:text="0000"
-                     />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/black" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -116,10 +130,12 @@
                 android:background="@color/main_white"
                 android:padding="15dip" >
 
-                <TextView
-                    style="@style/tv_title_primary_style"
+                <android.support.v7.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:text="修改密码" />
+                    android:text="修改密码"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                 <ImageView
                     android:id="@+id/imageView"
@@ -138,10 +154,12 @@
                 android:background="@color/main_white"
                 android:padding="15dip" >
 
-                <TextView
-                    style="@style/tv_title_primary_style"
+                <android.support.v7.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:text="上岗证编号" />
+                    android:text="上岗证编号"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                 <ImageView
                     android:id="@+id/iv_anchor"
@@ -151,12 +169,14 @@
                     android:layout_centerVertical="true"
                     android:src="@drawable/icon_arrow_right" />
 
-                <TextView
+                <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/tv_certificate_no"
-                    style="@style/tv_list_primary_style"
-      				android:layout_toLeftOf="@id/iv_anchor"
-      				android:text="dfd"
-                     />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toLeftOf="@id/iv_anchor"
+                    android:text="dfd"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/black" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -166,15 +186,20 @@
                 android:background="@color/main_white"
                 android:padding="15dip" >
 
-                <TextView
-                    style="@style/tv_title_primary_style"
+                <android.support.v7.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:text="注册时间" />
+                    android:text="注册时间"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-                <TextView
+                <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/tv_register_time"
-                    style="@style/tv_list_primary_style"
-                    android:layout_alignParentRight="true" />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@android:color/black" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -184,14 +209,16 @@
                 android:background="@color/main_white"
                 android:padding="15dip" >
 
-                <TextView
+                <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/tv_ratingbar"
-                    style="@style/tv_title_primary_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
-                    android:text="星级" />
+                    android:text="星级"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-                <RatingBar
+                <android.support.v7.widget.AppCompatRatingBar
                     android:id="@+id/ratingBar1"
                     style="@style/CommonRatingBar"
                     android:layout_width="wrap_content"
@@ -210,4 +237,4 @@
         </LinearLayout>
     </com.overtech.ems.widget.ReboundScrollView>
 
-</RelativeLayout>
+</LinearLayout>

@@ -2,11 +2,12 @@ package com.overtech.ems.activity.parttime.personal.others;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
+import android.widget.LinearLayout;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 
@@ -15,10 +16,11 @@ import com.overtech.ems.activity.BaseActivity;
 
 public class PersonalAboutAppActivity extends BaseActivity implements
 		OnClickListener {
-	private TextView mHead;
-	private ImageView mDoBack;
-	private RelativeLayout rl_company_info;
-	private RelativeLayout rl_share;
+	private Toolbar toolbar;
+	private ActionBar actionBar;
+	private AppCompatTextView tvTitle;
+	private LinearLayout llAboutUs;
+	private LinearLayout llShareFriends;
 
 	@Override
 	protected int getLayoutResIds() {
@@ -34,35 +36,40 @@ public class PersonalAboutAppActivity extends BaseActivity implements
 	}
 
 	private void init() {
-		mHead.setText("关于APP");
-		mDoBack.setVisibility(View.VISIBLE);
-		mDoBack.setOnClickListener(new OnClickListener() {
+		tvTitle.setText("关于APP");
+		toolbar.setNavigationOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
+				// TODO Auto-generated method stub
 				finish();
 			}
 		});
-		rl_company_info.setOnClickListener(this);
-		rl_share.setOnClickListener(this);
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
+		llAboutUs.setOnClickListener(this);
+		llShareFriends.setOnClickListener(this);
 	}
 
 	private void findViewById() {
-		mHead = (TextView) findViewById(R.id.tv_headTitle);
-		mDoBack = (ImageView) findViewById(R.id.iv_headBack);
-		rl_company_info = (RelativeLayout) findViewById(R.id.rl_company_info);
-		rl_share = (RelativeLayout) findViewById(R.id.rl_share);
+		toolbar = (Toolbar) findViewById(R.id.toolBar);
+		setSupportActionBar(toolbar);
+		actionBar = getSupportActionBar();
+		tvTitle = (AppCompatTextView) findViewById(R.id.tvTitle);
+		llAboutUs = (LinearLayout) findViewById(R.id.ll_about_us);
+		llShareFriends = (LinearLayout) findViewById(R.id.lL_share_friends);
 	}
 
 	@Override
 	public void onClick(View v) {
 		Intent intent = new Intent();
 		switch (v.getId()) {
-		case R.id.rl_company_info:
+		case R.id.ll_about_us:
 			intent.setClass(this, PersonalAboutCompanyActivity.class);
 			startActivity(intent);
 			break;
-		case R.id.rl_share:
+		case R.id.lL_share_friends:
 			showShare();
 			break;
 		}

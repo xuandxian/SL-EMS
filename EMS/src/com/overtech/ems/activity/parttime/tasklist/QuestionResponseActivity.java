@@ -4,13 +4,14 @@ import java.util.HashMap;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
@@ -22,8 +23,9 @@ import com.overtech.ems.utils.SharedPreferencesKeys;
 
 public class QuestionResponseActivity extends BaseActivity implements
 		OnClickListener {
-	private TextView tvHeadContent;
-	private ImageView ivBack;
+	private Toolbar toolbar;
+	private ActionBar actionBar;
+	private AppCompatTextView tvTitle;
 	private Button btConfirm;
 	private EditText etFeedbackInfo;
 	private String sFeedBackInfo;
@@ -47,7 +49,18 @@ public class QuestionResponseActivity extends BaseActivity implements
 	}
 
 	private void initEvent() {
-		ivBack.setOnClickListener(this);
+		tvTitle.setText("问题反馈");
+		toolbar.setNavigationOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				stackInstance.popActivity(activity);
+			}
+		});
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
 		btConfirm.setOnClickListener(this);
 
 		startProgressDialog("加载中...");
@@ -94,15 +107,15 @@ public class QuestionResponseActivity extends BaseActivity implements
 
 	private void init() {
 		activity = this;
-		tvHeadContent = (TextView) findViewById(R.id.tv_headTitle);
-		ivBack = (ImageView) findViewById(R.id.iv_headBack);
+		stackInstance.pushActivity(activity);
+		toolbar = (Toolbar) findViewById(R.id.toolBar);
+		setSupportActionBar(toolbar);
+		actionBar = getSupportActionBar();
+		tvTitle = (AppCompatTextView) findViewById(R.id.tvTitle);
 		btConfirm = (Button) findViewById(R.id.bt_confirm);
 		etFeedbackInfo = (EditText) findViewById(R.id.et_question_response);
-		tvHeadContent.setText("问题反馈");
-		ivBack.setVisibility(View.VISIBLE);
 		sTaskNo = getIntent().getExtras().getString(Constant.TASKNO);
 		sElevatorNo = getIntent().getExtras().getString(Constant.ELEVATORNO);
-		stackInstance.pushActivity(activity);
 		uid = (String) SharePreferencesUtils.get(activity,
 				SharedPreferencesKeys.UID, "");
 		certificate = (String) SharePreferencesUtils.get(activity,
@@ -112,9 +125,6 @@ public class QuestionResponseActivity extends BaseActivity implements
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.iv_headBack:
-			stackInstance.popActivity(activity);
-			break;
 		case R.id.bt_confirm:
 			sFeedBackInfo = etFeedbackInfo.getText().toString();
 			if (TextUtils.isEmpty(sFeedBackInfo)) {

@@ -32,8 +32,6 @@ public class RegisterAddIdCardFragment extends Fragment implements
 		OnClickListener {
 	private Context mContext;
 	private View view;
-	private TextView mHeadTitle;
-	private ImageView mDoBack;
 	private Button mNext;
 	private ImageView mIdCardFront;
 	private ImageView mIdCardOpposite;
@@ -87,7 +85,6 @@ public class RegisterAddIdCardFragment extends Fragment implements
 		}
 		Logr.e("==fragment==onCreateView=");
 		
-		Logr.e("fragment实例=="+this);
 		view = inflater.inflate(R.layout.fragment_register_add_id_card, null);
 		findViewById(view);
 		init();
@@ -95,17 +92,12 @@ public class RegisterAddIdCardFragment extends Fragment implements
 	}
 
 	private void init() {
-		mHeadTitle.setText("身份证确认");
-		mDoBack.setVisibility(View.VISIBLE);
-		mDoBack.setOnClickListener(this);
 		mIdCardFront.setOnClickListener(this);
 		mIdCardOpposite.setOnClickListener(this);
 		mNext.setOnClickListener(this);
 	}
 
 	private void findViewById(View v) {
-		mHeadTitle = (TextView) v.findViewById(R.id.tv_headTitle);
-		mDoBack = (ImageView) v.findViewById(R.id.iv_headBack);
 		mNext = (Button) v.findViewById(R.id.btn_next_fragment);
 		mIdCardFront = (ImageView) v.findViewById(R.id.iv_idcard_front);
 		mIdCardOpposite = (ImageView) v.findViewById(R.id.iv_idcard_opposite);
@@ -137,9 +129,6 @@ public class RegisterAddIdCardFragment extends Fragment implements
 			break;
 		case R.id.item_popupwindows_cancel:
 			mPopupWindow.dismiss();
-			break;
-		case R.id.iv_headBack:
-			getActivity().onBackPressed();
 			break;
 		case R.id.btn_next_fragment:
 			if (frontUri == null) {

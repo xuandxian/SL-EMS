@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_main" >
+    android:orientation="vertical" >
 
-    <include
-        android:id="@+id/include_phone_change"
-        layout="@layout/headview" />
+    <include layout="@layout/layout_toolbar" />
 
     <RelativeLayout
         android:id="@+id/rl_change_title"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_below="@id/include_phone_change" >
+        android:background="@color/bg_main" >
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -57,23 +55,21 @@
         </LinearLayout>
     </RelativeLayout>
 
-     <ImageView
+    <ImageView
         android:id="@+id/iv_reset_password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/rl_change_title"
-        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="19dp"
         android:src="@drawable/icon_successful" />
 
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/textView1"
         style="@style/tv_list_primary_style"
         android:layout_width="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/iv_reset_password"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="24dp"
         android:gravity="center"
         android:text="恭喜您，手机号更新成功！" />
 
-</RelativeLayout>
+</LinearLayout>

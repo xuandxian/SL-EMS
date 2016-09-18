@@ -17,11 +17,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.PopupMenu.OnMenuItemClickListener;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -55,8 +58,9 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 		OnClickListener {
 	private final int STUB_ID = R.drawable.icon_personal_my;// 此处为了将ImageLoader里面的方法抽出来单独使用，而将里面的字段提出来
 	private final Config DEFAULT_CONFIG = Config.RGB_565;// 同上
-	private TextView mHeadContent;
-	private ImageView mDoBack;
+	private Toolbar toolbar;
+	private ActionBar actionBar;
+	private AppCompatTextView tvTitle;
 	private RelativeLayout mChangePhoneNo;
 	private RelativeLayout mChangePassword;
 	private RelativeLayout mWorkLicense;
@@ -68,7 +72,6 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 	private TextView mCertificateNo;
 	private TextView mRegisterDate;
 	private RatingBar mRatingBar;
-	private AlertDialog.Builder builder;// 上岗证dialog
 	private View workLicenseView;// 上岗证view
 	private AppCompatEditText etWorkLicenseNo;// 上岗证编号
 	private DatePicker dpWorkLicenseDue;// 上岗证到期时间
@@ -180,8 +183,11 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 	}
 
 	private void initViews() {
-		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
-		mDoBack = (ImageView) findViewById(R.id.iv_headBack);
+		toolbar = (Toolbar) findViewById(R.id.toolBar);
+		setSupportActionBar(toolbar);
+		actionBar = getSupportActionBar();
+		tvTitle = (AppCompatTextView) findViewById(R.id.tvTitle);
+
 		mChangePhoneNo = (RelativeLayout) findViewById(R.id.rl_change_phoneNo);
 		mDoExit = (Button) findViewById(R.id.btn_exit);
 		mPhone = (TextView) findViewById(R.id.tv_personal_phone);
@@ -193,7 +199,6 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 		mCertificateNo = (TextView) findViewById(R.id.tv_certificate_no);
 		mRegisterDate = (TextView) findViewById(R.id.tv_register_time);
 		mRatingBar = (RatingBar) findViewById(R.id.ratingBar1);
-		mHeadContent.setText("账号信息");
 		activity = PersonalDeatilsActivity.this;
 		uid = (String) SharePreferencesUtils.get(activity,
 				SharedPreferencesKeys.UID, "");
@@ -202,9 +207,19 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 	}
 
 	private void initEvents() {
-		// 返回键
-		mDoBack.setVisibility(View.VISIBLE);
-		mDoBack.setOnClickListener(this);
+		toolbar.setNavigationOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				stackInstance.popActivity(activity);
+			}
+		});
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
+		tvTitle.setText("账号信息");
+
 		mChangePhoneNo.setOnClickListener(this);
 		mChangePassword.setOnClickListener(this);
 		mWorkLicense.setOnClickListener(this);
@@ -220,9 +235,6 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 			} else {
 				showPopupMenu();
 			}
-			break;
-		case R.id.iv_headBack:
-			stackInstance.popActivity(activity);
 			break;
 		case R.id.rl_change_phoneNo:
 			Intent intent = new Intent(PersonalDeatilsActivity.this,
@@ -316,56 +328,41 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 			btAddNewImg.setOnClickListener(this);
 		}
 		etWorkLicenseNo.setText(mWorkNo);
-		if (builder == null) {
-			builder = new AlertDialog.Builder(activity)
-					.setTitle("更新上岗证书及到期时间")
-					.setView(workLicenseView)
-					.setNegativeButton("取消",
-							new DialogInterface.OnClickListener() {
+		alertBuilder.setTitle("更新上岗证书及到期时间").setView(workLicenseView)
+				.setNegativeButton("取消", null)
+				.setPositiveButton("确认", new DialogInterface.OnClickListener() {
 
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-									// TODO Auto-generated method stub
-								}
-							})
-					.setPositiveButton("确认",
-							new DialogInterface.OnClickListener() {
-
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-									// TODO Auto-generated method stub
-									String worklicenseNo = etWorkLicenseNo
-											.getText().toString().trim();
-									int selectYear = dpWorkLicenseDue.getYear();
-									int selectMonth = dpWorkLicenseDue
-											.getMonth() + 1;// java month start
-															// from 0
-									int selectDay = dpWorkLicenseDue
-											.getDayOfMonth();
-									Logr.e(selectYear + "年" + selectMonth + "月"
-											+ selectDay + "日");
-									if (TextUtils.isEmpty(worklicenseNo)) {
-										Utilities
-												.showToast("上岗证不能为空", activity);
-										return;
-									}
-									startUpload(worklicenseNo, selectYear + "-"
-											+ selectMonth + "-" + selectDay);
-								}
-
-							}).setOnDismissListener(new OnDismissListener() {
-
-						@Override
-						public void onDismiss(DialogInterface dialog) {
-							// TODO Auto-generated method stub
-							((ViewGroup) workLicenseView.getParent())
-									.removeAllViews();// 去除会报异常
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						String worklicenseNo = etWorkLicenseNo.getText()
+								.toString().trim();
+						int selectYear = dpWorkLicenseDue.getYear();
+						int selectMonth = dpWorkLicenseDue.getMonth() + 1;// java
+																			// month
+																			// start
+																			// from
+																			// 0
+						int selectDay = dpWorkLicenseDue.getDayOfMonth();
+						Logr.e(selectYear + "年" + selectMonth + "月" + selectDay
+								+ "日");
+						if (TextUtils.isEmpty(worklicenseNo)) {
+							Utilities.showToast("上岗证不能为空", activity);
+							return;
 						}
-					});
-		}
-		builder.show();
+						startUpload(worklicenseNo, selectYear + "-"
+								+ selectMonth + "-" + selectDay);
+					}
+
+				}).setOnDismissListener(new OnDismissListener() {
+
+					@Override
+					public void onDismiss(DialogInterface dialog) {
+						// TODO Auto-generated method stub
+						((ViewGroup) workLicenseView.getParent())
+								.removeAllViews();// 去除会报异常
+					}
+				}).show();
 
 	}
 
@@ -505,8 +502,7 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 
 	private void exitDialog() {
 		// TODO Auto-generated method stub
-
-		new AlertDialog.Builder(activity).setTitle("退出?")
+		alertBuilder.setTitle("退出?").setView(null)
 				.setPositiveButton("退出", new DialogInterface.OnClickListener() {
 
 					@Override
@@ -514,15 +510,7 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 						// TODO Auto-generated method stub
 						exit();
 					}
-				})
-				.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						// TODO Auto-generated method stub
-
-					}
-				}).show();
+				}).setNegativeButton("取消", null).show();
 	}
 
 	private void exit() {

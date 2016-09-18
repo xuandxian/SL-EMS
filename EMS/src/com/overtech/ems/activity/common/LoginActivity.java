@@ -207,12 +207,12 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			@Override
 			public void bizStIs1Deal() {
 				// TODO Auto-generated method stub
+				stopProgressDialog();
 			}
 
 			@Override
 			public void stopDialog() {
 				// TODO Auto-generated method stub
-				stopProgressDialog();
 			}
 		};
 		conn.sendRequest();

@@ -20,7 +20,9 @@ public class MaintenanceDoneAdapter extends BaseAdapter {
 		this.ctx = ctx;
 		this.data = data;
 	}
-
+	public Map<String,Object> getData(int position){
+		return data==null?null:data.get(position);
+	}
 	@Override
 	public int getCount() {
 		// TODO Auto-generated method stub

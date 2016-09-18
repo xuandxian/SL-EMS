@@ -6,7 +6,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.SwitchCompat;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,9 +17,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
@@ -29,8 +30,9 @@ import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
 
 public class EvaluationActivity extends BaseActivity implements OnClickListener {
-	private TextView tvHeadContent;
-	private ImageView ivBack;
+	private Toolbar toolbar;
+	private ActionBar actionBar;
+	private AppCompatTextView tvTitle;
 	private Button btConfirm;
 	private RadioGroup rgChecked;
 	private EditText etContent;
@@ -61,7 +63,19 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 	}
 
 	private void initEvent() {
-		ivBack.setOnClickListener(this);
+		tvTitle.setText("互相评价");
+		toolbar.setNavigationOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				stackInstance.popActivity(activity);
+			}
+		});
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
+
 		btConfirm.setOnClickListener(this);
 		swParteners.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
@@ -149,14 +163,15 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 	}
 
 	private void init() {
-		tvHeadContent = (TextView) findViewById(R.id.tv_headTitle);
-		ivBack = (ImageView) findViewById(R.id.iv_headBack);
+		toolbar = (Toolbar) findViewById(R.id.toolBar);
+		setSupportActionBar(toolbar);
+		actionBar = getSupportActionBar();
+		tvTitle = (AppCompatTextView) findViewById(R.id.tvTitle);
+
 		swParteners = (SwitchCompat) findViewById(R.id.swPartner);
 		btConfirm = (Button) findViewById(R.id.bt_confirm);
 		rgChecked = (RadioGroup) findViewById(R.id.rg_container);
 		etContent = (EditText) findViewById(R.id.et_evaluation);
-		tvHeadContent.setText("互相评价");
-		ivBack.setVisibility(View.VISIBLE);
 		taskNo = getIntent().getExtras().getString(Constant.TASKNO);
 		activity = this;
 		stackInstance.pushActivity(activity);
@@ -165,9 +180,6 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.iv_headBack:
-			stackInstance.popActivity(activity);
-			break;
 		case R.id.bt_confirm:
 			upLoading();
 			break;

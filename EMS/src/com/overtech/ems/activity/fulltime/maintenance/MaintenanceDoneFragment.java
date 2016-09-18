@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -11,11 +12,15 @@ import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
+import com.overtech.ems.activity.fulltime.activity.MaintenanceDoneDetailActivity;
+import com.overtech.ems.activity.fulltime.adapter.MaintenaceNoneAdapter;
 import com.overtech.ems.activity.fulltime.adapter.MaintenanceDoneAdapter;
 import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.entity.bean.Bean;
@@ -43,8 +48,8 @@ public class MaintenanceDoneFragment extends BaseFragment {
 		uid = ((MainActivity) getActivity()).getUid();
 		certificate = ((MainActivity) getActivity()).getCertificate();
 
-		swipeRefresh.setColorSchemeResources(R.color.material_deep_teal_200,
-				R.color.material_deep_teal_500);
+		swipeRefresh.setColorSchemeResources(R.color.colorPrimary,
+				R.color.colorPrimary30);
 		swipeRefresh.setOnRefreshListener(new OnRefreshListener() {
 
 			@Override
@@ -53,8 +58,27 @@ public class MaintenanceDoneFragment extends BaseFragment {
 				requestLoading();
 			}
 		});
-		startProgressDialog(getResources().getString(
-				R.string.loading_public_default));
+		swipeRefresh.post(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				swipeRefresh.setRefreshing(true);
+			}
+		});
+		listview.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				// TODO Auto-generated method stub
+				Map<String,Object> data=((MaintenanceDoneAdapter)parent.getAdapter()).getData(position);
+				Intent intent =new Intent(activity,MaintenanceDoneDetailActivity.class);
+				intent.putExtra("workorderCode", data.get("workorderCode").toString());
+				startActivity(intent);
+			}
+		});
+		
 		requestLoading();
 		return view;
 	}
@@ -87,6 +111,7 @@ public class MaintenanceDoneFragment extends BaseFragment {
 					adapter = new MaintenanceDoneAdapter(getActivity(),
 							list);
 					listview.setAdapter(adapter);
+					
 				} else {
 					adapter.setData(list);
 					adapter.notifyDataSetChanged();

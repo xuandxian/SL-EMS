@@ -49,6 +49,7 @@ public class CustomProgressDialog extends Dialog {
 	 * 
 	 */
 	public CustomProgressDialog setTitile(String strTitle) {
+		customProgressDialog.setTitile(strTitle);
 		return customProgressDialog;
 	}
 

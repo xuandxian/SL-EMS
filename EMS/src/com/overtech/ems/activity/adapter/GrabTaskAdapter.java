@@ -6,6 +6,7 @@ import java.util.Map;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -19,21 +20,21 @@ import com.overtech.ems.activity.MyApplication;
 
 public class GrabTaskAdapter extends BaseAdapter {
 
-	private List<Map<String,Object>> list;
+	private List<Map<String, Object>> list;
 	private Context context;
 	private LatLng mLocation;
 	private double curLatitude;
 	private double curLongitude;
 
-	public List<Map<String,Object>> getData() {
+	public List<Map<String, Object>> getData() {
 		return list;
 	}
 
-	public void setData(List<Map<String,Object>> data) {
+	public void setData(List<Map<String, Object>> data) {
 		this.list = data;
 	}
 
-	public GrabTaskAdapter(List<Map<String,Object>> list, Context context) {
+	public GrabTaskAdapter(List<Map<String, Object>> list, Context context) {
 		super();
 		this.list = list;
 		this.context = context;
@@ -41,6 +42,7 @@ public class GrabTaskAdapter extends BaseAdapter {
 		curLongitude = ((MyApplication) context.getApplicationContext()).longitude;
 		mLocation = new LatLng(curLatitude, curLongitude);
 	}
+
 	@Override
 	public int getCount() {
 		return list == null ? 0 : list.size();
@@ -59,14 +61,16 @@ public class GrabTaskAdapter extends BaseAdapter {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		if (convertView == null) {
-			convertView = View.inflate(context,
-					R.layout.item_list_parttime_hot, null);
+			convertView = LayoutInflater.from(context).inflate(
+					R.layout.item_list_parttime_hot, parent, false);
 			new ViewHolder(convertView);
 		}
 		ViewHolder holder = (ViewHolder) convertView.getTag();
-		Map<String,Object> data = list.get(position);
+		Map<String, Object> data = list.get(position);
 		holder.tv_name.setText(data.get("taskPackageName").toString());
-		holder.elevtorNum.setText((int)Double.parseDouble(data.get("elevatorAmounts").toString())+"");
+		holder.elevtorNum.setText((int) Double.parseDouble(data.get(
+				"elevatorAmounts").toString())
+				+ "");
 		holder.addressName.setText(data.get("maintenanceAddress").toString());
 		String latitude = data.get("latitude").toString();
 		String longitude = data.get("longitude").toString();
@@ -76,8 +80,9 @@ public class GrabTaskAdapter extends BaseAdapter {
 		} else {
 			NumberFormat numberFormat = NumberFormat.getNumberInstance();// 保留两位小数
 			numberFormat.setMaximumFractionDigits(2);
-			LatLng latlng = new LatLng(Double.valueOf(data.get("latitude").toString()),
-					Double.valueOf(data.get("longitude").toString()));
+			LatLng latlng = new LatLng(Double.valueOf(data.get("latitude")
+					.toString()), Double.valueOf(data.get("longitude")
+					.toString()));
 			if (curLatitude == 0 || curLongitude == 0) {
 				holder.distance.setText("未获取到位置信息");
 			} else {

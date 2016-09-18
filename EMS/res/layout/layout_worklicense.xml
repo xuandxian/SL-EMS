@@ -44,7 +44,7 @@
         android:layout_height="wrap_content"
         android:text="添加上岗证照片："
         android:textAppearance="?android:attr/textAppearanceButton"
-        android:textColor="@color/material_deep_teal_200"
+        android:textColor="@color/colorPrimary"
          />
 
     <android.support.v7.widget.GridLayout

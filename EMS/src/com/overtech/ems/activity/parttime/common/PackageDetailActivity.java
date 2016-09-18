@@ -8,19 +8,24 @@ import java.util.Set;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.Toolbar.OnMenuItemClickListener;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import cn.jpush.android.api.JPushInterface;
 import cn.jpush.android.api.TagAliasCallback;
 
@@ -37,7 +42,6 @@ import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
-import com.overtech.ems.widget.dialogeffects.Effectstype;
 
 /*
  *任务包详情(抢单模块/附近模块)
@@ -47,19 +51,18 @@ import com.overtech.ems.widget.dialogeffects.Effectstype;
  */
 
 public class PackageDetailActivity extends BaseActivity {
+	private Toolbar toolbar;
+	private ActionBar actionBar;
+	private AppCompatTextView tvTitle;
+	private AppCompatTextView tvSubTitle;
 	private ListView mPackageDetailListView;
 	private PackageDetailAdapter adapter;
 	private List<Map<String, Object>> list;
 	private Button mGrabTaskBtn;
-	private Effectstype effect;
-	private ImageView mDoBack;
 	private String mCommunityName;
-	private TextView mHeadTitleCommunity;
-	private ImageView mRightContent;
 	private String mTaskNo;
 	private String mLongitude; // 经度
 	private String mLatitude; // 纬度
-	private TextView mHeadTitleTaskNo;
 	private int totalPrice;
 	private String uid;
 	private String certificate;
@@ -136,14 +139,21 @@ public class PackageDetailActivity extends BaseActivity {
 	}
 
 	private void findViewById() {
+		toolbar = (Toolbar) findViewById(R.id.toolBar2);
+		setSupportActionBar(toolbar);
+		actionBar = getSupportActionBar();
+		tvTitle = (AppCompatTextView) findViewById(R.id.tvTitle);
+		tvSubTitle = (AppCompatTextView) findViewById(R.id.tvSubTitle);
+
 		mPackageDetailListView = (ListView) findViewById(R.id.grab_task_package_listview);
 		mGrabTaskBtn = (Button) findViewById(R.id.btn_grab_task_package);
-		mHeadTitleCommunity = (TextView) findViewById(R.id.tv_headTitle_community_name);
-		mHeadTitleTaskNo = (TextView) findViewById(R.id.tv_headTitle_taskno);
-		mDoBack = (ImageView) findViewById(R.id.iv_grab_headBack);
-		mRightContent = (ImageView) findViewById(R.id.iv_navicate_right);
-		mRightContent.setBackgroundResource(R.drawable.icon_map);
-		mRightContent.setVisibility(View.VISIBLE);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// TODO Auto-generated method stub
+		getMenuInflater().inflate(R.menu.menu_map, menu);
+		return true;
 	}
 
 	private void getDataByTaskNo() {
@@ -165,7 +175,7 @@ public class PackageDetailActivity extends BaseActivity {
 				// TODO Auto-generated method stub
 				mCommunityName = response.body.get("taskPackageName")
 						.toString();
-				mHeadTitleCommunity.setText(mCommunityName);
+				tvTitle.setText(mCommunityName);
 				mLongitude = response.body.get("longitude").toString();
 				mLatitude = response.body.get("latitude").toString();
 				list = (List<Map<String, Object>>) response.body.get("data");
@@ -210,7 +220,41 @@ public class PackageDetailActivity extends BaseActivity {
 	}
 
 	private void init() {
-		mHeadTitleTaskNo.setText(mTaskNo);
+		toolbar.setNavigationOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				stackInstance.popActivity(activity);
+			}
+		});
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
+		tvSubTitle.setText(mTaskNo);
+		toolbar.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+			@Override
+			public boolean onMenuItemClick(MenuItem menuItem) {
+				// TODO Auto-generated method stub
+				switch (menuItem.getItemId()) {
+				case R.id.menu_map:
+					Intent intent = new Intent(PackageDetailActivity.this,
+							ShowCommunityLocationActivity.class);
+					Bundle bundle = new Bundle();
+					bundle.putString("CommunityName", mCommunityName);
+					bundle.putString("Longitude", mLongitude);
+					bundle.putString("Latitude", mLatitude);
+					intent.putExtras(bundle);
+					startActivity(intent);
+					break;
+
+				default:
+					break;
+				}
+				return true;
+			}
+		});
 		mPackageDetailListView
 				.setOnItemClickListener(new OnItemClickListener() {
 
@@ -235,48 +279,25 @@ public class PackageDetailActivity extends BaseActivity {
 				showDialog();
 			}
 		});
-		mDoBack.setOnClickListener(new OnClickListener() {
 
-			@Override
-			public void onClick(View arg0) {
-				stackInstance.popActivity(activity);
-			}
-		});
-		mRightContent.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				Intent intent = new Intent(PackageDetailActivity.this,
-						ShowCommunityLocationActivity.class);
-				Bundle bundle = new Bundle();
-				bundle.putString("CommunityName", mCommunityName);
-				bundle.putString("Longitude", mLongitude);
-				bundle.putString("Latitude", mLatitude);
-				intent.putExtras(bundle);
-				startActivity(intent);
-			}
-		});
 	}
 
 	private void showDialog() {
-		effect = Effectstype.Slideright;
-		dialogBuilder.withTitle("温馨提示").withTitleColor(R.color.main_primary)
-				.withDividerColor("#11000000").withMessage("您确认要接此单？")
-				.withMessageColor(R.color.main_primary)
-				.withDialogColor("#FFFFFFFF").isCancelableOnTouchOutside(true)
-				.withDuration(700).withEffect(effect)
-				.withButtonDrawable(R.color.main_white).withButton1Text("取消")
-				.withButton1Color("#DD47BEE9").withButton2Text("确认")
-				.withButton2Color("#DD47BEE9")
-				.setButton1Click(new View.OnClickListener() {
+		alertBuilder.setTitle("温馨提示")
+				.setMessage("您确认要接此单？")
+				.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+
 					@Override
-					public void onClick(View v) {
-						dialogBuilder.dismiss();
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+
 					}
-				}).setButton2Click(new View.OnClickListener() {
+				})
+				.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+
 					@Override
-					public void onClick(View v) {
-						dialogBuilder.dismiss();
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
 						startProgressDialog(getResources().getString(
 								R.string.loading_public_grabing));
 						HashMap<String, Object> body = new HashMap<String, Object>();
@@ -341,7 +362,7 @@ public class PackageDetailActivity extends BaseActivity {
 						};
 						conn.sendRequest();
 					}
-				});
+				}).show();
 
 	}
 

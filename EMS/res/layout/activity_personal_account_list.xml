@@ -5,7 +5,7 @@
     android:background="@color/bg_main"
     android:orientation="vertical" >
 
-    <include layout="@layout/headview" />
+    <include layout="@layout/layout_toolbar" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -13,7 +13,7 @@
         android:background="#ffffff"
         android:orientation="horizontal" >
 
-        <TextView
+        <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tv_account_donet"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -21,7 +21,7 @@
             android:background="@drawable/horizontal_line"
             android:gravity="center"
             android:text="已结算"
-            android:textColor="#666666"
+            android:textColor="@color/colorPrimary"
             android:textSize="15sp" />
 
         <View
@@ -29,16 +29,21 @@
             android:layout_height="match_parent"
             android:background="@color/main_line" />
 
-        <TextView
+        <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tv_account_none"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
             android:text="未结算"
-            android:textColor="#666666"
+            android:textColor="@color/primary_text_default_material_light"
             android:textSize="15sp" />
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="?android:attr/listDivider" />
 
     <ListView
         android:id="@+id/lv_personal_account_list"

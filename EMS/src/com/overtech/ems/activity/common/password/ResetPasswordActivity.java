@@ -7,12 +7,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
@@ -31,8 +32,9 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 public class ResetPasswordActivity extends BaseActivity {
-	private TextView mHeadContent;
-	private ImageView mHeadBack;
+	private Toolbar toolbar;
+	private ActionBar actionBar;
+	private AppCompatTextView tvTitle;
 	private Button mResetPassword;
 	private EditTextWithDelete mPasswordNew;
 	private EditTextWithDelete mPasswordConfirm;
@@ -90,8 +92,10 @@ public class ResetPasswordActivity extends BaseActivity {
 	private void findViewById() {
 		context = ResetPasswordActivity.this;
 		mPhoneNo = getIntent().getStringExtra("mPhoneNo");
-		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
-		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
+		toolbar = (Toolbar) findViewById(R.id.toolBar);
+		setSupportActionBar(toolbar);
+		actionBar = getSupportActionBar();
+		tvTitle = (AppCompatTextView) findViewById(R.id.tvTitle);
 		mResetPassword = (Button) findViewById(R.id.btn_reset_password);
 		mPasswordNew = (EditTextWithDelete) findViewById(R.id.et_reset_password_new);
 		mPasswordConfirm = (EditTextWithDelete) findViewById(R.id.et_reset_password_confirm);
@@ -99,8 +103,18 @@ public class ResetPasswordActivity extends BaseActivity {
 
 	private void init() {
 		activity = ResetPasswordActivity.this;
-		mHeadContent.setText("密码重置");
-		mHeadBack.setVisibility(View.VISIBLE);
+		toolbar.setNavigationOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				stackInstance.popActivity(activity);
+			}
+		});
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
+		tvTitle.setText("密码重置");
 		mResetPassword.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -160,13 +174,6 @@ public class ResetPasswordActivity extends BaseActivity {
 						Utilities.showToast("密码长度为6—18位", context);
 					}
 				}
-			}
-		});
-		mHeadBack.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				stackInstance.popActivity(activity);
 			}
 		});
 	}

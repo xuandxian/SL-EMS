@@ -5,14 +5,15 @@ import java.util.List;
 import java.util.Map;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -35,8 +36,9 @@ import com.squareup.okhttp.Response;
 
 public class PersonalAccountListActivity extends BaseActivity implements
 		OnClickListener {
-	private ImageView mDoBack;
-	private TextView mHeadContent;
+	private Toolbar toolbar;
+	private ActionBar actionBar;
+	private AppCompatTextView tvTitle;
 	private ListView mPersonalAccountListView;
 	private TextView mHasCount;
 	private TextView mNoCount;
@@ -160,8 +162,11 @@ public class PersonalAccountListActivity extends BaseActivity implements
 	}
 
 	private void findViewById() {
-		mDoBack = (ImageView) findViewById(R.id.iv_headBack);
-		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
+		toolbar = (Toolbar) findViewById(R.id.toolBar);
+		setSupportActionBar(toolbar);
+		actionBar = getSupportActionBar();
+		tvTitle = (AppCompatTextView) findViewById(R.id.tvTitle);
+
 		mPersonalAccountListView = (ListView) findViewById(R.id.lv_personal_account_list);
 		mHasCount = (TextView) findViewById(R.id.tv_account_donet);
 		mNoCount = (TextView) findViewById(R.id.tv_account_none);
@@ -173,9 +178,19 @@ public class PersonalAccountListActivity extends BaseActivity implements
 				SharedPreferencesKeys.CERTIFICATED, "");
 		uid = (String) SharePreferencesUtils.get(activity,
 				SharedPreferencesKeys.UID, "");
-		mDoBack.setVisibility(View.VISIBLE);
-		mHeadContent.setText("我的账单");
-		mDoBack.setOnClickListener(this);
+		tvTitle.setText("我的账单");
+		toolbar.setNavigationOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				stackInstance.popActivity(activity);
+			}
+		});
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
+
 		mHasCount.setOnClickListener(this);
 		mNoCount.setOnClickListener(this);
 	}
@@ -183,24 +198,22 @@ public class PersonalAccountListActivity extends BaseActivity implements
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
-		case R.id.iv_headBack:
-			stackInstance.popActivity(activity);
-			break;
 		case R.id.tv_account_donet:
 			startLoading(HASCOUNT);
 			mHasCount.setBackgroundResource(R.drawable.horizontal_line);
 			mNoCount.setBackgroundResource(R.color.main_white);
-			mHasCount.setTextColor(Color.rgb(0, 163, 233));
+			mHasCount.setTextColor(getResources()
+					.getColor(R.color.colorPrimary));
 			mNoCount.setTextColor(getResources().getColor(
-					R.color.main_secondary));
+					R.color.primary_text_default_material_light));
 			break;
 		case R.id.tv_account_none:
 			startLoading(NOCOUNT);
 			mHasCount.setBackgroundResource(R.color.main_white);
 			mNoCount.setBackgroundResource(R.drawable.horizontal_line);
 			mHasCount.setTextColor(getResources().getColor(
-					R.color.main_secondary));
-			mNoCount.setTextColor(Color.rgb(0, 163, 233));
+					R.color.primary_text_default_material_light));
+			mNoCount.setTextColor(getResources().getColor(R.color.colorPrimary));
 			break;
 		default:
 			break;

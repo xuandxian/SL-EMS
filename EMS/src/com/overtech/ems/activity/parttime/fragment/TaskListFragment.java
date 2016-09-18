@@ -63,16 +63,16 @@ public class TaskListFragment extends BaseFragment implements OnClickListener {
 	public void onHiddenChanged(boolean hidden) {
 		// TODO Auto-generated method stub
 		super.onHiddenChanged(hidden);
-		Logr.e("TaskListFragment=="+hidden);
-		if(!hidden){
-			if(mTaskNone.isVisible()){
+		Logr.e("TaskListFragment==" + hidden);
+		if (!hidden) {
+			if (mTaskNone.isVisible()) {
 				mTaskNone.onRefresh();
-			}else if(mTaskDone.isVisible()){
+			} else if (mTaskDone.isVisible()) {
 				mTaskDone.onRefresh();
 			}
 		}
 	}
-	
+
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -83,8 +83,9 @@ public class TaskListFragment extends BaseFragment implements OnClickListener {
 			mTaskNone = (TaskListNoneFragment) currentFragment;
 			mNone.setBackgroundResource(R.drawable.horizontal_line);
 			mDonet.setBackgroundResource(R.color.main_white);
-			mNone.setTextColor(Color.rgb(0, 185, 239));
-			mDonet.setTextColor(getResources().getColor(R.color.main_secondary));
+			mNone.setTextColor(getResources().getColor(R.color.colorPrimary));
+			mDonet.setTextColor(getResources().getColor(
+					R.color.primary_text_default_material_light));
 			break;
 		case R.id.tv_tasklist_donet:
 			currentFragment = FragmentUtils.switchFragment(
@@ -94,7 +95,8 @@ public class TaskListFragment extends BaseFragment implements OnClickListener {
 			mNone.setBackgroundResource(R.color.main_white);
 			mDonet.setBackgroundResource(R.drawable.horizontal_line);
 			mNone.setTextColor(getResources().getColor(R.color.main_secondary));
-			mDonet.setTextColor(Color.rgb(0, 185, 239));
+			mDonet.setTextColor(getResources().getColor(
+					R.color.primary_text_default_material_light));
 			break;
 		}
 	}

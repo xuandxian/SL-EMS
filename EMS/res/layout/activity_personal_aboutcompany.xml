@@ -2,16 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical" >
 
-    <include layout="@layout/headview" />
+    <include layout="@layout/layout_toolbar" />
 
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="17sp"
-        android:layout_margin="5dp"
-        android:text="@string/companyDescription" />
+        android:layout_margin="8dp"
+        android:text="@string/companyDescription"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
 </LinearLayout>

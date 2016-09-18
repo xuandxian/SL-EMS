@@ -10,13 +10,17 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.Toolbar.OnMenuItemClickListener;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -47,9 +51,10 @@ import com.overtech.ems.utils.Utilities;
 
 public class QueryTaskListActivity extends BaseActivity implements
 		OnClickListener {
-	private TextView mHeadContent;
+	private Toolbar toolbar;
+	private ActionBar actionBar;
+	private AppCompatTextView tvTitle;
 	private AppCompatTextView tvElevatorAddress;
-	private ImageView ivBack, ivPhone;
 	private double mLatitude;
 	private double mLongitude;
 	private LatLng mCurrentLocation;
@@ -98,22 +103,55 @@ public class QueryTaskListActivity extends BaseActivity implements
 		mLatitude = ((MyApplication) getApplication()).latitude;
 		mLongitude = ((MyApplication) getApplication()).longitude;
 		mCurrentLocation = new LatLng(mLatitude, mLongitude);
+
 		mListFooterView = LayoutInflater.from(activity).inflate(
 				R.layout.listview_footer_done, null);
 		btDone = (Button) mListFooterView.findViewById(R.id.btn_tasklist_done);
-		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
 		tvElevatorAddress = (AppCompatTextView) findViewById(R.id.tv_elevator_address);
-		ivBack = (ImageView) findViewById(R.id.iv_headBack);
-		ivPhone = (ImageView) findViewById(R.id.iv_headTitleRight);
 		tvTaskDetailsTitle = (TextView) findViewById(R.id.tv_task_detail_title);
-		mHeadContent.setText("维保清单");
-		ivBack.setVisibility(View.VISIBLE);
-		ivPhone.setVisibility(View.VISIBLE);
+		toolbar = (Toolbar) findViewById(R.id.toolBar);
+		setSupportActionBar(toolbar);
+		actionBar = getSupportActionBar();
+		tvTitle = (AppCompatTextView) findViewById(R.id.tvTitle);
 		lvTaskList = (ListView) findViewById(R.id.lv_task_details);
 		lvTaskList.addFooterView(mListFooterView);
-		ivBack.setOnClickListener(this);
-		ivPhone.setOnClickListener(this);
+
+		tvTitle.setText("维保清单");
+		toolbar.setNavigationOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				stackInstance.popActivity(activity);
+			}
+		});
+		toolbar.setOnMenuItemClickListener(new OnMenuItemClickListener() {
+
+			@Override
+			public boolean onMenuItemClick(MenuItem menuItem) {
+				// TODO Auto-generated method stub
+				switch (menuItem.getItemId()) {
+				case R.id.menu_phone:
+					showDialog(TYPE1, "您确认要拨打技术支持电话？");
+					break;
+
+				default:
+					break;
+				}
+				return true;
+			}
+		});
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
 		btDone.setOnClickListener(this);
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// TODO Auto-generated method stub
+		toolbar.inflateMenu(R.menu.menu_phone);
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	private void getExtraDataAndValidate() {// 验证维保数据，要求
@@ -392,14 +430,8 @@ public class QueryTaskListActivity extends BaseActivity implements
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.iv_headBack:
-			stackInstance.popActivity(activity);
-			break;
 		case R.id.btn_tasklist_done:
 			showDialog(TYPE2, "请确认维保工作已完成，并将电梯监测设备按钮调至正常状态!!!");
-			break;
-		case R.id.iv_headTitleRight:
-			showDialog(TYPE1, "您确认要拨打技术支持电话？");
 			break;
 		default:
 			break;

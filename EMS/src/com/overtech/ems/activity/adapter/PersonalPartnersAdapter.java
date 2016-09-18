@@ -106,9 +106,9 @@ public class PersonalPartnersAdapter extends Adapter<ViewHolder> {
 	@Override
 	public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		// TODO Auto-generated method stub
-		if (viewType == NORMAL) {
+		if (viewType == FOOTER) {
 			FooterViewHolder fvh = new FooterViewHolder(LayoutInflater
-					.from(ctx).inflate(android.R.layout.simple_spinner_item,
+					.from(ctx).inflate(R.layout.item_footer_textview,
 							parent, false));
 			return fvh;
 		} else {
@@ -144,7 +144,7 @@ public class PersonalPartnersAdapter extends Adapter<ViewHolder> {
 		public FooterViewHolder(View v) {
 			super(v);
 			// TODO Auto-generated constructor stub
-			tvMessage = (TextView) v.findViewById(android.R.id.text1);
+			tvMessage = (TextView) v.findViewById(R.id.text);
 		}
 
 	}

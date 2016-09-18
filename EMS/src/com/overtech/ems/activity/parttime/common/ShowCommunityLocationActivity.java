@@ -2,11 +2,11 @@ package com.overtech.ems.activity.parttime.common;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.Window;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BaiduMap.OnMarkerClickListener;
@@ -25,8 +25,9 @@ import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.utils.Logr;
 
 public class ShowCommunityLocationActivity extends BaseActivity {
-	private TextView mHeadContent;
-	private ImageView mHeadBack;
+	private Toolbar toolbar;
+	private ActionBar actionBar;
+	private AppCompatTextView tvTitle;
 	private MapView mMapView = null;
 	private BaiduMap mBaiduMap = null;
 	private LatLng communituLocation;
@@ -54,8 +55,10 @@ public class ShowCommunityLocationActivity extends BaseActivity {
 	}
 
 	private void findViewById() {
-		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
-		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
+		toolbar = (Toolbar) findViewById(R.id.toolBar);
+		setSupportActionBar(toolbar);
+		actionBar = getSupportActionBar();
+		tvTitle = (AppCompatTextView) findViewById(R.id.tvTitle);
 	}
 
 	private void getExtrasData() {
@@ -79,8 +82,18 @@ public class ShowCommunityLocationActivity extends BaseActivity {
 
 	private void initView() {
 		context = ShowCommunityLocationActivity.this;
-		mHeadContent.setText("小区位置");
-		mHeadBack.setVisibility(View.VISIBLE);
+		tvTitle.setText("小区位置");
+		toolbar.setNavigationOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				finish();
+			}
+		});
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
 		setCommunityMarker(communituLocation);
 		mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener() {
 
@@ -91,13 +104,6 @@ public class ShowCommunityLocationActivity extends BaseActivity {
 				mInfoWindow = new InfoWindow(infoWindow, communituLocation, -40);
 				mBaiduMap.showInfoWindow(mInfoWindow);
 				return true;
-			}
-		});
-		mHeadBack.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				finish();
 			}
 		});
 	}

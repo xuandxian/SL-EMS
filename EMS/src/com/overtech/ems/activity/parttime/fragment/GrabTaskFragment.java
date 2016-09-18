@@ -11,12 +11,14 @@ import java.util.Set;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +35,7 @@ import cn.jpush.android.api.TagAliasCallback;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
 import com.overtech.ems.activity.adapter.GrabTaskAdapter;
+import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.activity.parttime.common.PackageDetailActivity;
 import com.overtech.ems.activity.parttime.grabtask.GrabTaskDoFilterActivity;
@@ -43,6 +46,7 @@ import com.overtech.ems.http.HttpConnector;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.AppUtils;
 import com.overtech.ems.utils.Logr;
+import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView;
 import com.overtech.ems.widget.swiperefreshlistview.PullToRefreshSwipeMenuListView.IXListViewListener;
@@ -61,9 +65,8 @@ public class GrabTaskFragment extends BaseFragment implements
 	private LinearLayout mPartTimeDoFifter;
 	private TextView mKeyWordSearch;
 	private View mHeadView;
-	private Effectstype effect;
 	private GrabTaskAdapter mAdapter;
-	private List<Map<String,Object>> list;
+	private List<Map<String, Object>> list;
 	private TextView mHeadTitle;
 	private LinearLayout mNoResultPage;
 	private LinearLayout mNoWifi;
@@ -88,7 +91,7 @@ public class GrabTaskFragment extends BaseFragment implements
 			stopProgressDialog();
 		};
 	};
-	
+
 	private final TagAliasCallback mTagsCallback = new TagAliasCallback() {
 
 		@Override
@@ -135,7 +138,6 @@ public class GrabTaskFragment extends BaseFragment implements
 		initView(view);
 		initEvent();
 		onRefresh();
-		Log.e("GrabTaskFragment", "onCretateView");
 
 		return view;
 	}
@@ -166,12 +168,13 @@ public class GrabTaskFragment extends BaseFragment implements
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				Map<String,Object> data = (Map<String,Object>) parent
+				Map<String, Object> data = (Map<String, Object>) parent
 						.getItemAtPosition(position);
 				Intent intent = new Intent(mActivity,
 						PackageDetailActivity.class);
 				Bundle bundle = new Bundle();
-				bundle.putString("CommunityName", data.get("taskPackageName").toString());
+				bundle.putString("CommunityName", data.get("taskPackageName")
+						.toString());
 				bundle.putString("TaskNo", data.get("taskNo").toString());
 				bundle.putString("Longitude", data.get("longitude").toString());
 				bundle.putString("Latitude", data.get("latitude").toString());
@@ -212,12 +215,12 @@ public class GrabTaskFragment extends BaseFragment implements
 			@Override
 			public void create(SwipeMenu menu) {
 				SwipeMenuItem openItem = new SwipeMenuItem(mActivity);
-				openItem.setBackground(new ColorDrawable(Color.rgb(0xFF, 0x3A,
-						0x30)));
-				openItem.setWidth(dp2px(90));
+				openItem.setBackground(R.drawable.abc_popup_background_mtrl_mult);
+				openItem.setWidth(Utilities.dp2px(mActivity, 120));
 				openItem.setTitle("抢");
 				openItem.setTitleSize(18);
-				openItem.setTitleColor(Color.WHITE);
+				openItem.setTitleColor(getResources().getColor(
+						R.color.colorPrimary));
 				menu.addMenuItem(openItem);
 			}
 		};
@@ -237,7 +240,6 @@ public class GrabTaskFragment extends BaseFragment implements
 				.findViewById(R.id.et_do_parttime_search);
 	}
 
-
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -255,10 +257,12 @@ public class GrabTaskFragment extends BaseFragment implements
 			onRefresh();
 		}
 	}
-	private void keyWord(String keyWord){
-		HashMap<String,Object> body=new HashMap<String,Object>();
+
+	private void keyWord(String keyWord) {
+		HashMap<String, Object> body = new HashMap<String, Object>();
 		body.put("mKeyWord", keyWord);
-		HttpConnector<Bean> conn=new HttpConnector<Bean>(20020,uid,certificate,body) {
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20020, uid,
+				certificate, body) {
 
 			@Override
 			public Context getContext() {
@@ -319,11 +323,13 @@ public class GrabTaskFragment extends BaseFragment implements
 		};
 		conn.sendRequest();
 	}
-	private void filter(String filterTime,String filterZone){
-		HashMap<String,Object> body=new HashMap<String,Object>();
+
+	private void filter(String filterTime, String filterZone) {
+		HashMap<String, Object> body = new HashMap<String, Object>();
 		body.put(Constant.FILTERTIME, filterTime);
 		body.put(Constant.FILTERZONE, filterZone);
-		HttpConnector<Bean> conn=new HttpConnector<Bean>(20022,uid,certificate,body) {
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20022, uid,
+				certificate, body) {
 
 			@Override
 			public Context getContext() {
@@ -382,12 +388,14 @@ public class GrabTaskFragment extends BaseFragment implements
 		};
 		conn.sendRequest();
 	}
-	private void grabTask(String taskNo){
+
+	private void grabTask(String taskNo) {
 		startProgressDialog(getResources().getString(
 				R.string.loading_public_grabing));
-		HashMap<String,Object> body=new HashMap<String,Object>();
+		HashMap<String, Object> body = new HashMap<String, Object>();
 		body.put("taskNo", taskNo);
-		HttpConnector<Bean> conn=new HttpConnector<Bean>(20023,uid,certificate,body) {
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20023, uid,
+				certificate, body) {
 
 			@Override
 			public Context getContext() {
@@ -398,6 +406,30 @@ public class GrabTaskFragment extends BaseFragment implements
 			@Override
 			public void bizSuccess(Bean response) {
 				// TODO Auto-generated method stub
+				String status = response.body.get("status").toString();
+				if (TextUtils.equals(status, "0")) {// 重复抢单
+					Utilities.showToast(response.msg, activity);
+					onRefresh();
+				} else if (TextUtils.equals(status, "1")) {// 抢单成功，等待第二个人抢
+					Utilities.showToast(response.msg, activity);
+					onRefresh();
+					loadNotDoneTask();
+				} else if (TextUtils.equals(status, "2")) {// 抢单成功，到任务单中查看
+					Utilities.showToast(response.msg, activity);
+					onRefresh();
+					loadNotDoneTask();
+				} else if (TextUtils.equals(status, "3")) {// 差一点抢到
+					Utilities.showToast(response.msg, activity);
+					onRefresh();
+				} else if (TextUtils.equals(status, "4")) {// 维保日期内的电梯已经超过10台
+					Utilities.showToast(response.msg, activity);
+					onRefresh();
+				} else {
+					Utilities.showToast(response.msg, activity);
+					Intent intent = new Intent(getActivity(),
+							LoginActivity.class);
+					startActivity(intent);
+				}
 			}
 
 			@Override
@@ -418,11 +450,12 @@ public class GrabTaskFragment extends BaseFragment implements
 		};
 		conn.sendRequest();
 	}
+
 	@Override
 	public void onRefresh() {
-		HashMap<String,Object> body=new HashMap<String,Object>();
-		body.put("mKeyWord", "0");
-		HttpConnector<Bean> conn=new HttpConnector<Bean>(20020,uid,certificate,body) {
+		
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20020, uid,
+				certificate, null) {
 
 			@Override
 			public Context getContext() {
@@ -480,7 +513,7 @@ public class GrabTaskFragment extends BaseFragment implements
 			}
 		};
 		conn.sendRequest();
-//		mSwipeListView.setFooterViewInvisible();
+		// mSwipeListView.setFooterViewInvisible();
 	}
 
 	@Override
@@ -508,34 +541,26 @@ public class GrabTaskFragment extends BaseFragment implements
 	}
 
 	private void showDialog(final int position) {
-		effect = Effectstype.Slideright;
-		dialogBuilder.withTitle("温馨提示").withTitleColor(R.color.main_primary)
-				.withDividerColor("#11000000").withMessage("您确认要接此单？")
-				.withMessageColor(R.color.main_primary)
-				.withDialogColor("#FFFFFFFF").isCancelableOnTouchOutside(true)
-				.withDuration(700).withEffect(effect)
-				.withButtonDrawable(R.color.main_white).withButton1Text("取消")
-				.withButton1Color("#DD47BEE9").withButton2Text("确认")
-				.withButton2Color("#DD47BEE9")
-				.setButton1Click(new View.OnClickListener() {
+		alertBuilder.setTitle("温馨提示").setMessage("您确认要接此单？")
+				.setNegativeButton("取消", null)
+				.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+
 					@Override
-					public void onClick(View v) {
-						dialogBuilder.dismiss();
-					}
-				}).setButton2Click(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						dialogBuilder.dismiss();
-						String mTaskNo = list.get(position).get("taskNo").toString();
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
+						String mTaskNo = list.get(position).get("taskNo")
+								.toString();
 						grabTask(mTaskNo);
 					}
 				}).show();
 	}
+
 	/**
 	 * 加载未完成的任务单
 	 */
 	private void loadNotDoneTask() {
-		HttpConnector<Bean> conn=new HttpConnector<Bean>(20050,uid,certificate,null){
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20050, uid,
+				certificate, null) {
 
 			@Override
 			public Context getContext() {
@@ -560,21 +585,21 @@ public class GrabTaskFragment extends BaseFragment implements
 			@Override
 			public void bizFailed() {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void bizStIs1Deal() {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void stopDialog() {
 				// TODO Auto-generated method stub
-				
+
 			}
-			
+
 		};
 		conn.sendRequest();
 	}

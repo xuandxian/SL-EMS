@@ -3,9 +3,9 @@ package com.overtech.ems.activity.common.password;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.Toolbar;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
@@ -13,8 +13,9 @@ import com.overtech.ems.activity.common.LoginActivity;
 import com.overtech.ems.utils.Utilities;
 
 public class ResetPasswordSuccessActivity extends BaseActivity {
-	private TextView mHeadContent;
-	private ImageView mHeadBack;
+	private Toolbar toolbar;
+	private ActionBar actionBar;
+	private AppCompatTextView tvTitle;
 
 	@Override
 	protected int getLayoutResIds() {
@@ -30,13 +31,17 @@ public class ResetPasswordSuccessActivity extends BaseActivity {
 	}
 
 	private void findViewById() {
-		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
-		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
+		toolbar = (Toolbar) findViewById(R.id.toolBar);
+		setSupportActionBar(toolbar);
+		actionBar = getSupportActionBar();
+		tvTitle = (AppCompatTextView) findViewById(R.id.tvTitle);
 	}
 
 	private void init() {
-		mHeadContent.setText("密码重置");
-		mHeadBack.setVisibility(View.VISIBLE);
+		actionBar.setDisplayShowHomeEnabled(false);
+		actionBar.setDisplayShowTitleEnabled(false);
+		actionBar.setDisplayHomeAsUpEnabled(false);
+		tvTitle.setText("密码重置");
 		Utilities.showToast("2秒后跳转到登录", this);
 		new Handler().postDelayed(new Runnable() {
 			@Override

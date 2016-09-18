@@ -27,10 +27,10 @@
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
-    <!-- nifityDialog type -->
-    <style name="DialogWindowTitle">
-        <item name="android:textSize">22sp</item>
-        <item name="android:textColor">@color/main_white</item>
+    <!-- custom appcompat alertdialog -->
+    <style name="MyCustomAppCompatAlertDialg" parent="@style/Theme.AppCompat.Light.Dialog.Alert">
+        <!-- Used for the buttons -->
+    	<item name="colorAccent">@color/colorPrimary</item>
     </style>
 
     <style name="dialog_tran" parent="android:style/Theme.Dialog">
@@ -179,13 +179,6 @@
         <item name="android:layout_marginRight">16dp</item>
     </style>
 
-    <!-- spinner -->
-    <style name="spinner_style">
-        <item name="android:background">@drawable/spinner_selector</item>
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:paddingLeft">15dip</item>
-    </style>
     <!-- progress dialog -->
     <style name="CustomDialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>

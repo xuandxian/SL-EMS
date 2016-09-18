@@ -3,6 +3,9 @@ package com.overtech.ems.activity.common.register;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ExpandableListView;
@@ -23,8 +26,9 @@ import com.overtech.ems.utils.Utilities;
 import com.squareup.okhttp.Request;
 
 public class SelectCityActivity extends BaseActivity {
-	private ImageView ivBack;
-	private TextView title;
+	private Toolbar toolbar;
+	private ActionBar actionBar;
+	private AppCompatTextView tvTitle;
 	private SelectCityActivity activity;
 	private ExpandableListView elvCitys;
 	private SelectCityAdapter adapter;
@@ -42,8 +46,10 @@ public class SelectCityActivity extends BaseActivity {
 	@Override
 	protected void afterCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		ivBack = (ImageView) findViewById(R.id.iv_headBack);
-		title = (TextView) findViewById(R.id.tv_headTitle);
+		toolbar=(Toolbar) findViewById(R.id.toolBar);
+		setSupportActionBar(toolbar);
+		actionBar=getSupportActionBar();
+		tvTitle=(AppCompatTextView) findViewById(R.id.tvTitle);
 		elvCitys = (ExpandableListView) findViewById(R.id.elv_citys);
 		activity = this;
 		initEvent();
@@ -52,16 +58,18 @@ public class SelectCityActivity extends BaseActivity {
 
 	private void initEvent() {
 		// TODO Auto-generated method stub
-		title.setText("城市选择");
-		ivBack.setVisibility(View.VISIBLE);
-		ivBack.setOnClickListener(new OnClickListener() {
-
+		tvTitle.setText("城市选择");
+		toolbar.setNavigationOnClickListener(new OnClickListener() {
+			
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				finish();
 			}
 		});
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
 		// elvCitys.setOnGroupClickListener(new OnGroupClickListener() {
 		//
 		// @Override

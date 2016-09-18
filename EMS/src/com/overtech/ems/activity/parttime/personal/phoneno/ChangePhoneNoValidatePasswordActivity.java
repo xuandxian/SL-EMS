@@ -6,12 +6,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
@@ -40,8 +41,9 @@ import com.squareup.okhttp.Response;
  */
 public class ChangePhoneNoValidatePasswordActivity extends BaseActivity
 		implements OnClickListener {
-	private TextView mHeadContent;
-	private ImageView mDoBack;
+	private Toolbar toolbar;
+	private ActionBar actionBar;
+	private AppCompatTextView tvTitle;
 	private Button mNextContent;
 	private String mPhoneNo, flag;
 	private EditTextWithDelete mPhone;
@@ -123,19 +125,31 @@ public class ChangePhoneNoValidatePasswordActivity extends BaseActivity
 	}
 
 	private void initEvent() {
-		mDoBack.setVisibility(View.VISIBLE);
-		mDoBack.setOnClickListener(this);
+		toolbar.setNavigationOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				stackInstance.popActivity(activity);
+			}
+		});
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
 		mNextContent.setOnClickListener(this);
 	}
 
 	private void initView() {
-		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
+		toolbar = (Toolbar) findViewById(R.id.toolBar);
+		setSupportActionBar(toolbar);
+		actionBar = getSupportActionBar();
+		tvTitle = (AppCompatTextView) findViewById(R.id.tvTitle);
+
 		if (TextUtils.equals(CHANGEPHONE, flag)) {
-			mHeadContent.setText("更换手机号");
+			tvTitle.setText("更换手机号");
 		} else if (TextUtils.equals(RESETPASSWORD, flag)) {
-			mHeadContent.setText("修改密码");
+			tvTitle.setText("修改密码");
 		}
-		mDoBack = (ImageView) findViewById(R.id.iv_headBack);
 		mNextContent = (Button) findViewById(R.id.btn_next);
 		mPhone = (EditTextWithDelete) findViewById(R.id.et_phone);
 		mPhone.setHint(mPhoneNo);
@@ -145,9 +159,6 @@ public class ChangePhoneNoValidatePasswordActivity extends BaseActivity
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.iv_headBack:
-			stackInstance.popActivity(activity);
-			break;
 		case R.id.btn_next:
 			String phoneNo = mPhone.getHint().toString().trim();
 			String password = mPassword.getText().toString().trim();

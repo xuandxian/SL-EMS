@@ -8,9 +8,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -32,8 +34,9 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 public class PersonalChargeBackListActivity extends BaseActivity {
-	private ImageView mDoBack;
-	private TextView mHeadTitle;
+	private Toolbar toolbar;
+	private ActionBar actionBar;
+	private AppCompatTextView tvTitle;
 	private ListView mChargeback;
 	private TextView tvNoData;
 	private List<Map<String, Object>> list;
@@ -106,14 +109,19 @@ public class PersonalChargeBackListActivity extends BaseActivity {
 				SharedPreferencesKeys.CERTIFICATED, "");
 		uid = (String) SharePreferencesUtils.get(activity,
 				SharedPreferencesKeys.UID, "");
-		mDoBack.setVisibility(View.VISIBLE);
-		mDoBack.setOnClickListener(new OnClickListener() {
+
+		tvTitle.setText("退单记录");
+		toolbar.setNavigationOnClickListener(new OnClickListener() {
+
 			@Override
 			public void onClick(View v) {
+				// TODO Auto-generated method stub
 				stackInstance.popActivity(activity);
 			}
 		});
-		mHeadTitle.setText("退单记录");
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
 		startLoading();
 	}
 
@@ -154,8 +162,10 @@ public class PersonalChargeBackListActivity extends BaseActivity {
 	}
 
 	private void initView() {
-		mDoBack = (ImageView) findViewById(R.id.iv_headBack);
-		mHeadTitle = (TextView) findViewById(R.id.tv_headTitle);
+		toolbar = (Toolbar) findViewById(R.id.toolBar);
+		setSupportActionBar(toolbar);
+		actionBar = getSupportActionBar();
+		tvTitle = (AppCompatTextView) findViewById(R.id.tvTitle);
 		mChargeback = (ListView) findViewById(R.id.lv_cancle_task_record);
 		tvNoData = (TextView) findViewById(R.id.tv_no_data);
 	}

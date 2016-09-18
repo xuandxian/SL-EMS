@@ -1,6 +1,9 @@
 package com.overtech.ems.activity.parttime.personal.others;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -10,8 +13,9 @@ import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 
 public class PersonalAboutCompanyActivity extends BaseActivity {
-	private TextView mHeadContent;
-	private ImageView mDoBack;
+	private Toolbar toolbar;
+	private ActionBar actionBar;
+	private AppCompatTextView tvTitle;
 
 	@Override
 	protected int getLayoutResIds() {
@@ -22,16 +26,22 @@ public class PersonalAboutCompanyActivity extends BaseActivity {
 	@Override
 	protected void afterCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		mDoBack = (ImageView) findViewById(R.id.iv_headBack);
-		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
-		mHeadContent.setText("关于我们");
-		mDoBack.setVisibility(View.VISIBLE);
-		mDoBack.setOnClickListener(new OnClickListener() {
+		toolbar = (Toolbar) findViewById(R.id.toolBar);
+		setSupportActionBar(toolbar);
+		actionBar = getSupportActionBar();
+		tvTitle = (AppCompatTextView) findViewById(R.id.tvTitle);
+
+		toolbar.setNavigationOnClickListener(new OnClickListener() {
 
 			@Override
-			public void onClick(View arg0) {
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
 				finish();
 			}
 		});
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
+		tvTitle.setText("关于我们");
 	}
 }

@@ -14,6 +14,7 @@ import android.content.DialogInterface.OnDismissListener;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -24,18 +25,17 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
-import android.widget.EditText;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.adapter.ElevatorBrandAdapter;
+import com.overtech.ems.entity.bean.ZoneBean.Zone;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
 import com.overtech.ems.widget.popwindow.DimPopupWindow;
@@ -44,16 +44,9 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment implements
 		OnClickListener {
 	private View view;
 	private Context mContext;
-	private TextView mHeadTitle;
-	private ImageView mDoBack;
 	private Button mNext;
-	private ImageView mCalendar;
-	private RelativeLayout mElevatorBrand;
-	/**
-	 * 入行时间
-	 * */
-	private EditText mEnterWorkTime;
-	private TextView mElevator;
+	private AppCompatTextView tvElevatorBrand;
+	private AppCompatTextView tvEnterTime;
 	private Spinner mEdu;
 	private EditTextWithDelete mCurrWork;
 	private DimPopupWindow mPopupWindow;
@@ -120,12 +113,9 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment implements
 	}
 
 	private void init() {
-		mDoBack.setOnClickListener(this);
 		mNext.setOnClickListener(this);
-		mElevator.setOnClickListener(this);
-		mCalendar.setOnClickListener(this);
-		mDoBack.setVisibility(View.VISIBLE);
-		mHeadTitle.setText("学历/工作信息");
+		tvEnterTime.setOnClickListener(this);
+		tvElevatorBrand.setOnClickListener(this);
 	}
 
 	// 记录选择的时间
@@ -139,8 +129,8 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment implements
 					new DatePickerDialog.OnDateSetListener() {
 						public void onDateSet(DatePicker dp, int year,
 								int month, int dayOfMonth) {
-							mEnterWorkTime.setText(year + "-" + (month + 1)
-									+ "-" + dayOfMonth);
+							tvEnterTime.setText(year + "-" + (month + 1) + "-"
+									+ dayOfMonth);
 							selYear = year;
 							selMonth = month + 1;
 							selDay = dayOfMonth;
@@ -210,9 +200,9 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment implements
 				}
 			}
 			if (TextUtils.isEmpty(mCheckedMessage)) {
-				mElevator.setText("电梯品牌");
+				tvElevatorBrand.setText("电梯品牌");
 			} else {
-				mElevator.setText(mCheckedMessage.toString());
+				tvElevatorBrand.setText(mCheckedMessage.toString());
 			}
 		}
 	}
@@ -265,26 +255,26 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment implements
 				}
 			});
 		}
-		mPopupWindow.showAtLocation(mElevatorBrand, Gravity.CENTER, 0, 0);
+		mPopupWindow.showAtLocation(tvElevatorBrand, Gravity.CENTER, 0, 0);
 
 	}
 
 	private void findViewById(View v) {
 		c = Calendar.getInstance();
-		mHeadTitle = (TextView) v.findViewById(R.id.tv_headTitle);
-		mDoBack = (ImageView) v.findViewById(R.id.iv_headBack);
 		mNext = (Button) v.findViewById(R.id.btn_next_fragment);
 		mEdu = (Spinner) v.findViewById(R.id.sp_add_education);
 		mCurrWork = (EditTextWithDelete) v
 				.findViewById(R.id.et_register_add_name);
-		mCalendar = (ImageView) v.findViewById(R.id.imageView1);
-		mEnterWorkTime = (EditText) v
-				.findViewById(R.id.et_register_add_id_card);
-		mElevatorBrand = (RelativeLayout) v
-				.findViewById(R.id.rl_register_add_info_4);
-		mElevator = (TextView) v.findViewById(R.id.tv_elevator_message);
+		tvEnterTime = (AppCompatTextView) v.findViewById(R.id.tv_enter_time);
+		tvElevatorBrand = (AppCompatTextView) v
+				.findViewById(R.id.tv_elevator_message);
 		mWorkTime = (TextView) v.findViewById(R.id.et_register_add_workno);
 
+		ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+				android.R.layout.simple_spinner_item, getResources()
+						.getStringArray(R.array.education));
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		mEdu.setAdapter(adapter);
 		mEdu.setOnItemSelectedListener(new OnItemSelectedListener() {
 
 			@Override
@@ -307,12 +297,10 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment implements
 		case R.id.tv_elevator_message:
 			showPopupWindow();
 			break;
-		case R.id.imageView1:
+		case R.id.tv_enter_time:
 			showDialog();
 			break;
-		case R.id.iv_headBack:
-			getActivity().onBackPressed();
-			break;
+
 		case R.id.btn_next_fragment:
 			if (eduLevel.equals("学历")) {
 				Utilities.showToast("你还没有选择学历", mContext);
@@ -323,12 +311,12 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment implements
 				Utilities.showToast("工作单位不能为空", mContext);
 				return;
 			}
-			enterTime = mEnterWorkTime.getText().toString().trim();
+			enterTime = tvEnterTime.getText().toString().trim();
 			if (TextUtils.isEmpty(enterTime)) {
 				Utilities.showToast("入行时间不能为空", mContext);
 				return;
 			}
-			elevatorBrand = mElevator.getText().toString().trim();
+			elevatorBrand = tvElevatorBrand.getText().toString().trim();
 			if (elevatorBrand.equals("电梯品牌")) {
 				Utilities.showToast("您还没有选择电梯品牌", mContext);
 				return;

@@ -3,17 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp"
-     >
+    android:padding="16dp" >
 
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/tv_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:text="groupdefault"
-        android:textSize="18sp" 
-        android:textColor="@color/material_deep_teal_500"
-        />
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/colorPrimary"
+        android:textSize="18sp" />
 
 </LinearLayout>

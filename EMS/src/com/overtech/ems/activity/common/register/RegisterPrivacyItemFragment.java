@@ -9,16 +9,12 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
 
 public class RegisterPrivacyItemFragment extends BaseFragment implements
 		OnClickListener {
-	private TextView mTitle;
-	private ImageView mBack;
 	private CheckBox privacyCheckBox;
 	private Button mNext;
 	private RegPriItemFrgBtnClickListener listener;
@@ -28,7 +24,7 @@ public class RegisterPrivacyItemFragment extends BaseFragment implements
 			Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		View view = inflater.inflate(R.layout.fragment_register_privacy_item,
-				null);
+				container,false);
 		findViewById(view);
 		init();
 		return view;
@@ -36,9 +32,6 @@ public class RegisterPrivacyItemFragment extends BaseFragment implements
 
 	private void init() {
 		// TODO Auto-generated method stub
-		mTitle.setText("用户协议");
-		mBack.setVisibility(View.VISIBLE);
-		mBack.setOnClickListener(this);
 		mNext.setOnClickListener(this);
 		privacyCheckBox
 				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
@@ -48,7 +41,7 @@ public class RegisterPrivacyItemFragment extends BaseFragment implements
 							boolean arg1) {
 						// TODO Auto-generated method stub
 						if (arg1) {
-							mNext.setBackgroundResource(R.drawable.shape_button_visiable);
+							mNext.setBackgroundResource(R.drawable.selector_button_normal);
 						} else {
 							mNext.setBackgroundResource(R.drawable.shape_button_disable);
 						}
@@ -58,8 +51,6 @@ public class RegisterPrivacyItemFragment extends BaseFragment implements
 
 	private void findViewById(View view) {
 		// TODO Auto-generated method stub
-		mTitle = (TextView) view.findViewById(R.id.tv_headTitle);
-		mBack = (ImageView) view.findViewById(R.id.iv_headBack);
 		privacyCheckBox = (CheckBox) view.findViewById(R.id.cb_item_privacy);
 		mNext = (Button) view.findViewById(R.id.btn_next_fragment);
 	}
@@ -77,9 +68,6 @@ public class RegisterPrivacyItemFragment extends BaseFragment implements
 	public void onClick(View arg0) {
 		// TODO Auto-generated method stub
 		switch (arg0.getId()) {
-		case R.id.iv_headBack:
-			getActivity().onBackPressed();
-			break;
 		case R.id.btn_next_fragment:
 			if (privacyCheckBox.isChecked()) {
 				if (listener != null) {

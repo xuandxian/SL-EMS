@@ -8,9 +8,8 @@ import java.util.Set;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -39,7 +38,6 @@ import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.AppUtils;
 import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.Utilities;
-import com.overtech.ems.widget.dialogeffects.Effectstype;
 import com.overtech.ems.widget.swipemenu.SwipeMenu;
 import com.overtech.ems.widget.swipemenu.SwipeMenuCreator;
 import com.overtech.ems.widget.swipemenu.SwipeMenuItem;
@@ -53,7 +51,6 @@ public class NearByListFragment extends BaseFragment {
 	private SwipeMenuCreator creator;
 	private TextView tvNoData;
 	private Activity mActivity;
-	private Effectstype effect;
 	private List<Map<String, Object>> list;
 	private LatLng myLocation;
 	private GrabTaskAdapter mAdapter;
@@ -173,7 +170,7 @@ public class NearByListFragment extends BaseFragment {
 			@Override
 			public void stopDialog() {
 				// TODO Auto-generated method stub
-				
+
 			}
 		};
 		conn.sendRequest();
@@ -203,12 +200,12 @@ public class NearByListFragment extends BaseFragment {
 			@Override
 			public void create(SwipeMenu menu) {
 				SwipeMenuItem openItem = new SwipeMenuItem(mActivity);
-				openItem.setBackground(new ColorDrawable(Color.rgb(0xFF, 0x3A,
-						0x30)));
-				openItem.setWidth(dp2px(90));
+				openItem.setBackground(R.drawable.abc_popup_background_mtrl_mult);
+				openItem.setWidth(Utilities.dp2px(mActivity, 120));
 				openItem.setTitle("抢");
 				openItem.setTitleSize(18);
-				openItem.setTitleColor(Color.WHITE);
+				openItem.setTitleColor(getResources().getColor(
+						R.color.colorPrimary));
 				menu.addMenuItem(openItem);
 			}
 		};
@@ -244,24 +241,13 @@ public class NearByListFragment extends BaseFragment {
 	}
 
 	private void showDialog(final int position) {
-		effect = Effectstype.Slideright;
-		dialogBuilder.withTitle("温馨提示").withTitleColor(R.color.main_primary)
-				.withDividerColor("#11000000").withMessage("您确认要接此单？")
-				.withMessageColor(R.color.main_primary)
-				.withDialogColor("#FFFFFFFF").isCancelableOnTouchOutside(true)
-				.withDuration(700).withEffect(effect)
-				.withButtonDrawable(R.color.main_white).withButton1Text("取消")
-				.withButton1Color("#DD47BEE9").withButton2Text("确认")
-				.withButton2Color("#DD47BEE9")
-				.setButton1Click(new View.OnClickListener() {
+		alertBuilder.setTitle("温馨提示").setMessage("您确认要接此单？")
+				.setNegativeButton("取消", null)
+				.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+
 					@Override
-					public void onClick(View v) {
-						dialogBuilder.dismiss();
-					}
-				}).setButton2Click(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						dialogBuilder.dismiss();
+					public void onClick(DialogInterface dialog, int which) {
+						// TODO Auto-generated method stub
 						String mTaskNo = list.get(position).get("taskNo")
 								.toString();
 						grabTask(mTaskNo);
@@ -331,13 +317,12 @@ public class NearByListFragment extends BaseFragment {
 		conn.sendRequest();
 	}
 
-	
-
 	/**
 	 * 加载未完成的任务单
 	 */
 	private void loadNotDoneTask() {
-		HttpConnector<Bean> conn=new HttpConnector<Bean>(20050,uid,certificate,null) {
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20050, uid,
+				certificate, null) {
 
 			@Override
 			public Context getContext() {
@@ -362,19 +347,19 @@ public class NearByListFragment extends BaseFragment {
 			@Override
 			public void bizFailed() {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void bizStIs1Deal() {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void stopDialog() {
 				// TODO Auto-generated method stub
-				
+
 			}
 		};
 		conn.sendRequest();

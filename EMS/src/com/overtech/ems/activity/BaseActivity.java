@@ -51,8 +51,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 	public ProgressDialog dialog;
 
-	public NiftyDialogBuilder dialogBuilder;
-
 	public StackManager stackInstance;
 
 	private InputMethodManager imm;
@@ -76,7 +74,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 			parentView.setFitsSystemWindows(true);
 		}
 		fragmentManager = getSupportFragmentManager();
-		dialogBuilder = NiftyDialogBuilder.getInstance(this);
 		// sharePreferencesUtils=SharePreferencesUtils.getInstance();
 		httpEngine = HttpEngine.getInstance();
 		imageLoader = ImageLoader.getInstance();
@@ -99,7 +96,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 			gson = new Gson();
 		}
 		if (alertBuilder == null) {
-			alertBuilder = new AlertDialog.Builder(this).setCancelable(false);
+			alertBuilder = new AlertDialog.Builder(this,
+					R.style.MyCustomAppCompatAlertDialg).setCancelable(false);
 		}
 		afterCreate(savedInstanceState);
 	}
@@ -107,11 +105,12 @@ public abstract class BaseActivity extends AppCompatActivity {
 	@TargetApi(Build.VERSION_CODES.LOLLIPOP)
 	private void setStatusBar() {
 		// TODO Auto-generated method stub
-		if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.LOLLIPOP){
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
 			Window window = getWindow();
 			window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
 			window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-			window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
+			window.setStatusBarColor(ContextCompat.getColor(this,
+					R.color.colorPrimary));
 		}
 	}
 
@@ -150,6 +149,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 		} else {
 			if (progressDialog == null) {
 				progressDialog = CustomProgressDialog.createDialog(this);
+				progressDialog.setCanceledOnTouchOutside(false);
 			}
 			progressDialog.setMessage(content);
 			progressDialog.show();

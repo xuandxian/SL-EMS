@@ -3,7 +3,11 @@ package com.overtech.ems.activity.parttime.personal.phoneno;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -18,8 +22,9 @@ import com.overtech.ems.activity.common.LoginActivity;
  *
  */
 public class ChangePhoneNoSuccessActivity extends BaseActivity {
-	private TextView mHeadContent;
-	private ImageView mDoBack;
+	private Toolbar toolbar;
+	private ActionBar actionBar;
+	private AppCompatTextView tvTitle;
 	private ChangePhoneNoSuccessActivity activity;
 
 	@Override
@@ -36,10 +41,15 @@ public class ChangePhoneNoSuccessActivity extends BaseActivity {
 	}
 
 	private void initView() {
-		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
-		mDoBack = (ImageView) findViewById(R.id.iv_headBack);
-		mHeadContent.setText("更换成功");
-		mDoBack.setVisibility(View.VISIBLE);
+		toolbar = (Toolbar) findViewById(R.id.toolBar);
+		setSupportActionBar(toolbar);
+		actionBar = getSupportActionBar();
+		tvTitle = (AppCompatTextView) findViewById(R.id.tvTitle);
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
+		tvTitle.setText("更换成功");
+		
 		new Handler().postDelayed(new Runnable() {
 
 			@Override

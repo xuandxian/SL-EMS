@@ -15,6 +15,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,6 +62,10 @@ public class TaskListNoneFragment extends BaseFragment implements
 	private List<Map<String, Object>> list;
 	private LinearLayout mNoPage;
 	private Button reLoad;
+	/**
+	 * 记录年检提醒状态，如果出现之后点击确认后就不再提醒了
+	 */
+	private boolean hasShowAsNotification;
 	private String mTaskNo;
 	private String loginName;
 	private int mPosition;
@@ -213,7 +218,7 @@ public class TaskListNoneFragment extends BaseFragment implements
 				Intent intent = new Intent(mActivity,
 						TaskListPackageDetailActivity.class);
 				intent.putExtra(Constant.TASKNO, data.get("taskNo").toString());
-				if(data.get("isAs")!=null){
+				if (data.get("isAs") != null) {
 					intent.putExtra("isAs", data.get("isAs").toString());
 				}
 				startActivityForResult(intent, REQUESTCODE);
@@ -233,20 +238,22 @@ public class TaskListNoneFragment extends BaseFragment implements
 			@Override
 			public void create(SwipeMenu menu) {
 				SwipeMenuItem navicateItem = new SwipeMenuItem(mActivity);
-				navicateItem.setBackground(new ColorDrawable(Color.rgb(0xFF,
-						0x9D, 0x00)));
-				navicateItem.setWidth(dp2px(90));
+				navicateItem
+						.setBackground(R.drawable.abc_popup_background_mtrl_mult);
+				navicateItem.setWidth(Utilities.dp2px(mActivity, 120));
 				navicateItem.setTitle("导航");
 				navicateItem.setTitleSize(18);
-				navicateItem.setTitleColor(Color.WHITE);
+				navicateItem.setTitleColor(getResources().getColor(
+						R.color.colorPrimary));
 				menu.addMenuItem(navicateItem);
 				SwipeMenuItem deleteItem = new SwipeMenuItem(mActivity);
-				deleteItem.setBackground(new ColorDrawable(Color.rgb(0xFF,
-						0x3A, 0x30)));
-				deleteItem.setWidth(dp2px(90));
+				deleteItem
+						.setBackground(R.drawable.abc_popup_background_mtrl_mult);
+				deleteItem.setWidth(Utilities.dp2px(mActivity, 120));
 				deleteItem.setTitle("退单");
 				deleteItem.setTitleSize(18);
-				deleteItem.setTitleColor(Color.WHITE);
+				deleteItem.setTitleColor(getResources().getColor(
+						R.color.colorPrimary30));
 				menu.addMenuItem(deleteItem);
 			}
 		};
@@ -284,32 +291,12 @@ public class TaskListNoneFragment extends BaseFragment implements
 					Utilities.showToast(response.msg, mActivity);
 					return;
 				} else if (time.equals("1")) {// 退单时间距离维保时间在72小时内，退单会影响星级评定
-					alertBuilder.setMessage(response.msg);
+					Utilities.showToast(response.msg, mActivity);
 				} else {
-					alertBuilder.setMessage("您确认要退单？");// 退单时间距离维保时间72小时外
+					// 退单时间距离维保时间72小时外
+					dealChargeBackTask();
 				}
-				alertBuilder
-						.setTitle("温馨提示")
-						.setNegativeButton("取消",
-								new DialogInterface.OnClickListener() {
 
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										// TODO Auto-generated method stub
-
-									}
-								})
-						.setPositiveButton("确认",
-								new DialogInterface.OnClickListener() {
-
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										// TODO Auto-generated method stub
-										dealChargeBackTask();
-									}
-								}).show();
 			}
 
 			@Override
@@ -446,33 +433,33 @@ public class TaskListNoneFragment extends BaseFragment implements
 						adapter.setData(list);
 						adapter.notifyDataSetChanged();
 					}
-					/*
-					 * for (Map<String, Object> map : list) { String isAs =
-					 * map.get("isAs").toString(); if (TextUtils.equals(isAs,
-					 * "1")) {// 年检包 alertBuilder .setTitle("温馨提示")
-					 * .setMessage("发现你有需要年检的任务单，请按时年检") .setNegativeButton(
-					 * "取消", new DialogInterface.OnClickListener() {
-					 * 
-					 * @Override public void onClick( DialogInterface dialog,
-					 * int which) { // TODO Auto-generated // method stub
-					 * 
-					 * } }) .setPositiveButton( "确认", new
-					 * DialogInterface.OnClickListener() {
-					 * 
-					 * @Override public void onClick( DialogInterface dialog,
-					 * int which) { // TODO Auto-generated // method stub
-					 * 
-					 * } }).show(); } else {// 维保包
-					 * 
-					 * } }
-					 */
+
+					for (Map<String, Object> map : list) {
+						String isAs = map.get("isAs").toString();
+						if (TextUtils.equals(isAs, "1")&&!hasShowAsNotification) {// 年检包
+							alertBuilder.setTitle("温馨提示")
+									.setMessage("发现你有需要年检的任务单，请按时年检")
+									.setNegativeButton("取消", null)
+									.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+										
+										@Override
+										public void onClick(DialogInterface dialog, int which) {
+											// TODO Auto-generated method stub
+											hasShowAsNotification=true;
+										}
+									}).show();
+						} else {// 维保包
+
+						}
+					}
+
 				}
 			}
 
 			@Override
 			public void bizFailed() {
 				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
@@ -544,7 +531,7 @@ public class TaskListNoneFragment extends BaseFragment implements
 			@Override
 			public void stopDialog() {
 				// TODO Auto-generated method stub
-				
+
 			}
 		};
 		conn.sendRequest();

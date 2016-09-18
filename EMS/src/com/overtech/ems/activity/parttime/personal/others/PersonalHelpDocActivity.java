@@ -2,18 +2,21 @@ package com.overtech.ems.activity.parttime.personal.others;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
+
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.adapter.PersonalHelpDocAdapter;
 
 public class PersonalHelpDocActivity extends BaseActivity {
-	private ImageView mDoBack;
-	private TextView mHeadTitle;
+	private Toolbar toolbar;
+	private ActionBar actionBar;
+	private AppCompatTextView tvTitle;
 	private ListView mHelpDoc;
 	private Context context;
 	private PersonalHelpDocAdapter adapter;
@@ -33,21 +36,28 @@ public class PersonalHelpDocActivity extends BaseActivity {
 	}
 
 	private void init() {
-		mDoBack.setVisibility(View.VISIBLE);
-		mDoBack.setOnClickListener(new OnClickListener() {
+
+		toolbar.setNavigationOnClickListener(new OnClickListener() {
+
 			@Override
 			public void onClick(View v) {
+				// TODO Auto-generated method stub
 				finish();
 			}
 		});
-		mHeadTitle.setText("帮助文档");
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
+		tvTitle.setText("帮助文档");
 		adapter = new PersonalHelpDocAdapter(context);
 		mHelpDoc.setAdapter(adapter);
 	}
 
 	private void initView() {
-		mDoBack = (ImageView) findViewById(R.id.iv_headBack);
-		mHeadTitle = (TextView) findViewById(R.id.tv_headTitle);
+		toolbar = (Toolbar) findViewById(R.id.toolBar);
+		setSupportActionBar(toolbar);
+		actionBar = getSupportActionBar();
+		tvTitle = (AppCompatTextView) findViewById(R.id.tvTitle);
 		mHelpDoc = (ListView) findViewById(R.id.lv_help_doc);
 	}
 

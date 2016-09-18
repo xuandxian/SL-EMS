@@ -2,70 +2,81 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/main_white" >
+    android:layout_margin="16dp"
+    android:background="@drawable/abc_popup_background_mtrl_mult" >
 
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/tv_name"
-        style="@style/tv_list_primary_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:layout_alignRight="@+id/tv_address"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
         android:ellipsize="end"
         android:singleLine="true"
-        android:text="丰业广元公寓0318" />
+        android:text="丰业广元公寓0318"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@android:color/black" />
 
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/tv_taskno"
-        style="@style/tv_info_secondary_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/tv_name"
         android:layout_alignBottom="@+id/tv_name"
-        android:layout_marginLeft="20dp"
-        android:layout_marginRight="7dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="16dp"
         android:layout_toLeftOf="@+id/tv_num"
         android:text="WA201603180001"
-         />
+        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/tv_num"
-        style="@style/tv_info_secondary_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/tv_name"
         android:layout_alignBottom="@+id/tv_name"
         android:layout_alignParentRight="true"
         android:layout_marginRight="16dp"
-        android:text="3" />
+        android:text="3"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/tv_address"
-        style="@style/tv_info_secondary_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@id/tv_name"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
-        android:paddingBottom="10dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
         android:layout_toLeftOf="@+id/tv_distance"
-        android:singleLine="true"
         android:ellipsize="end"
-        android:text="徐汇区广元西路" />
+        android:singleLine="true"
+        android:text="徐汇区广元西路"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/tv_distance"
-        style="@style/tv_info_secondary_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/tv_address"
         android:layout_alignBottom="@+id/tv_address"
+        android:layout_marginRight="8dp"
         android:layout_toLeftOf="@+id/tv_date"
-        android:layout_marginRight="20dp"
-        android:text="0.0km" />
+        android:text="0.0km"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
         android:id="@+id/tv_date"
-        style="@style/tv_info_secondary_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/tv_distance"
         android:layout_alignBottom="@+id/tv_distance"
         android:layout_alignRight="@+id/tv_num"
-        android:text="2016-03-18" />
+        android:layout_marginRight="16dp"
+        android:text="2016-03-18"
+        android:textAppearance="@style/TextAppearance.AppCompat.Small" />
 
 </RelativeLayout>
-

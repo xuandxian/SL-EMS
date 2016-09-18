@@ -1,7 +1,6 @@
 package com.overtech.ems.activity.common.register;
 
 import java.io.File;
-import java.util.Random;
 
 import android.app.Activity;
 import android.content.Context;
@@ -20,14 +19,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
-import android.widget.TextView;
 
 import com.overtech.ems.R;
-import com.overtech.ems.utils.AppUtils;
 import com.overtech.ems.utils.ImageUtils;
 import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.Utilities;
@@ -43,8 +39,6 @@ public class RegisterOtherCertificateFragment extends Fragment implements
 	private Button mCamera;
 	private Button mPhoto;
 	private Button mCancle;
-	private ImageView mDoback;
-	private TextView mHeadTitle;
 	private Button mNext;
 	private RegOthCerFrgListener listener;
 	/**
@@ -81,15 +75,10 @@ public class RegisterOtherCertificateFragment extends Fragment implements
 
 	private void findViewById(View v) {
 		// TODO Auto-generated method stub
-		mDoback = (ImageView) v.findViewById(R.id.iv_headBack);
-		mHeadTitle = (TextView) v.findViewById(R.id.tv_headTitle);
 		mNext = (Button) v.findViewById(R.id.btn_next_fragment);
 		gridLayout = (GridLayout) view.findViewById(R.id.gridLayout);
 		btAddImg = (Button) view.findViewById(R.id.bt_add_img);
 
-		mDoback.setVisibility(View.VISIBLE);
-		mDoback.setOnClickListener(this);
-		mHeadTitle.setText("其他信息");
 		btAddImg.setOnClickListener(this);
 		mNext.setOnClickListener(this);
 	}
@@ -114,9 +103,6 @@ public class RegisterOtherCertificateFragment extends Fragment implements
 			break;
 		case R.id.item_popupwindows_cancel:
 			mPopupWindow.dismiss();
-			break;
-		case R.id.iv_headBack:
-			getActivity().onBackPressed();
 			break;
 		case R.id.btn_next_fragment:
 			if (listener != null) {
@@ -154,8 +140,8 @@ public class RegisterOtherCertificateFragment extends Fragment implements
 		if (!dir.exists()) {
 			dir.mkdirs();
 		}
-		outFile = new File(dir, "otherCertificate" + (int)(Math.random() * 100)
-				+ ".jpg");
+		outFile = new File(dir, "otherCertificate"
+				+ (int) (Math.random() * 100) + ".jpg");
 		cameraUri = Uri.fromFile(outFile);
 		intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraUri); // 这样就将文件的存储方式和uri指定到了Camera应用中
 		startActivityForResult(intent, PHOTO_CAPTURE);

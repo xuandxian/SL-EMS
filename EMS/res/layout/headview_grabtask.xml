@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="50dp"
-    android:background="@color/bg_title_blue" >
+    android:layout_height="56dp"
+    android:background="@color/colorPrimary" >
 
     <ImageView
         android:id="@+id/iv_grab_headBack"
@@ -11,7 +11,8 @@
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="15dp"
-        android:src="@drawable/icon_common_back" />
+        android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"
+        android:background="@android:color/black" />
 
     <TextView
         android:id="@+id/tv_headTitle_taskno"
@@ -35,6 +36,6 @@
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="10dp"
-        android:contentDescription="@null"/>
+        android:contentDescription="@null" />
 
 </RelativeLayout>

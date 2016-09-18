@@ -35,7 +35,7 @@ public class MaintenanceNoneFragment extends BaseFragment {
 	private Button reLoad;
 	private String uid;
 	private String certificate;
-	private List<Map<String,Object>> list;
+	private List<Map<String, Object>> list;
 	private MaintenaceNoneAdapter adapter;
 
 	@Override
@@ -43,7 +43,8 @@ public class MaintenanceNoneFragment extends BaseFragment {
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		View view = inflater.inflate(R.layout.fragment_maintenance_none, null);
+		View view = inflater.inflate(R.layout.fragment_maintenance_none,
+				container, false);
 		swipeRefresh = (SwipeRefreshLayout) view
 				.findViewById(R.id.swipeRefresh);
 		listview = (ListView) view.findViewById(R.id.lv_maintenance_none);
@@ -52,14 +53,22 @@ public class MaintenanceNoneFragment extends BaseFragment {
 		uid = ((MainActivity) getActivity()).getUid();
 		certificate = ((MainActivity) getActivity()).getCertificate();
 		initEvent();
+		swipeRefresh.post(new Runnable() {
+
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				swipeRefresh.setRefreshing(true);
+			}
+		});
 		requestLoading();
 		return view;
 	}
 
 	private void initEvent() {
 		// TODO Auto-generated method stub
-		swipeRefresh.setColorSchemeResources(R.color.material_deep_teal_200,
-				R.color.material_deep_teal_500);
+		swipeRefresh.setColorSchemeResources(R.color.colorPrimary,
+				R.color.colorPrimary30);
 		swipeRefresh.setOnRefreshListener(new OnRefreshListener() {
 
 			@Override
@@ -95,10 +104,9 @@ public class MaintenanceNoneFragment extends BaseFragment {
 
 	private void requestLoading() {
 		// TODO Auto-generated method stub
-		startProgressDialog(getResources().getString(
-				R.string.loading_public_default));
-		
-		HttpConnector<Bean> conn=new HttpConnector<Bean>(20000,uid,certificate,null) {
+
+		HttpConnector<Bean> conn = new HttpConnector<Bean>(20000, uid,
+				certificate, null) {
 
 			@Override
 			public Context getContext() {
@@ -117,8 +125,7 @@ public class MaintenanceNoneFragment extends BaseFragment {
 					llNoPage.setVisibility(View.GONE);
 					swipeRefresh.setVisibility(View.VISIBLE);
 					if (adapter == null) {
-						adapter = new MaintenaceNoneAdapter(getActivity(),
-								list);
+						adapter = new MaintenaceNoneAdapter(getActivity(), list);
 						listview.setAdapter(adapter);
 					} else {
 						adapter.setData(list);

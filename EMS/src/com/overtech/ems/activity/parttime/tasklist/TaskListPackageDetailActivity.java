@@ -16,7 +16,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.widget.SwipeRefreshLayout.OnRefreshListener;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -32,6 +35,7 @@ import cn.jpush.android.api.TagAliasCallback;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 
+import com.baidu.mapapi.common.Logger;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.utils.route.BaiduMapRoutePlan;
 import com.baidu.mapapi.utils.route.RouteParaOption;
@@ -57,13 +61,15 @@ import com.overtech.ems.utils.Utilities;
  */
 public class TaskListPackageDetailActivity extends BaseActivity implements
 		OnRefreshListener, OnClickListener {
-	private ImageView ivBack;
+	private Toolbar toolbar;
+	private ActionBar actionBar;
+	private AppCompatTextView tvTitle;
+	private AppCompatTextView tvSubTitle;
+	private SwipeRefreshLayout mSwipeLayout;
 	private ListView lvTask;
 	private Button btChargeback;
 	private Button btNext;
 	private Button btASComplete;
-	private TextView tvTaskPackageName;
-	private TextView tvTaskNo;
 	private AppCompatTextView tvNavigation;
 	private AppCompatTextView tvQrcode;
 	private AppCompatTextView tvShare;
@@ -88,7 +94,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	private LatLng llDestination;
 	// private String mDesName;
 	private boolean isToday;
-	private SwipeRefreshLayout mSwipeLayout;
+
 	private TaskListPackageDetailAdapter adapter;
 	private List<Map<String, Object>> list;
 	private final String ALLCOMPLETE = "allComplete";
@@ -156,10 +162,16 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	}
 
 	private void initView() {
+		toolbar = (Toolbar) findViewById(R.id.toolBar2);
+		setSupportActionBar(toolbar);
+		actionBar = getSupportActionBar();
+		tvTitle = (AppCompatTextView) findViewById(R.id.tvTitle);
+		tvSubTitle = (AppCompatTextView) findViewById(R.id.tvSubTitle);
+
+		mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.srl_container);
 		llStartPoint = new LatLng(
 				((MyApplication) getApplicationContext()).latitude,
 				(((MyApplication) getApplicationContext())).longitude);
-		ivBack = (ImageView) findViewById(R.id.iv_grab_headBack);
 		tvNavigation = (AppCompatTextView) findViewById(R.id.tv_navigation);
 		tvQrcode = (AppCompatTextView) findViewById(R.id.tv_qrcode);
 		tvShare = (AppCompatTextView) findViewById(R.id.tv_share);
@@ -169,9 +181,6 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 		btNext = (Button) findViewById(R.id.bt_next_response);
 		btASComplete = (Button) findViewById(R.id.bt_as_complete);
 
-		tvTaskPackageName = (TextView) findViewById(R.id.tv_headTitle_community_name);
-		tvTaskNo = (TextView) findViewById(R.id.tv_headTitle_taskno);
-		mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.srl_container);
 	}
 
 	private void getExtraDataAndInit() {
@@ -202,10 +211,20 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	}
 
 	private void initEvent() {
+		toolbar.setNavigationOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				stackInstance.popActivity(activity);
+			}
+		});
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
+		actionBar.setDisplayHomeAsUpEnabled(true);
 		mSwipeLayout.setOnRefreshListener(this);
-		mSwipeLayout.setColorSchemeResources(R.color.material_deep_teal_200,
-				R.color.material_deep_teal_500);
-		ivBack.setOnClickListener(this);
+		mSwipeLayout.setColorSchemeResources(R.color.colorPrimary,
+				R.color.colorPrimary30);
 		tvNavigation.setOnClickListener(this);
 		tvQrcode.setOnClickListener(this);
 		tvShare.setOnClickListener(this);
@@ -262,6 +281,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 
 		alertBuilder
 				.setTitle("搭档")
+				.setMessage(null)
 				.setMultiChoiceItems(partners, null,
 						new OnMultiChoiceClickListener() {
 
@@ -463,8 +483,8 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 					}
 
 				}
-				tvTaskNo.setText(sTaskNo);
-				tvTaskPackageName.setText(sTaskPackageName);
+				tvSubTitle.setText(sTaskNo);
+				tvTitle.setText(sTaskPackageName);
 				if (null == list || list.size() == 0) {
 					Utilities
 							.showToast(
@@ -582,6 +602,14 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	}
 
 	private void requestLoadASPartners() {
+		mSwipeLayout.post(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				mSwipeLayout.setRefreshing(true);
+			}
+		});
 		HashMap<String, Object> body = new HashMap<String, Object>();
 		body.put("taskNo", sTaskNo);
 		HttpConnector<Bean> conn = new HttpConnector<Bean>(20062, uid,
@@ -599,6 +627,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				hasLoadPartners = true;
 				listPartners = (List<Map<String, Object>>) response.body
 						.get("partners");
+				Logr.e("listPartners===size=" + listPartners.size());
 				partners = new String[listPartners.size()];
 				for (int i = 0; i < listPartners.size(); i++) {
 					if (listPartners.get(i).get("isMainAs").equals("1")) {
@@ -626,12 +655,23 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			public void stopDialog() {
 				// TODO Auto-generated method stub
 				stopProgressDialog();
+				if(mSwipeLayout.isRefreshing()){
+					mSwipeLayout.setRefreshing(false);
+				}
 			}
 		};
 		conn.sendRequest();
 	}
 
 	private void requestPartners() {
+		mSwipeLayout.post(new Runnable() {
+			
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				mSwipeLayout.setRefreshing(true);
+			}
+		});
 		HttpConnector<Bean> conn = new HttpConnector<Bean>(20079, uid,
 				certificate, null) {
 
@@ -669,6 +709,9 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			public void stopDialog() {
 				// TODO Auto-generated method stub
 				stopProgressDialog();
+				if(mSwipeLayout.isRefreshing()){
+					mSwipeLayout.setRefreshing(false);
+				}
 			}
 		};
 		conn.sendRequest();
@@ -717,9 +760,6 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.iv_grab_headBack:
-			stackInstance.popActivity(activity);
-			break;
 		case R.id.bt_cancle_task:
 			Logr.e("退单验证时间==");
 			validateChargebackTime();
@@ -737,7 +777,20 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			}
 			break;
 		case R.id.bt_as_complete:
-			asComplete();
+			alertBuilder
+					.setTitle("温馨提示")
+					.setMessage("请问您们的年检任务是否已经完成？")
+					.setPositiveButton("是",
+							new DialogInterface.OnClickListener() {
+
+								@Override
+								public void onClick(DialogInterface dialog,
+										int which) {
+									// TODO Auto-generated method stub
+									asComplete();
+								}
+							}).setNegativeButton("否", null).show();
+
 			break;
 		case R.id.tv_navigation:
 			startNavicate(llStartPoint, llDestination, "终点");
@@ -777,7 +830,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			public void bizSuccess(Bean response) {
 				// TODO Auto-generated method stub
 				Utilities.showToast(response.msg, activity);
-
+				stackInstance.popActivity(activity);
 			}
 
 			@Override
@@ -801,8 +854,8 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 
 	private void dialToASPartner() {
 		alertBuilder
-				.setTitle("年检成员")
-				.setMessage("请选择你要联系的搭档")
+				.setTitle("请选择你要联系的搭档")
+				.setMessage(null)
 				.setSingleChoiceItems(partners, -1,
 						new DialogInterface.OnClickListener() {
 
@@ -818,21 +871,15 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						// TODO Auto-generated method stub
-						String asPartner = listPartners.get(which)
+						int checkItemPosition = ((AlertDialog) dialog)
+								.getListView().getCheckedItemPosition();
+						String asPartner = listPartners.get(checkItemPosition)
 								.get("partnerPhone").toString();
 						Intent intent = new Intent(Intent.ACTION_CALL, Uri
 								.parse("tel:" + asPartner));
 						startActivity(intent);
 					}
-				})
-				.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						// TODO Auto-generated method stub
-
-					}
-				}).show();
+				}).setNegativeButton("取消", null).show();
 	}
 
 	private void dialToPartner() {

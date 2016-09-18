@@ -22,7 +22,6 @@ import com.overtech.ems.utils.FragmentUtils;
 public class MaintenanceFragment extends BaseFragment implements
 		OnClickListener {
 	private TextView title;
-	private ImageView qrCode;
 	private Button btMaintenanceNone;
 	private Button btMaintenanceDone;
 	private Fragment currentFragment;
@@ -33,7 +32,8 @@ public class MaintenanceFragment extends BaseFragment implements
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
-		View view = inflater.inflate(R.layout.fragment_maintenance, null);
+		View view = inflater.inflate(R.layout.fragment_maintenance, container,
+				false);
 		initView(view);
 		initEvent();
 		return view;
@@ -46,8 +46,6 @@ public class MaintenanceFragment extends BaseFragment implements
 				getChildFragmentManager(), R.id.fl_maintenance_content,
 				currentFragment, MaintenanceNoneFragment.class, null);
 		mMaintenanceNoneFragment = (MaintenanceNoneFragment) currentFragment;
-		qrCode.setVisibility(View.VISIBLE);
-		qrCode.setOnClickListener(this);
 		btMaintenanceNone.setOnClickListener(this);
 		btMaintenanceDone.setOnClickListener(this);
 	}
@@ -55,7 +53,6 @@ public class MaintenanceFragment extends BaseFragment implements
 	private void initView(View view) {
 		// TODO Auto-generated method stub
 		title = (TextView) view.findViewById(R.id.tv_tasklist_title);
-		qrCode = (ImageView) view.findViewById(R.id.iv_common_qrcode);
 		btMaintenanceNone = (Button) view
 				.findViewById(R.id.bt_maintenance_none);
 		btMaintenanceDone = (Button) view
@@ -71,18 +68,20 @@ public class MaintenanceFragment extends BaseFragment implements
 					getChildFragmentManager(), R.id.fl_maintenance_content,
 					currentFragment, MaintenanceNoneFragment.class, null);
 			mMaintenanceNoneFragment = (MaintenanceNoneFragment) currentFragment;
-			qrCode.setVisibility(View.VISIBLE);
 			btMaintenanceNone.setBackgroundResource(R.drawable.horizontal_line);
 			btMaintenanceDone.setBackgroundResource(R.color.main_white);
+			btMaintenanceNone.setTextColor(getResources().getColor(R.color.colorPrimary));
+			btMaintenanceDone.setTextColor(getResources().getColor(R.color.primary_text_default_material_light));
 			break;
 		case R.id.bt_maintenance_done:
 			currentFragment = FragmentUtils.switchFragment(
 					getChildFragmentManager(), R.id.fl_maintenance_content,
 					currentFragment, MaintenanceDoneFragment.class, null);
 			mMaintenanceDoneFragment = (MaintenanceDoneFragment) currentFragment;
-			qrCode.setVisibility(View.GONE);
 			btMaintenanceNone.setBackgroundResource(R.color.main_white);
 			btMaintenanceDone.setBackgroundResource(R.drawable.horizontal_line);
+			btMaintenanceNone.setTextColor(getResources().getColor(R.color.primary_text_default_material_light));
+			btMaintenanceDone.setTextColor(getResources().getColor(R.color.colorPrimary));
 			break;
 		case R.id.iv_common_qrcode:
 			Intent intent = new Intent(getActivity(), ScanCodeActivity.class);

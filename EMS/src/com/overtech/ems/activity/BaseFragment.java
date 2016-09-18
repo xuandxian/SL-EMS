@@ -35,8 +35,6 @@ public class BaseFragment extends Fragment {
 
 	public ProgressDialog dialog;
 	
-	public NiftyDialogBuilder dialogBuilder;
-	
 	public AlertDialog.Builder alertBuilder;
 	public Gson gson;
 	public final static String TAG="ems data from server==";
@@ -45,9 +43,8 @@ public class BaseFragment extends Fragment {
 		super.onCreate(savedInstanceState);
 		activity = getActivity();
 		fragmentManager = getFragmentManager();
-		dialogBuilder = NiftyDialogBuilder.getInstance(activity);
 		if(alertBuilder==null){
-			alertBuilder=new Builder(activity);
+			alertBuilder=new Builder(activity,R.style.MyCustomAppCompatAlertDialg);
 			alertBuilder.setCancelable(false);
 		}
 		httpEngine = HttpEngine.getInstance();
@@ -86,6 +83,7 @@ public class BaseFragment extends Fragment {
 		}else{
 			if (progressDialog == null) {
 				progressDialog = CustomProgressDialog.createDialog(activity);
+				progressDialog.setCanceledOnTouchOutside(false);
 			}
 			progressDialog.setMessage(content);
 			progressDialog.show();
@@ -105,8 +103,4 @@ public class BaseFragment extends Fragment {
 		}
 	}
 
-	public int dp2px(int dp) {
-		return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
-				getResources().getDisplayMetrics());
-	}
 }

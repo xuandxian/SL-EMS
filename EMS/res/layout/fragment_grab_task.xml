@@ -13,7 +13,8 @@
         android:id="@+id/sl_qiandan_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/title_grab_task" />
+        android:layout_below="@+id/title_grab_task"
+        android:divider="@android:color/transparent" />
 
     <include
         android:id="@+id/nopage"

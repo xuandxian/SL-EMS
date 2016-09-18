@@ -8,9 +8,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -31,10 +33,10 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 //奖励记录
-public class PersonalBoundsActivity extends BaseActivity implements
-		OnClickListener {
-	private ImageView mDoBack;
-	private TextView mHeadContent;
+public class PersonalBoundsActivity extends BaseActivity {
+	private Toolbar toolbar;
+	private ActionBar actionBar;
+	private AppCompatTextView tvTitle;
 	// private ExpandableListView mPersonalAccountListView;
 	private ListView mPersonalAccountListView;
 	private TextView tvNoData;
@@ -101,8 +103,10 @@ public class PersonalBoundsActivity extends BaseActivity implements
 	}
 
 	private void findViewById() {
-		mDoBack = (ImageView) findViewById(R.id.iv_headBack);
-		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
+		toolbar = (Toolbar) findViewById(R.id.toolBar);
+		setSupportActionBar(toolbar);
+		actionBar = getSupportActionBar();
+		tvTitle = (AppCompatTextView) findViewById(R.id.tvTitle);
 		// mPersonalAccountListView=(ExpandableListView)findViewById(R.id.lv_personal_account_list);
 		mPersonalAccountListView = (ListView) findViewById(R.id.lv_personal_account_list);
 		tvNoData = (TextView) findViewById(R.id.tv_no_data);
@@ -110,14 +114,23 @@ public class PersonalBoundsActivity extends BaseActivity implements
 
 	private void initData() {
 		activity = PersonalBoundsActivity.this;
+		stackInstance.pushActivity(activity);
 		uid = (String) SharePreferencesUtils.get(activity,
 				SharedPreferencesKeys.UID, "");
 		certificate = (String) SharePreferencesUtils.get(activity,
 				SharedPreferencesKeys.CERTIFICATED, "");
-		mDoBack.setVisibility(View.VISIBLE);
-		mHeadContent.setText("奖励记录");
-		stackInstance.pushActivity(activity);
-		mDoBack.setOnClickListener(this);
+		tvTitle.setText("奖励记录");
+		toolbar.setNavigationOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				stackInstance.popActivity(activity);
+			}
+		});
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
 		startLoading();
 	}
 
@@ -158,22 +171,10 @@ public class PersonalBoundsActivity extends BaseActivity implements
 	}
 
 	@Override
-	public void onClick(View view) {
-		switch (view.getId()) {
-		case R.id.iv_headBack:
-			stackInstance.popActivity(activity);
-			break;
-		default:
-			break;
-		}
-	}
-
-	@Override
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
 		super.onBackPressed();
 		stackInstance.popActivity(activity);
 	}
-
 
 }

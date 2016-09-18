@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_main" >
+    android:orientation="vertical" >
 
-    <include
-        android:id="@+id/include_phone_change"
-        layout="@layout/headview" />
-<!--
+    <include layout="@layout/layout_toolbar" />
+    <!--
     <RelativeLayout
         android:id="@+id/rl_change_title"
         android:layout_width="match_parent"
@@ -55,16 +53,13 @@
                 android:text="更换成功"
                 android:textColor="#757575" />
         </LinearLayout>
-    </RelativeLayout>
-    -->
+    </RelativeLayout>-->
 
     <RelativeLayout
         android:id="@+id/rl_register"
         android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/include_phone_change"
-        android:background="@color/main_white" >
+        android:layout_height="56dp"
+        android:layout_marginTop="20dp" >
 
         <com.overtech.ems.widget.EditTextWithDelete
             android:id="@+id/et_phone"
@@ -73,7 +68,6 @@
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:background="@drawable/shape_input"
             android:ems="10"
             android:enabled="false"
             android:hint=""
@@ -94,39 +88,22 @@
             android:visibility="gone" />
     </RelativeLayout>
 
-    <TextView
+    <com.overtech.ems.widget.EditTextWithDelete
+        android:id="@+id/et_verificate_password"
         android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_above="@+id/rl_register_2"
-        android:layout_centerHorizontal="true"
-        android:background="#c1c1c1" />
-
-    <RelativeLayout
-        android:id="@+id/rl_register_2"
-        android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/rl_register"
-        android:background="@color/main_white" >
-
-        <com.overtech.ems.widget.EditTextWithDelete
-            android:id="@+id/et_verificate_password"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/shape_input"
-            android:hint="请输入原密码"
-            android:inputType="textPassword"
-            android:maxLength="18" />
-    </RelativeLayout>
+        android:layout_height="56dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:hint="请输入原密码"
+        android:inputType="textPassword"
+        android:maxLength="18" />
 
     <Button
         android:id="@+id/btn_next"
         style="@style/btn_title_white_style"
         android:layout_below="@+id/rl_register_2"
-        android:background="@drawable/shape_button_visiable"
         android:layout_marginTop="25dp"
+        android:background="@drawable/selector_button_normal"
         android:text="下一步" />
 
-</RelativeLayout>
+</LinearLayout>

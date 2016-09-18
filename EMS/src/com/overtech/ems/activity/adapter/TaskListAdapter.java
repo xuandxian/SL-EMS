@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -18,7 +19,7 @@ import com.overtech.ems.utils.Utilities;
 
 public class TaskListAdapter extends BaseAdapter {
 
-	private List<Map<String,Object>> list;
+	private List<Map<String, Object>> list;
 	private Context context;
 	private double latitude;
 	private double longitude;
@@ -28,11 +29,12 @@ public class TaskListAdapter extends BaseAdapter {
 	 */
 	private int state;
 
-	public List<Map<String,Object>> getData() {
+	public List<Map<String, Object>> getData() {
 		return list;
 	}
 
-	public TaskListAdapter(List<Map<String,Object>> list, Context context, int state) {
+	public TaskListAdapter(List<Map<String, Object>> list, Context context,
+			int state) {
 		super();
 		this.list = list;
 		this.context = context;
@@ -72,17 +74,19 @@ public class TaskListAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		Map<String,Object> data = list.get(position);
+		Map<String, Object> data = list.get(position);
 		if (convertView == null) {
-			convertView = View.inflate(context, R.layout.item_list_tasklist,
-					null);
-			new ViewHolder(convertView);
+			convertView = LayoutInflater.from(context).inflate(
+					R.layout.item_list_tasklist, parent, false);
+			convertView.setTag(new ViewHolder(convertView));
 		}
 		ViewHolder holder = (ViewHolder) convertView.getTag();
 		holder.taskPackageName.setText(data.get("taskPackageName").toString());
-		String amounts=data.get("elevatorAmounts").toString();
-		holder.elevatorAmounts.setText(amounts.substring(0, amounts.indexOf(".")));
-		holder.maintenanceAddress.setText(data.get("maintenanceAddress").toString());
+		String amounts = data.get("elevatorAmounts").toString();
+		holder.elevatorAmounts.setText(amounts.substring(0,
+				amounts.indexOf(".")));
+		holder.maintenanceAddress.setText(data.get("maintenanceAddress")
+				.toString());
 		holder.maintenanceDate.setText(data.get("maintenanceDate").toString());
 		if (state == StatusCode.TASK_NO) {
 			holder.taskNo.setVisibility(View.GONE);
@@ -90,17 +94,18 @@ public class TaskListAdapter extends BaseAdapter {
 			holder.taskNo.setVisibility(View.VISIBLE);
 			holder.taskNo.setText(data.get("taskNo").toString());
 		}
-		LatLng latlng = new LatLng(Double.parseDouble(data.get("latitude").toString()),
-				Double.parseDouble(data.get("longitude").toString()));
-		holder.distance.setText(Utilities.format2decimal(DistanceUtil.getDistance(
-				mLatLng, latlng) / 1000.0) + "km");
+		LatLng latlng = new LatLng(Double.parseDouble(data.get("latitude")
+				.toString()), Double.parseDouble(data.get("longitude")
+				.toString()));
+		holder.distance.setText(Utilities.format2decimal(DistanceUtil
+				.getDistance(mLatLng, latlng) / 1000.0) + "km");
 		return convertView;
 	}
 
-	public void setData(List<Map<String,Object>> data){
-		this.list=data;
+	public void setData(List<Map<String, Object>> data) {
+		this.list = data;
 	}
-	
+
 	/**
 	 * 当前位置
 	 * 
@@ -117,7 +122,7 @@ public class TaskListAdapter extends BaseAdapter {
 	 * @return
 	 */
 	public LatLng getDestination(int position) {
-		Map<String,Object> data = list.get(position);
+		Map<String, Object> data = list.get(position);
 		String desLat = data.get("latitude").toString();
 		String desLng = data.get("longitude").toString();
 		return new LatLng(Double.parseDouble(desLat),

@@ -5,7 +5,7 @@
     android:background="@color/bg_main"
     android:orientation="vertical" >
 
-    <include layout="@layout/headview" />
+    <include layout="@layout/layout_toolbar" />
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -19,7 +19,7 @@
             android:layout_centerInParent="true"
             android:src="@drawable/icon" />
 
-        <TextView
+        <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tv_logo_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
             android:text="@string/app_name"
             android:textSize="@dimen/text_size_large" />
 
-        <TextView
+        <android.support.v7.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_logo_name"
@@ -40,66 +40,52 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/ll_about_us"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="56dp"
         android:background="@color/main_white"
-        android:orientation="vertical" >
+        android:orientation="horizontal" >
 
-        <RelativeLayout
-            android:id="@+id/rl_company_info"
-            android:layout_width="match_parent"
-            android:layout_height="40dp" >
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="16dp"
+            android:layout_weight="1"
+            android:text="关于我们"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="15dp"
-                android:text="关于我们"
-                android:textSize="@dimen/text_size_list" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="15dp"
-                android:src="@drawable/icon_arrow_right" />
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:background="@color/bg_main" />
-
-        <RelativeLayout
-            android:id="@+id/rl_share"
-            android:layout_width="match_parent"
-            android:layout_height="40dp" >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="15dp"
-                android:text="分享给朋友"
-                android:textSize="@dimen/text_size_list" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="15dp"
-                android:src="@drawable/icon_arrow_right" />
-        </RelativeLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/icon_arrow_right" />
     </LinearLayout>
 
-    <RelativeLayout
+    <LinearLayout
+        android:id="@+id/lL_share_friends"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    </RelativeLayout>
+        android:layout_height="56dp"
+        android:layout_marginTop="8dp"
+        android:background="@color/main_white"
+        android:orientation="horizontal" >
+
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="16dp"
+            android:layout_weight="1"
+            android:text="分享给朋友"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="16dp"
+            android:src="@drawable/icon_arrow_right" />
+    </LinearLayout>
 
 </LinearLayout>

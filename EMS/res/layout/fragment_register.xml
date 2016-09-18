@@ -6,83 +6,53 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical" >
 
-    <include layout="@layout/headview" />
-
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="56dp"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal" >
 
-        <RelativeLayout
-            android:id="@+id/rl_register_1 "
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_marginTop="20dp"
-            android:background="@color/main_white" >
+        <com.overtech.ems.widget.EditTextWithDelete
+            android:id="@+id/et_register_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="20dp"
+            android:layout_weight="1"
+            android:ems="10"
+            android:hint="手机号"
+            android:inputType="phone"
+            android:maxLength="11" />
 
-            <com.overtech.ems.widget.EditTextWithDelete
-                android:id="@+id/et_register_phone"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="20dp"
-                android:layout_toLeftOf="@+id/btn_get_valicate_code"
-                android:background="@drawable/shape_input"
-                android:ems="10"
-                android:hint="手机号"
-                android:inputType="phone"
-                android:maxLength="11" />
+        <com.overtech.ems.widget.TimeButton
+            android:id="@+id/btn_get_valicate_code"
+            style="@style/tv_hint_white_style"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/selector_button_normal"
+            android:enabled="false"
+            android:text="点击获取验证码" />
+    </LinearLayout>
 
-            <com.overtech.ems.widget.TimeButton
-                android:id="@+id/btn_get_valicate_code"
-                style="@style/tv_hint_white_style"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="15dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/shape_button_visiable"
-                android:enabled="false"
-                android:text="点击获取验证码" />
-        </RelativeLayout>
+    <com.overtech.ems.widget.EditTextWithDelete
+        android:id="@+id/et_valicate_code"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:hint="请输入验证码"
+        android:inputType="number" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_above="@+id/rl_register_2"
-            android:layout_centerHorizontal="true"
-            android:background="#c1c1c1" />
-
-        <RelativeLayout
-            android:id="@+id/rl_register_2"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/rl_register_1 "
-            android:background="@color/main_white" >
-
-            <com.overtech.ems.widget.EditTextWithDelete
-                android:id="@+id/et_valicate_code"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:background="@drawable/shape_input"
-                android:hint="请输入验证码"
-                android:inputType="number" />
-        </RelativeLayout>
-    </RelativeLayout>
-
-    <Button
+    <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_next_fragment"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginBottom="10dp"
-        android:layout_marginLeft="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:layout_marginTop="25dp"
-        android:background="@drawable/shape_button_visiable"
+        android:background="@drawable/selector_button_normal"
         android:text="下一步"
         android:textColor="@color/main_white"
-        android:textSize="17sp" />
+        android:textSize="18sp" />
 
 </LinearLayout>

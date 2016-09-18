@@ -33,7 +33,7 @@
             android:layout_marginLeft="50dp"
             android:layout_marginRight="50dp"
             android:layout_marginTop="18dp"
-            android:background="@drawable/shape_button_visiable"
+            android:background="@drawable/selector_button_normal"
             android:text="重新搜索" />
     </LinearLayout>
 

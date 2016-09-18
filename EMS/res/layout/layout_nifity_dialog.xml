@@ -58,7 +58,6 @@ https://github.com/android/platform_frameworks_base/blob/master/core/res/res/lay
 
                 <TextView
                     android:id="@+id/alertTitle"
-                    style="@style/DialogWindowTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"

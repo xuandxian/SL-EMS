@@ -5,14 +5,13 @@
     android:background="@color/bg_main"
     android:orientation="vertical" >
 
-    
+    <include layout="@layout/layout_toolbar" />
+
     <FrameLayout
         android:id="@+id/fl_register_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" >
     </FrameLayout>
-
-    
 
 </LinearLayout>

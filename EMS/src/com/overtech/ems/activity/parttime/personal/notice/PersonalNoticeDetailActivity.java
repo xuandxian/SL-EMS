@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -33,8 +36,9 @@ import com.squareup.okhttp.Response;
  * 
  */
 public class PersonalNoticeDetailActivity extends BaseActivity {
-	private TextView mHeadContent;
-	private ImageView mDoBack;
+	private Toolbar toolbar;
+	private ActionBar actionBar;
+	private AppCompatTextView tvTitle;
 	private TextView mAnnouncementContent;
 	private TextView mAnnouncementTheme;
 	private TextView mAnnouncementDate;
@@ -142,21 +146,27 @@ public class PersonalNoticeDetailActivity extends BaseActivity {
 	}
 
 	private void initView() {
-		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
-		mDoBack = (ImageView) findViewById(R.id.iv_headBack);
+		toolbar = (Toolbar) findViewById(R.id.toolBar);
+		setSupportActionBar(toolbar);
+		actionBar = getSupportActionBar();
+		tvTitle = (AppCompatTextView) findViewById(R.id.tvTitle);
 		mAnnouncementContent = (TextView) findViewById(R.id.tv_announcement_content);
 		mAnnouncementTheme = (TextView) findViewById(R.id.tv_announcement_theme);
 		mAnnouncementDate = (TextView) findViewById(R.id.tv_announcement_date);
 		mAnnouncementSummary = (TextView) findViewById(R.id.tv_announcement_summary);
-		mHeadContent.setText("公告详情");
-		mDoBack.setVisibility(View.VISIBLE);
-		mDoBack.setOnClickListener(new OnClickListener() {
+
+		toolbar.setNavigationOnClickListener(new OnClickListener() {
 
 			@Override
-			public void onClick(View arg0) {
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
 				stackInstance.popActivity(activity);
 			}
 		});
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
+		tvTitle.setText("公告详情");
 	}
 
 	@Override

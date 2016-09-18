@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:orientation="horizontal" >
 
         <Button
@@ -18,20 +18,28 @@
             android:layout_weight="1"
             android:background="@drawable/horizontal_line"
             android:text="未完成"
-            android:textColor="@color/bg_title_blue"
+            android:textColor="@color/colorPrimary"
             android:textSize="15sp" />
-
+		<View 
+		    android:layout_width="1px"
+		    android:layout_height="match_parent"
+		    android:background="@color/bg_main"
+		    />
         <Button
             android:id="@+id/bt_maintenance_done"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/main_white"
+            android:background="@drawable/abc_textfield_search_default_mtrl_alpha"
             android:text="已完成"
-            android:textColor="@color/bg_title_blue"
+            android:textColor="@color/primary_text_default_material_light"
             android:textSize="15sp" />
     </LinearLayout>
-
+	<View 
+	    android:layout_width="match_parent"
+	    android:layout_height="1px"
+	    android:background="?android:attr/listDivider"
+	    />
     <FrameLayout
         android:id="@+id/fl_maintenance_content"
         android:layout_width="match_parent"

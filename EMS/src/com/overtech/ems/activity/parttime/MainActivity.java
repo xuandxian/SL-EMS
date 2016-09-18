@@ -246,9 +246,6 @@ public class MainActivity extends BaseActivity {
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
-		if (dialogBuilder.isShowing()) {
-			dialogBuilder.dismiss();
-		}
 	}
 
 	public String getUid() {

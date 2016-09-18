@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
-    <include
-        android:id="@+id/show_community_title"
-        layout="@layout/headview" />
+    <include layout="@layout/layout_toolbar" />
 
     <com.baidu.mapapi.map.MapView
         android:id="@+id/bmapView"
@@ -14,4 +13,4 @@
         android:layout_below="@+id/show_community_title"
         android:clickable="true" />
 
-</RelativeLayout>
+</LinearLayout>

@@ -5,9 +5,6 @@ import java.io.File;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,7 +20,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.utils.ImageUtils;
@@ -36,8 +32,6 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements
 	private Context mContext;
 	private ImageView workCertificate1;
 	private ImageView workCertificate2;
-	private ImageView mDoBack;
-	private TextView mHeadTitle;
 	private Button mNext;
 	private DimPopupWindow mPopupWindow;
 	private Button mCamera;
@@ -103,13 +97,8 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements
 		workCertificate1 = (ImageView) v.findViewById(R.id.id_work_certificate);
 		workCertificate2 = (ImageView) v
 				.findViewById(R.id.id_work_certificate2);
-		mDoBack = (ImageView) v.findViewById(R.id.iv_headBack);
-		mHeadTitle = (TextView) v.findViewById(R.id.tv_headTitle);
 		mNext = (Button) v.findViewById(R.id.btn_next_fragment);
 
-		mDoBack.setVisibility(View.VISIBLE);
-		mHeadTitle.setText("上岗证确认");
-		mDoBack.setOnClickListener(this);
 		workCertificate1.setOnClickListener(this);
 		workCertificate2.setOnClickListener(this);
 		mNext.setOnClickListener(this);
@@ -147,12 +136,12 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.id_work_certificate:
-			Logr.e("==registerAddWorkCertificate=="+"one");
+			Logr.e("==registerAddWorkCertificate==" + "one");
 			curSel = CONE;
 			showPopupWindow();
 			break;
 		case R.id.id_work_certificate2:
-			Logr.e("==registerAddWorkCertificate=="+"two");
+			Logr.e("==registerAddWorkCertificate==" + "two");
 			curSel = CTWO;
 			showPopupWindow();
 			break;
@@ -166,9 +155,6 @@ public class RegisterAddWorkCertificateFragment extends Fragment implements
 			break;
 		case R.id.item_popupwindows_cancel:
 			mPopupWindow.dismiss();
-			break;
-		case R.id.iv_headBack:
-			getActivity().onBackPressed();
 			break;
 		case R.id.btn_next_fragment:
 			/*

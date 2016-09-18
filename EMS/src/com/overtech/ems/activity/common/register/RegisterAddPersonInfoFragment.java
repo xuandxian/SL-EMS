@@ -15,7 +15,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.overtech.ems.R;
@@ -37,8 +36,6 @@ public class RegisterAddPersonInfoFragment extends BaseFragment implements
 		OnClickListener {
 	private View view;
 	private Context mContext;
-	private TextView mHeadTitle;
-	private ImageView mDoBack;
 	private Button mNext;
 	private EditTextWithDelete mName;
 	private EditTextWithDelete mIdNum;
@@ -76,14 +73,12 @@ public class RegisterAddPersonInfoFragment extends BaseFragment implements
 			zoneCode=savedInstanceState.getString("zoneCode");
 		}
 		view = inflater.inflate(R.layout.fragment_register_add_person_info,
-				null);
+				container,false);
 		findViewById(view);
 		return view;
 	}
 
 	private void findViewById(View v) {
-		mHeadTitle = (TextView) v.findViewById(R.id.tv_headTitle);
-		mDoBack = (ImageView) v.findViewById(R.id.iv_headBack);
 		mNext = (Button) v.findViewById(R.id.btn_next_fragment);
 		mName = (EditTextWithDelete) v.findViewById(R.id.et_register_add_name);
 		mIdNum = (EditTextWithDelete) v
@@ -93,9 +88,6 @@ public class RegisterAddPersonInfoFragment extends BaseFragment implements
 		mCity = (TextView) v.findViewById(R.id.tv_add_city);
 		mZone = (AppCompatSpinner) v.findViewById(R.id.sp_add_zone);
 
-		mHeadTitle.setText("基本信息");
-		mDoBack.setVisibility(View.VISIBLE);
-		mDoBack.setOnClickListener(this);
 		mNext.setOnClickListener(this);
 
 		mCity.setOnClickListener(new OnClickListener() {
@@ -132,9 +124,6 @@ public class RegisterAddPersonInfoFragment extends BaseFragment implements
 	public void onClick(View arg0) {
 		// TODO Auto-generated method stub
 		switch (arg0.getId()) {
-		case R.id.iv_headBack:
-			getActivity().onBackPressed();
-			break;
 		case R.id.btn_next_fragment:
 			if(nameContent!=null){
 				Logr.e("PersonInfo=="+nameContent);

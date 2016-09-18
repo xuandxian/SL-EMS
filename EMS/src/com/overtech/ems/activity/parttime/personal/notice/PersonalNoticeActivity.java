@@ -10,14 +10,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
@@ -27,7 +28,6 @@ import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.AnnouncementBean;
 import com.overtech.ems.entity.common.Requester;
-import com.overtech.ems.http.OkHttpClientManager;
 import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
@@ -42,8 +42,10 @@ import com.squareup.okhttp.Response;
  * 
  */
 public class PersonalNoticeActivity extends BaseActivity {
-	private ImageView mDoBack;
-	private TextView mHeadContent;
+	private Toolbar toolbar;
+	private ActionBar actionBar;
+	private AppCompatTextView tvTitle;
+
 	private ListView mAnnouncement;
 	private PersonalNoticeActivity activity;
 	private PersonalAnnounceAdapter adapter;
@@ -147,17 +149,25 @@ public class PersonalNoticeActivity extends BaseActivity {
 	}
 
 	private void initView() {
-		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
-		mDoBack = (ImageView) findViewById(R.id.iv_headBack);
-		mAnnouncement = (ListView) findViewById(R.id.lv_announcement);
-		mHeadContent.setText("公告");
-		mDoBack.setVisibility(View.VISIBLE);
-		mDoBack.setOnClickListener(new OnClickListener() {
+		toolbar = (Toolbar) findViewById(R.id.toolBar);
+		setSupportActionBar(toolbar);
+		actionBar = getSupportActionBar();
+		tvTitle = (AppCompatTextView) findViewById(R.id.tvTitle);
+
+		toolbar.setNavigationOnClickListener(new OnClickListener() {
+
 			@Override
 			public void onClick(View v) {
+				// TODO Auto-generated method stub
 				stackInstance.popActivity(activity);
 			}
 		});
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
+		tvTitle.setText("公告");
+		mAnnouncement = (ListView) findViewById(R.id.lv_announcement);
+
 		mAnnouncement.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override

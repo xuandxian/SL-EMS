@@ -5,164 +5,108 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical" >
 
-    <include layout="@layout/headview" />
-
     <ScrollView
-        android:id="@+id/scrollView1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/include_register"
-        android:background="@color/bg_main"
+        android:background="@color/main_white"
         android:overScrollMode="always" >
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:focusable="true"
-            android:focusableInTouchMode="true" >
+            android:focusableInTouchMode="true"
+            android:orientation="vertical" >
 
             <TextView
                 android:id="@+id/register_send_phone"
-                style="@style/tv_info_secondary_style"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="10dp"
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/bg_main"
+                android:paddingBottom="8dp"
+                android:paddingLeft="16dp"
+                android:paddingTop="8dp"
                 android:text="学历信息" />
 
-            <RelativeLayout
-                android:id="@+id/rl_register_add_phone"
+            <android.support.v7.widget.AppCompatSpinner
+                android:id="@+id/sp_add_education"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/register_send_phone"
-                android:background="@color/main_white" >
+                android:layout_height="56dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:gravity="center_vertical"
+                 />
 
-                <Spinner
-                    android:id="@+id/sp_add_education"
-                    style="@style/spinner_style"
-                    android:entries="@array/education" >
-                </Spinner>
-            </RelativeLayout>
-
-            <TextView
+            <android.support.v7.widget.AppCompatTextView
                 android:id="@+id/tv_register_person_info"
-                style="@style/tv_info_secondary_style"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/rl_register_add_phone"
-                android:layout_marginBottom="10dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="10dp"
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/bg_main"
+                android:paddingBottom="8dp"
+                android:paddingLeft="16dp"
+                android:paddingTop="8dp"
                 android:text="工作信息" />
 
-            <RelativeLayout
-                android:id="@+id/rl_register_add_info"
+            <com.overtech.ems.widget.EditTextWithDelete
+                android:id="@+id/et_register_add_name"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/tv_register_person_info"
-                android:background="@color/main_white" >
+                android:layout_height="56dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="20dp"
+                android:gravity="center_vertical"
+                android:hint="目前单位" />
 
-                <com.overtech.ems.widget.EditTextWithDelete
-                    android:id="@+id/et_register_add_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:background="@drawable/shape_input"
-                    android:hint="目前单位" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/rl_register_add_info_2"
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_enter_time"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/rl_register_add_info"
-                android:layout_marginTop="1px"
-                android:background="@color/main_white" >
+                android:layout_height="56dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:drawableRight="@drawable/icon_cruise_calendar"
+                android:focusable="false"
+                android:gravity="center_vertical"
+                android:hint="入行时间"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-                <EditText
-                    android:id="@+id/et_register_add_id_card"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:background="@drawable/shape_input"
-                    android:focusable="false"
-                    android:hint="入行时间" />
-
-                <ImageView
-                    android:id="@+id/imageView1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignRight="@+id/et_register_add_id_card"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/icon_cruise_calendar" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/rl_register_add_info_3"
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/et_register_add_workno"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/rl_register_add_info_2"
-                android:layout_marginTop="1px"
-                android:background="@color/main_white" >
+                android:layout_height="56dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:gravity="center_vertical"
+                android:text="工作年限"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="@dimen/text_size_title" />
 
-                <TextView
-                    android:id="@+id/et_register_add_workno"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="20dp"
-                    android:background="@drawable/shape_input"
-                    android:text="工作年限"
-                    android:textSize="@dimen/text_size_title" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/rl_register_add_info_4"
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/tv_elevator_message"
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/rl_register_add_info_3"
-                android:background="@color/main_white" >
-
-                <TextView
-                    android:id="@+id/tv_elevator_message"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:layout_marginTop="20dp"
-                    android:background="@drawable/shape_input"
-                    android:singleLine="true"
-                    android:text="电梯品牌"
-                    android:textSize="18dp" />
-            </RelativeLayout>
+                android:layout_height="56dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:drawableRight="@drawable/icon_arrow_right"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="电梯品牌"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textSize="18dp" />
 
             <Button
                 android:id="@+id/btn_next_fragment"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_below="@id/rl_register_add_info_4"
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="25dp"
-                android:background="@drawable/shape_button_visiable"
+                android:background="@drawable/selector_button_normal"
                 android:text="下一步"
                 android:textColor="@color/main_white"
                 android:textSize="17sp" />
-        </RelativeLayout>
+        </LinearLayout>
     </ScrollView>
 
 </LinearLayout>

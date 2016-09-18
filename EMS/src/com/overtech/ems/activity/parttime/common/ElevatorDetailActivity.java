@@ -5,6 +5,9 @@ import java.util.HashMap;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
@@ -23,8 +26,9 @@ import com.overtech.ems.utils.SharedPreferencesKeys;
  */
 public class ElevatorDetailActivity extends BaseActivity {
 
-	private ImageView mGoBack;
-	private TextView mHeadContent;
+	private Toolbar toolbar;
+	private ActionBar actionBar;
+	private AppCompatTextView tvTitle;
 	private TextView mProjectName;
 	private TextView mElevatorBrand;
 	private TextView mElevatorModel;
@@ -64,8 +68,10 @@ public class ElevatorDetailActivity extends BaseActivity {
 	}
 
 	private void findViewById() {
-		mGoBack = (ImageView) findViewById(R.id.iv_headBack);
-		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
+		toolbar = (Toolbar) findViewById(R.id.toolBar);
+		setSupportActionBar(toolbar);
+		actionBar = getSupportActionBar();
+		tvTitle = (AppCompatTextView) findViewById(R.id.tvTitle);
 		mProjectName = (TextView) findViewById(R.id.tv_project_name);
 		mElevatorBrand = (TextView) findViewById(R.id.tv_elevator_brand);
 		mElevatorModel = (TextView) findViewById(R.id.tv_elevator_model);
@@ -94,16 +100,20 @@ public class ElevatorDetailActivity extends BaseActivity {
 	}
 
 	private void init() {
-		mGoBack.setVisibility(View.VISIBLE);
-		mHeadContent.setText("电梯详情");
-		getDataByElevatorNo();
-		mGoBack.setOnClickListener(new OnClickListener() {
+		tvTitle.setText("电梯详情");
+		toolbar.setNavigationOnClickListener(new OnClickListener() {
 
 			@Override
-			public void onClick(View arg0) {
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
 				stackInstance.popActivity(activity);
 			}
 		});
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
+		
+		getDataByElevatorNo();
 	}
 
 	private void getDataByElevatorNo() {

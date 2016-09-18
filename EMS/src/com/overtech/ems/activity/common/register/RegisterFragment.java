@@ -15,8 +15,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
@@ -41,8 +39,6 @@ public class RegisterFragment extends BaseFragment {
 	private EditTextWithDelete mRegisterPhone;
 	private EditTextWithDelete mEtValidateCode;
 	private String validateCode;
-	private TextView mHeadTitle;
-	private ImageView mDoBack;
 	private Button mNext;
 	public String mPhoneNo;
 	private RegFraBtnClickListener listener;
@@ -94,21 +90,13 @@ public class RegisterFragment extends BaseFragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		view = inflater.inflate(R.layout.fragment_register, null);
+		view = inflater.inflate(R.layout.fragment_register, container,false);
 		findViewById(view);
 		init();
 		return view;
 	}
 
 	private void init() {
-		mHeadTitle.setText("注册");
-		mDoBack.setVisibility(View.VISIBLE);
-		mDoBack.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				getActivity().onBackPressed();
-			}
-		});
 		mRegisterPhone.addTextChangedListener(new TextWatcher() {
 
 			@Override
@@ -228,8 +216,6 @@ public class RegisterFragment extends BaseFragment {
 	}
 
 	private void findViewById(View view) {
-		mHeadTitle = (TextView) view.findViewById(R.id.tv_headTitle);
-		mDoBack = (ImageView) view.findViewById(R.id.iv_headBack);
 		mNext = (Button) view.findViewById(R.id.btn_next_fragment);
 		mRegisterPhone = (EditTextWithDelete) view
 				.findViewById(R.id.et_register_phone);

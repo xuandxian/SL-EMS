@@ -6,14 +6,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
@@ -32,12 +33,13 @@ import com.squareup.okhttp.Request;
 import com.squareup.okhttp.Response;
 
 public class LostPasswordActivity extends BaseActivity {
+	private Toolbar toolbar;
+	private ActionBar actionBar;
+	private AppCompatTextView tvTitle;
 	private String mPhoneNo;
 	private String mSMSCode;
 	private EditTextWithDelete mPhoneNoEditText;
 	private EditTextWithDelete mSMSCodeEditText;
-	private TextView mHeadContent;
-	private ImageView mHeadBack;
 	private Button mNext;
 	private TimeButton mGetValicateCode;
 	private LostPasswordActivity activity;
@@ -97,8 +99,10 @@ public class LostPasswordActivity extends BaseActivity {
 	}
 
 	private void findViewById() {
-		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
-		mHeadBack = (ImageView) findViewById(R.id.iv_headBack);
+		toolbar = (Toolbar) findViewById(R.id.toolBar);
+		setSupportActionBar(toolbar);
+		actionBar = getSupportActionBar();
+		tvTitle = (AppCompatTextView) findViewById(R.id.tvTitle);
 		mPhoneNoEditText = (EditTextWithDelete) findViewById(R.id.et_lost_password_phone);
 		mSMSCodeEditText = (EditTextWithDelete) findViewById(R.id.et_valicate_code);
 		mGetValicateCode = (TimeButton) findViewById(R.id.btn_get_valicate_code);
@@ -106,8 +110,18 @@ public class LostPasswordActivity extends BaseActivity {
 	}
 
 	private void init() {
-		mHeadContent.setText("密码重置");
-		mHeadBack.setVisibility(View.VISIBLE);
+		toolbar.setNavigationOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				finish();
+			}
+		});
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
+		tvTitle.setText("密码重置");
 		mPhoneNoEditText.addTextChangedListener(new TextWatcher() {
 
 			@Override
@@ -147,13 +161,6 @@ public class LostPasswordActivity extends BaseActivity {
 			@Override
 			public void onClick(View view) {
 				getSmsCode();
-			}
-		});
-		mHeadBack.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View arg0) {
-				finish();
 			}
 		});
 	}
@@ -199,12 +206,12 @@ public class LostPasswordActivity extends BaseActivity {
 	}
 
 	public void submitVerificationCode() {
-		startProgressDialog(getResources().getString(
-				R.string.loading_public_sms));
 		mSMSCode = mSMSCodeEditText.getText().toString().trim();
 		if (TextUtils.isEmpty(mSMSCode)) {
 			Utilities.showToast("输入不能为空", activity);
 		} else {
+			startProgressDialog(getResources().getString(
+					R.string.loading_public_sms));
 			Requester requester = new Requester();
 			requester.cmd = 11;
 			requester.body.put(Constant.PHONENO, mPhoneNo);

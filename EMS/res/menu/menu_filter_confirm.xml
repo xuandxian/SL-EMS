@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.overtech.ems.activity.parttime.grabtask.GrabTaskDoFilterActivity" >
+
+    <item
+        android:id="@+id/menu_confirm"
+        android:title="确定"
+        app:showAsAction="always"/>
+
+</menu>

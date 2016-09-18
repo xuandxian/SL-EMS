@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="com.overtech.ems.activity.parttime.common.PackageDetailActivity" >
+    <item
+        android:id="@+id/menu_map"
+        android:icon="@drawable/icon_map"
+        android:title="地图"
+        app:showAsAction="always"/>
+
+</menu>

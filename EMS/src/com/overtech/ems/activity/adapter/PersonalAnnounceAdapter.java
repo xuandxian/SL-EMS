@@ -69,18 +69,18 @@ public class PersonalAnnounceAdapter extends BaseAdapter {
 
 		if (announceItemPosition.contains(String.valueOf(position))) {
 			vh.tvAnnouncementSummary.setTextColor(ctx.getResources().getColor(
-					R.color.announce_after));
+					R.color.colorPrimary30));
 			vh.tvAnnouncementTitle.setTextColor(ctx.getResources().getColor(
-					R.color.announce_after));
+					R.color.colorPrimary30));
 			vh.tvAnnouncementTime.setTextColor(ctx.getResources().getColor(
-					R.color.announce_after));
+					R.color.colorPrimary30));
 		} else {
 			vh.tvAnnouncementSummary.setTextColor(ctx.getResources().getColor(
-					R.color.announce_before));
+					R.color.colorPrimary));
 			vh.tvAnnouncementTitle.setTextColor(ctx.getResources().getColor(
-					R.color.announce_before));
+					R.color.colorPrimary));
 			vh.tvAnnouncementTime.setTextColor(ctx.getResources().getColor(
-					R.color.announce_before));
+					R.color.colorPrimary));
 		}
 		vh.tvAnnouncementSummary.setText(data.get("summary").toString());
 		vh.tvAnnouncementTitle.setText(data.get("theme").toString());

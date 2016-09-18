@@ -6,6 +6,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -42,8 +45,9 @@ import com.squareup.okhttp.Response;
 
 public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 		implements OnClickListener {
-	private TextView mHeadContent;
-	private ImageView mDoBack;
+	private Toolbar toolbar;
+	private ActionBar actionBar;
+	private AppCompatTextView tvTitle;
 	private Button mNextContent;
 	private TimeButton mGetMessageCode;
 	private EditTextWithDelete mPhoneNoEditText;
@@ -155,7 +159,19 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 				SharedPreferencesKeys.UID, "");
 		certificate = (String) SharePreferencesUtils.get(activity,
 				SharedPreferencesKeys.CERTIFICATED, "");
-		mDoBack.setOnClickListener(this);
+
+		toolbar.setNavigationOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				stackInstance.popActivity(activity);
+			}
+		});
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
+		tvTitle.setText("更换手机号");
 		mNextContent.setOnClickListener(this);
 		mGetMessageCode.setOnClickListener(this);
 		mPhoneNoEditText.addTextChangedListener(new TextWatcher() {
@@ -186,14 +202,15 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 	}
 
 	private void initView() {
-		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
+		toolbar = (Toolbar) findViewById(R.id.toolBar);
+		setSupportActionBar(toolbar);
+		actionBar = getSupportActionBar();
+		tvTitle = (AppCompatTextView) findViewById(R.id.tvTitle);
+
 		mGetMessageCode = (TimeButton) findViewById(R.id.get_verification_code);
-		mDoBack = (ImageView) findViewById(R.id.iv_headBack);
 		mNextContent = (Button) findViewById(R.id.btn_next);
 		mPhoneNoEditText = (EditTextWithDelete) findViewById(R.id.et_update_phone);
 		mValidateCodeEditText = (EditTextWithDelete) findViewById(R.id.et_update_verificate_password);
-		mHeadContent.setText("更换手机号");
-		mDoBack.setVisibility(View.VISIBLE);
 	}
 
 	@Override
@@ -204,9 +221,6 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 			break;
 		case R.id.btn_next:
 			submitVerificateSmsCode();
-			break;
-		case R.id.iv_headBack:
-			stackInstance.popActivity(activity);
 			break;
 		}
 	}

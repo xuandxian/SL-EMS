@@ -23,7 +23,7 @@
             android:background="@drawable/horizontal_line"
             android:gravity="center"
             android:text="未完成"
-            android:textColor="#666666"
+            android:textColor="@color/colorPrimary"
             android:textSize="15sp" />
 
         <View
@@ -36,12 +36,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:background="@drawable/abc_textfield_search_activated_mtrl_alpha"
             android:gravity="center"
             android:text="已完成"
-            android:textColor="#666666"
+            android:textColor="@color/primary_text_default_material_light"
             android:textSize="15sp" />
     </LinearLayout>
-
+	<View 
+	    android:layout_width="match_parent"
+	    android:layout_height="1px"
+	    android:background="?android:attr/listDivider"
+	    />
     <FrameLayout
         android:id="@+id/fl_container"
         android:layout_width="match_parent"
