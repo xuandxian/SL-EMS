@@ -14,10 +14,10 @@
 
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/swPartner"
-            android:layout_width="100dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:checked="false"
-            android:gravity="top|left"
+            android:gravity="top|right"
             android:text="搭档收藏" />
 
         <android.support.v7.widget.AppCompatTextView

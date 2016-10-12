@@ -306,6 +306,7 @@ public class RegisterActivity extends BaseActivity implements
 						} else {// 没有选择其他图片
 							Utilities.showToast("注册成功了,\n请等待后台分配用户名和密码",
 									activity);
+							finish();
 						}
 
 					}
@@ -410,7 +411,8 @@ public class RegisterActivity extends BaseActivity implements
 
 						}
 					} else {
-						Utilities.showToast("图片上传完成", activity);
+						Utilities.showToast("图片上传完成,请等待注册审核通过", activity);
+						finish();
 					}
 				} else {
 					// Utilities.showToast("", activity);
@@ -425,14 +427,7 @@ public class RegisterActivity extends BaseActivity implements
 	@Override
 	public void onRegOthCerFrgClick() {
 		alertBuilder.setTitle("温馨提示").setMessage("您确认提交以上信息？")
-				.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						// TODO Auto-generated method stub
-
-					}
-				})
+				.setNegativeButton("取消", null)
 				.setPositiveButton("确认", new DialogInterface.OnClickListener() {
 
 					@Override

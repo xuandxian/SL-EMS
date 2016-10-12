@@ -14,6 +14,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
@@ -54,7 +55,7 @@ public class ResetPasswordActivity extends BaseActivity {
 				int st = bean.st;
 				String beanMsg = bean.msg;
 				if (st == 0) {
-					Utilities.showToast(beanMsg, context);
+					Utilities.showToast(beanMsg, context,Toast.LENGTH_SHORT);
 					Intent intent = new Intent(activity,
 							ResetPasswordSuccessActivity.class);
 					startActivity(intent);

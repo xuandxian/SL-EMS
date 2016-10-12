@@ -1,6 +1,5 @@
 package com.overtech.ems.activity.fulltime.maintenance;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,14 +8,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.baidu.mapapi.map.ArcOptions;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseFragment;
-import com.overtech.ems.activity.parttime.tasklist.ScanCodeActivity;
-import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.FragmentUtils;
 
 public class MaintenanceFragment extends BaseFragment implements
@@ -82,11 +77,6 @@ public class MaintenanceFragment extends BaseFragment implements
 			btMaintenanceDone.setBackgroundResource(R.drawable.horizontal_line);
 			btMaintenanceNone.setTextColor(getResources().getColor(R.color.primary_text_default_material_light));
 			btMaintenanceDone.setTextColor(getResources().getColor(R.color.colorPrimary));
-			break;
-		case R.id.iv_common_qrcode:
-			Intent intent = new Intent(getActivity(), ScanCodeActivity.class);
-			intent.putExtra(Constant.EMPLOYEETYPE, "全职");
-			startActivity(intent);
 			break;
 		default:
 			break;

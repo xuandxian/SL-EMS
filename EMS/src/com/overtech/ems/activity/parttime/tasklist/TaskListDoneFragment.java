@@ -84,6 +84,8 @@ public class TaskListDoneFragment extends BaseFragment implements
 				Intent intent = new Intent(getActivity(),
 						TaskListPackageDoneDetailActivity.class);
 				intent.putExtra(Constant.TASKNO, taskNo);
+				intent.putExtra("taskPackageName",
+						list.get(position).get("taskPackageName").toString());
 				startActivity(intent);
 			}
 		});
@@ -137,7 +139,7 @@ public class TaskListDoneFragment extends BaseFragment implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 			}
 

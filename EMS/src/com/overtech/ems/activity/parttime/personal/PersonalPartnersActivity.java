@@ -71,8 +71,8 @@ public class PersonalPartnersActivity extends BaseActivity implements
 		actionBar.setDisplayShowHomeEnabled(true);
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		tvHead.setText("搭档收藏");
-		swipeRefresh.setColorSchemeColors(R.color.material_deep_teal_200,
-				R.color.material_deep_teal_500);
+		swipeRefresh.setColorSchemeResources(R.color.colorPrimary,
+				R.color.colorPrimary30);
 		swipeRefresh.setOnRefreshListener(this);
 		swipeRefresh.post(new Runnable() {
 
@@ -130,19 +130,7 @@ public class PersonalPartnersActivity extends BaseActivity implements
 							alertBuilder
 									.setTitle("温馨提示")
 									.setMessage("您确认要删除搭档吗？")
-									.setNegativeButton(
-											"取消",
-											new DialogInterface.OnClickListener() {
-
-												@Override
-												public void onClick(
-														DialogInterface dialog,
-														int which) {
-													// TODO Auto-generated
-													// method stub
-													deletePartener(position);
-												}
-											})
+									.setNegativeButton("取消", null)
 									.setPositiveButton(
 											"确认",
 											new DialogInterface.OnClickListener() {
@@ -153,7 +141,7 @@ public class PersonalPartnersActivity extends BaseActivity implements
 														int which) {
 													// TODO Auto-generated
 													// method stub
-
+													deletePartener(position);
 												}
 											}).show();
 						}
@@ -161,6 +149,7 @@ public class PersonalPartnersActivity extends BaseActivity implements
 					recyclerView.setAdapter(adapter);
 				} else {
 					adapter.setData(datas);
+					adapter.notifyDataSetChanged();
 				}
 			}
 
@@ -170,7 +159,7 @@ public class PersonalPartnersActivity extends BaseActivity implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 			}
 
@@ -189,7 +178,7 @@ public class PersonalPartnersActivity extends BaseActivity implements
 		startProgressDialog("删除中...");
 		Map<String, Object> p = adapter.getData(position);
 		HashMap<String, Object> body = new HashMap<String, Object>();
-		body.put("uid", body.get("uid").toString());
+		body.put("uid", p.get("uid").toString());
 		body.put("isPartner", "1");
 		HttpConnector<Bean> conn = new HttpConnector<Bean>(20059, uid,
 				certificate, body) {
@@ -213,7 +202,7 @@ public class PersonalPartnersActivity extends BaseActivity implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 
 			}

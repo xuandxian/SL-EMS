@@ -40,6 +40,7 @@ import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.bean.Bean;
 import com.overtech.ems.http.HttpConnector;
 import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.mapdialog.InstallerMapDialog;
 import com.overtech.ems.utils.AppUtils;
 import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.Utilities;
@@ -62,6 +63,7 @@ public class TaskListNoneFragment extends BaseFragment implements
 	private List<Map<String, Object>> list;
 	private LinearLayout mNoPage;
 	private Button reLoad;
+	private InstallerMapDialog mapDialog;
 	/**
 	 * 记录年检提醒状态，如果出现之后点击确认后就不再提醒了
 	 */
@@ -155,28 +157,14 @@ public class TaskListNoneFragment extends BaseFragment implements
 						// TODO Auto-generated method stub
 						switch (index) {
 						case 0:// 导航
-							LatLng startPoint = adapter.getCurrentLocation();
-							LatLng endPoint = adapter.getDestination(position);
-							String endName = adapter.getDesName(position);
-							startNavicate(startPoint, endPoint, endName);
+							startNavicate(adapter.getLatitude(position),
+									adapter.getLongitude(position));
 							break;
 						case 1:// t退单
 							alertBuilder
 									.setTitle("温馨提示")
 									.setMessage("您确定要退单")
-									.setNegativeButton(
-											"取消",
-											new DialogInterface.OnClickListener() {
-
-												@Override
-												public void onClick(
-														DialogInterface dialog,
-														int which) {
-													// TODO Auto-generated
-													// method stub
-
-												}
-											})
+									.setNegativeButton("取消", null)
 									.setPositiveButton(
 											"确认",
 											new DialogInterface.OnClickListener() {
@@ -291,7 +279,22 @@ public class TaskListNoneFragment extends BaseFragment implements
 					Utilities.showToast(response.msg, mActivity);
 					return;
 				} else if (time.equals("1")) {// 退单时间距离维保时间在72小时内，退单会影响星级评定
-					Utilities.showToast(response.msg, mActivity);
+					alertBuilder
+							.setTitle("温馨提示")
+							.setMessage(response.msg)
+							.setNegativeButton("取消", null)
+							.setPositiveButton("确认",
+									new DialogInterface.OnClickListener() {
+
+										@Override
+										public void onClick(
+												DialogInterface dialog,
+												int which) {
+											// TODO Auto-generated method stub
+											dealChargeBackTask();
+										}
+									}).show();
+
 				} else {
 					// 退单时间距离维保时间72小时外
 					dealChargeBackTask();
@@ -305,7 +308,7 @@ public class TaskListNoneFragment extends BaseFragment implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 			}
 
@@ -353,7 +356,7 @@ public class TaskListNoneFragment extends BaseFragment implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 			}
 
@@ -366,18 +369,13 @@ public class TaskListNoneFragment extends BaseFragment implements
 		conn.sendRequest();
 	}
 
-	private void startNavicate(LatLng startPoint, LatLng endPoint,
-			String endName) {// endName暂时不使用
+	private void startNavicate(double latitude, double longitude) {// endName暂时不使用
 		// 构建 route搜索参数
-		RouteParaOption para = new RouteParaOption().startName("起点")
-				.startPoint(startPoint).endPoint(endPoint).endName("终点")
-				.busStrategyType(EBusStrategyType.bus_time_first);
-		try {
-			BaiduMapRoutePlan.setSupportWebRoute(true);
-			BaiduMapRoutePlan.openBaiduMapTransitRoute(para, mActivity);
-			Logr.e("专为5.1量身打造的Logr，fuck，你到底是执行不执行");
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (mapDialog == null) {
+			mapDialog = new InstallerMapDialog(mActivity);
+			mapDialog.showDialog(latitude, longitude);
+		} else {
+			mapDialog.showDialog(latitude, longitude);
 		}
 	}
 
@@ -436,18 +434,25 @@ public class TaskListNoneFragment extends BaseFragment implements
 
 					for (Map<String, Object> map : list) {
 						String isAs = map.get("isAs").toString();
-						if (TextUtils.equals(isAs, "1")&&!hasShowAsNotification) {// 年检包
-							alertBuilder.setTitle("温馨提示")
+						if (TextUtils.equals(isAs, "1")
+								&& !hasShowAsNotification) {// 年检包
+							alertBuilder
+									.setTitle("温馨提示")
 									.setMessage("发现你有需要年检的任务单，请按时年检")
 									.setNegativeButton("取消", null)
-									.setPositiveButton("确认", new DialogInterface.OnClickListener() {
-										
-										@Override
-										public void onClick(DialogInterface dialog, int which) {
-											// TODO Auto-generated method stub
-											hasShowAsNotification=true;
-										}
-									}).show();
+									.setPositiveButton(
+											"确认",
+											new DialogInterface.OnClickListener() {
+
+												@Override
+												public void onClick(
+														DialogInterface dialog,
+														int which) {
+													// TODO Auto-generated
+													// method stub
+													hasShowAsNotification = true;
+												}
+											}).show();
 						} else {// 维保包
 
 						}
@@ -463,7 +468,7 @@ public class TaskListNoneFragment extends BaseFragment implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 				if (adapter != null) {
 					adapter.getData().clear();
@@ -523,7 +528,7 @@ public class TaskListNoneFragment extends BaseFragment implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 
 			}

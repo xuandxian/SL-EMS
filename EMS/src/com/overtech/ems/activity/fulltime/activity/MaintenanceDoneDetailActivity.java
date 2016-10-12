@@ -99,7 +99,7 @@ public class MaintenanceDoneDetailActivity extends BaseActivity {
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 				
 			}
@@ -110,6 +110,7 @@ public class MaintenanceDoneDetailActivity extends BaseActivity {
 				stopProgressDialog();
 			}
 		};
+		conn.sendRequest();
 	}
 
 	private void initView() {

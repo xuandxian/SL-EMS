@@ -56,7 +56,7 @@ public class MyPushReceiver extends BroadcastReceiver {
 			Map<String, String> extras = GsonUtils.getInstance().fromJson(msg,
 					Map.class);
 			String value = extras.get("action");
-			Log.d("====fuck====", value);
+			
 			if (TextUtils.equals(value, "1")) {
 				Intent m = new Intent(context, MainActivity.class);
 				m.putExtra("orderNo", extras.get("orderNo"));
@@ -101,6 +101,8 @@ public class MyPushReceiver extends BroadcastReceiver {
 			} else if (key.equals(JPushInterface.EXTRA_CONNECTION_CHANGE)) {
 				sb.append("\nkey:" + key + ", value:" + bundle.getBoolean(key));
 			} else if (key.equals(JPushInterface.EXTRA_EXTRA)) {
+				String s=bundle.getString(JPushInterface.EXTRA_EXTRA);
+				Log.i("额外消息", s==null?"什么都没有":s);
 				if (bundle.getString(JPushInterface.EXTRA_EXTRA).isEmpty()) {
 					Log.i(TAG, "This message has no Extra data");
 					continue;

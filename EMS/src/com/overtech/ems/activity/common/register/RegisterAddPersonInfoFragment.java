@@ -144,6 +144,10 @@ public class RegisterAddPersonInfoFragment extends BaseFragment implements
 				Utilities.showToast("上岗证编号不能为空", mContext);
 				return;
 			}
+			if(!AppUtils.isNumberOrCharac(workNumContent)){
+				Utilities.showToast("上岗证输入不合法", mContext);
+				return ;
+			}
 			if (TextUtils.isEmpty(cityName)) {
 				Utilities.showToast("您还没有选择城市", mContext);
 				return;

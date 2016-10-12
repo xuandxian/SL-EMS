@@ -24,7 +24,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:orientation="vertical" >
 
                 <android.support.v7.widget.AppCompatTextView
@@ -32,28 +32,28 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="地址："
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/tv_elevator_no"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="梯号："
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/tv_fault_from"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="故障来源："
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
                 <android.support.v7.widget.AppCompatTextView
                     android:id="@+id/tv_repair_content"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="报修内容："
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
             </LinearLayout>
 
             <ImageView
@@ -66,24 +66,40 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
         android:orientation="vertical" >
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/bt_close_people"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@drawable/selector_button_normal"
             android:text="关人"
-            android:textAppearance="@style/TextAppearance.AppCompat.Button"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
             android:visibility="gone" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/bt_component_list"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/selector_button_normal"
             android:text="配件列表"
-            android:textAppearance="@style/TextAppearance.AppCompat.Button"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
             android:visibility="gone" />
     </LinearLayout>
 

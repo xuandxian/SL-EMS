@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -81,7 +82,11 @@ public class TaskListAdapter extends BaseAdapter {
 			convertView.setTag(new ViewHolder(convertView));
 		}
 		ViewHolder holder = (ViewHolder) convertView.getTag();
-		holder.taskPackageName.setText(data.get("taskPackageName").toString());
+		if(TextUtils.equals("1", data.get("isAs").toString())){
+			holder.taskPackageName.setText(data.get("taskPackageName").toString()+"(年检)");
+		}else{
+			holder.taskPackageName.setText(data.get("taskPackageName").toString());
+		}
 		String amounts = data.get("elevatorAmounts").toString();
 		holder.elevatorAmounts.setText(amounts.substring(0,
 				amounts.indexOf(".")));
@@ -127,6 +132,14 @@ public class TaskListAdapter extends BaseAdapter {
 		String desLng = data.get("longitude").toString();
 		return new LatLng(Double.parseDouble(desLat),
 				Double.parseDouble(desLng));
+	}
+	public double getLatitude(int position){
+		Map<String,Object> data=list.get(position);
+		return Double.parseDouble(data.get("latitude").toString());
+	}
+	public double getLongitude(int position){
+		Map<String,Object> data=list.get(position);
+		return Double.parseDouble(data.get("longitude").toString());
 	}
 
 	/**

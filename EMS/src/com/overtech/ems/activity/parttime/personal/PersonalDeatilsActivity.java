@@ -168,7 +168,7 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 
 			}
@@ -369,7 +369,7 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 	private void startUpload(final String worklicenseNo, String date) {
 		// TODO Auto-generated method stub
 		startProgressDialog(getResources().getString(
-				R.string.loading_public_default));
+				R.string.loading_public_upload));
 		HashMap<String, Object> body = new HashMap<String, Object>();
 		body.put("workLicenseNo", worklicenseNo);
 		body.put("workLicenseDueDate", date);
@@ -407,7 +407,7 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 
 			}
@@ -415,7 +415,7 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 			@Override
 			public void stopDialog() {
 				// TODO Auto-generated method stub
-
+				stopProgressDialog();
 			}
 		};
 		conn.sendRequest();
@@ -442,7 +442,7 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 						// TODO Auto-generated method stub
 						int index = (Integer) v.getTag();
 						paths[index] = null;
-						for (int i = index; i < paths.length; i++) {
+						for (int i = index; i < paths.length; i++) {//将数组中后面的图片往前移一位填补被删除的图片的位置
 							if (i != paths.length - 1) {
 								paths[i] = paths[i + 1];
 							} else {
@@ -510,7 +510,8 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 						// TODO Auto-generated method stub
 						exit();
 					}
-				}).setNegativeButton("取消", null).show();
+				}).setNegativeButton("取消", null).setOnDismissListener(null)
+				.show();
 	}
 
 	private void exit() {
@@ -543,7 +544,7 @@ public class PersonalDeatilsActivity extends BaseActivity implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 
 			}

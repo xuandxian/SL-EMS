@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
@@ -35,6 +36,7 @@ import com.overtech.ems.activity.common.password.LostPasswordActivity;
 import com.overtech.ems.activity.common.register.RegisterActivity;
 import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.config.StatusCode;
+import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.Bean;
 import com.overtech.ems.http.HttpConnector;
 import com.overtech.ems.security.MD5Util;
@@ -202,10 +204,11 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			@Override
 			public void bizFailed() {
 				// TODO Auto-generated method stub
+				stopProgressDialog();
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 				stopProgressDialog();
 			}
@@ -306,7 +309,7 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(LoginActivity.this,
 						MainActivity.class);
@@ -328,6 +331,10 @@ public class LoginActivity extends BaseActivity implements OnClickListener {
 		// TODO Auto-generated method stub
 		((MyApplication) getApplication()).locationService.stop();
 		super.onBackPressed();
+	}
+	
+	public void changeIP(View view){
+		SystemConfig.NEWIP="http://"+((AppCompatEditText)findViewById(R.id.etIP)).getText().toString()+":8080/slems/MobileServlet";
 	}
 
 }

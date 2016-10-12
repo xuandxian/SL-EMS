@@ -107,7 +107,7 @@ public class MaintenanceReportExpandAdapter extends BaseExpandableListAdapter {
 		tvGroup.setText(data.get("name").toString());
 		if (isExpanded) {
 			tvGroup.setTextColor(ctx.getResources().getColor(
-					R.color.accent_material_light));
+					R.color.colorPrimary));
 		} else {
 			tvGroup.setTextColor(ctx.getResources().getColor(
 					R.color.material_blue_grey_800));

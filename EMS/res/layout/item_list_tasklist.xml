@@ -38,6 +38,7 @@
         android:layout_alignBaseline="@+id/tv_name"
         android:layout_alignBottom="@+id/tv_name"
         android:layout_alignParentRight="true"
+        android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:text="3"
         android:textAppearance="@style/TextAppearance.AppCompat.Small" />

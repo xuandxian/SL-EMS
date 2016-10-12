@@ -75,7 +75,16 @@ public class Utilities {
 		Toast toast = Toast.makeText(context, message, duration);
 		toast.show();
 	}
-
+	/**
+	 * 公用提示框
+	 * 
+	 * @param message
+	 * @param context
+	 */
+	public static void showToast(CharSequence message, Context context,int duration) {
+		Toast toast = Toast.makeText(context, message, duration);
+		toast.show();
+	}
 	/**
 	 * 公用提示框
 	 * 

@@ -124,7 +124,7 @@ public class MaintenanceDoneFragment extends BaseFragment {
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 			}
 

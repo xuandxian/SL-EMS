@@ -18,8 +18,10 @@ import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.entity.bean.Bean;
 import com.overtech.ems.http.HttpConnector;
 import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.utils.AppUtils;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
+import com.overtech.ems.utils.Utilities;
 
 public class QuestionResponseActivity extends BaseActivity implements
 		OnClickListener {
@@ -91,7 +93,7 @@ public class QuestionResponseActivity extends BaseActivity implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 
 			}
@@ -138,7 +140,11 @@ public class QuestionResponseActivity extends BaseActivity implements
 				setResult(RESULT_OK);
 				stackInstance.popActivity(activity);
 			} else {
-				startLoading();
+				if(AppUtils.isValidTagAndAlias(sFeedBackInfo)){
+					startLoading();
+				}else{
+					Utilities.showToast("输入数据不合法", activity);
+				}
 			}
 			break;
 
@@ -153,6 +159,7 @@ public class QuestionResponseActivity extends BaseActivity implements
 		HashMap<String, Object> body = new HashMap<String, Object>();
 		body.put(Constant.TASKNO, sTaskNo);
 		body.put(Constant.FEEDBACKINFO, sFeedBackInfo);
+		body.put(Constant.ELEVATORNO, sElevatorNo);
 		HttpConnector<Bean> conn = new HttpConnector<Bean>(20057, uid,
 				certificate, body) {
 
@@ -165,6 +172,7 @@ public class QuestionResponseActivity extends BaseActivity implements
 			@Override
 			public void bizSuccess(Bean response) {
 				// TODO Auto-generated method stub
+				Utilities.showToast("提交成功", activity);
 				// Intent intent = new Intent(QuestionResponseActivity.this,
 				// TaskListPackageDetailActivity.class);
 				// Bundle bundle = new Bundle();
@@ -182,7 +190,7 @@ public class QuestionResponseActivity extends BaseActivity implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 			}
 

@@ -36,6 +36,7 @@ import android.widget.TextView;
 import com.overtech.ems.R;
 import com.overtech.ems.activity.adapter.ElevatorBrandAdapter;
 import com.overtech.ems.entity.bean.ZoneBean.Zone;
+import com.overtech.ems.utils.AppUtils;
 import com.overtech.ems.utils.Utilities;
 import com.overtech.ems.widget.EditTextWithDelete;
 import com.overtech.ems.widget.popwindow.DimPopupWindow;
@@ -309,6 +310,10 @@ public class RegisterAddPersonEduAndWorkFragment extends Fragment implements
 			workUnit = mCurrWork.getText().toString().trim();
 			if (TextUtils.isEmpty(workUnit)) {
 				Utilities.showToast("工作单位不能为空", mContext);
+				return;
+			}
+			if(!AppUtils.isValidCopName(workUnit)){
+				Utilities.showToast("工作单位输入不合法", mContext);
 				return;
 			}
 			enterTime = tvEnterTime.getText().toString().trim();

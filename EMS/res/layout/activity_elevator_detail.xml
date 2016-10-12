@@ -1,310 +1,198 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
-    <include
-        android:id="@+id/include1"
-        layout="@layout/layout_toolbar" />
+    <include layout="@layout/layout_toolbar" />
 
     <com.overtech.ems.widget.ReboundScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/include1" >
+        android:layout_height="match_parent" >
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/device_no"
-                style="@style/tv_list_primary_style"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="10dp"
-                android:text="项目名称:" />
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                app:contentPadding="16dp" >
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_project_name"
-                style="@style/tv_list_primary_style"
-                android:layout_alignBaseline="@+id/device_no"
-                android:layout_alignBottom="@+id/device_no"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/device_no" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/use_department"
-                style="@style/tv_list_primary_style"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/device_no"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="8dp"
-                android:text="电梯品牌:" />
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/tv_project_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_elevator_brand"
-                style="@style/tv_list_primary_style"
-                android:layout_alignBaseline="@+id/use_department"
-                android:layout_alignBottom="@+id/use_department"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/use_department" />
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/tv_elevator_brand"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/elevator_type"
-                style="@style/tv_list_primary_style"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/use_department"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="8dp"
-                android:text="电梯型号:" />
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/tv_elevator_aliase"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_elevator_model"
-                style="@style/tv_list_primary_style"
-                android:layout_alignBaseline="@+id/elevator_type"
-                android:layout_alignBottom="@+id/elevator_type"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/elevator_type" />
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/tv_maitenance_company"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/elevator_speed"
-                style="@style/tv_list_primary_style"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/elevator_type"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="8dp"
-                android:text="电梯编号:" />
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/tv_device_address"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_elevator_no"
-                style="@style/tv_list_primary_style"
-                android:layout_alignBaseline="@+id/elevator_speed"
-                android:layout_alignBottom="@+id/elevator_speed"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/elevator_speed" />
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                app:contentPadding="16dp" >
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/elevator_capacity"
-                style="@style/tv_list_primary_style"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/elevator_speed"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="8dp"
-                android:text="梯        号:" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_elevator_aliase"
-                style="@style/tv_list_primary_style"
-                android:layout_alignBaseline="@+id/elevator_capacity"
-                android:layout_alignBottom="@+id/elevator_capacity"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/elevator_capacity" />
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/tv_tenement_company"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/elevator_floor"
-                style="@style/tv_list_primary_style"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/elevator_capacity"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="8dp"
-                android:text="物业公司:" />
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/tv_tenement_person"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_tenement_company"
-                style="@style/tv_list_primary_style"
-                android:layout_alignBaseline="@+id/elevator_floor"
-                android:layout_alignBottom="@+id/elevator_floor"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/elevator_floor" />
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/tv_tenement_tel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="8dp"
+                        android:drawableRight="@drawable/icon_common_phone_green"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/elevator_stack"
-                style="@style/tv_list_primary_style"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/elevator_floor"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="8dp"
-                android:text="物业联系人:" />
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/tv_maintenance_type"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_tenement_person"
-                style="@style/tv_list_primary_style"
-                android:layout_alignBaseline="@+id/elevator_stack"
-                android:layout_alignBottom="@+id/elevator_stack"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/elevator_stack" />
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/tv_annual_inspection_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/elevator_doors"
-                style="@style/tv_list_primary_style"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/elevator_stack"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="8dp"
-                android:text="物业联系电话:" />
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/tv_last_maintenance_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_tenement_tel"
-                style="@style/tv_list_primary_style"
-                android:layout_alignBaseline="@+id/elevator_doors"
-                android:layout_alignBottom="@+id/elevator_doors"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/elevator_doors" />
+            <android.support.v7.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="8dp"
+                app:contentPadding="16dp" >
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/elevator_maintenance"
-                style="@style/tv_list_primary_style"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/elevator_doors"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="8dp"
-                android:text="维保公司:" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" >
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_maitenance_company"
-                style="@style/tv_list_primary_style"
-                android:layout_alignBaseline="@+id/elevator_maintenance"
-                android:layout_alignBottom="@+id/elevator_maintenance"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/elevator_maintenance" />
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/tv_elevator_model"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/elevator_inspect"
-                style="@style/tv_list_primary_style"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/elevator_maintenance"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="8dp"
-                android:text="额定载重:" />
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/tv_elevator_no"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_load_capacity"
-                style="@style/tv_list_primary_style"
-                android:layout_alignBaseline="@+id/elevator_inspect"
-                android:layout_alignBottom="@+id/elevator_inspect"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/elevator_inspect" />
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/tv_load_capacity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/elevator_last_maintenance"
-                style="@style/tv_list_primary_style"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/elevator_inspect"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="8dp"
-                android:text="额定速度:" />
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/tv_nominal_speed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_nominal_speed"
-                style="@style/tv_list_primary_style"
-                android:layout_alignBaseline="@+id/elevator_last_maintenance"
-                android:layout_alignBottom="@+id/elevator_last_maintenance"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/elevator_last_maintenance" />
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/tv_storey_platform_door"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
 
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/elevator_floor_stack_bar"
-                style="@style/tv_list_primary_style"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/elevator_last_maintenance"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="8dp"
-                android:text="层站门:" />
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_storey_platform_door"
-                style="@style/tv_list_primary_style"
-                android:layout_alignBaseline="@+id/elevator_floor_stack_bar"
-                android:layout_alignBottom="@+id/elevator_floor_stack_bar"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/elevator_floor_stack_bar" />
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/elevator_height"
-                style="@style/tv_list_primary_style"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/elevator_floor_stack_bar"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="8dp"
-                android:text="提升高度:" />
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_elevator_higher"
-                style="@style/tv_list_primary_style"
-                android:layout_alignBaseline="@+id/elevator_height"
-                android:layout_alignBottom="@+id/elevator_height"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/elevator_height" />
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/elevator_maintenance_type"
-                style="@style/tv_list_primary_style"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/elevator_height"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="8dp"
-                android:text="保养类型:" />
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_maintenance_type"
-                style="@style/tv_list_primary_style"
-                android:layout_alignBaseline="@+id/elevator_maintenance_type"
-                android:layout_alignBottom="@+id/elevator_maintenance_type"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/elevator_maintenance_type" />
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/elevator_address"
-                style="@style/tv_list_primary_style"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/elevator_maintenance_type"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="8dp"
-                android:text="设备地址:" />
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_device_address"
-                style="@style/tv_list_primary_style"
-                android:layout_alignBaseline="@+id/elevator_address"
-                android:layout_alignBottom="@+id/elevator_address"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/elevator_address" />
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/elevator_nianjian_date"
-                style="@style/tv_list_primary_style"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/elevator_address"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="8dp"
-                android:text="年检日期:" />
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_annual_inspection_date"
-                style="@style/tv_list_primary_style"
-                android:layout_alignBaseline="@+id/elevator_nianjian_date"
-                android:layout_alignBottom="@+id/elevator_nianjian_date"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/elevator_nianjian_date" />
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/elevator_last_maintenance_date"
-                style="@style/tv_list_primary_style"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/elevator_nianjian_date"
-                android:layout_marginLeft="15dp"
-                android:layout_marginTop="8dp"
-                android:paddingBottom="15dp"
-                android:text="上次保养日期:" />
-
-            <android.support.v7.widget.AppCompatTextView
-                android:id="@+id/tv_last_maintenance_date"
-                style="@style/tv_list_primary_style"
-                android:layout_alignBaseline="@+id/elevator_last_maintenance_date"
-                android:layout_alignBottom="@+id/elevator_last_maintenance_date"
-                android:layout_marginLeft="5dp"
-                android:layout_toRightOf="@+id/elevator_last_maintenance_date" />
-        </RelativeLayout>
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/tv_elevator_higher"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp" />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+        </LinearLayout>
     </com.overtech.ems.widget.ReboundScrollView>
 
-</RelativeLayout>
+</LinearLayout>

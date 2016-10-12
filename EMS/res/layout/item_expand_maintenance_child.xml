@@ -8,9 +8,11 @@
         android:id="@+id/tv_child_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="16dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="32dp"
+        android:layout_marginTop="16dp"
         android:text="child_default"
-        android:textColor="@color/colorPrimary30"
+        android:textColor="@color/colorPrimary"
         android:textSize="16sp" />
 
     <TextView
@@ -18,8 +20,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="16dp"
-        android:textColor="@color/colorPrimary30"
+        android:textColor="@color/colorPrimary"
         android:textSize="16sp" />
 
 </LinearLayout>

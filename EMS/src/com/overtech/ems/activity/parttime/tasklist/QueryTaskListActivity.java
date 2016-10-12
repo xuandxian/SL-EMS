@@ -116,7 +116,6 @@ public class QueryTaskListActivity extends BaseActivity implements
 		lvTaskList = (ListView) findViewById(R.id.lv_task_details);
 		lvTaskList.addFooterView(mListFooterView);
 
-		tvTitle.setText("维保清单");
 		toolbar.setNavigationOnClickListener(new OnClickListener() {
 
 			@Override
@@ -141,6 +140,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 				return true;
 			}
 		});
+		tvTitle.setText("维保清单");
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setDisplayShowHomeEnabled(true);
 		actionBar.setDisplayShowTitleEnabled(false);
@@ -174,10 +174,11 @@ public class QueryTaskListActivity extends BaseActivity implements
 				Map<String, Object> currentElevator = null;
 				String isMeetRequire = response.body.get("isMeetRequire")
 						.toString();// 是否满足维保要求
-				String feedbacked = response.body.get("feedbacked").toString();// 是否已经完成该电梯
-																				// 0还没做
-																				// 1已经做了
 				if (TextUtils.equals(isMeetRequire, "1")) {// 满足
+					String feedbacked = response.body.get("feedbacked")
+							.toString();// 是否已经完成该电梯
+					// 0还没做
+					// 1已经做了
 					List<Map<String, Object>> result = (List<Map<String, Object>>) response.body
 							.get("data");
 					for (int i = 0; i < result.size(); i++) {// 遍历电梯编号，得到当前电梯正在维保的电梯
@@ -225,7 +226,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 			}
 
@@ -283,7 +284,7 @@ public class QueryTaskListActivity extends BaseActivity implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 			}
 
@@ -301,7 +302,8 @@ public class QueryTaskListActivity extends BaseActivity implements
 		alertBuilder
 				.setTitle("温馨提示")
 				.setMessage(
-						"电梯信息：" + address + "\n" + "请将电梯监测设备按钮调至维保状态后开始进行维保工作")
+						"电梯信息：" + address + "\n\n"
+								+ "请将电梯监测设备按钮调至维保状态后开始进行维保工作")
 				.setPositiveButton("确认", new DialogInterface.OnClickListener() {
 
 					@Override
@@ -385,27 +387,34 @@ public class QueryTaskListActivity extends BaseActivity implements
 				intent.putExtra(Constant.ELEVATORNO, sElevatorNo);
 				startActivity(intent);
 				stackInstance.popActivity(activity);
-				/*
-				 * if (TextUtils.equals(isAllCompleted, "1")) {//该业务逻辑暂不需要 if
-				 * (TextUtils.equals("0", taskStatus)) { // 任务包中还有未完成的
-				 * Utilities.showToast("您还有未完成的电梯", activity); // TODO Intent
-				 * intent = new Intent(QueryTaskListActivity.this,
-				 * QuestionResponseActivity.class);
-				 * intent.putExtra(Constant.TASKNO, sTaskNo);
-				 * intent.putExtra(Constant.ELEVATORNO, sElevatorNo);
-				 * startActivity(intent); stackInstance.popActivity(activity); }
-				 * else { // 任务包中全部都完成了 // TODO Intent intent = new
-				 * Intent(QueryTaskListActivity.this, EvaluationActivity.class);
-				 * intent.putExtra(Constant.TASKNO, sTaskNo);
-				 * intent.putExtra(Constant.ELEVATORNO, sElevatorNo);
-				 * startActivity(intent); stackInstance.popActivity(activity); }
-				 * } else { Utilities.showToast("请和搭档确认电梯的完成状态", activity);
-				 * Intent intent = new Intent(QueryTaskListActivity.this,
-				 * TaskListPackageDetailActivity.class);
-				 * intent.putExtra(Constant.TASKNO, sTaskNo); //
-				 * intent.putExtra(Constant.ELEVATORNO, mElevatorNo);
-				 * startActivity(intent); stackInstance.popActivity(activity); }
-				 */
+
+//				if (TextUtils.equals(isAllCompleted, "1")) {// 该业务逻辑暂不需要
+//					if (TextUtils.equals("0", taskStatus)) { // 任务包中还有未完成的
+//						Utilities.showToast("您还有未完成的电梯", activity); // TODO
+//						Intent intent = new Intent(QueryTaskListActivity.this,
+//								QuestionResponseActivity.class);
+//						intent.putExtra(Constant.TASKNO, sTaskNo);
+//						intent.putExtra(Constant.ELEVATORNO, sElevatorNo);
+//						startActivity(intent);
+//						stackInstance.popActivity(activity);
+//					} else { // 任务包中全部都完成了 // TODO
+//						Intent intent = new Intent(QueryTaskListActivity.this,
+//								EvaluationActivity.class);
+//						intent.putExtra(Constant.TASKNO, sTaskNo);
+//						intent.putExtra(Constant.ELEVATORNO, sElevatorNo);
+//						startActivity(intent);
+//						stackInstance.popActivity(activity);
+//					}
+//				} else {
+//					Utilities.showToast("请和搭档确认电梯的完成状态", activity);
+//					Intent intent = new Intent(QueryTaskListActivity.this,
+//							TaskListPackageDetailActivity.class);
+//					intent.putExtra(Constant.TASKNO, sTaskNo); //
+//					intent.putExtra(Constant.ELEVATORNO, mElevatorNo);
+//					startActivity(intent);
+//					stackInstance.popActivity(activity);
+//				}
+
 			}
 
 			@Override
@@ -414,8 +423,9 @@ public class QueryTaskListActivity extends BaseActivity implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
+				Utilities.showToast(response.msg, activity);
 			}
 
 			@Override

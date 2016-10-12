@@ -49,11 +49,13 @@ import com.overtech.ems.config.StatusCode;
 import com.overtech.ems.entity.bean.Bean;
 import com.overtech.ems.http.HttpConnector;
 import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.mapdialog.InstallerMapDialog;
 import com.overtech.ems.utils.AppUtils;
 import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
+import com.overtech.ems.widget.zxing.CaptureActivity;
 
 /*
  *任务包详情(任务单模块)
@@ -88,6 +90,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	 * 如果已经请求到收藏的搭档列表，就不需要重复请求了
 	 */
 	private boolean hasLoadPartners = false;
+	private InstallerMapDialog mapDialog;
 	private List<Map<String, Object>> listPartners;// 搭档
 	private String[] partners;// 搭档集合
 	private LatLng llStartPoint;
@@ -161,6 +164,21 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 		getExtraDataAndInit();
 	}
 
+	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		Logr.e("==TaskListPackage=onStart=");
+	}
+
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		onRefresh();
+		Logr.e("===TaskListPackage==onResume=");
+	}
+
 	private void initView() {
 		toolbar = (Toolbar) findViewById(R.id.toolBar2);
 		setSupportActionBar(toolbar);
@@ -207,7 +225,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			// 不好确定，可能有，可能没有
 			// requestPartners();
 		}
-		onRefresh();
+
 	}
 
 	private void initEvent() {
@@ -272,7 +290,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 								// TODO Auto-generated method stub
 								shareToWeChatOrQQ();
 							}
-						}).show();
+						}).setNegativeButton("", null).show();
 
 	}
 
@@ -298,21 +316,18 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 									selectPartners.remove(which);
 								}
 							}
-						})
-				.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						// TODO Auto-generated method stub
-
-					}
-				})
+						}).setNegativeButton("取消", null)
+				.setNeutralButton("", null)
 				.setPositiveButton("确认", new DialogInterface.OnClickListener() {
 
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						// TODO Auto-generated method stub
-						sharePartnersConfirm(selectPartners);
+						if (selectPartners.size() == 0) {
+							Logr.e("取消分享");
+						} else {
+							sharePartnersConfirm(selectPartners);
+						}
 					}
 				}).show();
 	}
@@ -343,7 +358,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 
 			}
@@ -376,7 +391,9 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				.busStrategyType(EBusStrategyType.bus_recommend_way);
 		try {
 			BaiduMapRoutePlan.setSupportWebRoute(true);
-			BaiduMapRoutePlan.openBaiduMapTransitRoute(para, activity);
+			boolean suc = BaiduMapRoutePlan.openBaiduMapTransitRoute(para,
+					activity);
+			Logr.e("百度地图调用结果===" + suc);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -385,12 +402,8 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		switch (requestCode) {
-		case StatusCode.RESULT_TASKLIST_PACKAGEDETAIL:
+		if (resultCode == RESULT_OK) {
 			onRefresh();
-			break;
-		default:
-			break;
 		}
 	}
 
@@ -511,7 +524,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 			}
 
@@ -566,17 +579,8 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 										// TODO Auto-generated method stub
 										chargeback();
 									}
-								})
-						.setNegativeButton("取消",
-								new DialogInterface.OnClickListener() {
-
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										// TODO Auto-generated method stub
-
-									}
-								}).show();
+								}).setNegativeButton("取消", null)
+						.setNeutralButton("", null).show();
 			}
 
 			@Override
@@ -585,7 +589,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 			}
 
@@ -603,7 +607,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 
 	private void requestLoadASPartners() {
 		mSwipeLayout.post(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
@@ -647,7 +651,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 			}
 
@@ -655,7 +659,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			public void stopDialog() {
 				// TODO Auto-generated method stub
 				stopProgressDialog();
-				if(mSwipeLayout.isRefreshing()){
+				if (mSwipeLayout.isRefreshing()) {
 					mSwipeLayout.setRefreshing(false);
 				}
 			}
@@ -665,7 +669,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 
 	private void requestPartners() {
 		mSwipeLayout.post(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				// TODO Auto-generated method stub
@@ -700,7 +704,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 
 			}
@@ -709,7 +713,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			public void stopDialog() {
 				// TODO Auto-generated method stub
 				stopProgressDialog();
-				if(mSwipeLayout.isRefreshing()){
+				if (mSwipeLayout.isRefreshing()) {
 					mSwipeLayout.setRefreshing(false);
 				}
 			}
@@ -743,7 +747,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 
 			}
@@ -773,7 +777,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 				intent.putExtras(bundle);
 				startActivity(intent);
 			} else if (btNext.getTag().equals(NOTCOMPLETE)) {
-				Utilities.showToast("尚有未完成的电梯", activity);
+				Utilities.showToast("您或搭档尚有未完成的电梯", activity);
 			}
 			break;
 		case R.id.bt_as_complete:
@@ -789,15 +793,26 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 									// TODO Auto-generated method stub
 									asComplete();
 								}
-							}).setNegativeButton("否", null).show();
+							}).setNegativeButton("否", null)
+					.setNeutralButton("", null).show();
 
 			break;
 		case R.id.tv_navigation:
-			startNavicate(llStartPoint, llDestination, "终点");
+			// startNavicate(llStartPoint, llDestination, "终点");
+			if (mapDialog == null) {
+				mapDialog = new InstallerMapDialog(activity);
+				mapDialog.showDialog(Double.parseDouble(latitude),
+						Double.parseDouble(longitude));
+			} else {
+				mapDialog.showDialog(Double.parseDouble(latitude),
+						Double.parseDouble(longitude));
+			}
+
 			break;
 		case R.id.tv_qrcode:
 			Intent intent = new Intent();
-			intent.setClass(activity, ScanCodeActivity.class);
+			intent.setClass(activity, CaptureActivity.class);
+			intent.putExtra(Constant.CURRSTATE, Constant.TASK);
 			startActivity(intent);
 			break;
 		case R.id.tv_share:
@@ -839,7 +854,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 			}
 
@@ -879,14 +894,15 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 								.parse("tel:" + asPartner));
 						startActivity(intent);
 					}
-				}).setNegativeButton("取消", null).show();
+				}).setNegativeButton("取消", null).setNeutralButton("", null)
+				.show();
 	}
 
 	private void dialToPartner() {
 		// TODO Auto-generated method stub
 		alertBuilder
 				.setTitle("温馨提示")
-				.setMessage("您确认要拨打电话给您的搭档：" + sPartnerName)
+				.setMessage("您确认要拨打电话给您的搭档：" +"\n"+ sPartnerName+" "+sPartnerPhone)
 				.setPositiveButton("确认", new DialogInterface.OnClickListener() {
 
 					@Override
@@ -904,7 +920,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 						// TODO Auto-generated method stub
 
 					}
-				}).show();
+				}).setNeutralButton("", null).show();
 	}
 
 	@Override
@@ -949,7 +965,7 @@ public class TaskListPackageDetailActivity extends BaseActivity implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 
 			}

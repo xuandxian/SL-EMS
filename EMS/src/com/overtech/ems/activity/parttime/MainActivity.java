@@ -241,7 +241,11 @@ public class MainActivity extends BaseActivity {
 		hideSoftInput();
 		return super.onTouchEvent(event);
 	}
-
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+//		super.onSaveInstanceState(outState);
+	}
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub

@@ -28,6 +28,7 @@ import com.overtech.ems.http.constant.Constant;
 import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
+import com.overtech.ems.utils.Utilities;
 
 /**
  * 维修报告单一级目录
@@ -46,11 +47,11 @@ public class MaintenanceTaskActivity extends BaseActivity implements
 	private String uid;
 	private String certificate;
 	private String elevatorNo;
-	private String workorderCode;
-	private String siteTel;
-	private String isMain;
-	private String hasReport;
-	private String hasChooseComponent;
+	private String workorderCode;// 维修单号
+	private String siteTel;// 站点电话
+	private String isMain;// 是否是主修
+	private String hasReport;// 是否已经提交维修报告
+	private String hasChooseComponent;// 是否已经选择了配件
 	public static final int REQUESTCODE = 0x001232;
 
 	@Override
@@ -74,14 +75,18 @@ public class MaintenanceTaskActivity extends BaseActivity implements
 		if (!TextUtils.isEmpty(elevatorNo)) {// 通过扫码进来
 			initData();
 		} else {
-			initHasChooseFrag();
+			if(TextUtils.equals("1", hasReport)){
+				initHasChooseFrag();//维修单详情页面配件列表进入
+			}else{
+				initReportFrag();
+			}
 		}
 	}
 
 	private void getExtraData() {
 		// TODO Auto-generated method stub
 		elevatorNo = getIntent().getStringExtra(Constant.ELEVATORNO);
-		workorderCode = getIntent().getStringExtra("workorderCode");
+		workorderCode = getIntent().getStringExtra(Constant.WORKORDERCODE);
 		siteTel = getIntent().getStringExtra("siteTel");
 		hasReport = getIntent().getStringExtra("hasReport");
 		hasChooseComponent = getIntent().getStringExtra("hasChooseComponent");
@@ -97,6 +102,7 @@ public class MaintenanceTaskActivity extends BaseActivity implements
 		startProgressDialog("加载中...");
 		HashMap<String, Object> body = new HashMap<String, Object>();
 		body.put("qrcode", elevatorNo);
+		body.put("workorderCode", workorderCode);
 		HttpConnector<Bean> connector = new HttpConnector<Bean>(20004, uid,
 				certificate, body) {
 
@@ -116,8 +122,13 @@ public class MaintenanceTaskActivity extends BaseActivity implements
 						.toString();
 				if (TextUtils.equals(hasReport, "1")) {
 					initHasChooseFrag();
-				} else {
-					initReportFrag();
+				} else {//目前主修还没有提交维修报告  
+					if(TextUtils.equals(isMain, "0")){
+						initReportFrag();
+					}else{
+						Utilities.showToast("请等待主修完成问题选择", activity);//辅修
+						stackInstance.popActivity(activity);
+					}
 				}
 			}
 
@@ -128,7 +139,7 @@ public class MaintenanceTaskActivity extends BaseActivity implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 				stackInstance.popActivity(activity);
 			}
@@ -147,9 +158,10 @@ public class MaintenanceTaskActivity extends BaseActivity implements
 		if (reportFrag == null) {
 			reportFrag = new MaintenanceReportFragment();
 			FragmentTransaction ft = fragmentManager.beginTransaction();
-			ft.add(R.id.fl_container, reportFrag);
-			ft.addToBackStack(reportFrag.getClass().getSimpleName());
+			ft.add(R.id.fl_container, reportFrag, "MaintenanceReport");
+			ft.addToBackStack(reportFrag.getClass().getName());
 			ft.commit();
+			fragmentManager.executePendingTransactions();
 			reportFrag.setOnNextClickListener(this);
 		}
 	}
@@ -158,9 +170,10 @@ public class MaintenanceTaskActivity extends BaseActivity implements
 		if (hasChooseFrag == null) {
 			hasChooseFrag = new MaintenanceHasChooseFragment();
 			FragmentTransaction ft = fragmentManager.beginTransaction();
-			ft.add(R.id.fl_container, hasChooseFrag);
-			ft.addToBackStack(hasChooseComponent.getClass().getSimpleName());
+			ft.add(R.id.fl_container, hasChooseFrag, "MaintenanceHasChoose");
+			ft.addToBackStack(hasChooseFrag.getClass().getName());
 			ft.commit();
+			fragmentManager.executePendingTransactions();
 		}
 	}
 
@@ -214,16 +227,20 @@ public class MaintenanceTaskActivity extends BaseActivity implements
 			return super.onOptionsItemSelected(item);
 		}
 	}
-
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		// TODO Auto-generated method stub
+//		super.onSaveInstanceState(outState);
+	}
 	@Override
 	public void onBackPressed() {
 		// TODO Auto-generated method stub
-		super.onBackPressed();
 		Logr.e("MaintenanceTask=====getBackStackEntryCount=="
 				+ fragmentManager.getBackStackEntryCount());
 		if (fragmentManager.getBackStackEntryCount() == 1) {
 			stackInstance.popActivity(activity);
 		}
+		super.onBackPressed();
 	}
 
 	public String getUid() {
@@ -256,8 +273,27 @@ public class MaintenanceTaskActivity extends BaseActivity implements
 		if (hasChooseFrag == null) {
 			hasChooseFrag = MaintenanceHasChooseFragment.newInstance(json);
 			FragmentTransaction ft = fragmentManager.beginTransaction();
-			ft.add(R.id.fl_container, hasChooseFrag);
+			if (!hasChooseFrag.isAdded()) {
+				ft.add(R.id.fl_container, hasChooseFrag);
+			} else {
+				ft.show(hasChooseFrag);
+			}
+			ft.addToBackStack(hasChooseFrag.getClass().getName());
 			ft.commit();
+			fragmentManager.executePendingTransactions();
+		}else{
+			Bundle args=new Bundle();
+			args.putString("argument", json);
+			hasChooseFrag.setArguments(args);
+			FragmentTransaction ft = fragmentManager.beginTransaction();
+			if (!hasChooseFrag.isAdded()) {
+				ft.add(R.id.fl_container, hasChooseFrag);
+			} else {
+				ft.show(hasChooseFrag);
+			}
+			ft.addToBackStack(hasChooseFrag.getClass().getName());
+			ft.commit();
+			fragmentManager.executePendingTransactions();
 		}
 	}
 

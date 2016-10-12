@@ -110,7 +110,9 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 										}
 									}).show();
 				} else {
-					updatePartnersChange("0");
+					if(!TextUtils.equals("1", isPartner)){
+						updatePartnersChange("0");
+					}
 				}
 			}
 		});
@@ -149,7 +151,7 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 			}
 
@@ -220,7 +222,7 @@ public class EvaluationActivity extends BaseActivity implements OnClickListener 
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 
 			}

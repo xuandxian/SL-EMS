@@ -206,7 +206,7 @@ public class PackageDetailActivity extends BaseActivity {
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 			}
 
@@ -350,7 +350,7 @@ public class PackageDetailActivity extends BaseActivity {
 							}
 
 							@Override
-							public void bizStIs1Deal() {
+							public void bizStIs1Deal(Bean response) {
 								// TODO Auto-generated method stub
 							}
 
@@ -413,7 +413,7 @@ public class PackageDetailActivity extends BaseActivity {
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 
 			}

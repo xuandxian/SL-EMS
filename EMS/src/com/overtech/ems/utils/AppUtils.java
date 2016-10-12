@@ -21,13 +21,32 @@ import android.telephony.TelephonyManager;
 
 public class AppUtils {
 
+	public static boolean isNumberOrCharac(String s){
+		for (int i = 0; i < s.length(); i++) {
+			if(!(Character.isDigit(s.charAt(i))||isCharac(s.charAt(i))))
+				return false;
+		}
+		return true;
+	}
+	private static boolean isCharac(char c){
+		if((c<='Z'&&c>'A')||(c<='z'&&c>='a')){
+			return true;
+		}else{
+			return false;
+		}
+	}
 	// 校验Tag Alias 只能是数字,英文字母和中文
 	public static boolean isValidTagAndAlias(String s) {
 		Pattern p = Pattern.compile("^[\u4E00-\u9FA50-9a-zA-Z_-]{0,}$");
 		Matcher m = p.matcher(s);
 		return m.matches();
 	}
-
+	// 校验公司名称 只能是数字,英文字母和中文（）()
+	public static boolean isValidCopName(String s) {
+		Pattern p = Pattern.compile("^[\u4E00-\u9FA50-9a-zA-Z_-（）()]{0,}$");
+		Matcher m = p.matcher(s);
+		return m.matches();
+	}
 	public static boolean isConnected(Context context) {
 		ConnectivityManager conn = (ConnectivityManager) context
 				.getSystemService(Context.CONNECTIVITY_SERVICE);

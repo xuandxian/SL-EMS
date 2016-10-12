@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
 
 import com.overtech.ems.R;
 import com.overtech.ems.activity.BaseActivity;
@@ -42,7 +43,7 @@ public class ResetPasswordSuccessActivity extends BaseActivity {
 		actionBar.setDisplayShowTitleEnabled(false);
 		actionBar.setDisplayHomeAsUpEnabled(false);
 		tvTitle.setText("密码重置");
-		Utilities.showToast("2秒后跳转到登录", this);
+		Utilities.showToast("2秒后跳转到登录", this,Toast.LENGTH_SHORT);
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {

@@ -21,8 +21,11 @@ import com.overtech.ems.activity.parttime.MainActivity;
 import com.overtech.ems.entity.bean.Bean;
 import com.overtech.ems.http.HttpConnector;
 import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.utils.AppUtils;
+import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
+import com.overtech.ems.utils.Utilities;
 
 public class MaintenanceResponseActivity extends BaseActivity implements
 		OnClickListener {
@@ -100,7 +103,7 @@ public class MaintenanceResponseActivity extends BaseActivity implements
 				}
 				if (!TextUtils.isEmpty(sArrivalTime)) {
 					tvArrivalTime.setVisibility(View.VISIBLE);
-					tvArrivalTime.setText("到达时间:" + sArrivalTime);
+					tvArrivalTime.setText("到达时间：" + sArrivalTime);
 				}
 				if (!TextUtils.isEmpty(sLiveSituation)) {
 					etCurrentSituation.setText(sLiveSituation);
@@ -117,7 +120,7 @@ public class MaintenanceResponseActivity extends BaseActivity implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 
 			}
@@ -161,6 +164,14 @@ public class MaintenanceResponseActivity extends BaseActivity implements
 		tvTitle.setText("维修结果");
 
 		btSubmit.setOnClickListener(this);
+		Logr.e("maintenanceResponse===isMain" + isMain);
+		if (TextUtils.equals(isMain, "0")) {// 主修
+			etCurrentSituation.setEnabled(true);
+			etMaintenanceSolve.setEnabled(true);
+		} else {
+			etCurrentSituation.setEnabled(false);
+			etMaintenanceSolve.setEnabled(false);
+		}
 	}
 
 	private void submitRepairSolve(String live, String solve) {
@@ -193,9 +204,8 @@ public class MaintenanceResponseActivity extends BaseActivity implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
-				stackInstance.popActivity(activity);
 			}
 
 			@Override
@@ -224,38 +234,46 @@ public class MaintenanceResponseActivity extends BaseActivity implements
 		// TODO Auto-generated method stub
 		switch (v.getId()) {
 		case R.id.bt_submit:
-			alertBuilder
-					.setTitle("提示")
-					.setMessage("此次维修任务完成？")
-					.setNegativeButton("取消",
-							new DialogInterface.OnClickListener() {
+			if (AppUtils.isValidTagAndAlias(etCurrentSituation.getText()
+					.toString())
+					&& AppUtils.isValidTagAndAlias(etMaintenanceSolve.getText()
+							.toString())){
+				alertBuilder
+				.setTitle("提示")
+				.setMessage("此次维修任务完成？")
+				.setNegativeButton("取消",
+						new DialogInterface.OnClickListener() {
 
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-									// TODO Auto-generated method stub
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// TODO Auto-generated method stub
 
+							}
+						})
+				.setPositiveButton("确认",
+						new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// TODO Auto-generated method stub
+								if (TextUtils.equals(isMain, "0")) {
+									sLiveSituation = etCurrentSituation
+											.getText().toString();
+									sRepairResult = etMaintenanceSolve
+											.getText().toString();
+									submitRepairSolve(sLiveSituation,
+											sRepairResult);
+								} else {
+									toMainActivity();
 								}
-							})
-					.setPositiveButton("确认",
-							new DialogInterface.OnClickListener() {
-
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-									// TODO Auto-generated method stub
-									if (TextUtils.equals(isMain, "1")) {
-										sLiveSituation = etCurrentSituation
-												.getText().toString();
-										sRepairResult = etMaintenanceSolve
-												.getText().toString();
-										submitRepairSolve(sLiveSituation,
-												sRepairResult);
-									} else {
-										toMainActivity();
-									}
-								}
-							}).show();
+							}
+						}).show();
+			}else{
+				Utilities.showToast("输入数据不合法", activity);
+			}
+				
 			break;
 
 		default:

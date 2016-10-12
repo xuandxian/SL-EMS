@@ -4,9 +4,17 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <include
-        android:id="@+id/task_details_title"
-        layout="@layout/layout_toolbar" />
+    <include layout="@layout/layout_toolbar" />
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/tv_elevator_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="16dp"
+        android:text="地址："
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
         android:id="@+id/tv_task_detail_title"
@@ -15,23 +23,14 @@
         android:padding="10dp"
         android:text="维保项目（内容）和要求"
         android:visibility="gone" />
-	<android.support.v7.widget.AppCompatTextView
-	    android:id="@+id/tv_elevator_address"
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:textAppearance="?android:attr/textAppearanceLarge"
-	    android:text="地址："
-	   	android:layout_marginLeft="16dp"
-	   	android:layout_marginTop="16dp"
-	   	android:layout_marginBottom="16dp"
-	    />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:background="@color/divider_color" />
-	
+
     <ListView
         android:id="@+id/lv_task_details"
         android:layout_width="match_parent"

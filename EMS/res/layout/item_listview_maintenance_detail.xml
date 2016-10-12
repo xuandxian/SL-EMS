@@ -24,7 +24,7 @@
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="fj"
-                android:textColor="@color/material_deep_teal_200"
+                android:textColor="@color/colorPrimary"
                 android:textSize="18sp" />
 
             <android.support.v7.widget.AppCompatTextView
@@ -32,7 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="hg"
-                android:textColor="@color/material_deep_teal_200"
+                android:textColor="@color/colorPrimary"
                 android:textSize="18sp" />
 
             <android.support.v7.widget.AppCompatCheckBox

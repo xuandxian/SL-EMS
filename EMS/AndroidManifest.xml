@@ -44,12 +44,18 @@
 
     <android:uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
+    <instrumentation
+        android:name="android.test.InstrumentationTestRunner"
+        android:targetPackage="com.overtech.ems" />
+
     <application
         android:name="com.overtech.ems.activity.MyApplication"
         android:allowBackup="true"
         android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:theme="@style/AppBaseTheme" >
+        <uses-library android:name="android.test.runner" />
+
         <activity
             android:name=".activity.common.SplashActivity"
             android:theme="@style/AppBaseTheme" >
@@ -101,7 +107,6 @@
         <activity android:name=".activity.parttime.personal.PersonalDeatilsActivity" />
         <activity android:name=".activity.parttime.grabtask.GrabTaskDoFilterActivity" />
         <activity android:name=".activity.parttime.grabtask.KeyWordSerachActivity" />
-        <activity android:name=".activity.parttime.tasklist.ScanCodeActivity" />
         <activity android:name=".activity.parttime.common.PackageDetailActivity" />
         <activity android:name=".activity.parttime.common.ElevatorDetailActivity" />
         <activity android:name=".activity.parttime.personal.PersonalAccountListActivity" />
@@ -109,11 +114,12 @@
         <activity android:name=".activity.parttime.personal.phoneno.ChangePhoneNoValidatePasswordActivity" />
         <activity android:name=".activity.parttime.personal.phoneno.ChangePhoneNoValicateSmsCodeActivity" />
         <activity android:name=".activity.parttime.personal.phoneno.ChangePhoneNoSuccessActivity" />
+        <activity android:name="com.overtech.ems.widget.zxing.CaptureActivity" />
         <activity android:name=".activity.parttime.tasklist.QueryTaskListActivity" />
         <activity android:name=".activity.parttime.tasklist.QuestionResponseActivity" />
         <activity android:name=".activity.parttime.tasklist.EvaluationActivity" />
         <activity android:name=".activity.parttime.tasklist.TaskListPackageDetailActivity" />
-        <activity android:name=".activity.parttime.tasklist.TaskListPackageDoneDetailActivity"/>
+        <activity android:name=".activity.parttime.tasklist.TaskListPackageDoneDetailActivity" />
         <activity android:name=".activity.parttime.personal.PersonalChargeBackListActivity" />
         <activity android:name=".activity.parttime.personal.PersonalPartnersActivity" />
         <activity android:name=".activity.parttime.personal.others.PersonalHelpDocActivity" />
@@ -125,8 +131,17 @@
         <activity android:name="com.overtech.ems.activity.fulltime.activity.MaintenanceDetailActivity" />
         <activity android:name="com.overtech.ems.activity.fulltime.activity.MaintenanceTaskActivity" />
         <activity android:name="com.overtech.ems.activity.fulltime.activity.MaintenanceResponseActivity" />
-        <activity android:name="com.overtech.ems.activity.fulltime.activity.MaintenanceComponentActivity"/>
-        <activity android:name="com.overtech.ems.activity.fulltime.activity.ClosePeopleSolveActivity"/>
+        <activity android:name="com.overtech.ems.activity.fulltime.activity.MaintenanceComponentActivity" />
+        <activity android:name="com.overtech.ems.activity.fulltime.activity.MaintenanceDoneDetailActivity" />
+        <activity android:name="com.overtech.ems.activity.fulltime.activity.ClosePeopleSolveActivity" />
+
+        <!-- Rich push 核心功能 since 2.0.6 -->
+        <activity
+            android:name="cn.jpush.android.ui.PopWinActivity"
+            android:exported="false"
+            android:theme="@style/MyDialogStyle" >
+        </activity>
+
         <!-- Required SDK核心功能 -->
         <activity
             android:name="cn.jpush.android.ui.PushActivity"
@@ -144,19 +159,7 @@
         <service
             android:name="cn.jpush.android.service.DownloadService"
             android:enabled="true"
-            android:exported="false" />
-
-        <!-- since 1.8.0 option 可选项。用于同一设备中不同应用的JPush服务相互拉起的功能。 -->
-        <!-- 若不启用该功能可删除该组件，将不拉起其他应用也不能被其他应用拉起 -->
-        <service
-            android:name="cn.jpush.android.service.DaemonService"
-            android:enabled="true"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="cn.jpush.android.intent.DaemonService" />
-
-                <category android:name="com.overtech.jpushdemo" />
-            </intent-filter>
+            android:exported="false" >
         </service>
 
         <!-- Required SDK 核心功能 -->
@@ -172,6 +175,20 @@
                 <action android:name="cn.jpush.android.intent.PUSH_TIME" />
             </intent-filter>
         </service>
+
+        <!-- since 1.8.0 option 可选项。用于同一设备中不同应用的JPush服务相互拉起的功能。 -->
+        <!-- 若不启用该功能可删除该组件，将不拉起其他应用也不能被其他应用拉起 -->
+        <service
+            android:name="cn.jpush.android.service.DaemonService"
+            android:enabled="true"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.DaemonService" />
+
+                <category android:name="com.overtech.ems" />
+            </intent-filter>
+        </service>
+
         <!-- Required SDK核心功能 -->
         <receiver
             android:name="cn.jpush.android.service.PushReceiver"
@@ -199,14 +216,15 @@
         <receiver
             android:name="cn.jpush.android.service.AlarmReceiver"
             android:exported="false" />
+
+        <!-- User defined.  For test only  用户自定义的广播接收器 -->
         <receiver
-            android:name=".receiver.MyPushReceiver"
+            android:name="com.overtech.ems.receiver.MyPushReceiver"
             android:enabled="true"
             android:exported="false" >
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.REGISTRATION" />
                 <!-- Required  用户注册SDK的intent -->
-                <action android:name="cn.jpush.android.intent.UNREGISTRATION" />
                 <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" />
                 <!-- Required  用户接收SDK消息的intent -->
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" />
@@ -220,6 +238,7 @@
                 <category android:name="com.overtech.ems" />
             </intent-filter>
         </receiver>
+
         <!-- Required  . Enable it you can get statistics data with channel -->
         <meta-data
             android:name="JPUSH_CHANNEL"

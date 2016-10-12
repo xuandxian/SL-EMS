@@ -53,7 +53,7 @@
             android:layout_marginLeft="16dp"
             android:layout_weight="1"
             android:text="关于我们"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <ImageView
             android:layout_width="wrap_content"
@@ -78,7 +78,7 @@
             android:layout_marginLeft="16dp"
             android:layout_weight="1"
             android:text="分享给朋友"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <ImageView
             android:layout_width="wrap_content"

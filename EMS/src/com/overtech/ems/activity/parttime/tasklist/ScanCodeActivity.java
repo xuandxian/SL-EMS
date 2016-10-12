@@ -2,7 +2,7 @@ package com.overtech.ems.activity.parttime.tasklist;
 
 import java.io.IOException;
 import java.util.Vector;
-import android.app.Activity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetFileDescriptor;
@@ -13,40 +13,44 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Vibrator;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.SurfaceHolder;
 import android.view.SurfaceHolder.Callback;
 import android.view.SurfaceView;
 import android.view.View;
-import android.view.Window;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.view.View.OnClickListener;
+
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.Result;
 import com.overtech.ems.R;
-import com.overtech.ems.utils.Logr;
-import com.overtech.ems.utils.Utilities;
+import com.overtech.ems.activity.BaseActivity;
 import com.overtech.ems.activity.fulltime.activity.MaintenanceTaskActivity;
 import com.overtech.ems.http.constant.Constant;
-import com.overtech.ems.widget.zxing.camera.CameraManager;
-import com.overtech.ems.widget.zxing.decoding.CaptureActivityHandler;
-import com.overtech.ems.widget.zxing.decoding.InactivityTimer;
-import com.overtech.ems.widget.zxing.view.ViewfinderView;
-
-public class ScanCodeActivity extends Activity implements Callback {
-
+import com.overtech.ems.utils.Logr;
+import com.overtech.ems.utils.Utilities;
+import com.overtech.ems.widget.zxing.utils.CaptureActivityHandler;
+import com.overtech.ems.widget.zxing.utils.InactivityTimer;
+/**
+ * 这个不在使用了，版本低
+ * @author Overtech Will
+ *
+ */
+public class ScanCodeActivity extends BaseActivity implements Callback {
+	private Toolbar toolbar;
+	private ActionBar actionBar;
+	private AppCompatTextView tvTitle;
 	private CaptureActivityHandler handler;
-	private ViewfinderView viewfinderView;
 	private boolean hasSurface;
-	private Vector<BarcodeFormat> decodeFormats;
+	private Vector decodeFormats;
 	private String characterSet;
 	private InactivityTimer inactivityTimer;
 	private MediaPlayer mediaPlayer;
 	private boolean playBeep;
 	private static final float BEEP_VOLUME = 0.10f;
 	private boolean vibrate;
-	private ImageView mDoBack;
-	private TextView mHeadContent;
 	private Context mContext;
 	private String employeeType;
 	private String mElevatorNo;
@@ -54,24 +58,36 @@ public class ScanCodeActivity extends Activity implements Callback {
 	public static String JZ = "兼职";
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.activity_task_list_capture);
+	protected int getLayoutResIds() {
+		// TODO Auto-generated method stub
+		return R.layout.activity_task_list_capture;
+	}
+
+	@Override
+	protected void afterCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
 		employeeType = getIntent().getStringExtra(Constant.EMPLOYEETYPE);
-		CameraManager.init(getApplication());
 		mContext = ScanCodeActivity.this;
-		viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
-		mHeadContent = (TextView) findViewById(R.id.tv_headTitle);
-		mHeadContent.setText("二维码扫描");
-		mDoBack = (ImageView) findViewById(R.id.iv_headBack);
-		mDoBack.setVisibility(View.VISIBLE);
-		mDoBack.setOnClickListener(new View.OnClickListener() {
+
+		toolbar = (Toolbar) findViewById(R.id.toolBar);
+		Logr.e("toolbar===" + toolbar);
+		setSupportActionBar(toolbar);
+		actionBar = getSupportActionBar();
+		tvTitle = (AppCompatTextView) findViewById(R.id.tvTitle);
+
+		tvTitle.setText("二维码扫描");
+		toolbar.setNavigationOnClickListener(new OnClickListener() {
+
 			@Override
 			public void onClick(View v) {
-				ScanCodeActivity.this.finish();
+				// TODO Auto-generated method stub
+				finish();
 			}
 		});
+		actionBar.setDisplayHomeAsUpEnabled(true);
+		actionBar.setDisplayShowHomeEnabled(true);
+		actionBar.setDisplayShowTitleEnabled(false);
+
 		hasSurface = false;
 		inactivityTimer = new InactivityTimer(this);
 	}
@@ -82,7 +98,6 @@ public class ScanCodeActivity extends Activity implements Callback {
 		SurfaceView surfaceView = (SurfaceView) findViewById(R.id.preview_view);
 		SurfaceHolder surfaceHolder = surfaceView.getHolder();
 		if (hasSurface) {
-			initCamera(surfaceHolder);
 		} else {
 			surfaceHolder.addCallback(this);
 			surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
@@ -105,7 +120,7 @@ public class ScanCodeActivity extends Activity implements Callback {
 			handler.quitSynchronously();
 			handler = null;
 		}
-		CameraManager.get().closeDriver();
+		
 	}
 
 	@Override
@@ -126,7 +141,7 @@ public class ScanCodeActivity extends Activity implements Callback {
 		if (mElevatorNo.equals("")) {
 			Utilities.showToast("扫描失败", mContext);
 		} else {
-			Logr.e("employeeType=="+employeeType);
+			Logr.e("employeeType==" + employeeType);
 			if (TextUtils.equals(QZ, employeeType)) {
 				// 前往维修清单
 				Intent intent = new Intent(ScanCodeActivity.this,
@@ -144,19 +159,7 @@ public class ScanCodeActivity extends Activity implements Callback {
 		}
 	}
 
-	private void initCamera(SurfaceHolder surfaceHolder) {
-		try {
-			CameraManager.get().openDriver(surfaceHolder);
-		} catch (IOException ioe) {
-			return;
-		} catch (RuntimeException e) {
-			return;
-		}
-		if (handler == null) {
-			handler = new CaptureActivityHandler(this, decodeFormats,
-					characterSet);
-		}
-	}
+	
 
 	@Override
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
@@ -164,14 +167,7 @@ public class ScanCodeActivity extends Activity implements Callback {
 
 	}
 
-	@Override
-	public void surfaceCreated(SurfaceHolder holder) {
-		if (!hasSurface) {
-			hasSurface = true;
-			initCamera(holder);
-		}
-
-	}
+	
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
@@ -179,18 +175,13 @@ public class ScanCodeActivity extends Activity implements Callback {
 
 	}
 
-	public ViewfinderView getViewfinderView() {
-		return viewfinderView;
-	}
+	
 
 	public Handler getHandler() {
 		return handler;
 	}
 
-	public void drawViewfinder() {
-		viewfinderView.drawViewfinder();
-
-	}
+	
 
 	private void initBeepSound() {
 		if (playBeep && mediaPlayer == null) {
@@ -235,4 +226,11 @@ public class ScanCodeActivity extends Activity implements Callback {
 			mediaPlayer.seekTo(0);
 		}
 	};
+
+	@Override
+	public void surfaceCreated(SurfaceHolder holder) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -67,8 +67,6 @@ public class PersonalBoundsActivity extends BaseActivity {
 					if (list == null || list.size() == 0) {
 						tvNoData.setVisibility(View.VISIBLE);
 						mPersonalAccountListView.setVisibility(View.GONE);
-						Utilities.showToast(
-								getString(R.string.response_no_data), activity);
 					} else {
 						tvNoData.setVisibility(View.GONE);
 						mPersonalAccountListView.setVisibility(View.VISIBLE);

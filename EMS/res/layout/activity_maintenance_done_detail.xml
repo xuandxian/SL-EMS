@@ -16,31 +16,47 @@
             android:id="@+id/tv_maintenance_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="地址：" />
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:text="地址："
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tv_maintenance_elevator_no"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="梯号：" />
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:text="梯号："
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tv_maintenance_fault_from"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="故障来源：" />
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:text="故障来源："
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tv_maintenace_repair_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="报修内容：" />
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:text="报修内容："
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/tv_maintenance_close"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="是否关人：" />
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:text="是否关人："
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
     </LinearLayout>
 
 </LinearLayout>

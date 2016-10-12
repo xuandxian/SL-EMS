@@ -90,6 +90,7 @@ public class PersonalPartnersAdapter extends Adapter<ViewHolder> {
 	}
 
 	public void deleteData(int position) {
+		datas.remove(position);
 		notifyItemRemoved(position);
 	}
 

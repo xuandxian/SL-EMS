@@ -9,6 +9,18 @@ package com.overtech.ems.http.constant;
 public class Constant {
 	
 	/**
+	 * 维保
+	 */
+	public static final int TASK=0x000123;
+	/**
+	 * 维修
+	 */
+	public static final int MAINTENANCE=0x000124;
+	/**
+	 * 当前扫码的目的
+	 */
+	public static final String CURRSTATE="currState";
+	/**
 	 * 标记传递的是parent or child
 	 */
 	public static final String TYPE="type";

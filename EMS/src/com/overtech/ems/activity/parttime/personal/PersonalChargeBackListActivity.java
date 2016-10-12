@@ -64,8 +64,6 @@ public class PersonalChargeBackListActivity extends BaseActivity {
 				} else {
 					list = (List<Map<String, Object>>) bean.body.get("data");
 					if (list == null || list.size() == 0) {
-						Utilities.showToast(
-								getString(R.string.response_no_data), activity);
 						tvNoData.setVisibility(View.VISIBLE);
 						mChargeback.setVisibility(View.GONE);
 					} else {

@@ -30,8 +30,10 @@ import com.overtech.ems.activity.fulltime.adapter.MaintenanceChildAdapter.ChildV
 import com.overtech.ems.entity.bean.Bean;
 import com.overtech.ems.http.HttpConnector;
 import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.utils.Logr;
 
-public class MaintenanceReportFragment extends BaseFragment implements OnClickListener {
+public class MaintenanceReportFragment extends BaseFragment implements
+		OnClickListener {
 	private ExpandableListView expand;
 	private ListView lvMaintenanceDetail;
 	private AppCompatButton btPrevious;
@@ -44,32 +46,34 @@ public class MaintenanceReportFragment extends BaseFragment implements OnClickLi
 	private String certificate;
 	private String workorderCode;
 	private OnNextClickListener listener;
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onCreate(savedInstanceState);
+		activity = (MaintenanceTaskActivity) getActivity();
+		uid = activity.getUid();
+		certificate = activity.getCertificate();
+		workorderCode = activity.getWorkorderCode();
+	}
+
 	@Override
 	@Nullable
 	public View onCreateView(LayoutInflater inflater,
 			@Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		View v = inflater.inflate(R.layout.fragment_maintenance_report,
-				container);
+				container, false);
 		initView(v);
 		initEvent();
 		initData();
 		return v;
 	}
-	@Override
-	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
-		super.onActivityCreated(savedInstanceState);
-		activity=(MaintenanceTaskActivity) getActivity();
-		uid=activity.getUid();
-		certificate=activity.getCertificate();
-		workorderCode=activity.getWorkorderCode();
-		
-	}
-	
+
 	private void initData() {
 		// TODO Auto-generated method stub
-		startProgressDialog(getResources().getString(R.string.loading_public_default));
+		startProgressDialog(getResources().getString(
+				R.string.loading_public_default));
 		HashMap<String, Object> body = new HashMap<String, Object>();
 		body.put("workorderCode", workorderCode);
 		body.put("isMain", activity.getIsMain());
@@ -118,7 +122,7 @@ public class MaintenanceReportFragment extends BaseFragment implements OnClickLi
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 				activity.stackInstance.popActivity(activity);
 			}
@@ -131,6 +135,7 @@ public class MaintenanceReportFragment extends BaseFragment implements OnClickLi
 		};
 		connector.sendRequest();
 	}
+
 	private void initEvent() {
 		// TODO Auto-generated method stub
 		expand.setOnGroupClickListener(new OnGroupClickListener() {
@@ -181,7 +186,7 @@ public class MaintenanceReportFragment extends BaseFragment implements OnClickLi
 				if (vh.cbStatus.isChecked()) {
 					child.put("checked", "1");
 				} else {
-					child.put("child", "0");
+					child.put("checked", "0");
 				}
 			}
 		});
@@ -191,13 +196,14 @@ public class MaintenanceReportFragment extends BaseFragment implements OnClickLi
 
 	private void initView(View v) {
 		// TODO Auto-generated method stub
-		expand = (ExpandableListView) v.findViewById(R.id.elv_maintenance_report);
-		lvMaintenanceDetail = (ListView) v.findViewById(R.id.lv_maintenance_detail);
-		btPrevious = (AppCompatButton)v. findViewById(R.id.bt_previous);
+		expand = (ExpandableListView) v
+				.findViewById(R.id.elv_maintenance_report);
+		lvMaintenanceDetail = (ListView) v
+				.findViewById(R.id.lv_maintenance_detail);
+		btPrevious = (AppCompatButton) v.findViewById(R.id.bt_previous);
 		btNext = (AppCompatButton) v.findViewById(R.id.bt_next);
 	}
 
-	
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
@@ -206,8 +212,8 @@ public class MaintenanceReportFragment extends BaseFragment implements OnClickLi
 			activity.onBackPressed();
 			break;
 		case R.id.bt_next:
-			String json=gson.toJson(mainAdapter.getData());
-			if(listener!=null){
+			String json = gson.toJson(mainAdapter.getData());
+			if (listener != null) {
 				listener.onNextClick(json);
 			}
 			break;
@@ -216,10 +222,12 @@ public class MaintenanceReportFragment extends BaseFragment implements OnClickLi
 			break;
 		}
 	}
-	public void setOnNextClickListener(OnNextClickListener listener){
-		this.listener=listener;
+
+	public void setOnNextClickListener(OnNextClickListener listener) {
+		this.listener = listener;
 	}
-	public interface OnNextClickListener{
+
+	public interface OnNextClickListener {
 		void onNextClick(String json);
 	}
 }

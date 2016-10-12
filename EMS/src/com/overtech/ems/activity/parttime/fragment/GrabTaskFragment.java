@@ -137,8 +137,8 @@ public class GrabTaskFragment extends BaseFragment implements
 		certificate = ((MainActivity) getActivity()).getCertificate();
 		initView(view);
 		initEvent();
+		startProgressDialog(getResources().getString(R.string.loading_public_default));
 		onRefresh();
-
 		return view;
 	}
 
@@ -302,7 +302,7 @@ public class GrabTaskFragment extends BaseFragment implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 				mSwipeListView.stopRefresh();
 				// new
@@ -367,7 +367,7 @@ public class GrabTaskFragment extends BaseFragment implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 				// new
 				// AlertDialog.Builder(activity).setMessage(msg).create().show();
@@ -438,7 +438,7 @@ public class GrabTaskFragment extends BaseFragment implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 			}
 
@@ -493,7 +493,7 @@ public class GrabTaskFragment extends BaseFragment implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 				// new
 				// AlertDialog.Builder(activity).setMessage(msg).create().show();
@@ -589,7 +589,7 @@ public class GrabTaskFragment extends BaseFragment implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 
 			}

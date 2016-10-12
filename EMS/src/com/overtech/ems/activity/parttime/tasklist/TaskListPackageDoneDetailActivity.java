@@ -37,6 +37,7 @@ public class TaskListPackageDoneDetailActivity extends BaseActivity implements
 	private RecyclerView recyclerView;
 	private TaskListPackageDoneDetailActivity activity;
 	private String sTaskNo;
+	private String sTaskPackageName;
 	private String uid;
 	private String certificate;
 	private TaskListPackageDoneDetailAdapter adapter;
@@ -73,14 +74,26 @@ public class TaskListPackageDoneDetailActivity extends BaseActivity implements
 		actionBar.setDisplayHomeAsUpEnabled(true);
 		actionBar.setDisplayShowHomeEnabled(true);
 		actionBar.setDisplayShowTitleEnabled(false);
+		tvTitle.setText(sTaskPackageName);
+		swipeRefresh.setColorSchemeResources(R.color.colorPrimary,
+				R.color.colorPrimary30);
 		swipeRefresh.setOnRefreshListener(this);
 		recyclerView.setItemAnimator(new DefaultItemAnimator());
+		swipeRefresh.post(new Runnable() {
 
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				swipeRefresh.setRefreshing(true);
+			}
+		});
+		onRefresh();
 	}
 
 	private void initView() {
 		// TODO Auto-generated method stub
 		sTaskNo = getIntent().getStringExtra(Constant.TASKNO);
+		sTaskPackageName=getIntent().getStringExtra("taskPackageName");
 		uid = (String) SharePreferencesUtils.get(activity,
 				SharedPreferencesKeys.UID, "");
 		certificate = (String) SharePreferencesUtils.get(activity,
@@ -119,10 +132,9 @@ public class TaskListPackageDoneDetailActivity extends BaseActivity implements
 							// TODO Auto-generated method stub
 							Intent intent = new Intent(activity,
 									QuestionResponseActivity.class);
-							intent.putExtra(Constant.TASKNO, data.get(position)
-									.get("taskNo").toString());
+							intent.putExtra(Constant.TASKNO, sTaskNo);
 							intent.putExtra(Constant.ELEVATORNO,
-									data.get(position).get("taskNo").toString());
+									data.get(position).get("elevatorNo").toString());
 							startActivityForResult(intent, 123);
 						}
 					});
@@ -139,7 +151,7 @@ public class TaskListPackageDoneDetailActivity extends BaseActivity implements
 			}
 
 			@Override
-			public void bizStIs1Deal() {
+			public void bizStIs1Deal(Bean response) {
 				// TODO Auto-generated method stub
 			}
 
@@ -151,6 +163,7 @@ public class TaskListPackageDoneDetailActivity extends BaseActivity implements
 				}
 			}
 		};
+		conn.sendRequest();
 	}
 
 	@Override

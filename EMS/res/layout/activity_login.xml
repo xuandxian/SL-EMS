@@ -89,5 +89,26 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/colorPrimary30" />
     </LinearLayout>
-
+	
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <android.support.v7.widget.AppCompatEditText
+            android:id="@+id/etIP"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:hint="请输入ip"
+            />
+        <android.support.v7.widget.AppCompatButton 
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Widget.Button"
+            android:text="更改ip"
+            android:onClick="changeIP"
+            />
+    </LinearLayout>
+    
 </LinearLayout>

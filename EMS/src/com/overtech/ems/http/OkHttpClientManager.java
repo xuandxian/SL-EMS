@@ -38,7 +38,7 @@ public class OkHttpClientManager {
 	private OkHttpClient mOkHttpClient;
 	private Handler mDelivery;
 	private Gson mGson;
-	private final int timeOut = 20000;
+	private final int timeOut = 30000;
 	public static final MediaType JSON = MediaType
 			.parse("application/json;charset=utf-8");
 

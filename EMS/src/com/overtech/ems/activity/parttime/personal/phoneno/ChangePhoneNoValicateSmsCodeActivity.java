@@ -26,6 +26,7 @@ import com.overtech.ems.config.SystemConfig;
 import com.overtech.ems.entity.bean.CommonBean;
 import com.overtech.ems.entity.common.Requester;
 import com.overtech.ems.http.constant.Constant;
+import com.overtech.ems.utils.Logr;
 import com.overtech.ems.utils.SharePreferencesUtils;
 import com.overtech.ems.utils.SharedPreferencesKeys;
 import com.overtech.ems.utils.Utilities;
@@ -61,6 +62,7 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 	private Handler handler = new Handler() {
 		public void handleMessage(android.os.Message msg) {
 			stopProgressDialog();
+			Logr.e(msg.obj.toString());
 			switch (msg.what) {
 			case StatusCode.SUBMIT_PHONENO_SUCCESS:
 				String json = (String) msg.obj;
@@ -116,7 +118,7 @@ public class ChangePhoneNoValicateSmsCodeActivity extends BaseActivity
 				}
 
 				if (updateSt == 0) {
-					String success = updateBean.msg;
+					String success = updateBean.body.success;
 					if (success.equals("1")) {
 						Utilities.showToast(updateBean.msg, activity);
 						Intent intent = new Intent(activity,

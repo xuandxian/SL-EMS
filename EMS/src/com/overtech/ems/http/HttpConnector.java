@@ -29,7 +29,7 @@ public abstract class HttpConnector<T> extends ResultCallback<Bean> {
 
 	public abstract void bizSuccess(Bean response);
 	public abstract void bizFailed();
-	public abstract void bizStIs1Deal();
+	public abstract void bizStIs1Deal(Bean response);
 	public abstract void stopDialog();
 	public HttpConnector(int cmd,String uid,String certificate,Map<String,Object> body){
 		requester=new Requester();
@@ -49,6 +49,7 @@ public abstract class HttpConnector<T> extends ResultCallback<Bean> {
 		// TODO Auto-generated method stub
 		Logr.e(request.toString());
 		stopDialog();
+		Utilities.showDialog(getContext(), "服务器正在维护中，请稍后再试...");
 		bizFailed();
 	}
 
@@ -75,7 +76,7 @@ public abstract class HttpConnector<T> extends ResultCallback<Bean> {
 				getContext().startActivity(intent);
 			} else if (st == 1) {
 				Utilities.showToast(msg, getContext());
-				bizStIs1Deal();
+				bizStIs1Deal(response);
 			} else {
 				Utilities.showToast(msg, getContext());
 			}
